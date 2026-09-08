@@ -1,0 +1,66 @@
+<?php
+
+class %collectionclassname% implements DynCom\dc\common\interfaces\GenericCollectionInterface {
+
+    use genericCollectionTrait;
+
+    /**
+     * @param %configclassname%  $config
+     * @param CriteriaHelperInterface $criteriaValidationService
+     */
+    public function __construct( %configclassname% $config, CriteriaHelperInterface $criteriaValidationService ) {
+        $this->elements                  =  new SplObjectStorage();
+        $this->config                    = $config;
+        $this->criteriaValidationService = $criteriaValidationService;
+        $this->entryClassName            = $config->getModelClassName();
+    }
+
+
+    /**
+     * @return \%collectionclassname%
+     */
+    public function getEmptyCollection() {
+        return new self($this->config,$this->criteriaValidationService);
+    }
+
+    /**
+     * @param mixed $instance
+     * @param bool  $idCheck
+     *
+     * @return bool
+     */
+    public function add( $instance, $idCheck = FALSE ) {
+        return $this->_add%modelclassname%($instance, $idCheck);
+    }
+
+    /**
+     * @param \%modelclassname% $%modelclassnameflower%
+     * @param bool      $idCheck
+     *
+     * @return bool
+     */
+    protected function _add%modelclassname%( %modelclassname% $%modelclassnameflower%, $idCheck = FALSE ) {
+        return $this->_add($%modelclassnameflower%, $idCheck);
+    }
+
+    /**
+     * @param mixed $instance
+     * @param bool  $idCheck
+     *
+     * @return bool
+     */
+    public function remove( $instance, $idCheck = FALSE ) {
+        return $this->_remove%modelclassname%($instance,$idCheck);
+    }
+
+    /**
+     * @param \%modelclassname% $%modelclassnameflower%
+     * @param bool                $idCheck
+     *
+     * @return bool
+     */
+    protected function _remove%modelclassname%( %modelclassname% $%modelclassnameflower%, $idCheck = FALSE ) {
+        return $this->_remove($%modelclassnameflower%,$idCheck);
+    }
+
+}

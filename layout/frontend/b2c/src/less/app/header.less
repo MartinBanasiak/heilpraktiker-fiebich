@@ -1,0 +1,249 @@
+#header {
+  background-color: @brand-primary;
+  color: @white;
+  padding-top: @spacer-base*0.9;
+  padding-bottom: @spacer-base*2;
+  > .container {
+    position: relative;
+  }
+  a {
+    color: @white;
+    &:hover {
+      color: @brand-second;
+    }
+  }
+
+  #header_1,
+  #header_2,
+  #header_3,
+  #header_4 {
+    float: left;
+    margin-top: 21px;
+    padding-right: @spacer-base*2;
+  }
+
+  #header_1 {
+    margin-top: 0;
+    .header_logo {
+      width: 190px;
+      text-align: center;
+    }
+  }
+  #header_2 {
+    overflow: hidden;
+    max-width:70%;
+    height: 39px;
+  }
+  #header_3 {
+    float: right;
+    padding-right: 0;
+  }
+  #header_4 {
+    float: right;
+  }
+  &.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10001;
+    padding-bottom: 15px;
+    #header_1 {
+      margin-top: 4px;
+      .header_logo {
+        img {
+          width: 110px !important;
+          height:auto !important;
+        }
+      }
+    }
+    #header_2,
+    #header_3,
+    #header_4 {
+      margin-top: 8px;
+    }
+    #primary_navigation > ul > li > a {
+      padding-top: 7px;
+      &:after {
+        margin-top: 4px;
+      }
+    }
+    #primary_navigation > ul > li > ul {
+      margin-top: 18px;
+    }
+    #header_basket .shopping_bag_hover {
+      margin-top: 28px;
+    }
+  }
+}
+
+#search {
+  width: 230px;
+  input {
+    width: 100%;
+  }
+}
+
+#header_account {
+  #user_account_navigation {
+    display: inline-block;
+  }
+  a {
+    color: @brand-second;;
+    display:block;
+    padding-left: @spacer-base;
+    padding-right: @spacer-base;
+    &:hover {
+      color: @white;
+    }
+  }
+}
+
+@media (min-width: @screen-md-min) and (max-width: @screen-lg-max) {
+  #search {
+    width: auto;
+    #form_search {
+      .search_field {
+        display: none;
+      }
+      .search_button {
+        position: static;
+        height: 37px;
+        background-color: @white;
+      }
+      &:hover {
+        .search_field {
+          position: absolute;
+          width: 200px;
+          left: -200px;
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: @screen-md-max) {
+  #header {
+    padding-bottom: 15px;
+    #header_1 {
+      .header_logo {
+        width: 150px;
+      }
+    }
+    #header_2,
+    #header_3,
+    #header_4 {
+      margin-top: 11px;
+    }
+  }
+}
+
+@media (max-width: @screen-sm-max) {
+  #header_account {
+    padding-bottom: @spacer-base;
+  }
+
+  #header {
+    padding-top: 0;
+    padding-bottom: 0;
+    .container {
+      padding-left: 0;
+    }
+    #header_1 {
+      padding-top: @spacer-base;
+      padding-left: @spacer-base*2;
+      width: 25%;
+      .header_logo {
+        max-width: 100%;
+        max-height: 40px;
+        img {
+          height: 40px !important;
+          width: auto !important;
+        }
+      }
+    }
+    #header_3 {
+      width: 70px;
+    }
+    #header_4 {
+      width: 55%;
+    }
+    &.sticky {
+      padding-bottom:0;
+      #header_1 {
+        margin-top: 0;
+        .header_logo {
+          img {
+            height: 40px !important;
+            width: auto !important;
+          }
+        }
+      }
+      #header_2,#header_3,#header_4 {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  #search {
+    width: 100%;
+    z-index:120;
+  }
+}
+
+@media (max-width: @screen-xs-max) {
+  #header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    #header_1 {
+      width: 130px;
+      padding-left: @spacer-base;
+      padding-right: @spacer-base;
+    }
+    #header_3 {
+      width: 45px;
+    }
+    #header_4 {
+      position: absolute;
+      left: 0;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      top: 60px;
+      display: none;
+      border-bottom: 1px solid @input-border-color;
+    }
+    &.sticky {
+      #header_3 {
+        margin-top: 11px;
+      }
+      #header_4 {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: (@container-min-width + 80px)) {
+  #header {
+    #header_1 {
+      width: 100px;
+      padding-top: 5px;
+    }
+    #header_3 {
+      margin-top: 5px;
+      width: 40px;
+    }
+    #header_4 {
+      top: 50px;
+    }
+    &.sticky {
+      #header_3 {
+        margin-top: 5px;
+      }
+    }
+  }
+}

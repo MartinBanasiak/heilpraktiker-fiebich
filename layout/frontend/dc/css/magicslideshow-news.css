@@ -1,0 +1,52 @@
+div.MagicSlideshow {
+    border: none;
+    background: transparent;
+    display: none;
+	margin: 10px 0px 10px 0px; 
+	padding: 0px;
+	overflow: hidden;
+	border-top: 1px dotted #999;
+	border-bottom: 1px dotted #999;
+}
+
+.MagicSlideshow:hover {
+	background-color: #eeeeee;	
+}
+
+.MagicSlideshow a:hover {
+	background-color: transparent;	
+}
+
+img.MagicSlideshowImage {
+    border: 0px;
+	margin: 10px 376px 10px 5px !important; 
+}
+
+
+.MagicSlideshow .MagicSlideshowDescription {
+	width: 350px;
+	height: 130px;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 10px 10px 10px 200px !important;
+	color:#333;
+	background: none;
+	text-align: left !important;
+	overflow: hidden !important;
+}
+
+.MagicSlideshow .MagicSlideshowDescription a {
+	margin: 10px 0px 8px 0px !important;
+	font-size: 20px;
+	line-height: 26px;
+	color: #99c137;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	text-decoration: underline;
+	text-align: left !important;
+}
+.MagicSlideshow .MagicSlideshowDescription a:hover {
+	color: #FFF;
+ 	background-color: #99c137;
+	text-decoration: underline;
+}

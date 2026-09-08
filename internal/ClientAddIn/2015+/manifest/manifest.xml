@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+    <Resources>
+        <Script>jQuery.js</Script>
+        <Script>Script.js</Script>
+		<StyleSheet>Style.css</StyleSheet>
+    </Resources>
+    <ScriptUrls>
+    </ScriptUrls>
+    
+    <Script>
+        <![CDATA[
+           $(document).ready(function() 
+        { 
+			document.getElementById("controlAddIn").innerHTML = 
+              '<div class="spinner"></div>';
+            Microsoft.Dynamics.NAV.InvokeExtensibilityMethod('ControlAddInReady', null);
+        });
+        ]]>
+    </Script>
+    
+    <RequestedHeight>400</RequestedHeight>
+    <RequestedWidth>700</RequestedWidth>
+    <MinimumHeight>200</MinimumHeight>
+    <MinimumWidth>400</MinimumWidth>
+    <MaximumHeight>1800</MaximumHeight>
+    <MaximumWidth>2400</MaximumWidth>
+    <VerticalStretch>true</VerticalStretch>
+    <HorizontalStretch>true</HorizontalStretch>
+    <VerticalShrink>true</VerticalShrink>
+    <HorizontalShrink>true</HorizontalShrink>  
+</Manifest>

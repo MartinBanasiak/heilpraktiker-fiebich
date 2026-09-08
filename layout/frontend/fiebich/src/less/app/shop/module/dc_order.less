@@ -1,0 +1,54 @@
+
+#dc_order {
+  #dc_amount_select {
+    margin-left: -@spacer-base;
+    margin-right: -@spacer-base;
+    .dc_amount {
+      display: inline-block;
+      padding: @spacer-base @spacer-base*2;
+      border: 1px solid @input-border-color;
+      margin-top: @spacer-base;
+      margin-left: @spacer-base;
+      margin-right: @spacer-base;
+      cursor: pointer;
+      &:hover {
+        background-color: @light-gray;
+      }
+      &.active {
+        background-color: @brand-primary;
+        border-color: @brand-primary;
+        color: @white;
+      }
+    }
+  }
+
+  #dc_background_select {
+    margin-bottom: @spacer-base*2;
+    .dc_background {
+      display: inline-block;
+      margin-top: @spacer-base*2;
+      margin-right: @spacer-base*2;
+      .opacity(0.6);
+      .transition(opacity 0.2s ease-in);
+      cursor:pointer;
+      &.active {
+        .opacity(1);
+      }
+    }
+  }
+
+  #input_message, #message {
+    height: 150px;
+  }
+}
+#dc_message {
+  #message {
+    height: 150px;
+  }
+}
+#coupon_background_image {
+  width:100%;
+  height:350px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}

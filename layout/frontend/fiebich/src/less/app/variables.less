@@ -1,0 +1,124 @@
+
+// ++++++ colors ++++++ //
+
+@white: #ffffff;
+@black: #444444;
+@gray-base: #808080;
+@middle-gray: #999999;
+@light-gray: #dddddd;
+@brand-primary: #FF9F03;
+@brand-second: lighten(@brand-primary,50);
+@brand-danger: #fe735d;
+@brand-warning: #e6e600;
+@brand-success: #7bdc84;
+@brand-action: #87b1ff;
+@brand-info: @gray-base;
+
+@ueber-mich: @brand-action;
+@behandlungsmethoden: @brand-success;
+@gebuehren: @brand-danger;
+@kontakt: @middle-gray;
+
+@body-background: @white;
+
+@headings-color: @brand-primary;
+
+@input-border-color: @middle-gray;
+
+// ------ colors ------ //
+
+
+// ++++++ typo ++++++ //
+
+@text-base: @black;
+
+@link: @brand-primary;
+@link-hover: @brand-danger;
+@link-decoration: none;
+@link-decoration-hover: none;
+
+@font-family-base: 'Lato', sans-serif;
+
+@font-size-base: 16px;
+@font-weight-base: 300;
+@font-weight-bold: 600;
+
+@line-height-base: 1.428571429;
+@line-height-computed: floor((@font-size-base * @line-height-base));
+
+@headings-font-family: @font-family-base;
+@headings-font-weight: @font-weight-base;
+@headings-line-height: 1.2;
+
+@font-size-xlarge: 42px;
+@font-size-large: 26px;
+@font-size-medium: 22px;
+@font-size-small: 20px;
+@font-size-xsmall: 18px;
+
+// ------ typo ------ //
+
+// ++++++ spacer ++++++ //
+
+@spacer-base: 10px;
+@spacer-xsmall: 5px;
+@spacer-small: 20px;
+@spacer-large: 40px;
+@spacer-xlarge: 60px;
+
+// ------ spacer ------ //
+
+// ++++++ grid system ++++++ //
+
+// Extra small screen / phone
+@screen-xs:                  480px;
+@screen-xs-min:              @screen-xs;
+@screen-phone:               @screen-xs-min;
+
+// Small screen / tablet
+@screen-sm:                  768px;
+@screen-sm-min:              @screen-sm;
+@screen-tablet:              @screen-sm-min;
+
+// Medium screen / desktop
+@screen-md:                  1024px;
+@screen-md-min:              @screen-md;
+@screen-desktop:             @screen-md-min;
+
+// Large screen / wide desktop
+@screen-lg:                  1250px;
+@screen-lg-min:              @screen-lg;
+@screen-lg-desktop:          @screen-lg-min;
+
+// X-Large screen / wide desktop
+@screen-xlg:                  1540px;
+@screen-xlg-min:              @screen-xlg;
+@screen-xlg-desktop:          @screen-lg-min;
+
+// So media queries don't overlap when required, provide a maximum
+@screen-xs-max:              (@screen-sm-min - 1);
+@screen-sm-max:              (@screen-md-min - 1);
+@screen-md-max:              (@screen-lg-min - 1);
+@screen-lg-max:              (@screen-xlg-min - 1);
+
+@grid-columns: 12;
+@grid-gutter-width: 40px;
+@grid-float-breakpoint: @screen-xs;
+@grid-float-breakpoint-max: @grid-float-breakpoint - 1;
+
+//container sizes
+@container-min-width: 320px;
+
+@container-tablet: 100%;
+@container-sm: @container-tablet;
+
+@container-desktop: 100%;
+@container-md: @container-desktop;
+
+@container-large-desktop: 100%;
+@container-lg: @container-large-desktop;
+
+@container-xlarge-desktop: 1280px + @grid-gutter-width;
+@container-xlg: @container-xlarge-desktop;
+
+// ------ grid system ------ //

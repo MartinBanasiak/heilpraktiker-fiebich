@@ -1,0 +1,1 @@
+﻿Export-NAVAppPermissionSet -Path C:\gitRepos\navShippingOptions\NAV\al\PermissionSet.xml -PermissionSetId DCSSHIPPINGCOST -ServerInstance DynamicsNAV110

@@ -1,0 +1,66 @@
+.scrollbar {
+  margin-bottom: @spacer-base*2;
+}
+
+.MagicScroll {
+  .mcs-button-arrow {
+    .opacity(1);
+    top: 50%;
+    margin-top: -23px;
+    height: 46px;
+    width: 46px;
+    line-height:46px;
+    border:1px solid @light-gray;
+    .transition(opacity 0.2s ease-in);
+    &:before {
+      font-family: "fontawesome";
+      font-size: 34px;
+      color: @gray-base;
+      display: block;
+      margin-top:-3px;
+    }
+    &.mcs-button-arrow-prev {
+      left: 0;
+      &:before {
+        content: "\f104";
+        margin-left:-2px;
+      }
+    }
+    &.mcs-button-arrow-next {
+      right: 0;
+      &:before {
+        content: "\f105";
+        margin-right:-2px;
+      }
+    }
+    &:hover {
+      border-color: @gray-base;
+      &:before {
+        color: @gray-base;
+      }
+    }
+  }
+  &:hover {
+    .mcs-button-arrow {
+      .opacity(1);
+    }
+  }
+}
+
+@media (max-width: @screen-md-max) {
+  .MagicScroll {
+    .mcs-item {
+      width: 33.333333% !important;
+    }
+  }
+}
+
+@media (max-width: (@screen-xs-max)) {
+  .MagicScroll {
+    .mcs-item {
+      width: 50% !important;
+      padding-left:10px;
+      padding-right:10px;
+    }
+  }
+}

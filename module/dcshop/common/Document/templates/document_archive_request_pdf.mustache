@@ -1,0 +1,42 @@
+{{#showRequstPDF}}
+    <div class="modal fade" id="requestPDFModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="formGeneratePDF" name="formGeneratePDF" class="form-label-left" action="{{formURLValue}}">
+                        <h1 class="shop_site_headline"> {{sendMailLabel}}</h1>
+                        <div class="input form-group text "><label for="email">{{emailLabel}}</label><input
+                                name="request_mail_pdf"
+                                id="request_mail_pdf"
+                                class=" form-control code"
+                                type="text"
+                                required
+                                maxlength="100"
+                                value="{{requestPDFEmailValue}}">
+                        </div>
+                        <input type="hidden" name="document_last_search_input" value="{{documentNoSearchValue}}">
+                        <input type="hidden" name="document_last_search_date_range" value="{{dateRangeSearchValue}}">
+                        <input type="hidden" name="page_value" value="{{currentPageValue}}">
+                        <input type="hidden" name="document_type_filter" value="{{documentTypeFilter}}"/>
+                        <input type="hidden" name="document_type" value="{{selectedDocumentType}}">
+                        <input type="hidden" name="document_no" value="{{selectedDocumentNo}}">
+                        <div class="button_row_bottom">
+                            <button type="submit" name="generate_document_pdf" value="true" class="button button_action">{{send}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script type="text/javascript">
+            $(window).load(function(){
+                $('#requestPDFModal').modal('show');
+            });
+        </script>
+{{/showRequstPDF}}

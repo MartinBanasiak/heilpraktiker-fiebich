@@ -1,0 +1,73 @@
+
+// CREATE ARRAYS
+@color-names:
+        'white',
+        'black',
+        'gray-base',
+        'middle-gray',
+        'light-gray',
+        'primary',
+        'second',
+        'action',
+        'danger',
+        'warning',
+        'success',
+        'info';
+@colors:
+        '@{white}',
+        '@{black}',
+        '@{gray-base}',
+        '@{middle-gray}',
+        '@{light-gray}',
+        '@{brand-primary}',
+        '@{brand-second}',
+        '@{brand-action}',
+        '@{brand-danger}',
+        '@{brand-warning}',
+        '@{brand-success}',
+        '@{brand-info}';
+
+// MIXIN
+.make-colors(@color-names, @colors) {
+  .color(@index) when (@index =< length(@colors)) {
+    @name:  extract(@color-names, @index);
+    @value: extract(@colors, @index);
+    @item: ~".color-@{name}";
+    @{item} {
+      color: color(@value);
+    }
+    .color(@index + 1);
+  }
+  .color(1);
+}
+
+.make-bg-colors(@color-names, @colors) {
+  .color(@index) when (@index =< length(@colors)) {
+    @name:  extract(@color-names, @index);
+    @value: extract(@colors, @index);
+    @item: ~".bg-@{name}";
+    @{item} {
+      background-color: color(@value);
+    }
+    .color(@index + 1);
+  }
+  .color(1);
+}
+
+.make-border-colors(@color-names, @colors) {
+  .color(@index) when (@index =< length(@colors)) {
+    @name:  extract(@color-names, @index);
+    @value: extract(@colors, @index);
+    @item: ~".border-@{name}";
+    @{item} {
+      border: 1px solid color(@value);
+    }
+    .color(@index + 1);
+  }
+  .color(1);
+}
+
+// CREATE
+.make-colors(@color-names, @colors);
+.make-bg-colors(@color-names, @colors);
+.make-border-colors(@color-names, @colors);

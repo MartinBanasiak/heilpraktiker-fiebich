@@ -1,0 +1,191 @@
+<?php
+
+namespace DynCom\dc\dcShop\rma;
+
+use DynCom\dc\dcShop\rma\classes\RetShipmentLine;
+use DynCom\dc\dcShop\rma\classes\RMAShipmentViewModel;
+
+/**
+ * @var $model RMAShipmentViewModel
+ */
+?>
+    <div class="return_order">
+        <div class="return_order_header">
+            <div class="return_order_title">
+                <h1><?php echo $this->model->titleString ?></h1>
+            </div>
+            <div class="return_order_text">
+                <?php echo $this->model->mainMessageString ?>
+            </div>
+            <div class="return_order_error">
+                <?php echo $this->model->errorString ?>
+            </div>
+            <div class="return_order_messages">
+                <?php echo $this->model->noticeString ?>
+            </div>
+            <div class="return_order_shipment_header">
+                <div>
+                    <h2><?php echo $this->model->shipmentLabel ?></h2>
+                    <div class="return_order_shipment_info">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-4">
+                                <div class="input form-group text ">
+                                    <label for="return_order_shipment_info_no"><?php echo $this->model->shipmentNoLabel ?></label>
+                                    <input name="return_order_shipment_info_no" id="return_order_shipment_info_no"
+                                           class=" form-control text" type="text" disabled="disabled"
+                                           value="<?php echo htmlspecialchars($this->model->shipment->no) ?>">
+                                </div>
+                                <div class="input form-group text ">
+                                    <label for="return_order_shipment_info_name"><?php echo $this->model->nameLabel ?></label>
+                                    <input name="return_order_shipment_info_name" id="return_order_shipment_info_name"
+                                           class=" form-control text" type="text" disabled="disabled"
+                                           value="<?php echo htmlspecialchars($this->model->shipment->ship_to_name) ?>">
+                                </div>
+                                <div class="input form-group text ">
+                                    <label for="return_order_shipment_info_posting_date"><?php echo $this->model->postingDateLabel ?></label>
+                                    <input name="return_order_shipment_info_posting_date"
+                                           id="return_order_shipment_info_posting_date" class=" form-control text"
+                                           type="text" disabled="disabled"
+                                           value="<?php echo date("d. m. Y", strtotime($this->model->shipment->posting_date)) ?>">
+                                </div>
+                                <div class="input form-group text ">
+                                    <label for="return_order_shipment_info_address"><?php echo $this->model->addressLabel ?></label>
+                                    <input name="return_order_shipment_info_address"
+                                           id="return_order_shipment_info_address" class=" form-control text"
+                                           type="text" disabled="disabled"
+                                           value="<?php echo htmlspecialchars($this->model->shipment->ship_to_address) ?>">
+                                </div>
+                                <div class="input form-group text ">
+                                    <label for="return_order_shipment_info_ship_to_post_code"><?php echo $this->model->postCodeLabel ?></label>
+                                    <input name="return_order_shipment_info_ship_to_post_code"
+                                           id="return_order_shipment_info_ship_to_post_code" class=" form-control text"
+                                           type="text" disabled="disabled"
+                                           value="<?php echo htmlspecialchars($this->model->shipment->ship_to_post_code) ?>">
+                                </div>
+                                <div class="input form-group text ">
+                                    <label for="return_order_shipment_info_ship_to_city"><?php echo $this->model->cityLabel ?></label>
+                                    <input name="return_order_shipment_info_ship_to_city"
+                                           id="return_order_shipment_info_ship_to_city" class="form-control text"
+                                           type="text" disabled="disabled"
+                                           value="<?php echo htmlspecialchars($this->model->shipment->ship_to_city) ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="return_order_result">
+            <form method="POST" action="?shop_category=rma&action=save">
+                <input type="hidden" name="input_header_id" value="<?php echo $this->model->shipment->id ?>"/>
+                <input type="hidden" name="input_rma_email" value="<?php echo $this->model->inputEMail ?>"/>
+                <input type="hidden" name="input_rma_post_code" value="<?php echo $this->model->inputPostCode ?>"/>
+                <input type="hidden" name="input_rma_request" value="<?php echo $this->model->inputRequest ?>"/>
+                <div class="return_order_lines_table  table_area">
+                    <div class="table_row table_header">
+                        <div class="table_cell text-right"><?php echo $this->model->itemNoLabel ?></div>
+                        <div class="table_cell"><?php echo $this->model->descriptionLabel ?></div>
+                        <div class="table_cell text-right"><?php echo $this->model->quantityLabel ?></div>
+                        <div class="table_cell text-right"><?php echo $this->model->qtyReturnedLabel ?></div>
+                        <div class="table_cell text-right"><?php echo $this->model->qtyRemainingLabel ?></div>
+                        <div class="table_cell text-center"><?php echo $this->model->returnQuantityLabel ?></div>
+                        <div class="table_cell text-center"><?php echo $this->model->returnReasonLabel ?></div>
+                    </div>
+                    <?php
+
+                    $i = 0;
+                    foreach ($this->model->shipment->lines as $shipmentLine) {
+                        if ($shipmentLine->type != RetShipmentLine::ITEM_TYPE) {
+                            continue;
+                        }
+                        $returnPossible = ($shipmentLine->returnable_quantity > 0);
+                        $prefillQuantity = (isset($this->linePrefill[$shipmentLine->id]['return_quantity']) ? $this->linePrefill[$shipmentLine->id]['return_quantity'] : '0');
+                        $quantity = ((($shipmentLine->quantity) == floor($shipmentLine->quantity)) ? (int)$shipmentLine->quantity : $shipmentLine->quantity);
+                        $returnQuantity = ((($shipmentLine->quantity_returned) == floor($shipmentLine->quantity_returned)) ? (int)$shipmentLine->quantity_returned : $shipmentLine->quantity_returned);
+                        $returnableQuantity = ((($shipmentLine->returnable_quantity) == floor($shipmentLine->returnable_quantity)) ? (int)$shipmentLine->returnable_quantity : $shipmentLine->returnable_quantity);
+                        ?>
+                        <div class="table_body table_row">
+                            <div class="table_cell text-right"><span
+                                        class="table_cell_label"><?php echo $this->model->itemNoLabel ?></span><span><?php echo $shipmentLine->no ?></span>
+                            </div>
+                            <div class="table_cell"><span
+                                        class="table_cell_label"><?php echo $this->model->descriptionLabel ?></span><span><?php echo $shipmentLine->description ?></span>
+                            </div>
+                            <div class="table_cell text-right"><span
+                                        class="table_cell_label"><?php echo $this->model->quantityLabel ?></span><span><?php echo $quantity ?></span>
+                            </div>
+                            <div class="table_cell text-right"><span
+                                        class="table_cell_label"><?php echo $this->model->qtyReturnedLabel ?></span><span><?php echo $returnQuantity ?></span>
+                            </div>
+                            <div class="table_cell text-right"><span
+                                        class="table_cell_label"><?php echo $this->model->qtyRemainingLabel ?></span><span><?php echo $returnableQuantity ?></span>
+                            </div>
+                            <div class="table_cell text-center">
+                                <? if ($returnPossible) { ?>
+                                    <input type="hidden" name="input_lines[<?php echo $i ?>][line_id]"
+                                           value="<?php echo $shipmentLine->id ?>"/>
+                                    <span class="table_cell_label"><?php echo $this->model->returnQuantityLabel ?></span>
+                                    <span><input type="number"
+                                                 name="input_lines[<?php echo $i ?>][return_quantity]"
+                                                 min="0"
+                                                 max="<?php echo $shipmentLine->returnable_quantity ?>"
+                                                 value="<?php echo $prefillQuantity ?>"
+                                                 style="text-align:center"/></span>
+                                <? } ?>
+                            </div>
+                            <div class="table_cell text-center">
+                                <? if ($returnPossible) { ?>
+                                    <span class="table_cell_label"><?php echo $this->model->returnReasonLabel ?></span>
+                                    <span>
+                                    <div class="select_body" style="min-width:100px;">
+                                        <select name="input_lines[<?php echo $i ?>][return_reason_id]">
+                                            <option><?php echo $this->model->pleaseChooseText ?></option>
+                                            <?php
+                                            foreach ($this->model->returnReasonCollection as $reason) {
+                                                $selected = (((isset($this->model->linePrefill[$shipmentLine->id]['return_reason_id'])) && ($this->model->linePrefill[$shipmentLine->id]['return_reason_id'] == $reason->id)) ? 'selected' : '');
+                                                ?>
+                                                <option
+                                                        value="<?php echo $reason->id ?>" <?php echo $selected ?>><?php echo $reason->description ?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </span>
+                                <? } ?>
+                            </div>
+                        </div>
+                        <?php
+                        ++$i;
+                    }
+                    ?>
+                </div>
+                <div class="reference_wrapper">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="input form-group text ">
+                                <label for="input_rma_request"><?php echo $this->model->yourReferenceLabel ?></label>
+                                <input name="input_your_reference" id="input_your_reference" class=" form-control text"
+                                       type="text" maxlength="80">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="button_row">
+                    <a class="button button_back"
+                       href="<?php echo $this->model->linkBack ?>"
+                    ><?php echo $this->model->backButtonLabel ?></a>
+                    <input type='submit' class="button button-proceed"
+                           value="<?php echo $this->model->sendButtonLabel ?>"/>
+                </div>
+
+            </form>
+        </div>
+    </div>
+<?php if (file_exists(rtrim($_SERVER['DOCUMENT_ROOT'], '/') . $this->model->scriptletPath) && is_readable(rtrim($_SERVER['DOCUMENT_ROOT'], '/') . $this->model->scriptletPath)) { ?>
+    <script type="text/javascript" src="<?php echo $this->model->scriptletPath ?>"></script>
+<?php } ?>
+<? /*<?php if(file_exists(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->styleFilePath) && is_readable(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->styleFilePath)) { ?>
+    <link type="text/css" rel="stylesheet" href="<?php echo $this->model->styleFilePath ?>" />
+<?php } ?>*/
+?>

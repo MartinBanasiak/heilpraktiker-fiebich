@@ -1,0 +1,13 @@
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+    <div class="form-group">
+        <label for="input_shipping_line_no">{{headLine}}</label>
+        <div class="select_body">
+            <select onchange="this.form.submit();" class="select_2" name="input_shipping_line_no" id="input_shipping_line_no">
+                {{#shippingOptionCollection}}
+                <option {{#isSelectedOption}}{{line_no}}{{/isSelectedOption}} value="{{line_no}}">{{description}} (+ {{#formatAmount}}{{shipping_cost}}{{/formatAmount}})</option>
+                {{/shippingOptionCollection}}
+            </select>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>

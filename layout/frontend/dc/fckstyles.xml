@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Styles>
+	<Style name="Üerschrift 1" element="h1" />
+	<Style name="Überschrift 2" element="h2" />
+	<Style name="Überschrift 3" element="h3" />
+	<Style name="Überschrift 4" element="h4" />
+	<Style name="Überschrift 5" element="h5" />
+	<Style name="Überschrift 6" element="h6" />
+</Styles>

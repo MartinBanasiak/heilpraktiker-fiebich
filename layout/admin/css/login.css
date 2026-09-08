@@ -1,0 +1,59 @@
+#container_1 {
+	background-color:#99C137;
+	width:330px;
+	display:block;
+	height:100%;
+	position:fixed;
+	left:0px;
+	top:0px;
+	background-image:url('../img/2016/dynamiccommerce.svg');
+	background-position:center 160px;
+	background-repeat:no-repeat;
+	background-size: 220px auto;
+}
+
+#header {
+	display:none;
+}
+
+#login_2 div.label {
+	color: #AFAFAF;
+	background:none;
+	font-size:14px;
+	margin-bottom:8px;
+	padding-left:5px;
+	height:15px;
+	font-family: 'SourceSansPro-Light';
+	line-height:normal;
+}
+
+#login_2 div.input {
+	width:100%;
+	float:left;
+	font-size:12px;
+	margin-bottom:15px;
+}
+
+input.code {
+	border: 1px solid #ccc;
+	padding: 10px;
+	width:250px;
+	font-size:14px;
+}
+
+#login_2 input.button {
+	border:none;
+	background:none;
+	font-size:22px;
+	color:#9AC238;
+	font-weight:normal;
+	height:auto;
+	text-align:left;
+	cursor:pointer;
+	float:left;
+	width:auto;
+	padding-left:38px;
+	background-image:url('../img/2015/anmelden_pfeil.png');
+	background-repeat:no-repeat;
+	background-position:5px center;
+}

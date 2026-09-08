@@ -1,0 +1,105 @@
+.slidecontent h3.slidecontent_headline{
+
+	color: #99C137;
+
+	font-size: 16px;
+
+	font-weight: bold;
+
+	padding: 0;
+
+	margin: 0;
+
+}
+
+
+div.slidecontent {
+
+	line-spacing: 145%;
+
+}
+
+div.slidecontent_headline {
+
+	color:#99c137;
+
+	cursor: pointer;
+
+	text-align:justify;
+
+	line-height: 200%;
+
+	padding-top: 1em;
+
+	padding-bottom: 1em;
+	
+	margin-top: 0px;
+
+	border-top: 1px dotted gray;
+
+}
+
+div.slidecontent_content {
+	display: block;
+	
+	text-align: justify;
+
+	max-width: 540px;
+
+	margin-left: 0;
+
+	padding-left: 0px;
+	
+	padding-right: 14px;
+	
+	padding-bottom: 1em;
+
+	line-height: 150%;
+	
+}
+
+a.slidecontent_headline {
+
+	text-decoration: none;
+
+	background-color: transparent;
+
+}
+
+a:link.slidecontent_headline {
+
+	color:#99c137;
+
+	text-decoration: none;
+
+}	
+
+a:hover.slidecontent_headline {
+
+	color:#333;
+
+	background-color: transparent;
+
+	text-decoration: none;
+
+}
+
+.slidecontent_content_background {
+
+	background-image: url('../../../../userdata/image/manual/antwort_mid.png');
+
+	background-repeat: repeat-y;
+
+	padding-left: 10px;
+
+	padding-right: 12px;
+
+}
+
+.slidecontent_content_top_image {
+background-image: url('/userdata/image/manual/antwort_top.png');
+}
+
+.slidecontent_content_bot_image {
+background-image: url('/userdata/image/manual/antwort_bot.png');
+}

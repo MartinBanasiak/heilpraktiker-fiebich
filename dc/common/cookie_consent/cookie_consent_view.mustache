@@ -1,0 +1,61 @@
+{{#cookieConsentRequired}}
+    {{^alreadyConsented}}
+        <div id="cookie-consent-wrapper" class="cookieBar" style="display:none;">
+            <div>
+                <span id="cookie-consent-message" class="cookieBar__message">{{message}}</span>
+                <button id="cookie-consent-button" class="cookieBar__button">{{buttonText}}</button>
+            </div>
+        </div>
+        <script type="text/javascript">
+
+            function showCookieConsentDialog(wrapperID) {
+                document.getElementById(wrapperID).style.display = 'block';
+            }
+
+            function hideCookieConsentDialog(wrapperID) {
+                document.getElementById(wrapperID).style.display = 'none';
+            }
+
+            function hasConsentCookie(name,value) {
+                return (document.cookie.split('; ').indexOf(name + '=' + value) !== -1);
+            }
+
+            function consentToCookies(config) {
+                setCookie(config.cookieName, config.cookieConsentValue, config.cookieConsentExpirationDays, config.useSecureCookies);
+                hideCookieConsentDialog(config.cookieConsentWrapperID);
+            }
+
+            function setCookie(name, value, expirationDays, secure) {
+                let date= new Date(),
+                    secureString = secure ? ';secure' : '';
+
+                date.setTime(date.getTime() + (parseInt(expirationDays) * 24 * 60 * 60 * 1000));
+
+                let dateString = date.toUTCString(),
+                    consentCookie = name + '=' + value + '; ' + 'expires=' + dateString + ';path=/' + secureString;
+
+                document.cookie = consentCookie;
+            }
+
+            function bootstrap() {
+                const config  = {
+                    cookieName: '{{cookieName}}',
+                    cookieConsentValue: 1,
+                    cookieConsentWrapperID: 'cookie-consent-wrapper',
+                    cookieConsentButtonID: 'cookie-consent-button',
+                    cookieConsentExpirationDays: {{cookieConsentExpirationDays}},
+                    useSecureCookies: {{useSecureCookies}}
+                };
+
+                if (!hasConsentCookie(config.cookieName,config.cookieConsentValue)) {
+                    document.getElementById(config.cookieConsentButtonID).addEventListener('click', function(e) {
+                        consentToCookies(config);
+                    });
+                    showCookieConsentDialog(config.cookieConsentWrapperID);
+                }
+            }
+
+            bootstrap();
+        </script>
+    {{/alreadyConsented}}
+{{/cookieConsentRequired}}

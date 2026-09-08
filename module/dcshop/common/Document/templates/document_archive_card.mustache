@@ -1,0 +1,294 @@
+<div class="modal fade" id="itemCardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h1 class="shop_site_headline"> {{document.getDocumentTypeText}}: {{document.getDocumentNo}}</h1>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="form-label-left">
+                            <div class="input form-group text ">
+                                <label for="sales_invoice_date">{{dateLabel}}</label>
+                                <input name="document_date" id="document_date" class=" form-control code"
+                                       type="text" disabled="disabled" maxlength="50"
+                                       value="{{document.getDocumentDate}}">
+                            </div>
+                            <div class="input form-group text "><label
+                                    for="customer_no">{{customerNoLabel}}</label><input
+                                    name="customer_no" id="customer_no" class=" form-control code" type="text"
+                                    disabled="disabled" maxlength="50" value="{{document.getCustomerNo}}"></div>
+                            <div class="input form-group text "><label for="name">{{nameLabel}}</label><input
+                                    name="name"
+                                    id="name"
+                                    class=" form-control code"
+                                    type="text"
+                                    disabled="disabled"
+                                    maxlength="50"
+                                    value="{{document.getDocumentName}}">
+                            </div>
+                            <div class="input form-group text "><label for="email">{{emailLabel}}</label><input
+                                    name="email"
+                                    id="email"
+                                    class=" form-control code"
+                                    type="text"
+                                    disabled="disabled"
+                                    maxlength="50"
+                                    value="{{document.getDocumentEmail}}">
+                            </div>
+                            {{#document.your_reference}}
+                                <div class="input form-group text "><label
+                                        for="your_reference">{{referenceLabel}}</label><input name="your_reference"
+                                                                                              id="your_reference"
+                                                                                              class=" form-control code"
+                                                                                              type="text"
+                                                                                              disabled="disabled"
+                                                                                              maxlength="50"
+                                                                                              value="{{document.your_reference}}">
+
+                                </div>
+                            {{/document.your_reference}}
+                            {{#document.your_comment}}
+                                <div class="input form-group text "><label
+                                        for="your_reference">{{commentLabel}}</label><input name="your_comment"
+                                                                                            id="your_comment"
+                                                                                            class=" form-control code"
+                                                                                            type="text"
+                                                                                            disabled="disabled"
+                                                                                            maxlength="50"
+                                                                                            value="{{document.your_comment}}">
+                                </div>
+                            {{/document.your_comment}}
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6">
+                        <div class="row">
+                            <div class="col-xs-12 xs-margin sm-margin col-md-6">
+                                <strong>{{invoiceAddressLabel}}</strong><br>
+                                {{document.bill_to_name}}<br>
+                                {{#document.bill_to_name_2}} {{document.bill_to_name_2}}
+                                    <br> {{/document.bill_to_name_2}}
+                                {{document.bill_to_address}}<br>
+                                {{#document.bill_to_address_2}} {{document.bill_to_address_2}}
+                                    <br> {{/document.bill_to_address_2}}
+                                {{document.bill_to_post_code}}  {{document.bill_to_city}}<br>
+                                {{document.bill_to_country}} <br>
+
+                            </div>
+                            <div class="col-xs-12 xs-margin sm-margin col-md-6">
+                                <strong>{{shipmentAddressLabel}}</strong><br>
+                                {{document.ship_to_name}}<br>
+                                {{#document.ship_to_name_2}} {{document.ship_to_name_2}}
+                                    <br> {{/document.ship_to_name_2}}
+                                {{document.ship_to_address}}<br>
+                                {{#document.ship_to_address_2}} {{document.ship_to_address_2}}
+                                    <br> {{/document.ship_to_address_2}}
+                                {{document.ship_to_post_code}}  {{document.ship_to_city}}<br>
+                                {{document.ship_to_country}} <br>
+
+                            </div>
+
+                            {{#document.tracking_link}}
+                                <div class="col-xs-12 xs-margin sm-margin col-md-6">
+                                    <a target="_blank" href="{{document.tracking_link}}"> {{trackShipmentLabel}}:&nbsp;{{document.tracking_no}}</a>
+                                </div>
+                            {{/document.tracking_link}}
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="itemtable_list itemtable_list8 table_area">
+                    <div class="itemtable_row table_row table_header">
+                        {{#displayItemImage}}
+                            <div class="table_cell"><label><strong>
+                            </strong></label></div>
+                        {{/displayItemImage}}
+                        <div class="table_cell"><label><strong>{{itemNoHeader}}</strong></label></div>
+
+                        {{#displayTypeHeader}}
+                            <div class="table_cell"><label><strong>{{typeDisplayedValue}}</strong></label></div>
+                        {{/displayTypeHeader}}
+
+                        <div class="table_cell"><label><strong>{{descriptionHeader}}</strong></label></div>
+
+
+                        <div class="table_cell"><label><strong>{{quantityHeader}}</strong></label></div>
+                        {{#displayUnitOfMeasure}}
+                            <div class="table_cell"><label><strong>{{unitOfMeasureHeader}}</strong></label></div>
+                        {{/displayUnitOfMeasure}}
+                        {{#displayLinePrice}}
+                            <div class="table_cell"><label><strong>{{priceHeader}} </strong></label></div>
+                            <div class="table_cell"><label><strong>{{totalPriceHeader}}</strong></label></div>
+                        {{/displayLinePrice}}
+                    </div>
+                    {{#document.getLines}}
+
+                        <div id="item_{{getLineItemNo}}" class="itemtable_row table_row">
+                            {{#displayItemImage}}
+                                <div class="table_cell item_no_line">
+                                    <div>
+                                        <img src="{{getWebshopItemImagePath}}" border="0" alt="{{description}}"
+                                             title="{{description}}">
+                                    </div>
+                                </div>
+                            {{/displayItemImage}}
+                            <div class="table_cell item_no_line">
+                                {{getLineItemNo}}
+                                {{#variant_code}}
+                                    <br/>
+                                    {{variantLabel}}&nbsp;{{variant_code}}
+                                {{/variant_code}}
+
+                            </div>
+
+                            {{#displayTypeHeader}}
+                                <div class="table_cell item_no_line">
+                                    {{typeText}}
+                                </div>
+                            {{/displayTypeHeader}}
+
+                            <div class="table_cell item_no_line">
+                                {{description}}
+                            </div>
+                            <div class="table_cell item_no_line">
+                                {{getQuantity}}
+                            </div>
+                            {{#displayUnitOfMeasure}}
+                                <div class="table_cell item_no_line">
+                                    {{unit_of_measure}}
+                                </div>
+                            {{/displayUnitOfMeasure}}
+                            {{#displayLinePrice}}
+                                <div class="table_cell item_no_line" style="width: 110px !important;">
+                                    {{getUnitPrice}}
+                                </div>
+                                <div class="table_cell item_no_line">
+                                    {{getLineAmount}}
+                                </div>
+                            {{/displayLinePrice}}
+                        </div>
+                    {{/document.getLines}}
+                </div>
+                {{#displayLinePrice}}
+                    <div class="order_prices_box">
+                        <div class="order_prices_box_left">
+                            {{{leftOrderBoxLabel}}}
+                        </div>
+                        <div class="order_prices_box_right">
+                            <table width="100%">
+                                <tbody>
+
+                                {{#orderValue}}
+                                    <tr>
+                                        <td class="order_sum_1">
+                                            {{orderLabel}}
+                                        </td>
+                                        <td class="order_sum_2 text-right">
+                                            <div class="order_price_total">
+                                                {{orderValue}}&nbsp;{{document.getCurrencyCode}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {{/orderValue}}
+
+                                {{#smallQuantityChargeValue}}
+                                    <tr>
+                                        <td class="order_sum_1">
+                                            {{smallQuantityChargeLabel}}
+                                        </td>
+                                        <td class="order_sum_2 text-right">
+                                            + {{smallQuantityChargeValue}}&nbsp;{{document.getCurrencyCode}}
+                                        </td>
+                                    </tr>
+                                {{/smallQuantityChargeValue}}
+
+                                {{#shippingCostValue}}
+                                    <tr>
+                                        <td class="order_sum_1">
+                                            {{shippingCostLabel}}
+                                        </td>
+                                        <td class="order_sum_2 text-right">
+                                            + {{shippingCostValue}}&nbsp;{{document.getCurrencyCode}}
+                                        </td>
+                                    </tr>
+                                {{/shippingCostValue}}
+
+
+                                {{#paymentCostValue}}
+                                    <tr>
+                                        <td class="order_sum_1">
+                                            {{paymentCostLabel}}
+                                        </td>
+                                        <td class="order_sum_2 text-right">
+                                            + {{paymentCostValue}}&nbsp;{{document.getCurrencyCode}}
+                                        </td>
+                                    </tr>
+                                {{/paymentCostValue}}
+
+
+                                {{#onlineDiscountValue}}
+                                    <tr>
+                                        <td class="order_sum_1">
+                                            {{onlineDiscountPercent}} % {{onlineDiscountLabel}}
+                                        </td>
+                                        <td class="order_sum_2 text-right">
+                                            -    {{onlineDiscountValue}}&nbsp;{{document.getCurrencyCode}}
+                                        </td>
+                                    </tr>
+                                {{/onlineDiscountValue}}
+
+                                {{#invoiceDiscountValue}}
+                                    <tr>
+                                        <td class="order_sum_1">
+                                            {{invoiceDiscountPercent}} % {{invoiceDiscountLabel}}
+                                        </td>
+                                        <td class="order_sum_2 text-right">
+                                            -    {{invoiceDiscountValue}}&nbsp;{{document.getCurrencyCode}}
+                                        </td>
+                                    </tr>
+                                {{/invoiceDiscountValue}}
+
+
+                                {{#couponAmountValue}}
+                                    <tr>
+                                        <td class="order_sum_1">
+                                            {{couponAmountLabel}}
+                                        </td>
+                                        <td class="order_sum_2 text-right">
+                                            - {{couponAmountValue}}&nbsp;{{document.getCurrencyCode}}
+                                        </td>
+                                    </tr>
+                                {{/couponAmountValue}}
+
+
+                                <tr>
+                                    <td class="order_sum_1">
+                                        <div class="order_price_total_label">{{sumLabel}}</div>
+                                    </td>
+                                    <td class="order_sum_2 text-right">
+                                        <div class="order_price_total">
+                                            {{document.getDocumentAmount}}&nbsp;{{document.getCurrencyCode}}
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {{/displayLinePrice}}
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(window).load(function(){
+        $('#itemCardModal').modal('show');
+    });
+</script>

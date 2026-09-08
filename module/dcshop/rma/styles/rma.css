@@ -1,0 +1,175 @@
+.noticebox {
+    padding      : 8px;
+    border       : 2px solid rgb(255, 223, 0);
+}
+
+div.return_order, div.return_order * {
+    box-sizing : border-box;
+}
+
+.return_order_text {
+    margin-top    : 20px;
+    margin-bottom : 20px;
+}
+
+.return_order_form_wrapper {
+    margin-top    : 30px;
+    margin-bottom : 20px;
+}
+
+div.return_order div.label {
+    height           : 26px;
+    float            : left;
+    clear            : left;
+    padding          : 5px 0 0 8px;
+    margin           : 0 0 10px 0;
+    background-color : rgb(245, 245, 245);
+}
+
+div.return_order .input {
+    margin  : 0 0 10px 0;
+    padding : 0;
+    height  : 25px;
+    float   : left;
+}
+
+div.return_order input[type=text], div.return_order input[type=code], div.return_order input [type=select], div.return_order input[type=number] {
+    height  : 26px;
+    margin  : 0;
+    padding : 0;
+    width   : 200px;
+}
+
+div.return_order .button {
+    margin-top : 20px;
+    clear      : left;
+}
+
+div.return_order .button input[type="submit"] {
+    width  : 100px;
+    height : 25px;
+}
+
+div.return_order div.toolbar-list {
+    margin-top    : 40px;
+    padding       : 0;
+    margin-bottom : 0;
+    border        : 0px none;
+}
+
+div.return_order table.linklist tr:first-child {
+    background-color : rgb(3, 81, 151);
+    color            : #ffffff;
+    border           : 0px none;
+}
+
+div.return_order a.button_edit {
+    height              : 35px;
+    display             : block;
+    width               : 140px;
+    padding             : 11px 0 0 5px;
+    background          : rgb(245, 245, 245) 8px 11px;
+    margin              : 0 0 0 0;
+    text-align          : center;
+}
+
+div.return_order a.button_edit:hover {
+    background-color : rgb(200, 200, 200);
+}
+
+.return_order_shipment_header {
+    margin-top : 30px;
+}
+
+.return_order_shipment_info {
+    margin-top    : 10px;
+    margin-bottom : 30px;
+    border        : 1px solid rgb(3, 82, 151);
+    padding       : 10px;
+}
+
+div.return_order table {
+    border-collapse : collapse;
+}
+
+div.return_order table thead th {
+    color            : #ffffff;
+    background-color : rgb(3, 81, 151);
+    height           : 30px;
+    font-weight      : normal;
+}
+
+div.return_order td.tlabel {
+    width            : 200px;
+    height           : 30px;
+    background-color : rgb(245, 245, 245);
+    padding          : 5px;
+}
+
+div.return_order table tr td {
+    height  : 30px;
+    padding : 0;
+    margin  : 0;
+}
+
+div.return_order table tr div {
+    padding : 0;
+    margin  : 0;
+}
+
+div.return_order td.tcontent {
+    padding-left : 20px;
+}
+
+div.return_order div.return_order_result table {
+    width         : 100%;
+    margin-bottom : 30px;
+    margin-top    : 0;
+}
+
+div.return_order div.return_order_result input[type="number"] {
+    text-align: right;
+    padding-right: 3px;
+    width : 50px;
+}
+
+div.return_order_shipment_info table {
+    border-collapse : separate !important;
+}
+
+div.return_order div.return_order_result select {
+    height : 26px;
+}
+
+div.return_order div.return_order_result table tr td {
+    height : 45px;
+}
+
+div.return_order div.return_order_result table tr:first-child td {
+    height : 35px;
+}
+
+div.return_order div.return_order_result table.return_order_lines_table tr:first-child td {
+    height : 45px;
+}
+
+div.return_order div.return_order_result table tr:nth-child(even) td {
+    background-color : rgb(245, 245, 245);
+}
+
+div.return_order div.button-back {
+    float       : left;
+    height      : 25px;
+    padding-top : 5px;
+    margin-top  : 22px;
+}
+
+div.return_order div.button-proceed {
+    float : right;
+    clear : right;
+}
+
+
+div.return_order input[type="number"] {
+    text-align: right;
+}

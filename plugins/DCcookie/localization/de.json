@@ -1,0 +1,356 @@
+{
+  "general": {
+    "welcome": "<strong>Wir verwenden Cookies</strong><br>Wir können diese zur Analyse unserer Besucherdaten platzieren, um unsere Website zu verbessern, personalisierte Inhalte anzuzeigen und Ihnen ein großartiges Website-Erlebnis zu bieten. Für weitere Informationen zu den von uns verwendeten Cookies öffnen Sie die Einstellungen.",
+    "time": "Cookie-Laufzeit",
+    "accept": "Alle akzeptieren",
+    "accept_one": "Akzeptieren",
+    "activate": "Aktiviert",
+    "allow_essential_text": "Nur essenzielle Cookies akzeptieren",
+    "back": "Zurück",
+    "cookie_name": "Cookie Name",
+    "cookie_time": "Laufzeit",
+    "cookie_settings": "Cookie Einstellungen",
+    "deactivate": "Deaktiviert",
+    "decine": "Verweigern",
+    "essential": "Essenziell",
+    "essential_text": "Essenzielle Cookies ermöglichen grundlegende Funktionen und sind für die einwandfreie Funktion der Website erfolderlich.",
+    "external_media": "Externe Medien",
+    "external_media_text": "Inhalte von Videoplattformen und Social Media Plattformen werden standardmäßig blockiert. Wenn Cookies von externen Medien akzeptiert werden, bedarf der Zugriff auf diese Inhalte keiner manuellen Zustimmung mehr.",
+    "history": "Historie",
+    "hosts": "Host(s)",
+    "imprint": "Impressum",
+    "imprint_link": "IMPRINT_LINK",
+    "marketing": "Marketing",
+    "marketing_text": "Marketing Cookies werden von Drittanbietern oder Publishern verwendet, um personalisierte Werbung anzuzeigen. Sie tun dies, indem sie Besucher über Websites hinweg verfolgen.",
+    "more_information": "Mehr Infos",
+    "name": "Name",
+    "private_polacy": "Datenschutz",
+    "private_polacy_link": "PRIVATE_POLICY_LINK",
+    "provider": "Anbieter",
+    "provider_group_headline": "DATENSCHUTZEINSTELLUNGEN",
+    "provider_group_text": "Hier finden Sie eine Übersicht über alle verwendeten Cookies. Sie können Ihre Zustimmung zu ganzen Kategorien geben oder sich weitere Informationen anzeigen lassen und so nur bestimmte Cookies auswählen",
+    "provider_text": "Speichert die Einstellungen der Besucher, die in der Cookie Box ausgewählt wurden und steuert die Anzeige der Cookie Einstellungen.",
+    "purpose": "Zweck",
+    "save": "Speichern",
+    "save_and_close": "Einstellungen speichern &amp; schließen",
+    "show_all": "Alle akzeptieren",
+    "show_cookie_information": "Cookie Informationen anzeigen",
+    "statistics": "Statistiken",
+    "statistics_text": "Statistik Cookies erfassen Informationen anonym. Diese Informationen helfen uns zu verstehen, wie unsere Besucher unsere Website nutzen.",
+    "take_all": "Alle akzeptieren",
+    "website_owner": "Eigentümer der Website",
+    "external_info_headline": "<strong>Wir brauchen Ihr Einverständnis!</strong>",
+    "external_info_text": "Wir benutzen Drittanbieter (hier '{{provider.name}}'), um Inhalte einzubinden. Diese können persönliche Daten über Ihre Aktivitäten sammeln. Bitte beachten Sie die Details und geben sie Ihre Einwilligung.",
+    "external_accept": "Externe Medien Akzeptieren"
+  },
+  "provider": {
+    "awin": {
+      "cookie_name": "_aw_m_****",
+      "cookie_time": "30 Tage",
+      "name": "AWIN",
+      "private_polacy_link": "https://www.awin.com/de/rechtliches/privacy-policy",
+      "text": "Cookie von AWIN für Website-Analysen. Erzeugt statistische Daten darüber, wie der Besucher die Website nutzt.",
+      "website_owner": "AWIN AG"
+    },
+    "cookie_consent": {
+      "cookie_name": "sid*",
+      "cookie_time": "1 Jahr",
+      "name": "Seitencookies",
+      "private_polacy_link": "PRIVATE_POLICY_LINK",
+      "text": "Wird verwendet um notwendige Funktionen der Webseite sicherzustellen.",
+      "website_owner": "Eigentümer der Website"
+    },
+    "facebook_connect": {
+      "cookie_time": "Daten werden nach der Verarbeitung gelöscht.",
+      "name": "Facebook Connect",
+      "private_polacy_link": "https://www.facebook.com/policies/cookies/",
+      "text": "Wird verwendet, um sich als Benutzer mit seinem Facebook-Konto anmelden zu können.",
+      "website_owner": "Facebook Ireland Limited"
+    },
+    "facebook_pixel": {
+      "cookie_name": "_fbp,act,c_user,datr,fr,m_pixel_ration,pl,presence,sb,spin,wd,xs",
+      "cookie_time": "Sitzung / 1 Jahr",
+      "name": "Facebook Pixel",
+      "private_polacy_link": "https://www.facebook.com/policies/cookies",
+      "text": "Cookie von Facebook, das für Website-Analysen, Ad-Targeting und Anzeigenmessung verwendet wird.",
+      "website_owner": "Facebook Ireland Limited"
+    },
+    "google_analytics": {
+      "cookie_name": "_ga, _gid, _gat, _gat_***, __utma, __utmb, __utmc, __utmv, __utmt __utmx, __utmz, 1P_JAR, AID, ANID, APISID, HSID, NID, SAPISID, SID, SIDCC, SSID, __Secure-3PAPISID, __Secure-3PSID, DV",
+      "cookie_time": "1-2 Jahre / Sitzung",
+      "name": "Google Analytics",
+      "private_polacy_link": "https://policies.google.com/privacy",
+      "text": "Cookie von Google für Website-Analysen. Erzeugt statistische Daten darüber, wie der Besucher die Website nutzt.",
+      "website_owner": "Google LLC"
+    },
+    "google_maps": {
+      "cookie_name": "NID",
+      "cookie_time": "6 Monate",
+      "name": "Google Maps",
+      "private_polacy_link": "https://policies.google.com/privacy",
+      "text": "Wird zum Entsperren von Google Maps-Inhalten verwendet.",
+      "website_owner": "Google"
+    },
+    "google_tag_manager": {
+      "cookie_name": "_ga / _gid / _gat",
+      "cookie_time": "1 Jahr",
+      "name": "Google Tag Manager",
+      "private_polacy_link": "https://policies.google.com/privacy?hl=de",
+      "text": "Cookies vom Google Tag Manager organisieren alle Tags von Drittanbietern auf der Webseite.",
+      "website_owner": "Google Ireland Limited"
+    },
+    "instagram": {
+      "cookie_name": "pigeon_state",
+      "cookie_time": "Sitzung",
+      "name": "Instagram",
+      "private_polacy_link": "https://www.instagram.com/legal/privacy/",
+      "text": "Wird verwendet, um Instagram-Inhalte zu entsperren.",
+      "website_owner": "Facebook"
+    },
+    "matomo": {
+      "cookie_name": "_pk_id / MATOMO_SESSID",
+      "cookie_time": "1 Jahr / Sitzung",
+      "name": "Matomo",
+      "private_polacy_link": "https://matomo.org/privacy-policy/",
+      "text": "Cookie von Matomo für Website-Analysen. Erzeugt statistische Daten darüber, wie der Besucher die Website nutzt.",
+      "website_owner": "Matomo"
+    },
+    "microsoft_bing_ads": {
+      "cookie_name": "_uetsid, _uetvid, MUID, BFB, OIDI, SRCHD, SRCHUID, _EDGE_S, _SS",
+      "cookie_time": "1 Jahr / 180 Tage",
+      "name": "Microsoft Bing Ads",
+      "private_polacy_link": "https://about.ads.microsoft.com/de-de/ressourcen/richtlinien/privacy-policy",
+      "text": "Cookie von Microsoft für Website-Analysen. Erzeugt statistische Daten darüber, wie der Besucher die Website nutzt.",
+      "website_owner": "Microsoft Corporation"
+    },
+    "linked_in": {
+      "cookie_time": "Daten werden nach der Verarbeitung gelöscht.",
+      "name": "LinkedIn",
+      "private_polacy_link": "https://www.linkedin.com/legal/cookie-policy",
+      "text": "Wird verwendet um LinkedIn-Inhalte zu entsperren",
+      "website_owner": "LinkedIn Ireland Unlimited Company, LinkedIn Inc"
+    },
+    "omnisend": {
+      "cookie_name": "soundest-s3<account identifier>, soundest-c3<account identifier>, <account identifier>-aID, <account identifier>-sID, <account identifier>-cID, <account identifier>-eID, soundestID, omnisendAnonymousID, omnisendSessionID, omnisendAttributionID, omnisendContactID, omnisendEmailID",
+      "cookie_time": "1-10 Jahre",
+      "name": "OmniSend",
+      "private_polacy_link": "https://support.omnisend.com/en/articles/1933402-explaining-and-managing-tracking-cookies",
+      "text": "Cookies von OmniSend sind für Website-Analysen. Erzeugt statische Daten darüber, wie der Besucher die Website nutzt.",
+      "website_owner": "OmniSend Limited Unit"
+    },
+    "open_street_map": {
+      "cookie_name": "_osm_location, _osm_session, _osm_totp_token, _osm_welcome, _pk_id., _pk_ref., _pk_ses., qos_token",
+      "cookie_time": "1-10 Jahre",
+      "hosts": ".openstreetmap.org",
+      "name": "OpenStreetMap",
+      "private_polacy_link": "https://wiki.osmfoundation.org/wiki/Privacy_Policy",
+      "text": "Wird verwendet, um OpenStreetMap-Inhalte zu entsperren.",
+      "website_owner": "OpenStreetMap Foundation"
+    },
+    "recaptcha": {
+      "cookie_name": "NID",
+      "cookie_time": "6 Monate",
+      "name": "Google reCAPTCHA",
+      "private_polacy_link": "https://policies.google.com/privacy",
+      "text": "Wird zum Entsperren von Google reCAPTCHA verwendet.",
+      "website_owner": "Google"
+    },
+    "shopify": {
+      "cookie_name": "_shopify_fs, _shopify_s, _shopify_sa_p, _shopify_sa_t, _shopify_y",
+      "cookie_time": "2 Jahre",
+      "name": "Shopify",
+      "private_polacy_link": "https://www.shopify.de/legal/datenschutz",
+      "text": "Cookies von Shopify für Website-Analysen. Erzeug statistische Daten darüber, wie der Besucher die Website nutzt.",
+      "website_owner": "Shopify International Limited"
+    },
+    "side_code_cookie": {
+      "cookie_name": "sid<site_code>",
+      "cookie_time": "Sitzung",
+      "name": "Seiten Code",
+      "text": "Speichert den zuletzt verwendeten Seiten Code.",
+      "website_owner": "Eigentümer der Website"
+    },
+    "spotify": {
+      "cookie_name": "sp_landing, sp_t, sp_landing",
+      "cookie_time": "1 Tag",
+      "name": "Spotify",
+      "private_polacy_link": "https://www.spotify.com/de/legal/cookies-policy/",
+      "text": "Wird zum Entsperren von Spotify-Inhalten verwendet.",
+      "website_owner": "Spotify AB"
+    },
+    "hubspot": {
+      "cookie_name": "__hs_initial_opt_in, __hs_opt_out, __hssc, __hssrc, __hstc, hs-messages-is-open, hubspotutk, messagesUtk, hs-messages-hide-welcome-message, __hs_do_not_track",
+      "cookie_time": "1 Jahr / Sitzung",
+      "name": "Hubspot",
+      "private_polacy_link": "https://legal.hubspot.com/privacy-policy",
+      "text": "Dies ist ein Service, welcher statische Daten darüber erzeugt wie ein Besucher die Webseite nutzt und die Chatfunktionalität zur Verfügung stellt.",
+      "website_owner": "HubSpot, Inc."
+    },
+    "trusted_shops": {
+      "cookie_name": "-",
+      "cookie_time": "-",
+      "name": "Trusted Shops",
+      "private_polacy_link": "https://business.trustedshops.de/impressum#datenschutz",
+      "text": "Dies ist ein Service, der Online-Vertrauen und -Sicherheit für Online-Händler und -Käufer gewährleistet.",
+      "website_owner": "Trusted Shops GmbH"
+    },
+    "twitter": {
+      "cookie_name": "_widgetsettings, local_storage_support_test",
+      "cookie_time": "Unbegrenzt",
+      "hosts": ".twimg.com, .twitter.com",
+      "name": "Twitter",
+      "private_polacy_link": "https://twitter.com/privacy",
+      "text": "Wird verwendet, um Twitter-Inhalte zu entsperren.",
+      "website_owner": "Twitter"
+    },
+    "vimeo": {
+      "cookie_name": "vuid",
+      "cookie_time": "2 Jahre",
+      "hosts": "player.vimeo.com",
+      "name": "Vimeo",
+      "private_polacy_link": "https://vimeo.com/privacy",
+      "text": "Wird verwendet, um Vimeo-Inhalte zu entsperren.",
+      "website_owner": "Vimeo"
+    },
+    "xing": {
+      "cookie_time": "Daten werden nach der Verarbeitung gelöscht.",
+      "hosts": "xing.com",
+      "name": "Xing",
+      "private_polacy_link": "https://privacy.xing.com/de/datenschutzerklaerung",
+      "text": "Wird verwendet, um Xing-Inhalte zu entsperren.",
+      "website_owner": "Xing"
+    },
+    "youtube": {
+      "cookie_name": "APISID, CONSENT, HSID, LOGIN_INFO, PREF, SAPISID, SID, SIDCC, VISITOR_INFO1_LIVE, YSC, __Secure-3PAPISID, __Secure-3PSID, remote_sid, wide, NID",
+      "cookie_time": "1-2 Jahre / Sitzung",
+      "hosts": "(www.)youtube.*, (www.)google.*",
+      "name": "YouTube",
+      "private_polacy_link": "https://policies.google.com/privacy",
+      "text": "Wird verwendet, um YouTube-Inhalte zu entsperren.",
+      "website_owner": "YouTube"
+    },
+    "google_ads": {
+      "cookie_name": "IDE, 1P_JAR, AID, ANID, APISID, HSID, NID, SAPISID, SID, SIDCC, SSID, __Secure-3PAPISID, __Secure-3PSID, DV",
+      "cookie_time": "1-2 Jahre / Sitzung",
+      "hosts": "doubleclick.net, (www.)google.*",
+      "name": "Google Ads",
+      "private_polacy_link": "https://policies.google.com/technologies/types?hl=de",
+      "text": "Enthalten Benutzer-Informationen. Anhand dieser Informationen kann Google den User über verschiedene Websites domainübergreifend wiedererkennen und personalisierte Werbung ausspielen.",
+      "website_owner": "Google"
+    },
+    "ehi_siegel": {
+      "cookie_name": "NID",
+      "cookie_time": "6 Monate",
+      "hosts": "ehi-siegel.de",
+      "name": "EHI Widget",
+      "private_polacy_link": "https://www.ehi.org/de/datenschutz/",
+      "text": "Gütesiegel und Shop-Zertifizierung von EHI Retail Institute.",
+      "website_owner": "EHI Retail Institute GmbH"
+    },
+    "pinterest": {
+      "cookie_name": "_pinterest_ct_ua",
+      "cookie_time": "12 Monate",
+      "hosts": "pinterest.com",
+      "name": "Pinterest",
+      "private_polacy_link": "https://policy.pinterest.com/de/privacy-policy",
+      "text": "Durch den Aufruf von Seiten die solche Funktionen nutzen werden Daten (IP-Adresse, Browserdaten, Datum und Zeitpunkt, Cookies) an Pinterest übermittelt, gespeichert und ausgewertet.",
+      "website_owner": "Pinterest Inc."
+    },
+    "snapchat": {
+      "cookie_name": "sc-at",
+      "cookie_time": "13 Monate",
+      "hosts": "snapchat.com",
+      "name": "Snapchat",
+      "private_polacy_link": "https://www.snap.com/de-DE/cookie-policy",
+      "text": "",
+      "website_owner": "Snap Inc."
+    },
+    "squarelovin": {
+      "cookie_name": "PHPSESSID,sq_d,sq_lg,sq_tr_str,sq_tr_pop,sq_tr_sps,sq_uv",
+      "cookie_time": "12 Monate",
+      "hosts": "squarelovin.com",
+      "name": "squarelovin",
+      "private_polacy_link": "https://squarelovin.com/privacy/",
+      "text": "",
+      "website_owner": "squarelovin"
+    },
+    "adobe": {
+      "cookie_name": "-",
+      "cookie_time": "-",
+      "hosts": "adobe.com",
+      "name": "Adobe Typekit Web Fonts",
+      "private_polacy_link": "https://www.adobe.com/de/privacy/policies/typekit.html",
+      "text": "Diese Seite nutzt zur einheitlichen Darstellung von Schriftarten sogenannte Web Fonts, die von Adobe Typekit bereitgestellt werden. Beim Aufruf einer Seite lädt Ihr Browser die benötigten Web Fonts in ihren Browsercache, um Texte und Schriftarten korrekt anzuzeigen.",
+      "website_owner": "Adobe Typekit Web Fonts"
+    },
+    "userlike": {
+      "cookie_name": "uslk_e, uslk_s",
+      "cookie_time": "1 Monat",
+      "hosts": "userlike.com",
+      "name": "Userlike LiveChat-Cookies",
+      "private_polacy_link": "https://www.userlike.com/de/data-privacy",
+      "text": "Live-Chat-Software für Website- und Mobilsupport",
+      "website_owner": "Userlike UG"
+    },
+    "linked_in_insight": {
+      "cookie_name": "Hierfür verwendete Cookies können hier gefunden werden: https://www.linkedin.com/legal/l/cookie-table",
+      "cookie_time": "Sitzung / 1 Tag - 2 Jahre",
+      "name": "LinkedIn",
+      "private_polacy_link": "https://www.linkedin.com/legal/cookie-policy",
+      "text": "Wird zur Analyse von Websites und zur Generierung statistischer Daten darüber verwendet, wie der Besucher die Website nutzt.",
+      "website_owner": "LinkedIn Ireland Unlimited Company, LinkedIn Inc"
+    },
+    "microsoft_webchat": {
+      "cookie_name": "UserId",
+      "cookie_time": "Sitzung",
+      "name": "Microsoft Webchat",
+      "hosts": "webchat.botframework.com",
+      "private_polacy_link": "https://privacy.microsoft.com/de-de/privacystatement",
+      "text": "Webchat ist ein Chat-Tool, welches Benutzern ermöglicht via Chat Kontakt aufzunehmen.",
+      "website_owner": "Microsoft"
+    },
+    "google_optimize": {
+      "cookie_name": "_gaexp",
+      "cookie_time": "Sitzung",
+      "name": "Google Optimize",
+      "private_polacy_link": "https://policies.google.com/privacy",
+      "text": "Google optimize hilft uns zu testen, ob Änderungen, die wir an unserer Website vornehmen, diese tatsächlich verbessern.",
+      "website_owner": "Google"
+    },
+    "hotjar_tracking": {
+      "cookie_name": "_hjClosedSurveyInvites, _hjDonePolls, _hjMinimizedPolls, _hjShownFeedbackMessage, _hjid, _hjRecordingLastActivity, _hjTLDTest, _hjUserAttributesHash, _hjCachedUserAttributes, _hjLocalStorageTest, _hjIncludedInPageviewSample, _hjIncludedInSessionSample, _hjAbsoluteSessionInProgress",
+      "cookie_time": "Sitzung / 30 Minuten / 1 Jahr",
+      "hosts": "*.hotjar.com",
+      "name": "Hotjar",
+      "text": "Hotjar ist ein Analyse-Tool, welches Benutzer-Verhalten auf der Webseite trackt und analysiert.",
+      "website_owner": "Hotjar"
+    },
+    "google_floodlight": {
+      "cookie_name": "-",
+      "cookie_time": "-",
+      "hosts": "*.google.*",
+      "name": "DoubleClick Floodlight",
+      "private_polacy_link": "https://policies.google.com/privacy",
+      "text": "Mit DoubleClick Floodlight-Cookies können wir nachvollziehen, ob Sie bestimmte Aktionen auf unseren Websites ausführen, nachdem Sie eine unserer auf Google oder anderen Plattformen über DoubleClick bereitgestellten Anzeige- / Videoanzeigen gesehen oder angeklickt haben.",
+      "website_owner": "Google"
+    },
+    "jameda": {
+      "cookie_name": "-",
+      "cookie_time": "-",
+      "hosts": "*.jameda.de",
+      "name": "Jameda",
+      "private_polacy_link": "https://www.jameda.de/datenschutz",
+      "text": "Widget zur Darstellung der Jameda Bewertungen",
+      "website_owner": "Jameda"
+    },
+    "dr-schmiedel.de": {
+      "cookie_name": "-",
+      "cookie_time": "-",
+      "hosts": "*.dr-schmiedel.de",
+      "name": "Dr Schmiedel",
+      "private_polacy_link": "https://www.dr-schmiedel.de/datenschutz/",
+      "text": "Iframe zur Darstellung des Dr Schmiedel Schnelltest Formulars",
+      "website_owner": "Jameda"
+    }
+  }
+}

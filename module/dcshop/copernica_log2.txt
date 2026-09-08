@@ -1,0 +1,88 @@
+
+
+Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Autohaus Mielberg KG,
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => Autohaus Mielberg KG
+    [EMail] => autohaus.mielberg.kg@cronuscorp.net
+    [Sprachcode] => DEU
+    [PLZ] => 22417
+    [Ort] => Hamburg 36
+    [Unternehmen] => Autohaus Mielberg KG
+    [pass] => ehugowis46
+)
+
+
+Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Autohaus Mielberg KG,
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => Autohaus Mielberg KG
+    [EMail] => autohaus.mielberg.kg@cronuscorp.net
+    [Sprachcode] => DEU
+    [PLZ] => 22417
+    [Ort] => Hamburg 36
+    [Unternehmen] => Autohaus Mielberg KG
+    [pass] => ehugowis46
+)
+
+
+Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Beef House,
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => Beef House
+    [EMail] => beef.house@cronuscorp.net
+    [Sprachcode] => DEU
+    [PLZ] => 40593
+    [Ort] => Düsseldorf
+    [Unternehmen] => Beef House
+    [pass] => ehugowis46
+)
+
+
+Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Hotel Pferdesee,
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => Hotel Pferdesee
+    [EMail] => hotel.pferdesee@cronuscorp.net
+    [Sprachcode] => DEU
+    [PLZ] => 60320
+    [Ort] => Frankfurt/Main
+    [Unternehmen] => Hotel Pferdesee
+    [pass] => ehugowis46
+)
+
+
+Array
+(
+    [Segment] => SM10002
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => Sjøboden
+    [EMail] => sjoboden@cronuscorp.net
+    [Sprachcode] => NOR
+    [PLZ] => 1300
+    [Ort] => Sandvika
+    [Unternehmen] => Sjøboden
+    [pass] => ehugowis46
+)

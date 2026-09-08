@@ -1,0 +1,138 @@
+{
+  "__comment": "Shoptypen 1 = B2C, 2 = B2B, 3 = Katalog , 4 = Login, 5 = Vertreterportal",
+  "shoptype": 1,
+  "b2c": {
+    "layout": {
+      "code": "fiebich",
+      "path": "./layout/frontend/",
+      "src": "src",
+      "build": "build",
+      "dist": "dist",
+      "cssfile": "style",
+      "jsfile": "script"
+    },
+    "bower": {
+      "path": "./components"
+    },
+    "favicon": {
+      "title": "Heilpraktiker Fiebich",
+      "background": "#ffffff",
+      "color": "#ff9f03",
+      "masterpicture_path": "favicon/",
+      "masterpicture_filename": "favicon.jpg",
+      "data_file": "faviconData.json"
+    },
+    "iconfont": {
+      "name": "icons"
+    }
+  },
+  "b2b": {
+    "layout": {
+      "code": "b2b",
+      "path": "./layout/frontend/",
+      "src": "src",
+      "build": "build",
+      "dist": "dist",
+      "cssfile": "style_b2b",
+      "jsfile": "script"
+    },
+    "bower": {
+      "path": "./components"
+    },
+    "favicon": {
+      "title": "dynamiccommerce b2b",
+      "background": "#FFFFFF",
+      "color": "#9BC243",
+      "masterpicture_path": "favicon/",
+      "masterpicture_filename": "favicon.jpg",
+      "data_file": "faviconData.json"
+    },
+    "iconfont": {
+      "name": "icons"
+    }
+  },
+  "catalog": {
+    "layout": {
+      "code": "b2b",
+      "path": "./layout/frontend/",
+      "src": "src",
+      "build": "build",
+      "dist": "dist",
+      "cssfile": "style_catalog",
+      "jsfile": "script"
+    },
+    "bower": {
+      "path": "./components"
+    },
+    "favicon": {
+      "title": "dynamiccommerce b2b",
+      "background": "#FFFFFF",
+      "color": "#9BC243",
+      "masterpicture_path": "favicon/",
+      "masterpicture_filename": "favicon.jpg",
+      "data_file": "faviconData.json"
+    },
+    "iconfont": {
+      "name": "icons"
+    }
+  },
+  "login": {
+    "layout": {
+      "code": "b2b",
+      "path": "./layout/frontend/",
+      "src": "src",
+      "build": "build",
+      "dist": "dist",
+      "cssfile": "style_login",
+      "jsfile": "script"
+    },
+    "bower": {
+      "path": "./components"
+    },
+    "favicon": {
+      "title": "dynamiccommerce b2b",
+      "background": "#FFFFFF",
+      "color": "#9BC243",
+      "masterpicture_path": "favicon/",
+      "masterpicture_filename": "favicon.jpg",
+      "data_file": "faviconData.json"
+    },
+    "iconfont": {
+      "name": "icons"
+    }
+  },
+  "salesperson": {
+    "layout": {
+      "code": "b2b",
+      "path": "./layout/frontend/",
+      "src": "src",
+      "build": "build",
+      "dist": "dist",
+      "cssfile": "style_salesperson",
+      "jsfile": "script_salesperson"
+    },
+    "bower": {
+      "path": "./components"
+    },
+    "favicon": {
+      "title": "dynamiccommerce b2b",
+      "background": "#FFFFFF",
+      "color": "#9BC243",
+      "masterpicture_path": "favicon/",
+      "masterpicture_filename": "favicon.jpg",
+      "data_file": "faviconData.json"
+    },
+    "iconfont": {
+      "name": "icons"
+    }
+  },
+  "autoupload": {
+    "active": false,
+    "host": "XXX",
+    "port": 21,
+    "user": "XXX",
+    "password": "XXX",
+    "remotePath": "/htdocs/XXX/current"
+  },
+  "livereload": true
+}

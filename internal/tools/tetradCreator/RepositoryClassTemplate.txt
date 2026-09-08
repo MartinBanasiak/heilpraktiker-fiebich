@@ -1,0 +1,39 @@
+<?php
+
+class %repositoryclassname% implements Repository {
+
+    use genericRepositoryTrait;
+
+    /**
+     * @param \GenericDBQueryWrapperInterface                     $db
+     * @param %configclassname%             $config
+     * @param CriteriaHelperInterface $criteriaValidationService
+     * @param %collectionclassname%     $collection
+     * @param                                                     $cacheAll
+     */
+    public function __construct( GenericDBQueryWrapperInterface $db, %configclassname% $config, CriteriaHelperInterface $criteriaValidationService, %collectionclassname% $collection, $cacheAll=false) {
+        $this->db                        = $db;
+        $this->config                    = $config;
+        $this->criteriaValidationService = $criteriaValidationService;
+        $this->collection                = $collection;
+        $this->collectionEntryClassName  = $this->collection->getEntryClassName();
+        $this->cacheAll                  = $cacheAll;
+    }
+
+    /**
+     * @return %modelclassname%
+     */
+    public function getNullObject() {
+        return new %modelclassname%($this->config);
+    }
+
+
+    /**
+     * @return %collectionclassname%
+     */
+    public function getEmptyCollection()
+    {
+        return $this->collection->getEmptyCollection();
+    }
+
+}

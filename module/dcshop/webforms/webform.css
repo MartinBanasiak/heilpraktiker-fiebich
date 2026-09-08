@@ -1,0 +1,392 @@
+@font-face {
+    font-family: 'SegoeUI';
+    src: url('fonts/SegoeUI.eot?#iefix') format('embedded-opentype'), url('fonts/SegoeUI.woff') format('woff'), url('fonts/SegoeUI.ttf') format('truetype'), url('fonts/SegoeUI.svg#SegoeUI') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    height: 100%;
+}
+
+body, td, th, input {
+    font-family: 'SourceSansPro-Regular', Tahoma, Geneva, sans-serif;
+    font-size: 14px;
+    color: #000;
+}
+
+body {
+    background-color: #fff;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+a:link, a:visited, a:active {
+    color: #000;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+form {
+    margin: 0px;
+    padding: 0px;
+}
+
+#box1 {
+    background-color: #FFF;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+    border-bottom: 1px solid #d5d5d5;
+}
+
+.image_box {
+    height: 250px;
+}
+
+.file_box {
+    height: 40px;
+}
+
+#box2 {
+    top: 290px;
+    height: 30px;
+    margin-bottom: 10px;
+    background-color: #FFF;
+    border: 1px solid #898c95;
+    padding: 10px;
+    text-align: center;
+    z-index: 2;
+}
+
+#box3 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    height: 312px;
+    background-color: #FFF;
+    border: 1px solid #898c95;
+    padding: 10px;
+    text-align: center;
+    z-index: 3;
+}
+
+.load {
+    border: 1px solid #898c95;
+}
+
+input.file {
+    height: 22px;
+    width: 300px;
+}
+
+input.button {
+    height: 24px;
+    width: 60px;
+}
+
+ul.buttonlist {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+ul.buttonlist li {
+    height: 22px;
+    margin: 0;
+    padding: 0px;
+}
+
+ul.buttonlist li a {
+    margin: 0px;
+    padding: 3px 0px 3px 21px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    line-height: 20px;
+}
+
+a.button_play {
+    background-image: url(img/button_play.gif);
+}
+
+a.button_pdf {
+    background-image: url(img/button_pdf.gif);
+}
+
+a.button_doc {
+    background-image: url(img/button_doc.gif);
+}
+
+a.button_xls {
+    background-image: url(img/button_xls.gif);
+}
+
+a.button_img {
+    background-image: url(img/button_img.gif);
+}
+
+a.button_zip {
+    background-image: url(img/button_zip.gif);
+}
+
+a.button_sonst {
+    background-image: url(img/button_sonst.gif);
+}
+
+a.cke_button__maximize {
+    display: none !important;
+}
+
+.button-area {
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+
+#startUpload {
+    background: rgb(155, 194, 67) none repeat scroll 0 0;
+    border: 1px solid rgb(102, 153, 0);
+    color: #fff;
+    display: inline;
+    height: 40px;
+    text-align: center;
+    width: 80%;
+    cursor: pointer;
+}
+
+#box1 .file, #box1 .file-progress {
+    margin: 10px;
+    position: relative;
+    display: inline-block;
+    min-height: 80px;
+    min-width: 80px;
+    padding: 15px;
+    vertical-align: top;
+}
+
+.progressLabel {
+    display: inline-block;
+    height: 25px;
+    line-height: 25px;
+    vertical-align: top;
+    width: 75px;
+}
+
+.progress {
+    display: inline-block !important;
+}
+
+#box1 .file .delete_upload {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    top: 0;
+    left: 0;
+}
+
+#box1 .file:hover .delete_upload {
+    display: block;
+}
+
+#box1 .file .delete_upload:after {
+    color: #fff;
+    content: "\f00d";
+    font-family: FontAwesome;
+    font-size: 2.5em;
+    left: 50%;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#box1 .file .download_upload {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    bottom: 0;
+    left: 0;
+}
+
+#box1 .file:hover .download_upload {
+    display: block;
+    border-top: 1px solid #fff;
+}
+
+#box1 .file .download_upload:after {
+    color: #fff;
+    content: "\f019";
+    font-family: FontAwesome;
+    font-size: 2.5em;
+    left: 50%;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.wrapper {
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+#box1 {
+    display: table-row;
+}
+
+.dropzone-wrapper {
+    display: table-row;
+    height: 100%;
+}
+
+.dropzone {
+    min-height: 100% !important;
+    border:0 !important;
+}
+
+.ribbon {
+    background: white none repeat scroll 0 0;
+    border-bottom: 1px solid #d5d5d5;
+    box-sizing: border-box;
+    font-family: "Segoe UI";
+    height: 82px;
+    padding: 0 0 0px;
+    width: 100%;
+    margin: 0 0 4px 0;
+}
+
+.ribbon > div {
+    cursor: default;
+}
+
+.ribbon .ribbon-section {
+    border-right: 1px solid #d5d5d5;
+    box-sizing: border-box;
+    display: inline-block;
+    height: 74px;
+    padding: 0 7px 0 12px;
+    text-align: center;
+}
+
+.ribbon .ribbon-section .ribbon-name {
+    box-sizing: border-box;
+    color: #d5d5d5;
+    display: block;
+    font-size: 12px;
+    text-align: center;
+}
+
+.ribbon .ribbon-icon {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 60px;
+    margin: 0 4px 0 0;
+    text-align: center;
+    position: relative;
+}
+
+.ribbon .ribbon-icon:not(.disabled):hover {
+    background: #e6f2fa;
+}
+
+.ribbon .ribbon-icon .ribbon-caption {
+    display: block;
+    font-size: 12px;
+    padding: 0 1px;
+    text-align: center;
+}
+
+.ribbon .ribbon-icon .ribbon-button {
+    display: inline-block;
+    height: 32px;
+    margin: 0;
+    width: 32px;
+}
+
+.ribbon .ribbon-icon.download .ribbon-button {
+    background: url("img/Export.png") no-repeat 0 0;
+}
+
+.ribbon .ribbon-icon.delete .ribbon-button {
+    background: url("img/Delete.png") no-repeat 0 0;
+}
+
+.ribbon .ribbon-icon.prev .ribbon-button {
+    background: url("img/PreviousRecord.png") no-repeat 0 0;
+}
+
+.ribbon .ribbon-icon.next .ribbon-button {
+    background: url("img/NextRecord.png") no-repeat 0 0;
+}
+
+.ribbon .ribbon-icon.disabled .ribbon-icon-inactive {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255,255,255,0.4);
+}
+
+/*
+.ribbon .ribbon-icon {
+    border-right: 1px solid #d5d5d5;
+    padding: 2px 10px 4px;
+    height: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.ribbon .ribbon-icon > div {
+    text-align: center;
+}
+
+.ribbon .ribbon-icon .ribbon-button {
+    display: inline-block;
+    height: 30px;
+    width: 30px;;
+}
+
+.ribbon .ribbon-icon .ribbon-caption {
+    display: block;
+    font-size: 12px;
+    height: 31px;
+}
+
+.ribbon .ribbon-icon .ribbon-name {
+    color: #d5d5d5;
+    display: block;
+    font-size: 12px;
+}
+
+.ribbon .ribbon-icon.download .ribbon-button {
+    background: url("img/Save.png") no-repeat 0 0;
+}
+
+.ribbon .ribbon-icon.delete .ribbon-button {
+    background: url("img/Delete.png") no-repeat 0 0;
+}
+
+*/
+
+.cke_toolbar > .cke_toolbar_separator {
+    float: left !important;
+    margin-right: 6px;
+}

@@ -1,0 +1,66 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Bauer
+ * Date: 7/1/2015
+ * Time: 8:05 AM
+ */
+?>
+<div class="order_bar">
+    <table class="order_bar" width="100%">
+        <tbody><tr>
+            <td width="25%" class="order_bar_grey"><span>%addressDataLabel%</span></td>
+            <td width="25%" class="order_bar_active"><span>%payAndShipLabel%</span></td>
+            <td width="25%" class="order_bar_grey"><span>%checkLabel%</span></td>
+            <td width="25%" class="order_bar_grey"><span>%finalizeLabel%</span></td>
+        </tr>
+    </tbody></table>
+</div>
+<form id="form_user_order_2" name="form_user_order_2" method="post" action="?action=step2">
+    <table class="cardform shipping" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+            <td>
+                <br>
+
+                <h3>Versand per</h3>
+                <div class="label"><label for="input_shipping_line_no">Versand per</label></div><div class="input"><select onchange="this.form.submit();" class="select_2" name="input_shipping_line_no" id="input_shipping_line_no"><option value="10000">DHL Standard (+0,00  €)</option><option value="20000">DHL Express (+10,00  €)</option></select></div>                </td>
+        </tr>
+        </tbody></table>
+    <table class="cardform" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+            <td>
+                <br>
+
+                <h3>Zahlweise</h3>
+                <div class="label"><label for="input_payment_line_no">Zahlweise</label></div><div class="input"><select onchange="this.form.submit();" class="select_2" name="input_payment_line_no" id="input_payment_line_no"><option value="10000">PayPal</option><option value="30000">Kreditkarte (Master/Visa)</option><option value="50000">Sofortüberweisung</option><option value="60000">Vorkasse</option><option value="70000">Nachname(+4,00  €)</option><option value="80000">Rechnung (Billpay)</option><option value="90000">Lastschrift (Billpay)</option></select></div>                </td>
+        </tr>
+        </tbody></table>
+    <div class="spacer_6">&nbsp;</div>
+    <table class="cardform" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+            <td width="240px"><h3>Weiteres</h3>
+                <div class="label"><label for="input_coupon_code">Gutscheincode: </label></div><div class="input"><input name="input_coupon_code" id="input_coupon_code" class="text" maxlength="30" value="" type="text"></div>
+            </td>
+            <td>
+                <br>
+                <a class="button_gift" href="javascript:void(0);" onclick="document.form_user_order_2.action='?action=coupon'; document.form_user_order_2.submit(); return false;">Gutschein einlösen</a>
+            </td>
+        </tr>
+        </tbody></table>
+    <div class="spacer_6">&nbsp;</div>
+    <table class="cardform" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+            <td>
+                <h3>
+                    <div class="label"><label for="newsletter">Newsletter abonnieren</label></div><div class="input"><input name="newsletter" id="newsletter" class="checkbox" type="checkbox"></div>
+                </h3>
+            </td>
+        </tr>
+        </tbody></table>
+
+
+    <br>
+    <a class="button_order" href="javascript:void(0);" onclick="document.form_user_order_2.action='?action=step1'; document.form_user_order_2.submit(); return false;">Zurück</a>
+    <a class="button_order" href="javascript:void(0);" onclick="document.form_user_order_2.action='?action=step3'; document.form_user_order_2.submit(); return false;">Weiter</a>
+    <br><br>
+</form>

@@ -1,0 +1,41 @@
+
+
+.breadcrumb {
+  margin: 0;
+  padding: @spacer-base*2 0;
+  background-color: transparent;
+  .border-radius(0);
+  color: @middle-gray;
+  font-size: 13px;
+  a {
+    color: @middle-gray;
+    &:hover {
+      color: @brand-primary;
+    }
+  }
+  i {
+    margin: 0 2px;
+    font-size: 12px;
+  }
+  .current {
+    color: @middle-gray;
+    font-weight: @font-weight-bold;
+  }
+
+  @media (max-width: @screen-xs-max){
+    padding-top: @spacer-base;
+    padding-bottom: @spacer-base;
+    &.text-right {
+      text-align: left;
+      padding-top:0;
+    }
+  }
+
+  @media (max-width: @screen-xs){
+    font-size: 12px;
+    white-space: nowrap;
+    width:100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}

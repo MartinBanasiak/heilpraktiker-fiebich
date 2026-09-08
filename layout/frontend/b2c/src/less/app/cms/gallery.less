@@ -1,0 +1,23 @@
+
+.MagicZoomGallery {
+  .MagicZoomWrapper {
+    margin-bottom: @spacer-base*4;
+    text-align: center;
+  }
+  .MagicScroll {
+    .mcs-item {
+      .mz-thumb {
+        img {
+          .filter(none);
+          .box-shadow(none);
+        }
+        &.mz-thumb-selected {
+          img {
+            .filter(none);
+            .box-shadow(none);
+          }
+        }
+      }
+    }
+  }
+}

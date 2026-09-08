@@ -1,0 +1,2 @@
+﻿Export-NAVApplicationObject -DatabaseName DC-2018-DEV -Path C:\temp\couponal\old\AllObjects.txt -DatabaseServer DEV01 -ExportTxtSkipUnlicensed -Filter "Version List = @*DCC*;ID = ..5447299|5447470.."
+Export-NAVApplicationObjectLanguage -Destination C:\temp\couponal\old\Captions.txt -Source C:\temp\couponal\old\AllObjects.txt

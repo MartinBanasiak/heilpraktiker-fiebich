@@ -1,0 +1,25 @@
+<div class="col-xs-12 order_option_list">
+    {{> shipping_option_headline}}
+    <div class="shippingAgentWrapper order_option_list_inner">
+        <div class="row">
+        {{#shippingOptionCollection}}
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div class="form-check shippingAgent {{#isSelected}}{{line_no}}{{/isSelected}}">
+                    <label for="input_shipping_line_no_{{id}}">
+                        <input onchange="this.form.submit();" value="{{line_no}}" type="radio" id="input_shipping_line_no_{{id}}" name="input_shipping_line_no" class="shippingRadioButton" {{#isChecked}}{{line_no}}{{/isChecked}}>
+                        {{#logo}}
+                        <div class='image'><img src="{{logo}}"></div>
+                        {{/logo}}
+                        <span class="span-wrapper">
+                            <span class="termDescription">{{description}}&nbsp;(+{{#formatAmount}}{{shipping_cost}}{{/formatAmount}})</span>
+                            {{#content}}
+                            &nbsp;<span class="longText">{{content}}</span>
+                            {{/content}}
+                        </span>
+                    </label>
+                </div>
+            </div>
+        {{/shippingOptionCollection}}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,2579 @@
+
+
+1422807540.0739 - Function upsert_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1422807540.0739 - Function get_profiles called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => autohaus.mielberg.kg@cronuscorp.net
+    [Segment] => SM10002
+)
+
+
+1422807540.0895 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/11/profiles?fields[]=EMail%3D%3Dautohaus.mielberg.kg%40cronuscorp.net&fields[]=Segment%3D%3DSM10002&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1422807541.3082 - Function get_profiles Line 144 - Response: {"start":0,"limit":0,"total":0,"data":[]}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 0
+    [total] => 0
+    [data] => Array
+        (
+        )
+
+)
+
+
+	No Profile found for E-Mail autohaus.mielberg.kg@cronuscorp.net, Segment SM10002 - creating new profile. 
+
+1422807541.3082 - Function create_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Autohaus Mielberg KG,
+    [Anrede] => Herr
+    [Vorname] => Autohaus
+    [Nachname] => Mielberg KG
+    [EMail] => autohaus.mielberg.kg@cronuscorp.net
+    [Unternehmen] => Autohaus Mielberg KG
+    [PLZ] => 22417
+    [Ort] => Hamburg 36
+    [Sprachcode] => DEU
+    [Quelle] => 
+    [DOI] => 0
+)
+
+
+1422807541.4332 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/11/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Autohaus Mielberg KG,
+    [Anrede] => Herr
+    [Vorname] => Autohaus
+    [Nachname] => Mielberg KG
+    [EMail] => autohaus.mielberg.kg@cronuscorp.net
+    [Unternehmen] => Autohaus Mielberg KG
+    [PLZ] => 22417
+    [Ort] => Hamburg 36
+    [Sprachcode] => DEU
+    [Quelle] => 
+    [DOI] => 0
+    [Mail_Domain] => cronuscorp.net
+)
+
+
+1422807542.4801 - Function create_profile Line 377 - Response: HTTP/1.1 201 Created
+Date: Sun, 01 Feb 2015 16:19:11 GMT
+Server: Apache
+Location: https://api.copernica.com/profile/5004?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+
+
+Creating Profile succeeded - Location: https://api.copernica.com/profile/5004?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1422807554.8083 - Function upsert_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1422807554.8083 - Function get_profiles called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => autohaus.mielberg.kg@cronuscorp.net
+    [Segment] => SM10002
+)
+
+
+1422807554.8083 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/11/profiles?fields[]=EMail%3D%3Dautohaus.mielberg.kg%40cronuscorp.net&fields[]=Segment%3D%3DSM10002&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1422807555.3551 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"total":1,"data":[{"ID":"5004","fields":{"EMail":"autohaus.mielberg.kg@cronuscorp.net","Segment":"SM10002","Anrede":"Herr","Anrede_formell":"Sehr geehrte Damen und Herren,","Anrede_informell":"Autohaus Mielberg KG,","Vorname":"Autohaus","Nachname":"Mielberg KG","SOI":"0","DOI":"0","PLZ":"22417","Mail_Domain":"cronuscorp.net","Geburtsdatum":"","Name":"","Ort":"Hamburg 36","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Sprachcode":"DEU"},"interests":[],"database":"11","secret":"8190bbb94827ec6869ea81c2017327e8","created":"2015-02-01 17:19:11"}]}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [total] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 5004
+                    [fields] => Array
+                        (
+                            [EMail] => autohaus.mielberg.kg@cronuscorp.net
+                            [Segment] => SM10002
+                            [Anrede] => Herr
+                            [Anrede_formell] => Sehr geehrte Damen und Herren,
+                            [Anrede_informell] => Autohaus Mielberg KG,
+                            [Vorname] => Autohaus
+                            [Nachname] => Mielberg KG
+                            [SOI] => 0
+                            [DOI] => 0
+                            [PLZ] => 22417
+                            [Mail_Domain] => cronuscorp.net
+                            [Geburtsdatum] => 
+                            [Name] => 
+                            [Ort] => Hamburg 36
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Sprachcode] => DEU
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 11
+                    [secret] => 8190bbb94827ec6869ea81c2017327e8
+                    [created] => 2015-02-01 17:19:11
+                )
+
+        )
+
+)
+
+
+	Profile: {"EMail":"autohaus.mielberg.kg@cronuscorp.net","Segment":"SM10002","Anrede":"Herr","Anrede_formell":"Sehr geehrte Damen und Herren,","Anrede_informell":"Autohaus Mielberg KG,","Vorname":"Autohaus","Nachname":"Mielberg KG","SOI":"0","DOI":"0","PLZ":"22417","Mail_Domain":"cronuscorp.net","Geburtsdatum":"","Name":"","Ort":"Hamburg 36","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Sprachcode":"DEU","ID":"5004"}
+
+	Updating Profile {"EMail":"autohaus.mielberg.kg@cronuscorp.net","Segment":"SM10002","Anrede":"Herr","Anrede_formell":"Sehr geehrte Damen und Herren,","Anrede_informell":"Autohaus Mielberg KG,","Vorname":"Autohaus","Nachname":"Mielberg KG","SOI":"0","DOI":"0","PLZ":"22417","Mail_Domain":"cronuscorp.net","Geburtsdatum":"","Name":"","Ort":"Hamburg 36","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Sprachcode":"DEU","ID":"5004"}
+	Data: {"Segment":"SM10002","Anrede_formell":"Sehr geehrte Damen und Herren,","Anrede_informell":"Autohaus Mielberg KG,","Anrede":"Herr","Vorname":"Autohaus","Nachname":"Mielberg KG","EMail":"autohaus.mielberg.kg@cronuscorp.net","Unternehmen":"Autohaus Mielberg KG","PLZ":"22417","Ort":"Hamburg 36","Sprachcode":"DEU","Quelle":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/11/profiles/?fields[]=ID%3D%3D5004&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"Segment":"SM10002","Anrede_formell":"Sehr geehrte Damen und Herren,","Anrede_informell":"Autohaus Mielberg KG,","Anrede":"Herr","Vorname":"Autohaus","Nachname":"Mielberg KG","EMail":"autohaus.mielberg.kg@cronuscorp.net","Unternehmen":"Autohaus Mielberg KG","PLZ":"22417","Ort":"Hamburg 36","Sprachcode":"DEU","Quelle":""}
+
+1422807555.3708 - Function update_profile Line 642 - Sending Request: https://api.copernica.com/database/11/profiles/?fields[]=ID%3D%3D5004&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"Segment":"SM10002","Anrede_formell":"Sehr geehrte Damen und Herren,","Anrede_informell":"Autohaus Mielberg KG,","Anrede":"Herr","Vorname":"Autohaus","Nachname":"Mielberg KG","EMail":"autohaus.mielberg.kg@cronuscorp.net","Unternehmen":"Autohaus Mielberg KG","PLZ":"22417","Ort":"Hamburg 36","Sprachcode":"DEU","Quelle":""}
+
+1422807556.6051 - Function update_profile Line 654 - Response: HTTP/1.1 200 OK
+Date: Sun, 01 Feb 2015 16:19:25 GMT
+Server: Apache
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Sun, 01 Feb 2015 16:19:25 GMT
+Server: Apache
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Sun, 01 Feb 2015 16:19:25 GMT
+Server: Apache
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+
+
+1422807556.8239 - Function upsert_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1422807556.8239 - Function get_profiles called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => beef.house@cronuscorp.net
+    [Segment] => SM10002
+)
+
+
+1422807556.8239 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/11/profiles?fields[]=EMail%3D%3Dbeef.house%40cronuscorp.net&fields[]=Segment%3D%3DSM10002&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1422807558.2614 - Function get_profiles Line 144 - Response: {"start":0,"limit":0,"total":0,"data":[]}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 0
+    [total] => 0
+    [data] => Array
+        (
+        )
+
+)
+
+
+	No Profile found for E-Mail beef.house@cronuscorp.net, Segment SM10002 - creating new profile. 
+
+1422807558.277 - Function create_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Beef House,
+    [Anrede] => Herr
+    [Vorname] => Beef
+    [Nachname] => House
+    [EMail] => beef.house@cronuscorp.net
+    [Unternehmen] => Beef House
+    [PLZ] => 40593
+    [Ort] => Düsseldorf
+    [Sprachcode] => DEU
+    [Quelle] => 
+    [DOI] => 0
+)
+
+
+1422807558.2926 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/11/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Beef House,
+    [Anrede] => Herr
+    [Vorname] => Beef
+    [Nachname] => House
+    [EMail] => beef.house@cronuscorp.net
+    [Unternehmen] => Beef House
+    [PLZ] => 40593
+    [Ort] => Düsseldorf
+    [Sprachcode] => DEU
+    [Quelle] => 
+    [DOI] => 0
+    [Mail_Domain] => cronuscorp.net
+)
+
+
+1422807559.2926 - Function create_profile Line 377 - Response: HTTP/1.1 201 Created
+Date: Sun, 01 Feb 2015 16:19:28 GMT
+Server: Apache
+Location: https://api.copernica.com/profile/5005?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+
+
+Creating Profile succeeded - Location: https://api.copernica.com/profile/5005?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1422807559.527 - Function upsert_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1422807559.527 - Function get_profiles called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => hotel.pferdesee@cronuscorp.net
+    [Segment] => SM10002
+)
+
+
+1422807559.527 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/11/profiles?fields[]=EMail%3D%3Dhotel.pferdesee%40cronuscorp.net&fields[]=Segment%3D%3DSM10002&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1422807560.1676 - Function get_profiles Line 144 - Response: {"start":0,"limit":0,"total":0,"data":[]}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 0
+    [total] => 0
+    [data] => Array
+        (
+        )
+
+)
+
+
+	No Profile found for E-Mail hotel.pferdesee@cronuscorp.net, Segment SM10002 - creating new profile. 
+
+1422807560.1676 - Function create_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Hotel Pferdesee,
+    [Anrede] => Herr
+    [Vorname] => Hotel
+    [Nachname] => Pferdesee
+    [EMail] => hotel.pferdesee@cronuscorp.net
+    [Unternehmen] => Hotel Pferdesee
+    [PLZ] => 60320
+    [Ort] => Frankfurt/Main
+    [Sprachcode] => DEU
+    [Quelle] => 
+    [DOI] => 0
+)
+
+
+1422807560.1676 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/11/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => Sehr geehrte Damen und Herren,
+    [Anrede_informell] => Hotel Pferdesee,
+    [Anrede] => Herr
+    [Vorname] => Hotel
+    [Nachname] => Pferdesee
+    [EMail] => hotel.pferdesee@cronuscorp.net
+    [Unternehmen] => Hotel Pferdesee
+    [PLZ] => 60320
+    [Ort] => Frankfurt/Main
+    [Sprachcode] => DEU
+    [Quelle] => 
+    [DOI] => 0
+    [Mail_Domain] => cronuscorp.net
+)
+
+
+1422807561.6051 - Function create_profile Line 377 - Response: HTTP/1.1 201 Created
+Date: Sun, 01 Feb 2015 16:19:30 GMT
+Server: Apache
+Location: https://api.copernica.com/profile/5006?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+
+
+Creating Profile succeeded - Location: https://api.copernica.com/profile/5006?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1422807561.7926 - Function upsert_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1422807561.7926 - Function get_profiles called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => sjoboden@cronuscorp.net
+    [Segment] => SM10002
+)
+
+
+1422807561.7926 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/11/profiles?fields[]=EMail%3D%3Dsjoboden%40cronuscorp.net&fields[]=Segment%3D%3DSM10002&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1422807563.3082 - Function get_profiles Line 144 - Response: {"start":0,"limit":0,"total":0,"data":[]}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 0
+    [total] => 0
+    [data] => Array
+        (
+        )
+
+)
+
+
+	No Profile found for E-Mail sjoboden@cronuscorp.net, Segment SM10002 - creating new profile. 
+
+1422807563.3082 - Function create_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => 
+    [Anrede_informell] => 
+    [Anrede] => Herr
+    [Vorname] => Sjøboden
+    [Nachname] => 
+    [EMail] => sjoboden@cronuscorp.net
+    [Unternehmen] => Sjøboden
+    [PLZ] => 1300
+    [Ort] => Sandvika
+    [Sprachcode] => NOR
+    [Quelle] => 
+    [DOI] => 0
+)
+
+
+1422807563.3082 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/11/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [Segment] => SM10002
+    [Anrede_formell] => 
+    [Anrede_informell] => 
+    [Anrede] => Herr
+    [Vorname] => Sjøboden
+    [Nachname] => 
+    [EMail] => sjoboden@cronuscorp.net
+    [Unternehmen] => Sjøboden
+    [PLZ] => 1300
+    [Ort] => Sandvika
+    [Sprachcode] => NOR
+    [Quelle] => 
+    [DOI] => 0
+    [Mail_Domain] => cronuscorp.net
+)
+
+
+1422807564.1832 - Function create_profile Line 377 - Response: HTTP/1.1 201 Created
+Date: Sun, 01 Feb 2015 16:19:33 GMT
+Server: Apache
+Location: https://api.copernica.com/profile/5007?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+
+
+Creating Profile succeeded - Location: https://api.copernica.com/profile/5007?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480497529.0014 - Function upsert_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480497529.0194 - Function get_profiles called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480497529.031 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/11/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480497529.0419 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment Manual - creating new profile. 
+
+1480497529.0878 - Function create_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+)
+
+
+1480497529.0996 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/11/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480497529.1102 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480497590.8484 - Function upsert_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480497590.862 - Function get_profiles called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480497590.8738 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/11/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480497590.8855 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment Manual - creating new profile. 
+
+1480497590.9335 - Function create_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+)
+
+
+1480497590.9448 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/11/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480497590.9566 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480497630.9592 - Function upsert_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480497630.9714 - Function get_profiles called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480497630.9815 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/11/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480497630.9949 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment Manual - creating new profile. 
+
+1480497631.0358 - Function create_profile called with parameters DB-ID: 11 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+)
+
+
+1480497631.0469 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/11/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480497631.0567 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480497719.1446 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480497719.1551 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480497719.1661 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480497719.1771 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment Manual - creating new profile. 
+
+1480497719.2164 - Function create_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+)
+
+
+1480497719.227 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/4/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480497719.2391 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480497850.5519 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480497850.5627 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480497850.5723 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480497850.5822 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment Manual - creating new profile. 
+
+1480497850.619 - Function create_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+)
+
+
+1480497850.6304 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/4/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480497850.6424 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480497889.9447 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480497889.9547 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => 
+)
+
+
+1480497889.964 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3D&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480497889.9729 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment  - creating new profile. 
+
+1480497890.0039 - Function create_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [DOI] => 0
+)
+
+
+1480497890.0117 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/4/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480497890.0213 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480498960.4234 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480498960.4363 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => 
+)
+
+
+1480498960.4475 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3D&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480498960.4595 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment  - creating new profile. 
+
+1480498960.5061 - Function create_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [DOI] => 0
+)
+
+
+1480498960.5173 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/4/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480498960.5295 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480498996.3935 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480499039.476 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480499039.4874 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => 
+)
+
+
+1480499039.5017 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3D&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480499039.5124 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment  - creating new profile. 
+
+1480499039.5532 - Function create_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [DOI] => 0
+)
+
+
+1480499039.5638 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/4/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480499039.5739 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480499093.8753 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480499093.8868 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => langmeyer@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480499093.8975 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlangmeyer%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480499093.9085 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail langmeyer@dc-solution.de, Segment Manual - creating new profile. 
+
+1480499093.951 - Function create_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => langmeyer@dc-solution.de
+    [Segment] => Manual
+    [DOI] => 0
+)
+
+
+1480499093.9633 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/4/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => langmeyer@dc-solution.de
+    [Segment] => Manual
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480499093.9756 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1480501111.6901 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501111.7034 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => langmeyer@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501111.7162 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlangmeyer%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501112.284 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"5272","fields":{"Anrede":"Herr","Vorname":"Tobias","Nachname":"Langmeyer","EMail":"langmeyer@dc-solution.de","Name":"Tobias Langmeyer","Land":"","Geburtsdatum":"","PLZ":"95326","Ort":"Kulmbach","DOI":"0","SOI":"0","OOI":"2","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"2015-05-15","DatumAbmeldung":"","DatumGutschein":"","Quelle":"Bestellung (nicht akzeptiert)","Segmant":"","Sprachcode":"","Mail_Domain":""},"interests":[],"database":"4","secret":"f00251545b4e4b9d4387e6295b55540e","created":"2015-05-15 17:07:50"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 5272
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => Tobias
+                            [Nachname] => Langmeyer
+                            [EMail] => langmeyer@dc-solution.de
+                            [Name] => Tobias Langmeyer
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 95326
+                            [Ort] => Kulmbach
+                            [DOI] => 0
+                            [SOI] => 0
+                            [OOI] => 2
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 2015-05-15
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => Bestellung (nicht akzeptiert)
+                            [Segmant] => 
+                            [Sprachcode] => 
+                            [Mail_Domain] => 
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => f00251545b4e4b9d4387e6295b55540e
+                    [created] => 2015-05-15 17:07:50
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"Tobias","Nachname":"Langmeyer","EMail":"langmeyer@dc-solution.de","Name":"Tobias Langmeyer","Land":"","Geburtsdatum":"","PLZ":"95326","Ort":"Kulmbach","DOI":"0","SOI":"0","OOI":"2","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"2015-05-15","DatumAbmeldung":"","DatumGutschein":"","Quelle":"Bestellung (nicht akzeptiert)","Segmant":"","Sprachcode":"","Mail_Domain":"","ID":"5272"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"Tobias","Nachname":"Langmeyer","EMail":"langmeyer@dc-solution.de","Name":"Tobias Langmeyer","Land":"","Geburtsdatum":"","PLZ":"95326","Ort":"Kulmbach","DOI":"0","SOI":"0","OOI":"2","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"2015-05-15","DatumAbmeldung":"","DatumGutschein":"","Quelle":"Bestellung (nicht akzeptiert)","Segmant":"","Sprachcode":"","Mail_Domain":"","ID":"5272"}
+	Data: {"EMail":"langmeyer@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D5272&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"langmeyer@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501112.3406 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D5272&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"langmeyer@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501113.0834 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:18:32 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:18:32 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:18:32 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501207.8094 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501207.8232 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => langmeyer@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501207.8353 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlangmeyer%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501208.615 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"5272","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"langmeyer@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"2","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"2015-05-15","DatumAbmeldung":"","DatumGutschein":"","Quelle":"Bestellung (nicht akzeptiert)","Segmant":"","Sprachcode":"de","Mail_Domain":""},"interests":[],"database":"4","secret":"f00251545b4e4b9d4387e6295b55540e","created":"2015-05-15 17:07:50"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 5272
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => langmeyer@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 2
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 2015-05-15
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => Bestellung (nicht akzeptiert)
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => 
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => f00251545b4e4b9d4387e6295b55540e
+                    [created] => 2015-05-15 17:07:50
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"langmeyer@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"2","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"2015-05-15","DatumAbmeldung":"","DatumGutschein":"","Quelle":"Bestellung (nicht akzeptiert)","Segmant":"","Sprachcode":"de","Mail_Domain":"","ID":"5272"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"langmeyer@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"2","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"2015-05-15","DatumAbmeldung":"","DatumGutschein":"","Quelle":"Bestellung (nicht akzeptiert)","Segmant":"","Sprachcode":"de","Mail_Domain":"","ID":"5272"}
+	Data: {"EMail":"langmeyer@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D5272&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"langmeyer@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501208.6897 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D5272&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"langmeyer@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501212.1179 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:20:09 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:20:09 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:20:09 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501245.4345 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501245.4473 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501245.46 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501245.9811 - Function get_profiles Line 144 - Response: {"start":0,"limit":0,"count":0,"data":[],"total":0}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 0
+    [count] => 0
+    [data] => Array
+        (
+        )
+
+    [total] => 0
+)
+
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment Manual - creating new profile. 
+
+1480501246.0186 - Function create_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+)
+
+
+1480501246.0321 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/4/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [Anrede] => Herr
+    [Vorname] => 
+    [Nachname] => 
+    [Name] => 
+    [SOI] => 1
+    [PLZ] => 
+    [Ort] => 
+    [Sprachcode] => de
+    [Geburtsdatum] => 
+    [DOI] => 0
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1480501247.0483 - Function create_profile Line 377 - Response: HTTP/1.1 201 Created
+Date: Wed, 30 Nov 2016 10:20:46 GMT
+Server: Apache
+Location: https://api.copernica.com/profile/7509?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Creating Profile succeeded - Location: https://api.copernica.com/profile/7509?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501284.1866 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501284.2001 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501284.2128 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501284.7328 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501284.7992 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501285.3084 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:21:24 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:21:24 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:21:24 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501310.4856 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501310.4976 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501310.5074 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501310.9578 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501311.0153 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501311.493 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:21:51 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:21:51 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:21:51 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501353.4318 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501353.4454 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501353.4558 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501353.7988 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501353.8541 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501354.302 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:22:33 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:22:33 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:22:33 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501372.6553 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501372.6698 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501372.683 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501373.2505 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501373.3087 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501373.7807 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:22:53 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:22:53 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:22:53 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501389.7772 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501389.7911 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501389.8021 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501390.1834 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501390.2502 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501390.8263 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:23:10 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:23:10 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:23:10 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501606.5309 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501606.5428 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501606.5544 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501607.0289 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501607.0921 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501608.2935 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:26:47 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:26:47 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:26:47 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501624.8873 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501624.9002 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501624.9118 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501625.3118 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501625.3798 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501625.8621 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:27:05 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:27:05 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:27:05 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501666.8552 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501666.8691 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501666.8831 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501668.5426 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501668.6215 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501668.9783 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:27:48 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:27:48 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:27:48 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501701.2235 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501701.2351 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501701.2469 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501701.5685 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501701.629 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501702.0681 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:28:21 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:28:21 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:28:21 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501735.9077 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501735.9209 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501735.9319 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501736.3109 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501736.3838 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501737.0454 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:28:56 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:28:56 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:28:56 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480501764.8166 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480501764.8289 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480501764.843 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480501765.4218 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501765.4949 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":""}
+
+1480501766.0752 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:29:25 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:29:25 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:29:25 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1480502897.435 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1480502897.4475 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1480502897.4608 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1480502898.083 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":""},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                            [CouponCode] => 
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":"","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":"","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":"","CouponCode":"ngQZ6qh6"}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":"","CouponCode":"ngQZ6qh6"}
+
+1480502898.155 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","Anrede":"Herr","Vorname":"","Nachname":"","Name":"","SOI":1,"PLZ":"","Ort":"","Sprachcode":"de","Geburtsdatum":"","CouponCode":"ngQZ6qh6"}
+
+1480502898.5557 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:48:18 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:48:18 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Wed, 30 Nov 2016 10:48:18 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1481032728.0124 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1481032728.0286 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1481032728.0407 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1481032728.0549 - Function get_profiles Line 144 - Response: 
+
+ERROR in function get_profiles - No output array in Line 160 | Output-Raw: 
+
+Function upsert_profile - Selected Profiles for Update: 
+
+	No Profile found for E-Mail lorenz@dc-solution.de, Segment Manual - creating new profile. 
+
+1481032728.1117 - Function create_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [SOI] => 1
+    [Sprachcode] => de
+    [Name] => Sebastian Lorenz
+    [Vorname] => Sebastian
+    [Nachname] => Lorenz
+    [Geburtsdatum] => 14.12.2016
+    [PLZ] => 95326
+    [Ort] => Kulmbach
+    [DOI] => 0
+    [CouponCode] => WFCUGKQ
+)
+
+
+1481032728.126 - Function create_profile Line 365 - Sending Request: https://api.copernica.com/database/4/profiles?access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+    [SOI] => 1
+    [Sprachcode] => de
+    [Name] => Sebastian Lorenz
+    [Vorname] => Sebastian
+    [Nachname] => Lorenz
+    [Geburtsdatum] => 14.12.2016
+    [PLZ] => 95326
+    [Ort] => Kulmbach
+    [DOI] => 0
+    [CouponCode] => WFCUGKQ
+    [Mail_Domain] => dc-solution.de
+)
+
+
+1481032728.1413 - Function create_profile Line 377 - Response: 
+
+Creating Profile failed - Output: 
+
+1481033442.1566 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1481033442.171 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1481033442.1829 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1481033443.1176 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":"ngQZ6qh6"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => 
+                            [Nachname] => 
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => 
+                            [Land] => 
+                            [Geburtsdatum] => 
+                            [PLZ] => 
+                            [Ort] => 
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                            [CouponCode] => ngQZ6qh6
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":"ngQZ6qh6","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"","Nachname":"","EMail":"lorenz@dc-solution.de","Name":"","Land":"","Geburtsdatum":"","PLZ":"","Ort":"","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":"ngQZ6qh6","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","SOI":1,"Sprachcode":"de","Name":"Sebastian Lorenz","Vorname":"Sebastian","Nachname":"Lorenz","Geburtsdatum":"07.12.2016","PLZ":"95326","Ort":"Kulmbach"}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","SOI":1,"Sprachcode":"de","Name":"Sebastian Lorenz","Vorname":"Sebastian","Nachname":"Lorenz","Geburtsdatum":"07.12.2016","PLZ":"95326","Ort":"Kulmbach"}
+
+1481033443.2084 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","SOI":1,"Sprachcode":"de","Name":"Sebastian Lorenz","Vorname":"Sebastian","Nachname":"Lorenz","Geburtsdatum":"07.12.2016","PLZ":"95326","Ort":"Kulmbach"}
+
+1481033443.9007 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Tue, 06 Dec 2016 14:10:43 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Tue, 06 Dec 2016 14:10:43 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Tue, 06 Dec 2016 14:10:43 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+1481033477.9468 - Function upsert_profile called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Profile: 
+
+1481033477.9639 - Function get_profiles called with parameters DB-ID: 4 | Access Token: b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838 | Fields: Array
+(
+    [EMail] => lorenz@dc-solution.de
+    [Segment] => Manual
+)
+
+
+1481033477.9807 - Function get_profiles Line 132 - Sending Request: https://api.copernica.com/database/4/profiles?fields[]=EMail%3D%3Dlorenz%40dc-solution.de&fields[]=Segment%3D%3DManual&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+
+1481033478.4468 - Function get_profiles Line 144 - Response: {"start":0,"limit":1,"count":1,"data":[{"ID":"7509","fields":{"Anrede":"Herr","Vorname":"Sebastian","Nachname":"Lorenz","EMail":"lorenz@dc-solution.de","Name":"Sebastian Lorenz","Land":"","Geburtsdatum":"2016-12-07","PLZ":"95326","Ort":"Kulmbach","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":"ngQZ6qh6"},"interests":[],"database":"4","secret":"78719c0b12c274048253aa8c175f93e4","created":"2016-11-30 11:20:46"}],"total":1}
+
+Function upsert_profile - Selected Profiles for Update: Array
+(
+    [start] => 0
+    [limit] => 1
+    [count] => 1
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [ID] => 7509
+                    [fields] => Array
+                        (
+                            [Anrede] => Herr
+                            [Vorname] => Sebastian
+                            [Nachname] => Lorenz
+                            [EMail] => lorenz@dc-solution.de
+                            [Name] => Sebastian Lorenz
+                            [Land] => 
+                            [Geburtsdatum] => 2016-12-07
+                            [PLZ] => 95326
+                            [Ort] => Kulmbach
+                            [DOI] => 0
+                            [SOI] => 1
+                            [OOI] => 0
+                            [Leadscore] => 
+                            [LetzterKlick] => 
+                            [DatumAnmeldung] => 
+                            [DatumAbmeldung] => 
+                            [DatumGutschein] => 
+                            [Quelle] => 
+                            [Segmant] => 
+                            [Sprachcode] => de
+                            [Mail_Domain] => dc-solution.de
+                            [CouponCode] => ngQZ6qh6
+                        )
+
+                    [interests] => Array
+                        (
+                        )
+
+                    [database] => 4
+                    [secret] => 78719c0b12c274048253aa8c175f93e4
+                    [created] => 2016-11-30 11:20:46
+                )
+
+        )
+
+    [total] => 1
+)
+
+
+	Profile: {"Anrede":"Herr","Vorname":"Sebastian","Nachname":"Lorenz","EMail":"lorenz@dc-solution.de","Name":"Sebastian Lorenz","Land":"","Geburtsdatum":"2016-12-07","PLZ":"95326","Ort":"Kulmbach","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":"ngQZ6qh6","ID":"7509"}
+
+	Updating Profile {"Anrede":"Herr","Vorname":"Sebastian","Nachname":"Lorenz","EMail":"lorenz@dc-solution.de","Name":"Sebastian Lorenz","Land":"","Geburtsdatum":"2016-12-07","PLZ":"95326","Ort":"Kulmbach","DOI":"0","SOI":"1","OOI":"0","Leadscore":"","LetzterKlick":"","DatumAnmeldung":"","DatumAbmeldung":"","DatumGutschein":"","Quelle":"","Segmant":"","Sprachcode":"de","Mail_Domain":"dc-solution.de","CouponCode":"ngQZ6qh6","ID":"7509"}
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","SOI":1,"Sprachcode":"de","Anrede":"Frau"}
+
+Updating Profiles
+	URL: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+	Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","SOI":1,"Sprachcode":"de","Anrede":"Frau"}
+
+1481033478.5226 - Function update_profile Line 643 - Sending Request: https://api.copernica.com/database/4/profiles/?fields[]=ID%3D%3D7509&fields[]=limit%3D%3D1&access_token=b46ff74daed1817f60d1388ef93a2deeee426bc220b86a004019ef632feafd41c9610b353805c7661baece6f473325571907244c9bb806f830e68c7d9d507838
+ Data: {"EMail":"lorenz@dc-solution.de","Segment":"Manual","SOI":1,"Sprachcode":"de","Anrede":"Frau"}
+
+1481033479.0317 - Function update_profile Line 655 - Response: HTTP/1.1 200 OK
+Date: Tue, 06 Dec 2016 14:11:18 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+Response: HTTP/1.1 200 OK
+Date: Tue, 06 Dec 2016 14:11:18 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+
+
+
+	Response: HTTP/1.1 200 OK
+Date: Tue, 06 Dec 2016 14:11:18 GMT
+Server: Apache
+Content-Length: 0
+Content-Type: application/json
+

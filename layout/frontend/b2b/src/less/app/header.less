@@ -1,0 +1,158 @@
+#header_1 {
+  background-color: @brand-primary;
+  color: @text-base;
+  padding-top: @spacer-base*3;
+  padding-bottom: @spacer-base*3;
+
+  #header_logo {
+    float:left;
+    width: 25%;
+    margin-top: 24px;
+  }
+
+  #header_search {
+    float:left;
+    width: 25%;
+  }
+  #header_navigation {
+    float:right;
+  }
+
+  label {
+    color: @text-base;
+    font-weight: @font-weight-bold;
+  }
+}
+
+#header_2 {
+  background-color: @black;
+  color: @white;
+  a {
+    color: @white;
+  }
+  #primary_navigation {
+    float:left;
+  }
+  #user_account_navigation {
+    float:right;
+  }
+}
+
+#header_trust {
+  color: @gray-base;
+  ul {
+    margin:0 -@spacer-xsmall;
+    padding:0;
+    li {
+      margin:0;
+      padding:0;
+      list-style-type: none;
+      display: inline;
+      padding-left: @spacer-xsmall;
+      padding-right: @spacer-xsmall;
+      color: @gray-base;
+      &:before {
+        content: "\F00C";
+        font-family: fontawesome;
+        margin-right: @spacer-xsmall;
+      }
+    }
+  }
+}
+
+#header_search_mobile {
+  display: none;
+}
+
+@media (max-width: @screen-md-max) {
+  #header_1 {
+    #header_logo {
+      width: 33.3333%;
+    }
+    #header_search {
+      width: 33.3333%;
+    }
+  }
+}
+
+@media (max-width: @screen-sm-max) {
+  #header {
+    position: fixed;
+    width:100%;
+    top:0;
+    left:0;
+    z-index:100;
+  }
+  #header_1 {
+    padding:0;
+    #header_logo {
+      width: 30%;
+      margin-top: 16px;
+      padding-left: @spacer-base*2;
+      padding-right: @spacer-base*2;
+    }
+    #header_search {
+      margin-top: 11px;
+      .calc(width,"55% - 60px");
+      label {
+        display: none;
+      }
+    }
+    #header_navigation {
+      display: none;
+    }
+    #header_account_mobile {
+      float:right;
+      a {
+        color: @text-base;
+        &:hover {
+          color: @white;
+        }
+      }
+      .header_account {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+@media (max-width: @screen-xs-max) {
+  #header_1 {
+    position:relative;
+    .container {
+      padding-left:0;
+      padding-right:0;
+    }
+    #header_logo {
+      padding-left: @spacer-base*1.5;
+      padding-right: 0;
+      width: 150px;
+      margin-top: 14px;
+    }
+    #header_account_mobile {
+      padding-right: @spacer-base*2;
+      #header_search_mobile {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        padding-left: @spacer-base/2;
+        padding-right: @spacer-base/2;
+        display: inline-block;
+        .fa {
+          font-size: 1.4em;
+        }
+      }
+    }
+    #header_search {
+      width:100%;
+      float:none;
+      margin-top:0;
+      position: absolute;
+      padding:0;
+      left:0;
+      bottom:-39px;
+      display: none;
+      border-bottom: 1px solid @light-gray;
+      .box-shadow(0px 10px 10px -11px rgba(0,0,0,0.75));
+    }
+  }
+}

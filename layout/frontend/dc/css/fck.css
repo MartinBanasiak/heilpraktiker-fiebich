@@ -1,0 +1,152 @@
+html, body
+{
+	background-color: transparent;
+	margin: 0px;
+	padding: 0px;
+}
+
+body
+{
+	padding: 10px;
+}
+
+body, td, input, select, textarea
+{
+	font-size: 12px;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+
+h1 {
+	padding: 0px;
+	margin: 0px;
+	font-size: 70px;
+	color: #99c137;
+	font-weight: normal;
+	letter-spacing: -1px;
+	line-height: 65px;
+	margin-bottom: 10px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+h2 {
+	margin: 10px 0px 4px 0px; /* oben, rechts, unten, links */
+	padding: 0px;
+	font-size: 20px;
+	color: #99c137;	
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+}
+
+h3 {
+	padding: 0px;
+	margin: 6px 0px 3px 0px; /* oben, rechts, unten, links */
+	font-size: 16px;
+	color: #99c137;
+	font-weight: bold;
+}
+
+h4 {
+	padding: 0px;
+	margin: 6px 0px 3px 0px; /* oben, rechts, unten, links */
+	font-size: 16px;
+	color: #333;
+	font-weight: bold;
+}
+
+h5 {
+	padding: 0px;
+	margin: 4px 0px 2px 0px; /* oben, rechts, unten, links */
+	font-size: 13px;
+	color: #99c137;
+	font-weight: bold;
+}
+
+h6 {
+	padding: 0px;
+	margin: 4px 0px 2px 0px; /* oben, rechts, unten, links */
+	font-size: 13px;
+	color: #333;
+	font-weight: bold;
+}
+
+h1 a, h1 a:link, h2 a, h2 a:link,h2 a:visited, h3 a, h5 a {
+	color: #99c137;
+	text-decoration: underline;
+}
+
+h4 a, h6 a {
+	color: #99c137;
+	text-decoration: underline;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, a6 a:hover {
+	color: #FFF;
+	background-color: color: #99c137;
+	text-decoration: underline;
+}
+
+ul {
+	margin: 0px;
+	padding: 2px 0px 5px 20px; /* oben, rechts, unten, links */
+	list-style-image:url(../img/ul.gif);
+}
+
+ul li {
+	margin: 0px;
+	padding: 2px 0px 2px 0px; /* oben, rechts, unten, links */
+}
+
+.pixelbox {
+	border-top: 1px dotted #666;
+	padding: 0px 5px 10px 5px; /* oben, rechts, unten, links */
+}
+
+.last_pixelbox {
+	border-top: 1px dotted #999;
+	border-bottom: 1px dotted #999;
+	padding: 0px 5px 10px 5px; 
+}
+
+.pixelbox_no_border {
+	padding: 0px 5px 10px 5px; 
+}
+
+.pixelbox_bottom_border {
+	border-bottom: 1px dotted #999;
+	padding: 0px 5px 10px 5px; 
+}
+
+.pixelbox_start {
+	width: 210px;
+	min-height: 170px;
+	border-top: 1px dotted #999;
+	border-bottom: 1px dotted #999;
+	padding: 0px 5px 10px 5px;
+	margin: 0px 0px 0px 20px;
+	float: left;
+}
+
+.spacer_4 {
+	width: 4px;
+	height: 4px;
+	line-height: 4px;
+}
+
+.spacer_6 {
+	width: 6px;
+	height: 6px;
+	line-height: 6px;
+}
+
+a.dcbutton {
+	display: block;
+	width: 260px;
+	height: 30px;
+	padding: 0px;
+	margin: 0px;
+	overflow: hidden;
+	background-image:url(../img/dc-button.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+}

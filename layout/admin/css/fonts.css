@@ -1,0 +1,107 @@
+@font-face {
+	font-family: 'SourceSansPro-Regular';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Regular.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-Regular.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-Regular.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-Regular.svg#SourceSansPro-Regular') format('svg'); /* Legacy iOS */
+	}
+	
+@font-face {
+	font-family: 'SourceSansPro-Bold';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Bold.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-Bold.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-Bold.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-Bold.svg#SourceSansPro-Bold') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-Black';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Black.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Black.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-Black.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-Black.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-Black.svg#SourceSansPro-Black') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-BlackIt';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-BlackIt.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-BlackIt.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-BlackIt.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-BlackIt.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-BlackIt.svg#SourceSansPro-BlackIt') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-BoldIt';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-BoldIt.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-BoldIt.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-BoldIt.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-BoldIt.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-BoldIt.svg#SourceSansPro-BoldIt') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-ExtraLight';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-ExtraLight.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-ExtraLight.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-ExtraLight.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-ExtraLight.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-ExtraLight.svg#SourceSansPro-ExtraLight') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-ExtraLightIt';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-ExtraLightIt.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-ExtraLightIt.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-ExtraLightIt.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-ExtraLightIt.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-ExtraLightIt.svg#SourceSansPro-ExtraLightIt') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-It';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-It.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-It.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-It.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-It.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-It.svg#SourceSansPro-It') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-Light';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Light.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-Light.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-Light.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-Light.svg#SourceSansPro-Light') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-LightIt';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-LightIt.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-LightIt.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-LightIt.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-LightIt.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-LightIt.svg#SourceSansPro-LightIt') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-Semibold';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Semibold.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-Semibold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-Semibold.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-Semibold.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-Semibold.svg#SourceSansPro-Semibold') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+	font-family: 'SourceSansPro-SemiboldIt';
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-SemiboldIt.eot'); /* IE9 Compat Modes */
+	src: url('fonts/sourcesanspro/EOT/SourceSansPro-SemiboldIt.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('fonts/sourcesanspro/WOFF/TTF/SourceSansPro-SemiboldIt.ttf.woff')  format('woff'), /* Safari, Android, iOS */
+	     url('fonts/sourcesanspro/WOFF/OTF/SourceSansPro-SemiboldIt.ttf.woff')  format('woff'),
+	     url('fonts/sourcesanspro/SVG/SourceSansPro-SemiboldIt.svg#SourceSansPro-SemiboldIt') format('svg'); /* Legacy iOS */
+}

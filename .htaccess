@@ -1,0 +1,121 @@
+AddDefaultCharset UTF-8
+
+# Video support
+AddType video/ogg .ogv
+AddType video/mp4 .mp4
+AddType video/webm .webm
+AddType video/ogv .ogv
+
+# Audio support
+AddType audio/mp3 .mp3
+AddType audio/oga .oga
+AddType audio/ogg .ogg
+AddType audio/wav .wav
+
+# For HLS support
+AddType application/x-mpegURL .m3u8
+AddType vnd.apple.mpegURL .m3u8
+AddType video/MP2T .ts
+
+# For M(PEG)-DASH support
+AddType application/dash+xml .mpd
+
+# For subtitles support
+AddType text/vtt .vtt
+AddType text/srt .srt
+
+# Deflate Compression by FileType
+<IfModule mod_deflate.c>
+ AddOutputFilterByType DEFLATE text/plain
+ AddOutputFilterByType DEFLATE text/html
+ AddOutputFilterByType DEFLATE text/xml
+ AddOutputFilterByType DEFLATE text/css
+ AddOutputFilterByType DEFLATE text/javascript
+ AddOutputFilterByType DEFLATE application/xml
+ AddOutputFilterByType DEFLATE application/xhtml+xml
+ AddOutputFilterByType DEFLATE application/rss+xml
+ AddOutputFilterByType DEFLATE application/atom_xml
+ AddOutputFilterByType DEFLATE application/javascript
+ AddOutputFilterByType DEFLATE application/x-javascript
+ AddOutputFilterByType DEFLATE application/x-shockwave-flash
+</IfModule>
+
+# turns cache on for 1 month
+<IfModule mod_expires.c>
+ ExpiresActive On
+ ExpiresByType text/css "access plus 1 month"
+ ExpiresByType text/javascript "access plus 1 month"
+ ExpiresByType text/html "access plus 1 month"
+ ExpiresByType application/javascript "access plus 1 month"
+ ExpiresByType image/gif "access plus 1 month"
+ ExpiresByType image/jpeg "access plus 1 month"
+ ExpiresByType image/png "access plus 1 month"
+ ExpiresByType image/x-icon "access plus 1 month"
+</IfModule>
+<ifmodule mod_headers.c>
+ <filesmatch "\\.(ico|jpe?g|png|gif|swf)$">
+  Header set Cache-Control "max-age=2592000, public"
+ </filesmatch>
+ <filesmatch "\\.(css)$">
+  Header set Cache-Control "max-age=604800, public"
+ </filesmatch>
+ <filesmatch "\\.(js)$">
+  Header set Cache-Control "max-age=216000, private"
+ </filesmatch>
+</ifmodule>
+
+# Deflate Compression by MimeType
+<IfModule mod_deflate.c>
+ <FilesMatch "\.(js|jpg|jpeg|gif|png|css)$">
+  ExpiresActive on
+  ExpiresDefault "access plus 1 month"
+  SetOutputFilter DEFLATE
+ </FilesMatch>
+</IfModule>
+
+<ifmodule mod_headers.c>
+    SetEnvIf Host ^dc-test\.de$ is_on_dev_site
+    Header set X-Robots-Tag "noindex, nofollow" env=is_on_dev_site
+</ifmodule>
+
+RewriteEngine on
+
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+#FallbackResource /dc/frontend/frontend.php
+
+
+RewriteRule ^layout/frontend/css/([^/.]*)/([^/.]*)/$ /dc/frontend/css.php?layout_id=$1&page_id=$2 [L,QSA]
+
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteRule ^dc/(.*)$ /dc/admin/admin.php [L,QSA]
+#RewriteRule ^dc/$ /dc/admin/admin.php?site=$1 [L,QSA]
+#RewriteRule ^dc/([^/.]*)/$ /dc/admin/admin.php?site=$1&language=$2 [L,QSA]
+#RewriteRule ^dc/([^/.]*)/([^/.]*)/$ /dc/admin/admin.php?site=$1&language=$2&level_1=$3 [L,QSA]
+#RewriteRule ^dc/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/admin/admin.php?site=$1&language=$2&level_1=$3&level_2=$4 [L,QSA]
+#RewriteRule ^dc/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/admin/admin.php?site=$1&language=$2&level_1=$3&level_2=$4&level_3=$5 [L,QSA]
+
+#RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(layout|userdata)($|/) - [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /dc/frontend/frontend.php [L,QSA]
+
+#RewriteRule ^([^/.]*)/([^/.]*)/shop/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=shop&slevel_1=$3 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/shop/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=shop&slevel_1=$3&slevel_2=$4 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/shop/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=shop&slevel_1=$3&slevel_2=$4&slevel_3=$5 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/shop/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=shop&slevel_1=$3&slevel_2=$4&slevel_3=$5&slevel_4=$6 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/shop/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=shop&slevel_1=$3&slevel_2=$4&slevel_3=$5&slevel_4=$6&slevel_5=$7 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/shop/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=shop&slevel_1=$3&slevel_2=$4&slevel_3=$5&slevel_4=$6&slevel_5=$7&slevel_6=$8 [L,QSA]
+
+#RewriteRule ^(.*)$ /dc/frontend/frontend.php [L,QSA]
+#RewriteRule ^([^/.]*)/$ /dc/frontend/frontend.php?site=$1 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=$3 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=$3&level_2=$4 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=$3&level_2=$4&level_3=$5 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=$3&level_2=$4&level_3=$5&level_4=$6 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=$3&level_2=$4&level_3=$5&level_4=$6&level_5=$7 [L,QSA]
+#RewriteRule ^([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/([^/.]*)/$ /dc/frontend/frontend.php?site=$1&language=$2&level_1=$3&level_2=$4&level_3=$5&level_4=$6&level_5=$7&level_6=$8 [L,QSA]
+

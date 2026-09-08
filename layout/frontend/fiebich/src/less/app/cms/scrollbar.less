@@ -1,0 +1,108 @@
+
+.MagicScroll {
+  margin-bottom: @spacer-large;
+  .mcs-button-arrow {
+    &:before {
+      font-family: "fontawesome";
+      font-size: 45px;
+      color: @light-gray;
+      position: absolute;
+      top: 50%;
+      margin-top: -25px;
+      margin-left: -5px;
+    }
+    &.mcs-button-arrow-prev {
+      left: -35px;
+      &:before {
+        content: "\f104";
+      }
+    }
+    &.mcs-button-arrow-next {
+      right: -35px;
+      &:before {
+        content: "\f105";
+      }
+    }
+    &:hover {
+      &:before {
+        color: @gray-base;
+      }
+    }
+  }
+  &.MagicScroll-arrows-inside {
+    .mcs-button-arrow {
+      width: 40px;
+      height: 40px;
+      .border-radius(0);
+      .box-shadow(none);
+      background-color: fade(@white,40);
+      &:before {
+        font-family: "fontawesome";
+        font-size: 45px;
+        color: @light-gray;
+        position: absolute;
+        top: 50%;
+        margin-top: -25px;
+        margin-left: -8px;
+      }
+      &.mcs-button-arrow-prev {
+        left: -40px;
+        &:before {
+          content: "\f104";
+        }
+      }
+      &.mcs-button-arrow-next {
+        right: -40px;
+        &:before {
+          content: "\f105";
+        }
+      }
+      &:hover {
+        &:before {
+          color: @gray-base;
+        }
+      }
+    }
+  }
+}
+
+.MagicZoomGallery {
+  .mcs-item {
+    padding: @spacer-base;
+  }
+}
+
+
+@media (max-width: @screen-sm-max) {
+  .MagicScroll {
+    > .mcs-button-arrow {
+      width: 20px;
+      &.mcs-button-arrow-prev {
+        left: -17px;
+        &:before {
+          margin-left: -8px;
+        }
+      }
+      &.mcs-button-arrow-next {
+        right: -17px;
+        &:before {
+          margin-left: -10px;
+        }
+      }
+    }
+  }
+}
+@media (max-width: @screen-xs-max){
+    .MagicScroll.scrollbar {
+      .mcs-item {
+        width: 33.3333333% !important;
+      }
+    }
+}
+@media (max-width: @screen-xs) {
+  .MagicScroll.scrollbar {
+    .mcs-item {
+      width: 50% !important;
+    }
+  }
+}

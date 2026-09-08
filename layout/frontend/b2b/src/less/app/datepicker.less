@@ -1,0 +1,78 @@
+
+.datepicker {
+  .border-radius(0);
+  td, th {
+    .border-radius(0);
+  }
+  table {
+    tr {
+      td {
+        &.active {
+          background: none;
+          background-color: @brand-primary;
+          text-shadow: none;
+          &.active,
+          &:hover {
+            background-color: @brand-primary;
+            background: none;
+            text-shadow: none;
+            &:hover,
+            &.active {
+              background: none;
+              background-color: @brand-primary;
+              text-shadow: none;
+            }
+          }
+        }
+        span {
+          &.active {
+            background: none;
+            background-color: @brand-primary;
+            text-shadow: none;
+            &.active,
+            &:hover {
+              background-color: @brand-primary;
+              background: none;
+              text-shadow: none;
+              &:hover,
+              &.active {
+                background: none;
+                background-color: @brand-primary;
+                text-shadow: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.daterangepicker {
+  .border-radius(0);
+  td, th {
+    .border-radius(0);
+  }
+  td {
+    &.in-range {
+      background-color: @light-gray;
+    }
+    &.active {
+      background-color: @brand-primary;
+      &:hover {
+        background-color: darken(@brand-primary,5);
+      }
+    }
+    &.start-date,
+    &.end-date {
+      .border-radius(0);
+    }
+  }
+  .input-mini {
+    &:extend(.form-control all);
+    &.active {
+      &:extend(.form-control:focus);
+      .border-radius(0);
+    }
+  }
+}

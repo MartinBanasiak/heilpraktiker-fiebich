@@ -1,0 +1,38 @@
+.margin{
+  margin: @spacer-base;
+  &Top{
+    margin-top: @spacer-base;
+  }
+  &Right{
+    margin-right: @spacer-base;
+  }
+  &Bottom{
+    margin-bottom: @spacer-base;
+  }
+  &Left{
+    margin-left: @spacer-base;
+  }
+}
+@margin: --small @spacer-small, --large @spacer-large, --xlarge @spacer-xlarge, --xsmall @spacer-xsmall;
+.make-margins(@index) when (@index > 0){
+  @extraction: extract(@margin, @index);
+  @first: extract(@extraction,1);
+  @second: extract(@extraction,2);
+  .margin@{first}{
+    margin: @second;
+  }
+  .marginTop@{first}{
+    margin-top: @second;
+  }
+  .marginRight@{first}{
+    margin-right: @second;
+  }
+  .marginBottom@{first}{
+    margin-bottom: @second;
+  }
+  .marginLeft@{first}{
+    margin-left: @second;
+  }
+  .make-margins(@index - 1);
+}
+.make-margins(length(@margin));

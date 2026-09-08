@@ -1,0 +1,39 @@
+
+.alert {
+  .border-radius(0);
+  position: relative;
+  padding-left: 50px;
+  &:before {
+    content: "\f05a";
+    font-family: FontAwesome;
+    position: absolute;
+    left:15px;
+    top:50%;
+    font-size: 30px;
+    margin-top: -21px;
+  }
+}
+
+.alert-danger {
+  color: @brand-danger;
+  border-color: @brand-danger;
+  background-color: lighten(@brand-danger,50);
+}
+
+.alert-warning {
+  color: @brand-warning;
+  border-color: @brand-warning;
+  background-color: lighten(@brand-warning,50);
+}
+
+.alert-success {
+  color: @brand-success;
+  border-color: @brand-success;
+  background-color: lighten(@brand-success,50);
+}
+
+.alert-info {
+  color: @gray-base;
+  border-color: @gray-base;
+  background-color: lighten(@gray-base,50);
+}

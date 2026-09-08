@@ -1,0 +1,38 @@
+
+.cookieBar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background-color: fade(@white,80);
+  font-size: 12px;
+  padding: @spacer-base;
+  width: 100%;
+  z-index: 100;
+  text-align: center;
+  min-width: 320px;
+  > div {
+    display: inline-block;
+  }
+  &__message {
+    display: inline-block;
+    padding-right: @spacer-base;
+  }
+  &__button {
+    &:extend(.button all);
+    min-width: 0;
+    width: 100px;
+  }
+}
+
+@media (max-width: @screen-lg-max) {
+  .cookieBar {
+    > div {
+      display: block;
+    }
+    &__message {
+      display: block;
+      padding-right: 0;
+      margin-bottom: @spacer-base;
+    }
+  }
+}

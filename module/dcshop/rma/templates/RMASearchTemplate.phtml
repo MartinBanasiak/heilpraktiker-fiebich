@@ -1,0 +1,143 @@
+<?php
+namespace DynCom\dc\dcShop\rma;
+?>
+<div class="return_order">
+    <div class="return_order_header">
+        <div class="return_order_title">
+            <h1><?php echo $this->model->titleString ?></h1>
+        </div>
+        <div class="return_order_text">
+            <?php echo $this->model->mainMessageString ?>
+        </div>
+        <div class="return_order_error">
+            <?php echo $this->model->errorString ?>
+        </div>
+        <div class="return_order_messages">
+            <?php echo $this->model->noticeString ?>
+        </div>
+        <div class="return_order_form_wrapper">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <form id="rma_shipment_search" name="rma_shipment_search" method="POST"
+                          action="?shop_category=rma&action=search">
+                        <?php if(!$this->model->hasLogin) { ?>
+                            <div class="input form-group email ">
+                                <label for="input_rma_email"><?php echo $this->model->emailLabel ?></label>
+                                <input name="input_rma_email" id="input_rma_email" class="form-control email text" type="email" value="<?php echo $this->model->inputEMail ?>">
+                            </div>
+                            <div class="input form-group post_code ">
+                                <label for="input_rma_post_code"><?php echo $this->model->postCodeLabel ?></label>
+                                <input name="input_rma_post_code" id="input_rma_post_code" class="form-control  text" type="text" value="<?php echo $this->model->inputPostCode ?>">
+                            </div>
+                        <? } ?>
+                        <div class="input form-group request ">
+                            <label for="input_rma_request"><?php echo $this->model->searchFieldLabel ?></label>
+                            <input name="input_rma_request" id="input_rma_request" class="form-control  text" type="text"  value="<?php echo $this->model->inputRequest ?>" data-prefill="<?php echo $this->model->searchPrefill ?>">
+                        </div>
+                        <div class="submitwrapper">
+                            <input type="submit" class="button" value="<?php echo $this->model->submitLabel ?>">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="return_order_result">
+        <?php
+        if (count($this->model->retShipmentCollection) > 0) {
+            ?>
+            <form id="form_rma_result_list" name="form_rma_result_list" method="POST"
+                  action="?shop_category=rma&action=view-shipment">
+                <input name="input_rma_request" type="hidden" value="<?php echo $this->model->inputRequest ?>">
+                <?php if(!$this->model->hasLogin) { ?>
+                <input name="input_rma_post_code" type="hidden" value="<?php echo $this->model->inputPostCode ?>">
+                <input name="input_rma_email" type="hidden" value="<?php echo $this->model->inputEMail ?>">
+                <? } ?>
+                <?/*<div class="toolbar toolbar-list">
+                    <a class="button_edit" href="javascript:void(0);"
+                       onclick="document.form_rma_result_list.action='?shop_category=rma&action=view-shipment'; document.form_rma_result_list.submit(); return false;"><?php echo $this->model->showShipmentLabel ?></a>
+
+                </div>*/?>
+                <div class="linklist table_area">
+                    <div class="table_row table_header">
+                        <div class="table_cell" style="display: none">
+                            &nbsp;
+                        </div>
+                        <div class="table_cell">
+                            <?php echo $this->model->shipmentNoLabel ?>
+                        </div>
+                        <div class="table_cell">
+                            <?php echo $this->model->postingDateLabel ?>
+                        </div>
+                        <div class="table_cell">
+                            <?php echo $this->model->yourReferenceLabel ?>
+                        </div>
+                        <div class="table_cell">
+                            <?php echo $this->model->addressLabel ?>
+                        </div>
+                        <div class="table_cell">
+                            <?php echo $this->model->postCodeLabel ?>
+                        </div>
+                        <div class="table_cell">
+                            <?php echo $this->model->cityLabel ?>
+                        </div>
+                    </div>
+                    <?php
+
+                    $i = 0;
+                    foreach ($this->model->retShipmentCollection as $shipment) {
+                        ?>
+                        <div class="table_row table_body" onclick="document.form_rma_result_list.form_rma_result_list_input_id[<?=$i?>].checked = true; ">
+                            <div style="display: none" class="option">
+                                <input id="form_rma_result_list_input_id" name="input_header_id" type="radio" class="id_input" value="<?php echo $shipment->id ?>">
+                            </div>
+                            <div class="table_cell">
+                                <span class="table_cell_label"><?php echo $this->model->shipmentNoLabel ?></span>
+                                <span><?php echo $shipment->no ?></span>
+                            </div>
+                            <div class="table_cell">
+                                <span class="table_cell_label"><?php echo $this->model->postingDateLabel ?></span>
+                                <span><?php echo date("d.m.Y", strtotime($shipment->posting_date)) ?></span>
+                            </div>
+                            <div class="table_cell">
+                                <span class="table_cell_label"><?php echo $this->model->yourReferenceLabel ?></span>
+                                <span><?php echo $shipment->your_reference ?></span>
+                            </div>
+                            <div class="table_cell">
+                                <span class="table_cell_label"><?php echo $this->model->addressLabel ?></span>
+                                <span><?php echo $shipment->ship_to_address ?></span>
+                            </div>
+                            <div class="table_cell">
+                                <span class="table_cell_label"><?php echo $this->model->postCodeLabel ?></span>
+                                <span><?php echo $shipment->ship_to_post_code ?></span>
+                            </div>
+                            <div class="table_cell">
+                                <span class="table_cell_label"><?php echo $this->model->cityLabel ?></span>
+                                <span><?php echo $shipment->ship_to_city ?></span>
+                            </div>
+                        </div>
+                        <?php
+                        ++$i;
+                    }
+                    ?>
+                </div>
+            </form>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#form_rma_result_list .table_body').click(function(){
+                        $('#form_rma_result_list').attr('action','?shop_category=rma&action=view-shipment');
+                        $('#form_rma_result_list').submit();
+                    });
+                });
+            </script>
+        <?php
+        }
+        ?>
+    </div>
+</div>
+<?php if(file_exists(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->scriptletPath) && is_readable(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->scriptletPath))  { ?>
+<script type="text/javascript" src="<?php echo $this->model->scriptletPath ?>"></script>
+<?php } ?>
+<?/*<?php if(file_exists(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->styleFilePath) && is_readable(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->styleFilePath)) { ?>
+<link type="text/css" rel="stylesheet" href="<?php echo $this->model->styleFilePath ?>" />
+<?php } ?>*/?>

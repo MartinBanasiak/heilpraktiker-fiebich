@@ -1,0 +1,181 @@
+
+//
+// Grid system
+// --------------------------------------------------
+
+
+// Container widths
+//
+// Set the container width, and override it for fixed navbars in media queries.
+
+.container {
+  min-width: @container-min-width;
+  .container-fixed();
+
+  @media (min-width: @screen-sm-min) {
+    width: @container-sm;
+  }
+  @media (min-width: @screen-md-min) {
+    width: @container-md;
+  }
+  @media (min-width: @screen-lg-min) {
+    width: @container-lg;
+  }
+  @media (min-width: @screen-xlg-min) {
+    width: @container-xlg;
+  }
+}
+
+
+// Fluid container
+//
+// Utilizes the mixin meant for fixed width containers, but without any defined
+// width for fluid, full width layouts.
+
+.container-fluid {
+  .container-fixed();
+}
+
+
+// Row
+//
+// Rows contain and clear the floats of your columns.
+
+.row {
+  .make-row();
+}
+
+
+// Columns
+//
+// Common styles for small and large grid columns
+
+.make-grid-columns();
+
+
+// Extra small grid
+//
+// Columns, offsets, pushes, and pulls for extra small devices like
+// smartphones.
+
+.make-grid(xs);
+
+
+// Small grid
+//
+// Columns, offsets, pushes, and pulls for the small device range, from phones
+// to tablets.
+
+@media (min-width: @screen-sm-min) {
+  .make-grid(sm);
+}
+
+
+// Medium grid
+//
+// Columns, offsets, pushes, and pulls for the desktop device range.
+
+@media (min-width: @screen-md-min) {
+  .make-grid(md);
+}
+
+
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+
+@media (min-width: @screen-lg-min) {
+  .make-grid(lg);
+
+  .col-lg-1-5 {
+    width:20%;
+  }
+  .col-lg-2-5 {
+    width:40%;
+  }
+  .col-lg-3-5 {
+    width:60%;
+  }
+  .col-lg-4-5 {
+    width:80%;
+  }
+}
+
+
+// X-Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+
+@media (min-width: @screen-xlg-min) {
+  .make-grid(xlg);
+
+  .col-xlg-1-5 {
+    width:20%;
+  }
+  .col-xlg-2-5 {
+    width:40%;
+  }
+  .col-xlg-3-5 {
+    width:60%;
+  }
+  .col-xlg-4-5 {
+    width:80%;
+  }
+}
+
+@media (min-width: @screen-xlg-min) {
+  .xlg-margin {
+    margin-bottom: @spacer-base*2;
+    &--small {
+      margin-bottom: @spacer-base;
+    }
+  }
+}
+
+@media (min-width: @screen-lg-min) and (max-width: @screen-lg-max) {
+  .lg-margin {
+    margin-bottom: @spacer-base*2;
+    &--small {
+      margin-bottom: @spacer-base;
+    }
+  }
+}
+
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+  .md-margin {
+    margin-bottom: @spacer-base*2;
+    &--small {
+      margin-bottom: @spacer-base;
+    }
+  }
+}
+
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+  .sm-margin {
+    margin-bottom: @spacer-base*2;
+    &--small {
+      margin-bottom: @spacer-base;
+    }
+  }
+  .float-sm-right {
+    float:right;
+  }
+}
+
+@media (max-width: @screen-xs-max) {
+  .xs-margin {
+    margin-bottom: @spacer-base*2;
+    &--small {
+      margin-bottom: @spacer-base;
+    }
+  }
+}
+
+
+@media (max-width: @screen-xs) {
+  .make-grid(xxs);
+}
+
+.clearfloat {
+  clear:both;
+}

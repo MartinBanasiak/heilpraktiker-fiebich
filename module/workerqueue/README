@@ -1,0 +1,89 @@
+To set up the workerqueue:
+
+1. Have a database connection with workerqueue tables (general_worker_queue,scheduled_jobs)
+
+   CREATE TABLE `general_job_queue` (
+     `id` int(11) NOT NULL AUTO_INCREMENT,
+     `queue_name` varchar(128) NOT NULL,
+     `creation_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     `time_to_live` int(11) NOT NULL DEFAULT '0',
+     `last_action_timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'  ON UPDATE CURRENT_TIMESTAMP,
+     `status` varchar(20) NOT NULL,
+     `failure_code` int(3) NOT NULL DEFAULT '0',
+     `no_of_unsuccessful_attempts` int(3) NOT NULL DEFAULT '0',
+     `max_no_of_retries` int(3) NOT NULL DEFAULT '0',
+     `payload` mediumtext NOT NULL,
+     `failure_data` mediumtext NOT NULL,
+     PRIMARY KEY (`id`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+   CREATE TABLE `scheduled_jobs` (
+     `id` int(11) NOT NULL AUTO_INCREMENT,
+     `cron_spec` varchar(128) NOT NULL,
+     `registered_with_pid` varchar(10) NOT NULL DEFAULT '',
+     `queue_name` varchar(128) NOT NULL,
+     `time_to_live` int(11) NOT NULL DEFAULT '0',
+     `max_no_of_retries` int(3) NOT NULL DEFAULT '0',
+     `payload` mediumtext NOT NULL,
+     PRIMARY KEY (`id`),
+     KEY `pid` (`registered_with_pid`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+2. Have a "workerqueue" directory in the "/conf" directory where the following files are present:
+    - .env
+    - workers.yml
+
+
+3. Have at least the following entries in the .env file
+
+    WORKERQUEUE_DB_HOST="[host, e.g. localhost]"
+    WORKERQUEUE_DB_PORT="[port, e.g. 3306]"
+    WORKERQUEUE_DB_USER="[user]"
+    WORKERQUEUE_DB_PASS="[pass]"
+    WORKERQUEUE_DB_SCHEMA="[schema, e.g. webXX_workerqueue]"
+
+    MAIN_SMTP_MAILER_IP="[IP, e.g. 0.0.0.0]"
+    MAIN_SMTP_MAILER_PORT="[Port, e.g. 1025]"
+
+
+4. Fill the workers.yml according to the following schema
+
+basepath: "../"
+workers:
+  [WorkerClassName1]:
+    path: "[Filepath to worker1 relative to workerqueue directory]"
+    instances: [No of instances (INT)]
+    instance_restart_minutes: [No of minutes (INT)]
+    arguments: {[Not yet implemented] }
+  [WorkerClassName2]:
+    path: "[Filepath to worker2 relative to workerqueue directory]"
+    instances: [No of instances (INT)]
+    instance_restart_minutes: [No of minutes (INT)]
+    arguments: {[Not yet implemented]}
+
+
+5. Workers may require their own .env files (usually from corresponding subdirectories of /config/workerqueue/workers)
+   make sure you provide the required data (look for "getenv" in the the worker's respective JobHandler & Worker)
+
+
+6. Set up a scheduled job in the system (CRON on linux, Task Scheduler on Windows) to execute the script in
+   "/module/workerqueue/processManagement/superviseProcesses.php" with php71 regularly, e.g. every 2-5 minutes
+   (locally with php[71] -q [script-path], not via network)
+
+
+========
+
+
+6. To make use of the CronSpecScheduledJobHandler to perform scheduled (timed and/or recurring) jobs, you can place entries
+   into the scheduled_jobs table manually or programmatically by creating an instance of GenericCronSpecScheduledJob,
+   passing the relevant data into it, then pass it to the "createScheduledJob" Method of the PDOCronSpecScheduledJobGateway
+
+
+7. To handle a new kind of Job, you will need a JobHandler which extracts and validates payload (if necessary) and performs
+   the actual work. Copy the thematically closest of the existing Handlers and modify accordingly. Then you build a dedicated
+   worker (which you can copy from an existing one as well), and give it dedicated error/exception/interrupt handling to exit
+   cleanly in the worker class (if the default handling is not enough), and append below the class in the same file the
+   script part which is later called from the ProcessSupervisor, which gets environment variables, constructs class-instances,
+   sets up logging and starts the workers loop
+

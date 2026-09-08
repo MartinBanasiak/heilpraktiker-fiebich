@@ -1,0 +1,46 @@
+
+.owl-carousel {
+  position: relative;
+  .owl-nav {
+    > button {
+      font-size: 20px !important;
+      position: absolute;
+      top: 50%;
+      width: 40px;
+      height: 40px;
+      color: @light-gray;
+      display: block;
+      text-align: center;
+      line-height: 40px;
+      margin-top: -20px;
+      background-color: fade(@white,85) !important;
+      .opacity(0);
+      .transition(0.2s ease-in-out);
+      &:hover {
+        color: @text-base;
+        background-color: @white !important;
+      }
+    }
+    .owl-next {
+      right: -40px;
+    }
+    .owl-prev {
+      left: -40px;
+    }
+  }
+  &:hover {
+    .owl-nav {
+      > button {
+        .opacity(1);
+      }
+    }
+  }
+}
+
+@media (max-width: @screen-xs-max) {
+  .owl-carousel {
+    .owl-nav {
+      display: none;
+    }
+  }
+}

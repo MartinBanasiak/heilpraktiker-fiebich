@@ -1,0 +1,129 @@
+<div class="form_wrapper shop_form_wrapper customer_address_form_wrapper">
+    <form method="POST" action="/b2c/de/account/{{action}}/?action=shop_login_account&test_cont=1">
+        <input type="hidden" name="id" value="{{id}}"/>
+        <input type="hidden" name="company" value="{{company}}"/>
+        <input type="hidden" name="customer_no" value="{{customer_no}}"/>
+        <div class="form_label shop_form_label customer_address_form_label" id="customer_address_form_code_label">
+            <label for="customer_address_form_code_input">{{codeLabel}}</label>
+        </div>
+        <div class="form_input_wrapper shop_form_input_wrapper customer_address_form_input_wrapper"
+             id="customer_address_form_code_input_wraper">
+            <input type="{{fieldInputOptions.code.type}}"
+                {{#fieldInputOptions.code.required}} required {{/fieldInputOptions.code.required}}
+                {{#fieldInputOptions.code.minlength}}
+                   minlength="{{fieldInputOptions.code.minlength}}" {{/fieldInputOptions.code.minlength}}
+                {{#fieldInputOptions.code.maxlength}}
+                   maxlength="{{fieldInputOptions.code.minlength}}" {{/fieldInputOptions.code.maxlength}}
+                {{#fieldInputOptions.code.pattern}}
+                   pattern="{{fieldInputOptions.code.pattern}}" {{/fieldInputOptions.code.pattern}}
+                   class="form_input short_text_input shop_form_input customer_address_form_input"
+                   id="customer_address_form_code_input" name="code" value="{{code}}"/>
+        </div>
+        <div class="form_label shop_form_label customer_address_form_label" id="customer_address_form_label_name">
+            <label for="customer_address_form_name_input">{{nameLabel}}</label>
+        </div>
+        <div class="form_input_wrapper shop_form_input_wrapper customer_address_form_input_wrapper"
+             id="customer_address_form_name_input_wraper">
+            <input type="{{fieldInputOptions.name.type}}"
+                   {{#fieldInputOptions.name.required}}required{{/fieldInputOptions.name.required}}
+                {{#fieldInputOptions.name.minlength}}
+                   minlength="{{fieldInputOptions.name.minlength}}" {{/fieldInputOptions.name.minlength}}
+                {{#fieldInputOptions.name.maxlength}}
+                   maxlength="{{fieldInputOptions.name.minlength}}" {{/fieldInputOptions.name.maxlength}}
+                {{#fieldInputOptions.name.pattern}}pattern="{{fieldInputOptions.name.pattern}}"{{/fieldInputOptions.name.pattern}}
+                   class="form_input short_text_input shop_form_input customer_address_form_input"
+                   id="customer_address_form_name_input" name="name" value="{{name}}"/>
+        </div>
+        <div class="form_label shop_form_label customer_address_form_label" id="customer_address_form_label_name_2">
+            <label for="customer_address_form_name_2_input">{{name2Label}}</label>
+        </div>
+        <div class="form_input_wrapper shop_form_input_wrapper customer_address_form_input_wrapper"
+             id="customer_address_form_name_2_input_wraper">
+            <input type="{{fieldInputOptions.name_2.type}}"
+                   {{#fieldInputOptions.name_2.required}}required{{/fieldInputOptions.name_2.required}}
+                {{#fieldInputOptions.name_2.minlength}}
+                   minlength="{{fieldInputOptions.name_2.minlength}}" {{/fieldInputOptions.name_2.minlength}}
+                {{#fieldInputOptions.name_2.maxlength}}
+                   maxlength="{{fieldInputOptions.name_2.minlength}}" {{/fieldInputOptions.name_2.maxlength}}
+                {{#fieldInputOptions.name_2.pattern}}pattern="{{fieldInputOptions.name_2.pattern}}"{{/fieldInputOptions.name_2.pattern}}
+                   class="form_input short_text_input shop_form_input customer_address_form_input"
+                   id="customer_address_form_name_2_input" name="name_2" value="{{name_2}}"/>
+        </div>
+        <div class="form_label shop_form_label customer_address_form_label" id="customer_address_form_label_name">
+            <label for="customer_address_form_address_input">{{addressLabel}}</label>
+        </div>
+        <div class="form_input_wrapper shop_form_input_wrapper customer_address_form_input_wrapper"
+             id="customer_address_form_address_input_wraper">
+            <input type="{{fieldInputOptions.address.type}}"
+                   {{#fieldInputOptions.address.required}}required{{/fieldInputOptions.address.required}}
+                {{#fieldInputOptions.address.minlength}}
+                   minlength="{{fieldInputOptions.address.minlength}}" {{/fieldInputOptions.address.minlength}}
+                {{#fieldInputOptions.address.maxlength}}
+                   maxlength="{{fieldInputOptions.address.minlength}}" {{/fieldInputOptions.address.maxlength}}
+                {{#fieldInputOptions.address.pattern}}pattern="{{fieldInputOptions.address.pattern}}"{{/fieldInputOptions.address.pattern}}
+                   class="form_input short_text_input shop_form_input customer_address_form_input"
+                   id="customer_address_form_address_input" name="address" value="{{address}}"/>
+        </div>
+        <div class="form_label shop_form_label customer_address_form_label" id="customer_address_form_label_address_2">
+            <label for="customer_address_form_address_2_input">{{address2Label}}</label>
+        </div>
+        <div class="form_input_wrapper shop_form_input_wrapper customer_address_form_input_wrapper"
+             id="customer_address_form_address_2_input_wraper">
+            <input type="{{fieldInputOptions.address_2.type}}"
+                   {{#fieldInputOptions.address_2.required}}required{{/fieldInputOptions.address_2.required}}
+                {{#fieldInputOptions.address_2.minlength}}
+                   minlength="{{fieldInputOptions.address_2.minlength}}" {{/fieldInputOptions.address_2.minlength}}
+                {{#fieldInputOptions.address_2.maxlength}}
+                   maxlength="{{fieldInputOptions.address_2.minlength}}" {{/fieldInputOptions.address_2.maxlength}}
+                {{#fieldInputOptions.address_2.pattern}}pattern="{{fieldInputOptions.address_2.pattern}}"{{/fieldInputOptions.address_2.pattern}}
+                   class="form_input short_text_input shop_form_input customer_address_form_input"
+                   id="customer_address_form_address_2_input" name="address_2" value="{{address_2}}"/>
+        </div>
+        <div class="form_label shop_form_label customer_address_form_label" id="customer_address_form_label_post_code">
+            <label for="customer_address_form_post_code_input">{{postCodeLabel}}</label>
+        </div>
+        <div class="form_input_wrapper shop_form_input_wrapper customer_address_form_input_wrapper"
+             id="customer_address_form_post_code_input_wraper">
+            <input type="{{fieldInputOptions.post_code.type}}"
+                   {{#fieldInputOptions.post_code.required}}required{{/fieldInputOptions.post_code.required}}
+                {{#fieldInputOptions.post_code.minlength}}
+                   minlength="{{fieldInputOptions.post_code.minlength}}" {{/fieldInputOptions.post_code.minlength}}
+                {{#fieldInputOptions.post_code.maxlength}}
+                   maxlength="{{fieldInputOptions.post_code.minlength}}" {{/fieldInputOptions.post_code.maxlength}}
+                {{#fieldInputOptions.post_code.pattern}}pattern="{{fieldInputOptions.post_code.pattern}}"{{/fieldInputOptions.post_code.pattern}}
+                   class="form_input short_text_input shop_form_input customer_address_form_input"
+                   id="customer_address_form_post_code_input" name="post_code" value="{{post_code}}"/>
+        </div>
+        <div class="form_label shop_form_label customer_address_form_label" id="customer_address_form_label_city">
+            <label for="customer_address_form_city_input">{{cityLabel}}</label>
+        </div>
+        <div class="form_input_wrapper shop_form_input_wrapper customer_address_form_input_wrapper"
+             id="customer_address_form_city_input_wraper">
+            <input type="{{fieldInputOptions.city.type}}"
+                   {{#fieldInputOptions.city.required}}required{{/fieldInputOptions.city.required}}
+                {{#fieldInputOptions.city.minlength}}
+                   minlength="{{fieldInputOptions.city.minlength}}" {{/fieldInputOptions.city.minlength}}
+                {{#fieldInputOptions.city.maxlength}}
+                   maxlength="{{fieldInputOptions.city.maxlength}}" {{/fieldInputOptions.city.maxlength}}
+                {{#fieldInputOptions.city.pattern}}pattern="{{fieldInputOptions.city.pattern}}"{{/fieldInputOptions.city.pattern}}
+                   class="form_input short_text_input shop_form_input customer_address_form_input"
+                   id="customer_address_form_city_input" name="city" value="{{city}}"/>
+        </div>
+        <div class="form_label shop_form_label customer_address_form_label" id="customer_address_form_label_country">
+            <label for="customer_address_form_country_input">{{countryLabel}}</label>
+        </div>
+        <div class="form_input_wrapper shop_form_input_wrapper customer_address_form_input_wrapper"
+             id="customer_address_form_country_input_wraper">
+            <input type="{{fieldInputOptions.country.type}}"
+                   {{#fieldInputOptions.country.required}}required{{/fieldInputOptions.country.required}}
+                {{#fieldInputOptions.country.minlength}}
+                   minlength="{{fieldInputOptions.country.minlength}}" {{/fieldInputOptions.country.minlength}}
+                {{#fieldInputOptions.country.maxlength}}
+                   maxlength="{{fieldInputOptions.country.maxlength}}" {{/fieldInputOptions.country.maxlength}}
+                {{#fieldInputOptions.country.pattern}}pattern="{{fieldInputOptions.country.pattern}}"{{/fieldInputOptions.country.pattern}}
+                   class="form_input short_text_input shop_form_input customer_address_form_input"
+                   id="customer_address_form_country_input" name="country" value="{{country}}"/>
+        </div>
+        <button type="submit">SEND</button>
+    </form>
+</div>

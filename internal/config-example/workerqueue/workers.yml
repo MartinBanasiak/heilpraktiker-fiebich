@@ -1,0 +1,37 @@
+basepath: "../"
+workers:
+    SendEmailQueueWorker:
+      path: "workers/email/SendEmailQueueWorker.php"
+      instances: 2
+      instance_restart_minutes: 60
+      arguments: { }
+    CurrencyRatesQueueWorker:
+      path: "workers/currencyConversion/CurrencyRatesQueueWorker.php"
+      instances: 1
+      instance_restart_minutes: 60
+      arguments: { }
+    CustomerTopItemsWorker:
+      path: "workers/customerTopItems/CustomerTopItemsQueueWorker.php"
+      instances: 1
+      instance_restart_minutes: 60
+      arguments: { }
+    CronSpecScheduledJobHandler:
+      path: "main/CronSpecScheduledJobHandler.php"
+      instances: 1
+      instance_restart_minutes: 60
+      arguments: { }
+    ItemAvailabilityNotificationsQueueWorker:
+      path: "workers/itemAvailabilityNotification/ItemAvailabilityNotificationQueueWorker.php"
+      instances: 1
+      instance_restart_minutes: 60
+      arguments: { }
+    ReopenFailedJobsWorker:
+      path: "main/ReopenFailedJobsWorker.php"
+      instances: 1
+      instance_restart_minutes: 60
+      arguments: { }
+    CommandLineWorker:
+      path: "workers/commandLine/CommandLineJobQueueWorker.php"
+      instances: 2
+      instance_restart_minutes: 60
+      arguments: { }

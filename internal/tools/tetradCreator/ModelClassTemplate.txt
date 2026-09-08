@@ -1,0 +1,21 @@
+<?php
+
+class %modelclassname% implements GenericDBModelInterface, Entity {
+
+    use genericDBModelTrait, universallyGettableTrait;
+
+    %properties%
+
+    /**
+     * @param \%configclassname% $config
+     */
+    public function __construct( %configclassname% $config ) {
+        $this->config = $config;
+    }
+
+    public function getNullObject() {
+        return new self($this->config);
+    }
+
+
+}

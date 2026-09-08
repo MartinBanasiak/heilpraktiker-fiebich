@@ -1,0 +1,228 @@
+
+div.itemcard_subscription_buttons * {
+    box-sizing: border-box;
+}
+
+form#subsc_order_option_button_form_1 {
+    width: 100%;
+    border: 0px none;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: Tahoma, Sans-serif;
+    font-size: 12px;
+    background-color: #f2f2f2;
+}
+
+
+input.itemcard_subscription_order_inner_order_button {
+    border: 0px none;
+    width: 100%;
+    background-color: #2877CD;
+    color: white;
+    height: 35px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+div.itemcard_subscription_order_inner_text_top {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+div.itemcard_subscription_order_inner_text_top_2 {
+    font-size: 135%;
+    font-weight: 600;
+}
+
+form#subsc_order_option_button_form_1 input[type=number] {
+    width: 45px;
+    height: 30px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    border-color: #aaaaaa;
+    text-align: center;
+}
+
+div.input_subscription_item_qty_wrapper {
+    float: left;
+}
+
+div.itemcard_subscription_order_inner_unit_text {
+    float: left;
+    height: 30px;
+    width: auto;
+    font-size: 17px;
+    padding-top: 4px;
+    padding-left: 15px;
+}
+
+
+div.itemcard_subscription_order_inner_qty {
+    height: 30px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+div.input_no_of_intervals_wrapper {
+    float: left;
+    height: 30px;
+}
+
+div.itemcard_subscription_order_inner_interval_description {
+    float: left;
+    height: 30px;
+    width: auto;
+    font-size: 130%;
+    padding-top: 4px;
+    padding-left: 15px;
+}
+
+div.itemcard_subscription_order_inner_interval_description>span:first-child {
+    font-size: 11px;
+    vertical-align: 2px;
+    margin-right: 5px;
+}
+
+div.itemcard_subscription_order_inner_no_of_turns_select {
+    height: 30px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.itemcard_subscription_order_inner_order_button_wrapper {
+    margin: 25px 0 !important;
+    text-align: center;
+}
+
+input.itemcard_subscription_order_inner_order_button:hover {
+    background-color: #1D4E95;
+}
+
+form#subsc_order_option_button_form_1 div {
+    margin-top: 5px;
+}
+
+form#subsc_order_option_button_form_1 div>span:first-child {
+    left: 0;
+    display: inline;
+}
+
+form#subsc_order_option_button_form_1 div>span {
+    left: auto;
+    text-align: right;
+}
+
+form#subsc_order_option_button_form_1 div>span+span {
+    float: right;
+}
+
+
+div#itemcard_subscription_order_inner_interval_description_1>span {
+    float: none !important;
+}
+
+div.itemcard_subscription_order_price_per_interval {
+    font-size: 14px;
+    margin-top: 10px !important;
+    font-weight: 600;
+}
+
+div.itemcard_subscription_order_price_total {
+    font-size: 14px;
+    margin-bottom: 10px !important;
+    font-weight: 600;
+}
+
+div.itemcard_subscription_order_savings_total>span+span {
+    color: #097002;
+    font-weight: 600;
+}
+
+div.itemcard_subscription_order_price_per_interval>span+span {
+    font-weight: 600;
+}
+
+div.itemcard_subscription_order_price_total>span+span {
+    font-weight: 600;
+}
+
+div.itemcard_subscription_order_price_per_unit>span+span {
+    color: #097002;
+    font-weight: 600;
+}
+
+div.itemcard_subscription_order_savings_per_unit>span+span {
+    font-weight: 600;
+    color: #097002;
+}
+
+div#input_subscription_item_qty_wrapper {
+    float: left;
+}
+
+div#input_no_of_intervals_wrapper {
+    float: left;
+}
+
+.form_label_wrapper {
+    float: left;
+    height: 30px;
+    width: 90px;
+    font-size: 17px;
+    padding-top: 3px;
+}
+
+.itemcard_subscription_order_turn_description_text_left {
+    font-size: 17px;
+    height: 30px;
+    padding-top: 3px;
+    float: left;
+}
+
+.itemcard_subscription_order_turn_description_text_right {
+    float: left;
+    height: 30px;
+    margin-left: 32px;
+    font-size: 16px;
+    padding-top: 4px;
+}
+
+.itemcard_subscription_order_inner_turn_description {
+    height: 30px;
+}
+
+.itemcard_subscription_order_inner_qty_label {
+    float: left;
+    height: 30px;
+    font-size: 17px;
+    padding-top: 4px;
+}
+
+.itemcard_subscription_order_inner_qty_fields {
+    float: right;
+    margin-right: 20px;
+}
+
+.itemcard_subscription_order_turn_description_text_right {
+    float: right !important;
+    margin-right: 20px;
+    padding-top: 6px;
+}
+
+.itemcard_subscription_order_turn_description_text_left {
+    float: left;
+}
+
+.itemcard_subscription_order_inner_no_of_turns_select_label {
+    float: left;
+    height: 30px;
+    font-size: 17px;
+    padding-top: 4px;
+}
+
+.itemcard_subscription_order_inner_no_of_turns_select_fields {
+    height: 30px;
+    float: right;
+    margin-right: 20px;
+}

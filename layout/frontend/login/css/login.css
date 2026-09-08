@@ -1,0 +1,422 @@
+@charset "utf-8";
+
+/* Mysyde-Standard-Tags */
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+}
+
+h1 {
+font-size: 20px;
+margin: 10px 0;
+}
+
+#container {
+    margin: 0 auto;
+    position: relative;
+    width: 980px;
+    left: 50%;
+    margin-left: -480px;
+    top: 0;
+    margin-top: 0;
+    height: auto;
+}
+
+
+#container_1 {
+	display: none;
+}
+
+#container_2 {	
+	overflow: hidden;
+}
+
+#container_3 {
+	display: none;
+}
+
+#header {
+
+}
+
+#header_1 {
+	
+}
+
+#header_2 {  
+	
+}
+
+#header_3 { 
+
+}
+
+#gadget { 
+	display: none;
+}
+
+
+#menu { 
+	display: none;
+}
+
+#content { 
+	width: 960px;
+	height: 360px;
+	background-color: #FFF;
+	overflow: hidden;
+}
+
+#content_1 {
+	width: 960px;
+	height: 360px;
+	overflow: hidden;
+	position: absolute;
+	background-image: url('../img/titel_login_1.jpg');
+	background-repeat: no-repeat;
+}
+
+#content_2 {
+	width: 600px;
+	min-height: 200px;
+	max-height: 300px;
+	margin: 20px;
+	padding: 10px;
+	border: 1px solid #025496;
+	overflow: auto;
+	z-index: 10;	
+	position: absolute;	
+	background-image:url(../img/login_bg.png);
+	_background-image:url(../img/login_bg.jpg);
+}
+
+.start #content_2 {
+	display: none;
+}
+
+#content_3 { 
+
+}
+
+#box { 
+width: 960px;
+height: 240px;
+overflow: hidden;
+background-color: #fff;
+border: 1px solid #ddd;
+}
+
+
+#box_1 {
+width: 290px;
+height: 180px;
+background-position: center center;
+background-repeat: no-repeat;
+padding: 0px 10px 0px 10px;
+margin: 32px 0px 32px 0px;
+border-right: 1px solid #CCCCCC;
+float: left;
+text-align: center;
+}
+
+#box_1 div.textcontent {
+display: table-cell;
+width: 290px;
+height: 180px;
+vertical-align: middle;
+}
+
+#box_2 {
+	width: 400px;
+	height: 180px;
+	padding: 0px 33px 0px 33px;
+	margin: 32px 0px 32px 0px;
+	border-right: 1px solid #CCCCCC;
+	overflow: visible;
+	float: left;
+}
+
+#box_3 {
+	width: 268px;
+	height: 180px;
+	margin: 32px 0;
+	overflow: hidden;
+	float: left;
+	font-size: 12px;
+	padding: 0 0 0 0px;
+}
+
+#footer {
+	width: 960px;
+	height: 40px;
+	padding: 10px 10px 10px 10px;
+	text-align: right;
+}
+
+#footer_1 {
+
+}
+
+#footer_2 {
+
+}
+
+#footer_3 { 
+	
+}
+
+#box_3 ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+#box_3 ul li a {
+color: #333;
+padding: 0 0 0 10px;
+height: 60px;
+display: table-cell;
+vertical-align: middle;
+}
+
+#box_3 ul li:first-child a {
+	margin-top: 0;
+}
+
+#box_3 ul li:hover {
+background-color: #eee;
+}
+
+#footer_2 ul {
+	padding: 0px;
+	margin: 0px;
+	list-style-type: none;
+}
+
+#footer_2 ul li {
+	padding: 0px;
+	margin: 0px;
+	display: inline;
+	border-left: 1px solid #737373;
+}
+
+#footer_2 ul li:first-child {
+	border-left: none;
+}
+
+#footer_2 ul li a {
+	padding: 0px 15px 0px 15px; /* oben, rechts, unten, links */
+	text-decoration: none;
+	font-weight:normal;
+	font-size: 12px;
+	line-height: 11px;
+	color: #737373;
+}
+
+#footer_2 ul li a:hover {
+	color: #000000;
+}
+
+div.toolbar {
+	height: 20px;
+	border: 1px solid #025496;
+	padding: 8px 6px 2px 6px; /* oben, rechts, unten, links */
+	margin: 6px 0px 6px 0px; /* oben, rechts, unten, links */
+	background-image:url(../img/bg_leiste_6.jpg);
+	background-repeat: repeat-x;
+	background-position: top;
+}
+
+div.subtoolbar, div.infobox {
+	border: 1px solid #025496;
+	padding: 6px 6px 6px 6px; /* oben, rechts, unten, links */
+	margin: 6px 0px 6px 0px; /* oben, rechts, unten, links */
+}
+
+div.errorbox {
+border: 2px solid #cc0000;
+padding: 6px 6px 6px 26px;
+margin: 6px 0px 6px 0px;
+background-image: url(../img/error.gif);
+background-repeat: no-repeat;
+background-position: center left;
+position: absolute;
+width: 620px;
+margin-left: -130px;
+margin-top: -68px;
+background-color: white;
+}
+
+div.successbox {
+	color: #025496; 
+	font-weight: bold;
+	font-size: 16px;
+	border: 2px solid #025496;
+	padding: 6px 6px 6px 6px; /* oben, rechts, unten, links */
+	margin: 6px 0px 6px 0px; /* oben, rechts, unten, links */
+}
+
+
+div.label {
+float: left;
+clear: left;
+height: 30px;
+width: 110px;
+margin-top: 8px;
+padding-top: 5px;
+}
+
+
+div.input {
+float: left;
+min-height: 30px;
+margin-top: 8px;
+}
+
+input.code {
+	border: 1px solid #ddd;
+	background-color:#FFF;
+	height: 30px;
+	width: 220px; 
+	padding: 0 10px;
+}
+
+input.decimal {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 15px;
+	width: 100px;
+	padding: 3px 4px 2px 4px; 
+	text-align: right;
+}
+
+input.decimal:focus {
+	text-align: left;
+}
+
+input.date {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 15px;
+	width: 100px;
+	padding: 2px 4px 2px 4px; 
+	text-align: right;
+}
+
+input.date:focus {
+	text-align: left;
+}
+
+input.checkbox {
+	height: 14px;
+	width: 14px;
+	padding: 1px 1px 1px 1px; 
+}
+
+input.text {
+border: 1px solid #ddd;
+background-color: #FFF;
+height: 30px;
+width: 220px;
+padding: 3px 4px 1px 4px;
+}
+
+select.select_login {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 23px;
+	width: 150px;
+	padding: 3px 4px 1px 4px; 
+}
+
+input.file {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 17px;
+	width: 250px;
+	padding: 2px 4px 2px 4px; 
+}
+
+select.select {
+	border: 1px solid #abadb3;
+	height: 23px;
+	width: 210px;
+}
+
+textarea.small {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 45px;
+	width: 200px;
+	padding: 2px 4px 2px 4px; 
+}
+
+textarea.normal, textarea.textarea {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 90px;
+	width: 200px;
+	padding: 2px 4px 2px 4px; 
+}
+
+input.code:focus, input.text:focus, textarea:focus, select.select:focus {
+	border: 1px solid #025496;
+}
+
+a:visited {
+	color: #CCCCCC;
+}
+
+#pw_wrapper,#pw_wrapper input {
+width: 180px;
+margin-top: 8px;
+}
+
+#form_shop_login > div.ok_button {
+background-image: url(/layout/frontend/b2b/img/ok.png);
+width: 33px;
+height: 29px;
+background-repeat: no-repeat;
+background-position: center center;
+float: left;
+margin-top: 8px;
+margin-left: 7px;
+cursor: pointer;
+}
+
+#form_shop_login > div.ok_button:hover {
+	background-image: url(/layout/frontend/b2b/img/ok_hover.png);
+}
+
+#pw_wrapper {
+margin-top: 0px;
+float: left;
+}
+
+.button {
+float: left;
+clear: left;
+margin-top: 8px;
+}
+
+input[type="text"], input[type="password"], input[type="select"] {
+height: 25px;
+}
+
+input[type="submit"] {
+display: block;
+padding: 2px 30px;
+}
+
+.submit_button {
+position: relative;
+float: left;
+margin-top: 10px;
+display: block;
+margin-left: 58px;
+}

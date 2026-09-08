@@ -1,0 +1,124 @@
+version: '3'
+volumes:
+  mysqldata:
+    external: false
+  esdata1:
+    external: false
+  esdata2:
+    external: false
+services:
+  mysql:
+    image: mariadb:latest
+    build:
+      context: ./mariadb
+    ports: 
+      - "3406:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - ../mysql:/usr/share/db/import:rw
+    env_file:
+      - ./mariadb/mariadbroot.env
+      - ./mariadb/mariadbuser.env
+    command: mysqld --sql-mode=''
+    #healthcheck:
+      #test: ["CMD-SHELL", "mysqladmin ping --silent"]
+      #interval: 1m30s
+      #timeout: 10s
+      #retries: 3
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  php:
+    image: php:7.1-fpm
+    build:
+      context: ./php
+    ports:
+      - "2222:22"
+    volumes:
+      - ../../:/usr/local/apache2/htdocs:rw
+      #- ../../:/usr/share/nginx/html:rw
+    env_file:
+      - ./mariadb/mariadbuser.env
+    links:
+      - mailhog
+      - mysql
+      - redis
+      - elasticsearch1
+    entrypoint:
+      - /usr/local/sbin/php-fpm
+    #depends_on:
+      #- mysql      
+  #web:
+  #  image: nginx:latest
+  #  build:
+  #    context: ./nginx
+  #  ports:
+  #    - "8080:80"
+  #  volumes:
+  #    - ../../:/usr/share/nginx/html:rw
+  #    - ./nginx/site.conf:/etc/nginx/conf.d/site.conf
+  #    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+  #  env_file:
+  #   - ./nginx/nginx.env
+  #  links:
+  #    - php
+  #    - redis
+  #    - elasticsearch1
+  web:
+      image: httpd:latest
+      build:
+        context: ./httpd
+      ports:
+        - "8080:80"
+      volumes:
+        - ../../:/usr/local/apache2/htdocs:rw
+        - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf:rw
+      env_file:
+       - ./httpd/httpd.env
+      links:
+        - php
+        - redis
+        - elasticsearch1
+  mailhog:
+    image: mailhog:latest
+    build:
+      context: ./mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    #healthcheck:
+      #test: ["CMD", "curl", "-f", "http://localhost:8025"]
+      #interval: 1m30s
+      #timeout: 10s
+      #retries: 3
+  elasticsearch1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.1
+    container_name: elasticsearch1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+  elasticsearch2:
+      image: docker.elastic.co/elasticsearch/elasticsearch:5.5.1
+      environment:
+        - cluster.name=docker-cluster
+        - "xpack.security.enabled=false"
+        - bootstrap.memory_lock=true
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - "discovery.zen.ping.unicast.hosts=elasticsearch1"
+      ulimits:
+        memlock:
+          soft: -1
+          hard: -1
+      volumes:
+        - esdata2:/usr/share/elasticsearch/data

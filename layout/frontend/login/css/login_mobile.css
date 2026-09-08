@@ -1,0 +1,449 @@
+@charset "utf-8";
+
+body {
+	font-family: Arial, sans-serif;
+}
+
+#container {
+	width: 960px;
+	height: 550px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	padding: 10px 10px 0px 10px;
+	margin: -280px 0px 0px -490px;
+	background-image:url(../img/login_shadow.png);
+	background-repeat:no-repeat;
+	background-position: center top;
+}
+
+
+#container_1 {
+	display: none;
+}
+
+#container_2 {
+	width: 960px;
+	height: 550px;	
+	overflow: hidden;
+}
+
+#container_3 {
+	display: none;
+}
+
+#header {
+
+}
+
+#header_1 {
+	
+}
+
+#header_2 {  
+	
+}
+
+#header_3 { 
+
+}
+
+#gadget { 
+	display: none;
+}
+
+
+#menu { 
+	display: none;
+}
+
+#content { 
+	width: 960px;
+	height: 360px;
+	background-color: #FFF;
+	overflow: hidden;
+}
+
+#content_1 {
+	width: 960px;
+	height: 360px;
+	overflow: hidden;
+	position: absolute;
+	background-image: url('../img/titel_login_1.jpg');
+	background-repeat: no-repeat;
+}
+
+#content_2 {
+	width: 600px;
+	min-height: 200px;
+	max-height: 300px;
+	margin: 20px;
+	padding: 10px;
+	border: 1px solid #025496;
+	overflow: auto;
+	z-index: 10;	
+	position: absolute;	
+	background-image:url(../img/login_bg.png);
+	_background-image:url(../img/login_bg.jpg);
+}
+
+.start #content_2 {
+	display: none;
+}
+
+#content_3 { 
+
+}
+
+#box { /* Rechte Seitenleiste */
+	width: 960px;
+	height: 160px;
+	overflow: hidden;
+	background-color: #F1F1F1;
+	
+}
+
+#box_1 {
+	width: 300px;
+	height: 120px;
+	background-image:url('/layout/frontend/login/img/ciclo-klein.jpg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	padding: 0px 10px 0px 10px;
+	margin: 19px 0px 19px 0px;
+	border-right: 1px solid #CCCCCC;
+	float: left;
+}
+
+#box_2 {
+	width: 270px;
+	height: 115px;
+	padding: 5px 10px 0px 10px;
+	margin: 19px 0px 19px 0px;
+	border-right: 1px solid #CCCCCC;
+	overflow: visible;
+	float: left;
+}
+
+#box_3 {
+	width: 300px;
+	height: 120px;
+	padding: 3px 10px 0px 10px;
+	margin: 19px 0px 19px 0px;
+	overflow: hidden;
+	float: left;
+}
+
+#footer {
+	width: 960px;
+	height: 20px;
+	padding: 10px 10px 10px 10px;
+	text-align: right;
+}
+
+#footer_1 {
+
+}
+
+#footer_2 {
+
+}
+
+#footer_3 { 
+	
+}
+
+#box_3 ul {
+	list-style-type: none;
+	font-size: 13px;
+	padding: 0px;
+	margin: 0px;
+}
+
+#box_3 ul li a {
+	padding: 5px 5px 5px 5px;
+	height: 30px;
+	margin: 0px;
+	display: block;
+	text-decoration: none;
+	color: #000;}
+
+#box_3 ul li a:hover {
+	background-color: #FFF;
+	text-decoration: none;
+	border-top: 1px solid #025496;
+	border-bottom: 1px solid #025496;
+	padding: 4px 5px 4px 5px;
+	color: #025496;
+}
+
+#footer_2 ul {
+	padding: 0px;
+	margin: 0px;
+	list-style-type: none;
+}
+
+#footer_2 ul li {
+	padding: 0px;
+	margin: 0px;
+	display: inline;
+	border-left: 1px solid #737373;
+}
+
+#footer_2 ul li:first-child {
+	border-left: none;
+}
+
+#footer_2 ul li a {
+	padding: 0px 15px 0px 15px; /* oben, rechts, unten, links */
+	text-decoration: none;
+	font-weight:normal;
+	font-size: 12px;
+	line-height: 11px;
+	color: #737373;
+}
+
+#footer_2 ul li a:hover {
+	color: #000000;
+}
+
+div.toolbar {
+	height: 20px;
+	border: 1px solid #025496;
+	padding: 8px 6px 2px 6px; /* oben, rechts, unten, links */
+	margin: 6px 0px 6px 0px; /* oben, rechts, unten, links */
+	background-image:url(../img/bg_leiste_6.jpg);
+	background-repeat: repeat-x;
+	background-position: top;
+}
+
+div.subtoolbar, div.infobox {
+	border: 1px solid #025496;
+	padding: 6px 6px 6px 6px; /* oben, rechts, unten, links */
+	margin: 6px 0px 6px 0px; /* oben, rechts, unten, links */
+}
+
+div.errorbox {
+	border: 2px solid #cc0000;
+	padding: 6px 6px 6px 26px; /* oben, rechts, unten, links */
+	margin: 6px 0px 6px 0px; /* oben, rechts, unten, links */
+	background-image:url(../img/error.gif);
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+
+div.successbox {
+	color: #025496; 
+	font-weight: bold;
+	font-size: 16px;
+	border: 2px solid #025496;
+	padding: 6px 6px 6px 6px; /* oben, rechts, unten, links */
+	margin: 6px 0px 6px 0px; /* oben, rechts, unten, links */
+}
+
+
+div.label {
+	position: absolute;
+	width: 100px;
+	text-align: left;
+	margin: 7px 0px 0px 0px; 
+	*margin: 7px 0px 0px -85px;
+	overflow: hidden;
+	font-size: 13px;
+}
+
+div.input {
+	margin: 7px 0px 5px 100px; 
+	padding: 0px;
+	vertical-align: bottom;
+	min-height: 17px;
+}
+
+input.code {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 17px;
+	width: 140px;
+	padding: 2px 4px 1px 4px; 
+}
+
+input.decimal {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 15px;
+	width: 100px;
+	padding: 3px 4px 2px 4px; 
+	text-align: right;
+}
+
+input.decimal:focus {
+	text-align: left;
+}
+
+input.date {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 15px;
+	width: 100px;
+	padding: 2px 4px 2px 4px; 
+	text-align: right;
+}
+
+input.date:focus {
+	text-align: left;
+}
+
+input.checkbox {
+	height: 14px;
+	width: 14px;
+	padding: 1px 1px 1px 1px; 
+}
+
+input.text {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 17px;
+	width: 140px;
+	padding: 3px 4px 1px 4px; 
+}
+
+select.select_login {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 23px;
+	width: 150px;
+	padding: 3px 4px 1px 4px; 
+}
+
+input.file {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 17px;
+	width: 250px;
+	padding: 2px 4px 2px 4px; 
+}
+
+select.select {
+	border: 1px solid #abadb3;
+	height: 23px;
+	width: 210px;
+}
+
+textarea.small {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 45px;
+	width: 200px;
+	padding: 2px 4px 2px 4px; 
+}
+
+textarea.normal, textarea.textarea {
+	border: 1px solid #abadb3;
+	background-color:#FFF;
+	height: 90px;
+	width: 200px;
+	padding: 2px 4px 2px 4px; 
+}
+
+input.code:focus, input.text:focus, textarea:focus, select.select:focus {
+	border: 1px solid #025496;
+}
+
+a:visited {
+	color: #CCCCCC;
+}
+
+#container {
+    background-image: none;
+    height: auto;
+    left: auto;
+    margin: 0px;
+    padding: opx;
+    position: static;
+    top: auto;
+    width: auto;
+}
+
+#container_2 {
+    height: auto;
+    overflow: hidden;
+    width: auto;
+}
+
+#content { 
+	width: auto;
+	padding: 0px;
+	float: none;
+	overflow: hidden;
+	font-size: 12px;
+	height:auto;
+}
+
+#content_1 { 
+	display:none;
+}
+
+#box {
+    background-color: #F1F1F1;
+    height: auto;
+    overflow: hidden;
+    width: auto;
+}
+
+#box_1 {
+    background-image: url("/layout/frontend/login/img/ciclo-klein.jpg");
+    background-position: left center;
+    background-repeat: no-repeat;
+    border-right: medium none;
+    float: none;
+    height: 120px;
+    margin: 19px 0;
+    padding: 0 10px;
+    width: auto;
+}
+
+#box_2 {
+    border-right: medium none;
+    float: none;
+    height: auto;
+    margin: 19px 0;
+    overflow: visible;
+    padding: 5px 10px 0;
+    width: auto;
+}
+
+#box_3 {
+    float: none;
+    height: auto;
+    margin: 19px 0;
+    overflow: hidden;
+    padding: 3px 10px 0;
+    width: auto;
+}
+
+#footer {
+    height: auto;
+    padding: 10px;
+    text-align: left;
+    width: auto;
+}
+
+#footer_2 ul li:first-child {
+    border-left: medium none;
+}
+
+#footer_2 ul li {
+    border-left: medium none;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+#box_3 ul li a {
+    color: #000000;
+    display: block;
+    height: auto;
+    margin: 0;
+    padding: 5px;
+    text-decoration: none;
+}

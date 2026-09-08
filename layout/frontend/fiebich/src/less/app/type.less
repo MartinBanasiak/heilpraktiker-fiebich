@@ -1,0 +1,181 @@
+//
+// Typography
+// --------------------------------------------------
+
+body {
+  background-color: @body-background;
+  font-size: @font-size-base;
+  font-weight: @font-weight-base;
+  line-height: @line-height-base;
+  font-family: @font-family-base;
+  color: @text-base;
+
+  @media (max-width: @screen-xs){
+    font-size: 14px;
+  }
+}
+
+// Headings
+// -------------------------
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: @headings-font-family;
+  font-weight: @headings-font-weight;
+  line-height: @headings-line-height;
+  color: @headings-color;
+  margin-top:0;
+  margin-bottom: 1em;
+}
+
+h1, .h1 {
+  font-size: @font-size-xlarge;
+
+  @media (max-width: @screen-md-max){
+    font-size: 36px;
+  }
+
+  @media (max-width: @screen-xs-max){
+    font-size: 28px;
+  }
+
+  @media (max-width: @screen-xs){
+    font-size: 24px;
+  }
+}
+
+h2, .h2 {
+  font-size: @font-size-large;
+  margin-bottom: @spacer-base*2;
+
+  @media (max-width: @screen-xs-max){
+    font-size: 24px;
+  }
+
+  @media (max-width: @screen-xs){
+    font-size: 18px;
+  }
+}
+
+
+h3, .h3 {
+  font-size: @font-size-medium;
+  color: @gray-base;
+
+  @media (max-width: @screen-md-max){
+    font-size: 20px;
+  }
+
+  @media (max-width: @screen-xs){
+    font-size: 18px;
+  }
+}
+
+h4, .h4 {
+  font-size: @font-size-small;
+}
+
+h5, .h5 {
+  font-size: @font-size-xsmall
+}
+
+h6, .h6 {
+  font-size: @font-size-base
+}
+
+a, .link {
+  color: @link;
+  text-decoration: @link-decoration;
+  cursor: pointer;
+  &:hover,
+  &:focus,
+  &:active {
+    color: @link-hover;
+    text-decoration: @link-decoration-hover;
+    outline: 0;
+  }
+}
+
+* {
+  &:focus {
+    outline: 0;
+  }
+}
+
+// Emphasis & misc
+// -------------------------
+
+// Alignment
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+// Transformation
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+// Lists
+// -------------------------
+
+// Unordered and Ordered lists
+ul,
+ol {
+  margin: 0;
+  li {
+    color: @text-base;
+    padding: @spacer-xsmall 0;
+  }
+}
+
+// Addresses
+address {
+  margin-bottom: @line-height-computed;
+  font-style: italic;
+  line-height: @line-height-base;
+}
+
+hr {
+  border-top: 1px solid @input-border-color;
+  margin-top: @spacer-large;
+  margin-bottom: @spacer-large;
+}
+
+label {
+  font-weight: @font-weight-base;
+  color: @gray-base;
+}
+
+.color-action {
+  color: @brand-action;
+}
+
+@media (max-width: @screen-xs-max) {
+  h1, .h1 {
+    font-size: floor(@font-size-xlarge*0.8)
+  }
+}

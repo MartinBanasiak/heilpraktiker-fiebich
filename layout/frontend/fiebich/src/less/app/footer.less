@@ -1,0 +1,48 @@
+
+footer {
+  padding-top: @spacer-base*4;
+  padding-bottom: @spacer-base*8;
+  border-top: 1px solid @light-gray;
+  color: @middle-gray;
+  .box-shadow(0 0 40px fade(#000000,20));
+  background-color: @white;
+  z-index: 1;
+  position: relative;
+  a {
+    color: @middle-gray;
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    &.active_tree {
+      color: @brand-primary;
+    }
+  }
+}
+
+.footerbar {
+  .flexbox();
+  &__item {
+    height: 8px;
+    width: 100%/5;
+  }
+}
+
+.footerInfo {
+
+  @media (max-width: @screen-xs-max){
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  @media (max-width: @screen-xs){
+
+  }
+}
+
+.footerText {
+  @media (max-width: @screen-sm-max){
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}

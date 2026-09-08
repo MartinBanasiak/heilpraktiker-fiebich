@@ -1,0 +1,9 @@
+<div class="itemcard_subscription_buttons">
+    <?php echo $this->model->buttonHTML ?>
+</div>
+<?php if(file_exists(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->scriptletPath) && is_readable(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->scriptletPath))  { ?>
+    <script type="text/javascript" src="<?php echo $this->model->scriptletPath ?>"></script>
+<?php } ?>
+<?php if(file_exists(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->styleFilePath) && is_readable(rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $this->model->styleFilePath)) { ?>
+    <link type="text/css" rel="stylesheet" href="<?php echo $this->model->styleFilePath ?>" />
+<?php } ?>

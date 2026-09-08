@@ -1,0 +1,882 @@
+@CHARSET "UTF-8";
+
+#header_2 #site_header_main{
+	width:570px;
+	height:80px;
+	float:right;
+	margin: 0px 25px 0px 0px;
+}
+
+
+#header_2 #site_header_main #site_header {
+	float:left;
+	width:435px;
+	height:80px;
+}
+
+#header_2 .logged_in_as {
+	float:left;
+	margin: 18px 5px 0px 0px;
+}
+
+#header_2  .user_menu {
+	float:left;
+	text-align:left;
+}
+
+#header_2 .shoppingcart {
+	border: 1px solid #CCC;
+	background-color: #FFF;
+	padding: 5px 7px 5px 25px; /* oben, rechts, unten, links */
+	background-image:url(../img/basket.gif);
+	background-position: left center;
+	background-repeat: no-repeat;
+	width:100px;
+	float:left;
+	margin:10px 0px 0px 0px;
+}
+
+#header_2 .shoppingcart .shoppingcart_quantity {
+	float:left;
+	width:100px;
+}
+
+#header_2 .shoppingcart .shoppingcart_amount {
+	float:left;
+	width:100px;
+}
+
+
+#search {
+	float:left;
+	width: 310px;
+	overflow:hidden;
+	margin:0px 0px 0px 172px;
+}
+
+.search_txt{
+	float:left; 
+	width:43px;
+
+	padding:8px 0px 0px 0px;
+}
+
+.search_field {
+	float:left;
+	width: 190px;
+
+	padding: 6px 0px 0px 0px;
+}
+
+.search_button {
+	float:left;
+	padding:6px 0px 0px 0px;
+}
+
+#direct_order {
+	float:left;
+	width:380px;
+	overflow:hidden;
+}
+
+.direct_order_txt {
+	float:left;
+	width:100px;
+	padding:8px 0px 0px 0px;
+}
+
+.direct_order_field{
+	float:left;
+	width:135px;
+	padding: 6px 0px 0px 0px;
+}
+
+.direct_order_button {
+	float:left;
+	padding:6px 0px 0px 0px;
+}
+
+#login {	
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -131px;
+	margin-top: -30px;
+	width: 260px;
+	height: 115px;
+	border: 1px solid #336600;
+	background-color:#FFF;
+}
+
+.shop_category_2 ul {
+	padding: 0px;
+	margin: 5px 4px 10px 4px; /* oben, rechts, unten, links */
+	list-style-type: none;
+}
+
+.shop_category_2 ul li {
+	color: #005596;
+	margin: 0px 6px 0px 0px; /* oben, rechts, unten, links */
+	padding: 0px;
+	display: inline;
+}
+
+.shop_category_2 ul li a, div.infobar a:link,div.infobar a:visited {
+	color: #005596;
+	text-decoration:none;
+	text-decoration:underline;
+}
+
+.shop_category_2 ul li a:hover{
+	text-decoration:none;
+}
+
+table.cardform {
+	width: 100%;
+	margin: 6px 0px 6px 0px; /* oben, rechts, unten, links */
+	padding: 0px;
+	border: 1px solid #8cb2d0;
+}
+
+table.cardform td {
+	padding: 6px;
+	text-align: left;
+	vertical-align: top;
+}
+
+table.cardform td:first-child {
+	width: 350px;
+}
+
+table.itemlist {
+    width: 98.5%;
+	margin: 0px 0px 6px 0px; /* oben, rechts, unten, links */
+	padding: 0px;
+	border: 1px solid #8cb2d0;
+}
+
+table.itemlist tr td a {
+	text-decoration: none;
+}
+
+table.itemlist tr td {
+	margin: 0px;
+	padding: 2px 4px 2px 4px; /* oben, rechts, unten, links */
+	border-top: 1px solid #f0f0f0;
+	border-left: 1px solid #f0f0f0;
+	height: 31px;
+	vertical-align: middle;
+}
+
+table.itemlist tr td div {
+	margin: 0px;
+	padding: 0px; /* oben, rechts, unten, links */
+	max-height: 31px;
+	width: 100%; 
+	overflow: hidden;
+}
+
+table.itemlist tr:first-child td div {
+	margin: 0px;
+	padding: 0px; /* oben, rechts, unten, links */
+	max-height: 14px;
+	width: 100%; 
+	overflow: hidden;
+}
+
+table.itemlist tr:first-child td {
+	background-image:url(../img/td_back.jpg);
+	background-repeat: repeat-x;
+	background-position: left center;
+	border-top: none;
+	border-bottom: 1px solid #d5d5d5;
+	border-left: 1px solid #f0f0f0;
+	height: 14px;
+}
+
+
+table.itemlist tr:first-child {
+	cursor: auto;
+}
+
+table.itemlist tr {
+	cursor: pointer;
+}
+
+table.itemlist tr:hover {
+	background-color:#e5eef5;
+}
+
+table.itemlist tr:first-child:hover {
+	background-color: none;
+}
+
+div.itemlist1_base_price {
+	position: relative;
+	top: 1px;
+	left: 0px;
+	font-size: 9px;
+	font-weight: normal;
+	text-decoration:line-through;
+}
+
+div.itemlist1_campain_price{
+	position: relative;
+	color: #c60707;
+	top: -2px;
+	left: 0px;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+div.infobar {
+	border: 1px solid #8cb2d0;
+	padding: 2px 4px 2px 4px; /* oben, rechts, unten, links */
+	margin: 0px 0px 6px 0px; /* oben, rechts, unten, links */
+	background-image: url(../img/bg_leiste_5.jpg);
+	background-repeat: repeat-x;
+	background-position: left center;
+	font-weight: bold;
+	color: #005596;
+	clear: both;
+}
+
+div.infobar a, div.infobar a:link,div.infobar a:visited {
+	font-weight: bold;
+	color: #005596;
+	text-decoration:underline;
+}
+
+div.infobar a:hover{
+	text-decoration:none;
+}
+
+div.infotext {
+	padding: 2px 4px 0px 0px; /* oben, rechts, unten, links */
+	margin: 6px 0px 10px 0px; /* oben, rechts, unten, links */
+	color: #005596;
+	clear: both;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 12px;
+}
+
+div.itemlist2 {
+	width: 146px;
+	height: 196px;
+	border: 1px solid #8cb2d0;
+	padding: 2px 2px 2px 2px; /* oben, rechts, unten, links */
+	margin: 0px 6px 6px 0px; /* oben, rechts, unten, links */
+	background-image: url(../img/itemlist2_back.jpg);
+	background-repeat: repeat-x;
+	background-position: left center;
+	float: left;
+	overflow: hidden;
+	text-align: left;
+	cursor: pointer;
+}
+
+div.itemlist2:hover {
+	cursor: pointer;
+	background-image: url(../img/itemlist2_back_over.jpg);
+}
+
+div.itemlist2_image {
+	height: 100px;
+	width: 146px;
+	background-color:#FFF;
+	overflow: hidden;
+}
+
+div.itemlist2_image_layer1 {
+	height: 100px;
+	width: 146px;
+	text-align: center;
+	overflow: hidden;
+}
+
+div.itemlist2_image_layer2 {
+	position: relative;
+	left: 0px;
+	top: -100px;
+	height: 100px;
+	width: 146px;
+	background-image:url(../img/camain_de.png);
+	background-position: left top;
+	background-repeat: no-repeat;
+	text-align: center;
+	overflow: hidden;
+}
+
+
+div.itemlist2_description {
+	height: 42px;
+	width: 144px;
+	padding: 3px 1px 3px 1px; /* oben, rechts, unten, links */
+	border-bottom: 1px solid #8cb2d0;
+ 	overflow: hidden;
+}
+
+div.itemlist2_item_no{
+	height: 16px;
+	width: 144px;
+	padding: 2px 1px 2px 1px; /* oben, rechts, unten, links */
+ 	overflow: hidden;
+}
+
+
+div.itemlist2_price {
+	height: 17px;
+	width: 90px;
+	padding: 4px 1px 2px 1px; /* oben, rechts, unten, links */
+ 	overflow: hidden;
+	color: #005596;
+	font-size: 13px;
+	font-weight: bold;
+	float: left;
+}
+
+div.itemlist2_base_price {
+	position: relative;
+	top: -5px;
+	left: 3px;
+	color: #005596;
+	font-size: 9px;
+	font-weight: normal;
+	text-decoration:line-through;
+}
+
+div.itemlist2_campain_price{
+	position: relative;
+	color: #c60707;
+	top: -9px;
+	left: 0px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+div.itemlist2_symbol {
+	width: 21px;
+	height: 23px;
+	float: left;
+	padding-right: 4px;
+}
+
+
+div.itemlist3 {
+	width: 198px;
+	height: 74px;
+	border: 1px solid #8cb2d0;
+	padding: 2px 2px 2px 2px; /* oben, rechts, unten, links */
+	margin: 0px 7px 6px 0px; /* oben, rechts, unten, links */
+	background-image: url(../img/itemlist2_back.jpg);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	float: left;
+	overflow: hidden;
+	text-align: left;
+	cursor: pointer;
+}
+
+div.itemlist3:hover {
+	background-image: url(../img/itemlist2_back_over.jpg);
+}
+
+div.itemlist3_top {
+	width: 198px;
+	height: 42px;
+	padding: 0px 2px 2px 0px; /* oben, rechts, unten, links */
+	overflow: hidden;
+	border-bottom: 1px solid #8cb2d0;
+}
+
+div.itemlist3_bottom {
+	width: 198px;
+	height: 25px;
+	padding: 2px 0px 0px 0px; /* oben, rechts, unten, links */
+	overflow: hidden;
+}
+
+div.itemlist3_image_layer1 {
+	position:relative;
+	left: 0px;
+	top: 0px;
+	width: 50px;
+	height: 36px;
+}
+
+div.itemlist3_image_layer2 {
+	position:relative;
+	left: 0px;
+	top: -36px;
+	width: 50px;
+	height: 36px;
+	background-image:url(../img/campain_small_de.png);
+	background-position: center bottom;
+	background-repeat: no-repeat;
+}
+
+div.itemlist3_image {
+	padding: 5px 0px 0px 0px; /* oben, rechts, unten, links */
+	height: 36px;
+	width: 50px;
+	background-color:#FFF;
+	text-align: center;
+	overflow: hidden;
+	float: left;
+}
+
+div.itemlist3_description {
+	height: 28px;
+	width: 144px;
+	padding: 0px 0px 0px 4px; /* oben, rechts, unten, links */
+ 	overflow: hidden;
+	float: left;
+}
+
+div.itemlist3_item_no {
+	height: 16px;
+	width: 144px;
+	padding: 0px 0px 0px 4px; /* oben, rechts, unten, links */
+ 	overflow: hidden;
+	float: left;
+}
+
+div.itemlist3_quantity {
+	height: 18px;
+	width: 50px;
+	text-align: center;
+	padding: 7px 0px 0px 0px; /* oben, rechts, unten, links */
+ 	overflow: hidden;
+	float: left;
+}
+
+div.itemlist3_price {
+	height: 21px;
+	width: 94px;
+	padding: 4px 0px 0px 0px; /* oben, rechts, unten, links */
+ 	overflow: hidden;
+	color: #005596;
+	font-size: 13px;
+	font-weight: bold;
+	float: left;
+}
+
+div.itemlist3_base_price {
+	position: relative;
+	top: -3px;
+	left: 3px;
+	color: #005596;
+	font-size: 9px;
+	font-weight: normal;
+	text-decoration:line-through;
+}
+
+div.itemlist3_campain_price{
+	position: relative;
+	color: #c60707;
+	top: -7px;
+	left: 0px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+div.itemlist3_symbol {
+	width: 21px;
+	height: 24px;
+	float: left;
+	padding: 1px 4px 0px 0px; /* oben, rechts, unten, links */
+}
+
+div.shop_category_image{
+    height: auto;
+    overflow: hidden;
+}
+
+div.campaign_item_list{
+    height: auto;
+    overflow: hidden;
+}
+
+div.random_item_list{
+    height: auto;
+    overflow: hidden;
+}
+
+div.item_list{
+    height: auto;
+    overflow: hidden;
+}
+
+div.default_item_list {
+    height:410px;
+    overflow:hidden
+}
+
+#itemcard .itemcard_list3 {
+	max-height: 85px;
+	overflow: hidden;
+}
+
+.clearfloat {
+	clear:both;
+    height:0;
+    font-size: 1px;
+    line-height: 0px;
+}
+
+#variant_select {
+  width: 214px;
+	height: 14px;
+	border: 1px solid #8cb2d0;
+	background-image:url(../img/select.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+	padding: 1px 2px 0px 2px; /* oben, rechts, unten, links */
+	overflow: hidden;
+	cursor: default;
+}
+
+.variant_select_over {
+	display: none;
+	position: absolute;
+	min-width: 216px;
+	margin: 0px 1px 0px 1px; /* oben, rechts, unten, links */
+	background-color: #FFF;
+	border: 1px solid #8cb2d0;
+	overflow: hidden;
+	z-index: 5;
+}
+
+.variant_select_over table {
+	min-width: 216px;
+}
+
+.variant_select_over table tr {
+	height: 18px;
+	cursor: pointer;
+}
+
+.variant_select_over table tr td {
+	padding: 1px 10px 1px 2px; /* oben, rechts, unten, links */
+}
+
+.variant_select_over table tr:hover td{
+	background-color:#e5eef5;
+	border-top: 1px dotted #333;
+	border-bottom: 1px dotted #333;
+	padding: 0px 10px 0px 2px; /* oben, rechts, unten, links */
+}
+
+ul.tab {
+	list-style: none;
+	margin: 0px 0px 6px 0px; /* oben, rechts, unten, links */
+	padding: 0px;
+	border-bottom: 1px solid #8cb2d0;
+}
+
+ul.tab li {
+	display: inline-block;
+	border-left: 1px solid #8cb2d0;
+	border-top: 1px solid #8cb2d0;
+	border-right: 1px solid #8cb2d0;
+	padding: 0px 6px 4px 6px; /* oben, rechts, unten, links */
+	margin: 0px 2px 0px 0px; /* oben, rechts, unten, links */
+	background-image: url(../img/bg_leiste_5.jpg);
+	background-repeat: repeat-x;
+	background-position: left top;
+	height:15px;
+}
+
+ul.tab li:hover {
+	background-image: none;
+	background-color: #FFF;
+}
+
+ul.tab li.tabon {
+	background-image: none;
+	background-color: #FFF;
+}
+
+ul.tab li a {
+	text-decoration: none;
+	color: #005596;
+	font-weight: bold;
+	font-size:10px;
+	display: block;
+	padding-top: 3px;
+}
+
+#itemcard {
+	width: 734px;
+}
+
+#itemcard_left {
+	width: 364px;
+	float: left;
+	overflow:hidden;
+	margin-right: 10px;
+}
+
+#itemcard_right {
+	width: 360px;
+	overflow:hidden;
+}
+
+#itemcard_bottom {
+	width: 734px;
+	clear:both;
+	padding-top: 20px;
+}
+
+#itemcard table.basket {
+	width: 220px;
+	height: 30px;
+	margin: 0px 10px 10px 0px; /* oben, rechts, unten, links */
+	background-image:url(../img/bg_basket.jpg);
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+#itemcard table.basket tr td {
+	vertical-align: middle;
+	padding: 0px 3px 0px 3px; /* oben, rechts, unten, links */
+}
+
+#itemcard table.basket tr td:first-child {
+	padding: 0px 6px 0px 6px; /* oben, rechts, unten, links */
+}
+
+#itemcard .item_main_image {
+	display: block;
+	width: 300px;
+	height: 250px;
+	margin: 0px 6px 6px 0px; /* oben, rechts, unten, links */
+	overflow: hidden;
+}
+
+#itemcard .item_main_image_layer1 {
+	width: 300px;
+	text-align: center;
+	border:none;
+}
+
+#itemcard .item_main_image_layer2 {
+	position: relative;
+	top: -250px;
+	display: block;
+	width: 300px;
+	height: 250px;
+	background-image:url(../img/camain_de.png);
+	background-position: left top;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+#itemcard .item_images {
+	width: 300px;
+	text-align: center;
+}
+
+#itemcard .item_images a {
+	display: inline-block;
+	width: 45px;
+	height: 30px;
+	padding: 3px; /* oben, rechts, unten, links */
+}
+
+#itemcard .item_images a:hover {
+	background-color: #e0eaf3;	
+}
+
+#form_itemcard {
+	margin: 0px 0px 0px 372px;
+}
+
+.hide {
+	display: none;	
+}
+
+ul.buttonlist {
+	margin: 0px 0px 6px 0px; /* oben, rechts, unten, links */
+	padding: 0px;
+	list-style: none;
+}
+
+a.button_close {
+	margin-right: 10px; 
+	padding-left: 12px;
+	background-image:url(../img/logout.gif);
+	background-position: left center; 
+	background-repeat: no-repeat;	
+}
+
+ul.buttonlist li {
+	height: 20px;
+	margin: 1px 0px 1px 6px; /* oben, rechts, unten, links */
+	padding: 0px;
+	list-style-image: none;
+}
+
+ul.buttonlist li a {
+	margin-right: 10px; 
+	padding:3px 0px 3px 21px; /* oben, rechts, unten, links */
+	background-position: left center; 
+	background-repeat: no-repeat;		
+}
+
+div.categorylist {
+    width: 146px;
+    height: 148px;
+    border: 1px solid #8cb2d0;
+    padding: 2px 2px 2px 2px; /* oben, rechts, unten, links */
+    margin: 4px 4px 4px 0px; /* oben, rechts, unten, links */
+    background-image: url(../img/itemlist2_back.jpg);
+    background-repeat: repeat-x;
+    background-position: left center;
+    float: left;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+}
+
+div.categorylist_description {
+    height: 30px;
+    width: 144px;
+    padding: 5px 1px 3px 1px; /* oben, rechts, unten, links */
+    overflow: hidden;
+    font-size:14px;
+    color: #006699;
+}
+
+div.categorylist_image {
+    height: 100px;
+    width: 146px;
+    background-color:#FFF;
+    overflow: hidden;
+}
+div.categorylist_image_layer1 {
+    height: 100px;
+    width: 146px;
+    text-align: center;
+    overflow: hidden;
+}
+div.categorylist:hover {
+    background-image: url(../img/itemlist2_back_over.jpg);
+}
+
+.details {
+
+}
+
+.details tr td {
+  border-top: 1px solid #8cb2d0;
+}
+
+.show  ul {
+  padding-left:15px;
+}
+
+#category_main_pic {
+    margin: 6px 10px 6px 0px; /* oben, rechts, unten, links */
+   /* width:500px;
+    height:500px;*/
+}
+
+img.inventory_image {
+    width: 26px;
+    height:  10px;
+    border: 0px;
+}
+
+table.order_sum {
+    border-collapse: collapse;
+    width:  300px;
+}
+
+table.order_sum td {
+    text-align: right;
+}
+
+td.order_sum_1 {
+  padding: 0px 0px 4px 0px; /* oben, rechts, unten, links */    
+  width: 200px;  
+}
+
+td.order_sum_1_no_padding {
+  padding: 0px 0px 0px 0px; /* oben, rechts, unten, links */    
+  width: 200px;  
+}
+
+td.order_sum_2 {
+    padding: 0px 0px 4px 0px; /* oben, rechts, unten, links */    
+    width: 100px;
+}
+
+td.order_sum_2_no_padding {
+    padding: 0px 0px 0px 0px; /* oben, rechts, unten, links */    
+    width: 100px;
+}
+
+img.category_image {
+    padding: 0px 0px 10px 0px; /* oben, rechts, unten, links */    
+}
+
+
+div.itembox {
+	margin-right: -7px;
+}
+
+div.sort_label {
+	float: left;
+	width: 100px;
+	height: 16px;
+	text-align: left;
+	margin: 4px 0px 2px 0px; /* oben, rechts, unten, links */
+	overflow: hidden;
+}
+
+div.page_switch {
+	text-align: center;
+    margin: 5px 0px 5px 0px; /* oben, rechts, unten, links */
+}
+
+.tooltip {
+	display:none;
+
+}
+/*Magic Zoom*/
+#zoom-big {
+	position:absolute;
+	top:165px;
+	left:575px; 
+}
+
+table.mail_header {
+	border:1px solid #8cb2d0;
+	padding:6px;
+	width: 100%;
+}
+
+table.mail_bottom {
+	border:1px solid #8cb2d0; 
+	padding:6px;
+	width:100%;
+}
+
+table.mail_bottom tr td {
+	width:200px;
+}
+
+table.order_history {
+	width:100%
+}
+
+table.order_history tr td {
+	width: 200px;
+	text-align:left;
+}
+
+table.order_step_1_bottom tr td {
+	width: 200px;
+}

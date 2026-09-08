@@ -1,0 +1,39 @@
+
+.padding{
+  padding: @spacer-base;
+  &Top{
+    padding-top: @spacer-base;
+  }
+  &Right{
+    padding-right: @spacer-base;
+  }
+  &Bottom{
+    padding-bottom: @spacer-base;
+  }
+  &Left{
+    padding-left: @spacer-base;
+  }
+}
+@padding: --small @spacer-small, --large @spacer-large, --xlarge @spacer-xlarge, --xsmall @spacer-xsmall;
+.make-paddings(@index) when (@index > 0){
+  @extraction: extract(@padding, @index);
+  @first: extract(@extraction,1);
+  @second: extract(@extraction,2);
+  .padding@{first}{
+    padding: @second;
+  }
+  .paddingTop@{first}{
+    padding-top: @second;
+  }
+  .paddingRight@{first}{
+    padding-right: @second;
+  }
+  .paddingBottom@{first}{
+    padding-bottom: @second;
+  }
+  .paddingLeft@{first}{
+    padding-left: @second;
+  }
+  .make-paddings(@index - 1);
+}
+.make-paddings(length(@padding));

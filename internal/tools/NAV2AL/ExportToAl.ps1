@@ -1,0 +1,2 @@
+﻿Import-Module C:\temp\Cloud.Ready.Software.PowerShell-master\PSModules\Cloud.Ready.Software.NAV\ModelTools\Export-NAVALfromNAVApplicationObjectAndServer.ps1
+Export-NAVALfromNAVApplicationObjectAndServer -extensionStartId 5447300 -Filter "ID=5447300..5447304;Type=Table|Page" -ServerInstance DC-2018-DEV -ServiceTierServer DEV01 -TargetPath c:\temp\dcal -WorkingFolder c:\temp

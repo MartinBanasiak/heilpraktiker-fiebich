@@ -1,0 +1,56 @@
+.textcontent img.picture_right {
+    float      : right;
+    margin-top : 37px;
+}
+
+#copernica_wrapper {
+}
+
+#copernica_wrapper h2 {
+    margin-bottom : 1em;
+}
+
+#copernica_wrapper form#copernica_subscribe {
+    border-bottom  : 1px solid #e6e6e6;
+    padding-bottom : 16px;
+}
+
+#copernica_wrapper .pflichtfeld {
+    margin-top : 20px;
+}
+
+#copernica_wrapper .button_subscribe {
+    display         : block;
+    /*background-image: url("/layout/frontend/vegandia/img/main_button.png");
+    background-position: left top;
+    background-repeat: no-repeat;*/
+    border          : 0 none;
+    color           : #ffffff;
+    cursor          : pointer;
+    font-size       : 14px;
+    height          : 44px;
+    line-height     : 44px;
+    margin          : 0 0 15px 135px;
+    padding         : 0;
+    text-align      : center;
+    text-decoration : none;
+    width           : 215px;
+}
+
+#copernica_wrapper .button_subscribe:hover {
+    /*background-image: url("/layout/frontend/vegandia/img/main_button_hover.png");*/
+}
+
+#content_1 > pre {
+    background  : none repeat scroll 0 0 #ffffff;
+    left        : 50%;
+    margin-left : -500px;
+    padding     : 20px;
+    position    : absolute;
+    top         : 1070px;
+    width       : 1000px;
+}
+
+#content_1 > pre pre {
+    background : none repeat scroll 0 0 #ffffff;
+}

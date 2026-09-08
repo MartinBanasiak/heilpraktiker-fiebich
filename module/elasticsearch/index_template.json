@@ -1,0 +1,64 @@
+{
+  "template":   "dcshop",
+  "mappings": {
+    "item": {
+      "_all":   {"enabled" : false},
+      "properties" : {
+        "id": {"type": "integer"},
+        "company": {"type": "keyword"},
+        "shop_code": {"type": "keyword"},
+        "language_code": {"type": "keyword"},
+        "item_no": {"type": "keyword"},
+        "parent_item_no": {"type": "keyword"},
+        "description": {"type": "keyword"},
+        "summary": {"type": "keyword"},
+        "width": {"type": "float"},
+        "length": {"type": "float"},
+        "height": {"type": "float"},
+        "volume": {"type": "float"},
+        "weight": {"type": "float"},
+        "order_ranking": {"type": "integer"},
+        "retail_price": {"type": "float"},
+        "base_price": {"type": "float"},
+        "vendor_no": {"type": "keyword"},
+        "vendor_name": {"type": "keyword"},
+        "inventory": {"type": "float"},
+        "active": {"type": "boolean"},
+        "starting_date": {"type": "date"},
+        "ending_date": {"type": "date"},
+        "category_sortings": {
+          "dynamic": "true",
+          "type": "nested",
+          "include_in_parent": true
+        },
+        "attributes": {
+          "dynamic": "true",
+          "type": "nested",
+          "include_in_parent": true
+        }
+      }
+    },
+    "_default_": {
+      "_all": {
+        "enabled": false
+      },
+      "properties": {
+        "width": {"type": "float"},
+        "length": {"type": "float"},
+        "height": {"type": "float"},
+        "volume": {"type": "float"},
+        "weight": {"type": "float"}
+      },
+      "dynamic_templates": [
+        {
+          "strings": {
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

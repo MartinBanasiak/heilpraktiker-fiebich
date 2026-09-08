@@ -1,0 +1,49 @@
+
+.datepicker {
+  .border-radius(0);
+  td, th {
+    .border-radius(0);
+  }
+  table {
+    tr {
+      td {
+        &.active {
+          background: none;
+          background-color: @brand-primary;
+          text-shadow: none;
+          &.active,
+          &:hover {
+            background-color: @brand-primary;
+            background: none;
+            text-shadow: none;
+            &:hover,
+            &.active {
+              background: none;
+              background-color: @brand-primary;
+              text-shadow: none;
+            }
+          }
+        }
+        span {
+          &.active {
+            background: none;
+            background-color: @brand-primary;
+            text-shadow: none;
+            &.active,
+            &:hover {
+              background-color: @brand-primary;
+              background: none;
+              text-shadow: none;
+              &:hover,
+              &.active {
+                background: none;
+                background-color: @brand-primary;
+                text-shadow: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

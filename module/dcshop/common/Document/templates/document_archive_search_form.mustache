@@ -1,0 +1,122 @@
+<div class="form_wrapper shop_form_wrapper customer_address_form_wrapper archiveFilterbox">
+    <form method="POST" id="document_search_form" name="document_search_form" action="{{formURLValue}}">
+        <div class="row">
+            <div class="col-xs-12 col-lg-8 archiveFilterbox__left">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="document_search_input">{{documentNoSearchLabel}}</label>
+                            <input id="document_search_input" type="text" class="form-control"
+                                   name="document_search_input"
+                                   value="{{documentNoSearchValue}}"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="document_daterange">{{dateRangeLabel}}</label>
+                            <input type="text" id="document_daterange_input" class="form-control"
+                                   name="document_daterange" value="{{dateRangeSearchValue}}"/>
+                        </div>
+                    </div>
+                    {{#showDocumentTypeFilter}}
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label for="document_type_filter">{{documentTypelabel}}</label>
+                                <div class="select_body">
+                                    <select name="document_type_filter" id="document_type_filter"
+                                            onchange="this.form.submit();">
+                                        {{#documentTypeFilterOptions}}
+                                            <option {{selected_value}}
+                                                    value="{{option_value}}">   {{option_name}}  </option>
+                                        {{/documentTypeFilterOptions}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    {{/showDocumentTypeFilter}}
+                </div>
+            </div>
+            <div class="col-xs-12 col-lg-4 archiveFilterbox__right">
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <div class="button_row">
+                        <button type="submit" class="button button_action">{{searchButtonLabel}}</button>
+                        <button type="button" class="button" onclick="customReset();">{{resetButtonLabel}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{{#showNotificationMessage}}
+    <!-- Modal -->
+    <div class="modal fade " id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{{notificationMessageValue}}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(window).load(function () {
+            $('#notificationModal').modal('show');
+        });
+    </script>
+{{/showNotificationMessage}}
+
+
+<script type="text/javascript">
+
+
+    var dateRangeValue = "{{dateRangeSearchValue}}";
+    $(function () {
+
+        var date = new Date();
+
+        $('input[name="document_daterange"]').daterangepicker({
+            timePicker: false,
+            timePickerIncrement: 30,
+            //  startDate : null,
+            // endDate : null,
+            maxDate: new Date(),
+            opens: "center",
+            drops: "up",
+            autoApply: true,
+            locale: {
+                format: 'DD.MM.YYYY',
+                "separator": " - ",
+                "daysOfWeek": [
+                    {{weekDays}}
+                ]
+                ,
+                "monthNames": [
+                    {{yearMonths}}
+                ],
+                "firstDay": 1
+            }
+
+        });
+
+        if (dateRangeValue == "") {
+            document.getElementById("document_daterange_input").value = "";
+        }
+    });
+
+
+    function customReset() {
+        document.getElementById("document_search_input").value = "";
+        document.getElementById("document_daterange_input").value = "";
+    }
+
+
+</script>

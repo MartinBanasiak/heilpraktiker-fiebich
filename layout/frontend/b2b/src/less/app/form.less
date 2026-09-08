@@ -1,0 +1,268 @@
+input,
+select,
+textarea{
+  padding: 7px 15px;
+  color: @black;
+  border: 1px solid @input-border-color;
+  .border-radius(0);
+  .box-shadow(none);
+  &:active,&:focus {
+    outline:0;
+  }
+  &.error {
+    border-color: @brand-danger;
+  }
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance:textfield;
+}
+
+input[type="file"] {
+  padding:0;
+  border:0;
+}
+
+.radio input[type="radio"] {
+  margin-top: 11px;
+}
+
+textarea {
+  resize:vertical;
+}
+
+.form-control {
+  background-color: @white;
+  border: 1px solid @input-border-color;
+  .box-shadow(none);
+  color: @black;
+  font-size: @font-size-base;
+  .border-radius(0);
+  &:focus {
+    .box-shadow(none);
+    border-color: @gray-base;
+  }
+}
+
+.input-group-addon {
+  background-color: @white;
+  border: 1px solid @input-border-color;
+  .box-shadow(none);
+  .border-radius(0);
+  color: @gray-base;
+  font-size: @font-size-base;
+}
+
+.input-group {
+  .form-control {
+    border-right:0;
+  }
+  .input_group-addon {
+    border-left:0;
+  }
+}
+
+// Select und Checkbox
+
+.select_body {
+  background-color: @white;
+  cursor: pointer;
+  display: inline-block;
+  width: auto;
+  position: relative;
+  &:after {
+    content: "\f107";
+    font-family: fontawesome;
+    position: absolute;
+    right: 12px;
+    top:5px;
+    font-size: floor(@font-size-base*1.5);
+    color: @black;
+    pointer-events: none;
+  }
+  select {
+    color: @black;
+    border-color: @input-border-color;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 30px;
+    .appearance(none);
+    display:block;
+    width: 100%;
+    &::-ms-expand {
+      display:none;
+    }
+  }
+}
+
+.sort_by {
+  .select_body {
+    width: 100%;
+  }
+}
+
+.select_body_div {
+  color: @black;
+  position: relative;
+  .select_body_header {
+    padding: 7px 15px;
+    border: 1px solid @input-border-color;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+    &:after {
+      content: "\f107";
+      font-family: fontawesome;
+      position: absolute;
+      right: 0px;
+      top:0px;
+      font-size: floor(@font-size-base*1.5);
+      color: @black;
+      padding: 2px 10px;
+      background-color: @white;
+    }
+  }
+  .select_body_options {
+    display:none;
+    padding: 7px 0;
+    background-color: @white;
+    .box-shadow(0 2px 4px fade(#000000,20%));
+    position: absolute;
+    width:100%;
+    z-index:1;
+    > div {
+      padding: 7px 15px;
+      cursor: pointer;
+      &:hover {
+        background-color: @light-gray;
+      }
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: @spacer-base;
+  .select_body {
+    width: 100%;
+  }
+  &.has-danger {
+    input {
+      border-color: @brand-danger;
+      color: @brand-danger;
+    }
+  }
+}
+.form-check {
+  height: 35px;
+  line-height: 35px;
+  label {
+    cursor: pointer;
+  }
+  .form-check-input {
+    margin-right: @spacer-base;
+    margin-top: 12px;
+  }
+}
+
+.form-group-street {
+  &:after {
+    clear:both;
+    display:block;
+    content: " ";
+  }
+  > label {
+    width:100%;
+    float:left;
+  }
+  .form-group {
+    &.text_street{
+      width:70%;
+      float:left;
+      padding-right: @spacer-base;
+    }
+    &.text_street_no {
+      width:30%;
+      float:left;
+    }
+  }
+}
+
+.form-label-left {
+  .form-group {
+    &:not(.form-check) {
+      &:after {
+        clear: both;
+        display: block;
+        content: " ";
+      }
+      label {
+        margin-top: 11px;
+        width: 160px;
+        float: left;
+      }
+      input,
+      textarea,
+      .select_body {
+        .calc(width,"100% - 160px");
+        float: left;
+      }
+    }
+  }
+  .form-group-street {
+    > label {
+      width: 160px;
+      float: left;
+    }
+    .form-group {
+      &.text_street {
+        float: left;
+        .calc(width,"100% - 80px - 160px");
+        input {
+          width: 100%;
+          float: none;
+        }
+      }
+      &.text_street_no {
+        float: left;
+        width: 80px;
+        input {
+          width: 100%;
+          float: none;
+        }
+      }
+    }
+  }
+
+  @media (max-width: @screen-xs) {
+    .form-group {
+      &:not(.form-check) {
+        label {
+          margin-top: 5px;
+          width: 100%;
+        }
+        input,
+        textarea,
+        .select_body {
+          width:100%;
+        }
+      }
+    }
+    .form-group-street {
+      > label {
+        width:100%;
+      }
+      .form-group {
+        &.text_street {
+          float: left;
+          .calc(width,"100% - 80px");
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,160 @@
+@charset "utf-8";
+/* Frontend-Design bss-it */
+
+body {
+	margin: 0px;
+	padding: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #FFFFFF;
+}
+
+/* Mysyde-Standard-Tags */
+
+#header {
+	height: 35px;
+	padding: 10px 0px 0px 250px; /* oben, rechts, unten, links */	
+	background-image:url(../img/ciclo_small_de.jpg);
+	background-repeat:no-repeat;
+	background-position: left center;
+	text-align: right;
+}
+
+#item_title {
+	position: absolute;
+	top: 15px;
+	left: 250px;
+	width: 220px;
+	text-align: center;
+}
+
+#close_window {
+	display: block;
+	height: 50px;
+	margin: 20px 10px 10px 10px; /* oben, rechts, unten, links */
+	padding: 0px 0px 0px 250px; /* oben, rechts, unten, links */	
+	float:left;
+}
+
+#main {
+	margin: 10px 0px 10px 0px; /* oben, rechts, unten, links */	
+	padding: 5px 5px 5px 5px; /* oben, rechts, unten, links */	
+	border: 1px solid #8cb2d0;
+	text-align: center;
+}
+
+#footer {
+	padding: 5px 5px 5px 5px; /* oben, rechts, unten, links */	
+	border: 1px solid #8cb2d0;
+	text-align: center;
+}
+
+#item_main_image {
+	display: block;
+	width: 568px;
+	height: 400px;
+	text-align: center;
+}
+
+a, a:link, a:active, a:visited {
+	color: #000;
+	text-decoration:underline;
+}
+
+a:hover {
+	color: #000;
+	text-decoration: none;
+}
+
+h1 {
+	padding: 0px;
+	margin: 0px;
+	font-size: 20px;
+	color: #005596;
+	font-weight: normal;
+	text-transform: uppercase;	
+}
+
+h2 {
+	padding: 0px;
+	margin: 0px;
+	font-size: 14px;
+	color: #005596;
+	font-weight: bold;
+	text-transform: uppercase;	
+}
+
+h3 {
+	padding: 0px;
+	margin: 0px;
+	font-size: 12px;
+	color: #005596;
+	font-weight: bold;
+}
+
+h4, h5, h6 {
+	padding: 0px;
+	margin: 0px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.item_images a, .item_images a:link, .item_images a:visited {
+	display: inline-block;
+	width: 45px;
+	height: 30px;
+	padding: 3px; /* oben, rechts, unten, links */
+}
+
+.item_images a:active, .item_images a:hover, .item_images a.active {
+	background-color: #e0eaf3;
+}
+
+a.button_close {
+	margin-right: 10px; 
+	padding-left: 12px;
+	background-image:url(/layout/frontend/ciclo/img/logout.gif);
+	background-position: left center; 
+	background-repeat: no-repeat;	
+}
+
+ul.buttonlist li {
+	height: 20px;
+	margin: 1px 0px 1px 6px; /* oben, rechts, unten, links */
+	padding: 0px;
+}
+
+ul.buttonlist li a {
+	margin-right: 10px; 
+	padding-left: 12px;
+	background-position: left center; 
+	background-repeat: no-repeat;		
+}
+
+a.button_play {
+	background-image:url(/layout/frontend/ciclo/img/button_play.gif);
+}
+
+a.button_pdf {
+	background-image:url(/layout/frontend/ciclo/img/button_pdf.gif);
+}
+
+a.button_doc {
+	background-image:url(/layout/frontend/ciclo/img/button_doc.gif);
+}
+
+a.button_xls {
+	background-image:url(/layout/frontend/ciclo/img/button_xls.gif);
+}
+
+a.button_img {
+	background-image:url(/layout/frontend/ciclo/img/button_img.gif);
+}
+
+a.button_zip {
+	background-image:url(/layout/frontend/ciclo/img/button_img.gif);
+}
+
+a.button_sonst {
+	background-image:url(/layout/frontend/ciclo/img/button_sonst.gif);
+}

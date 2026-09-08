@@ -1,0 +1,117 @@
+<tr class="table_row table_body {{#hasRelatedDocuments}}toggleTable{{/hasRelatedDocuments}}">
+    <td class="table_cell archiveTable__statusLine">
+        <span class="table_cell_label">
+            {{documentNoHeader}}
+        </span>
+        <strong>{{getDocumentNo}}</strong>
+    </td>
+    <td class="table_cell archiveTable__infoLine">
+        <div class="toggleTableRow isfirst">
+            <table class="table_area archiveTableInTable">
+                <tbody>
+                <tr class="table_row table_body">
+                    <td class="table_cell archiveTable__typeLine">
+                                                    <span class="table_cell_label">
+                                                        {{documentTypeHeader}}
+                                                    </span>
+                        {{getDocumentTypeText}}
+                    </td>
+                    <td class="table_cell archiveTable__numberLine">
+                                                        <span class="table_cell_label">
+                                                            {{documentNoHeader}}
+                                                        </span>
+                        {{getDocumentNo}}
+                    </td>
+
+                    <td class="table_cell archiveTable__dataLine">
+                                                    <span class="table_cell_label">
+                                                        {{documentDateHeader}}
+                                                    </span>
+                        {{getDocumentDate}}
+                    </td>
+                    <td class="table_cell text-right archiveTable__totalLine">
+                                                    <span class="table_cell_label">
+                                                        {{documentAmountHeader}}
+                                                    </span>
+                        <span itemprop="price">{{getDocumentAmount}}&nbsp;{{getCurrencyCode}}</span>
+                    </td>
+                    <td class="table_cell text-right archiveTable__actionLine">
+                        <form method="POST" name="generate_pdf_form"
+                              action="{{formURLValue}}">
+                            <input type="hidden" name="document_last_search_input" value="{{documentNoSearchValue}}">
+                            <input type="hidden" name="document_last_search_date_range"
+                                   value="{{dateRangeSearchValue}}">
+                            <input type="hidden" name="page_value" value="{{currentPageValue}}">
+
+                            <input type="hidden" name="document_type" value="{{getDocumentType}}">
+                            <input type="hidden" name="document_no" value="{{getDocumentNo}}">
+
+                            <button type="submit" class="button" name="view_document_card" value="true">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                Details
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="toggleTableRow" style="display: none">
+            <table class="table_area archiveTableInTable">
+                <tbody>
+                {{#relatedDocuments}}
+                    <tr class="table_row table_body">
+                        <td class="table_cell archiveTable__typeLine">
+                                                            <span class="table_cell_label">
+                                                                {{documentTypeHeader}}
+                                                            </span>
+                            {{getDocumentTypeText}}
+                        </td>
+                        <td class="table_cell archiveTable__numberLine">
+                                                                <span class="table_cell_label">
+                                                                    {{documentNoHeader}}
+                                                                </span>
+                            {{getDocumentNo}}
+                        </td>
+
+                        <td class="table_cell archiveTable__dataLine">
+                                                            <span class="table_cell_label">
+                                                                {{documentDateHeader}}
+                                                            </span>
+                            {{getDocumentDate}}
+                        </td>
+                        <td class="table_cell text-right archiveTable__totalLine">
+                                                            <span class="table_cell_label">
+                                                                {{documentAmountHeader}}
+                                                            </span>
+                            <span itemprop="price">{{getDocumentAmount}}&nbsp;{{getCurrencyCode}}</span>
+                        </td>
+                        <td class="table_cell text-right archiveTable__actionLine">
+                            <form method="POST" name="generate_pdf_form"
+                                  action="{{formURLValue}}">
+                                <input type="hidden" name="document_last_search_input"
+                                       value="{{documentNoSearchValue}}">
+                                <input type="hidden" name="document_last_search_date_range"
+                                       value="{{dateRangeSearchValue}}">
+                                <input type="hidden" name="page_value" value="{{currentPageValue}}">
+
+                                <input type="hidden" name="document_type" value="{{getDocumentType}}">
+                                <input type="hidden" name="document_no" value="{{getDocumentNo}}">
+
+                                <button type="submit" class="button" name="view_document_card" value="true">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    Details
+                                </button>
+                                <button type="submit" class="button" name="request_document_pdf" value="true">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                    PDF
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {{/relatedDocuments}}
+                </tbody>
+            </table>
+        </div>
+    </td>
+</tr>

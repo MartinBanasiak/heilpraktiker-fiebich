@@ -1,0 +1,27 @@
+{
+  "name": "dccookie",
+  "version": "1.0.0",
+  "description": "dc Cookie Manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "npx webpack --config webpack.config.js",
+    "webpack-ie": "npx webpack --config webpack-ie.config.js",
+    "compile": "npx webpack --config webpack.config.js && npx webpack --config webpack-ie.config.js"
+  },
+  "author": "Paul Schmiedel",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "babel-loader": "^8.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^2.2.1",
+    "regenerator-runtime": "^0.13.7"
+  }
+}

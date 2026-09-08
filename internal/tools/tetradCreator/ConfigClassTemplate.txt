@@ -1,0 +1,15 @@
+<?php
+
+class %configclassname% implements DynCom\dc\common\interfaces\ModelDBConfigInterface {
+
+    use genericConfigTrait;
+
+    protected $modelClassName = '%modelclassname%';
+    protected $tableName      = '%tablename%';
+    protected $baseTableName  = '%tablename%';
+    protected $altPrimary     = %altprimaryarr%;
+    protected $mappedFields   = [
+        %mappedfieldsarr%
+    ];
+
+}

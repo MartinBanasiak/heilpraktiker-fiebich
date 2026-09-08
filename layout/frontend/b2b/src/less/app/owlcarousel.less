@@ -1,0 +1,36 @@
+
+.owl-carousel {
+  position: relative;
+  .owl-nav {
+    > div {
+      font-family: FontAwesome;
+      font-size: 45px;
+      position: absolute;
+      top: 50%;
+      width: 40px;
+      height: 40px;
+      color: @light-gray;
+      display: block;
+      text-align: center;
+      line-height: 40px;
+      margin-top: -20px;
+      &:hover {
+        color: @gray-base;
+      }
+    }
+    .owl-next {
+      right: -40px;
+    }
+    .owl-prev {
+      left: -40px;
+    }
+  }
+}
+
+@media (max-width: @screen-xs-max) {
+  .owl-carousel {
+    .owl-nav {
+      display: none;
+    }
+  }
+}

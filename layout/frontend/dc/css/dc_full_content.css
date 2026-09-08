@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+
+#content {
+	display: none;
+}
+#box {
+	display: none;
+}
+#menu {
+	display: none;
+}
+#gadget_2 {
+	display: block;
+}

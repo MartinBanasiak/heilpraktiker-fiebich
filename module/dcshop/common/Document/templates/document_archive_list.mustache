@@ -1,0 +1,45 @@
+{{#listHasValues}}
+    {{> list_pagination}}
+    <table class="table_area archiveTable">
+        <thead>
+        <tr class="table_row table_header">
+            <td class="table_cell archiveTable__statusLine">{{documentNoHeader}}</td>
+            <td class="table_cell archiveTable__infoLine">
+                <table class="table_area archiveTableInTable">
+                    <tbody>
+                    <tr>
+                        <td class="table_cell archiveTable__typeLine">
+                            {{documentTypeHeader}}
+                        </td>
+                        <td class="table_cell archiveTable__dataLine">
+                            {{documentDateHeader}}
+                        </td>
+                        <td class="table_cell text-right archiveTable__totalLine">
+                            {{documentAmountHeader}}
+                        </td>
+                        <td class="table_cell text-right archiveTable__actionLine">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        {{#documents}}
+            {{> document_archive_view}}
+        {{/documents}}
+        </tbody>
+    </table>
+    {{> list_pagination}}
+    {{#showDocumentCard}}
+        {{> document_archive_card}}
+    {{/showDocumentCard}}
+    {{#showRequstPDF}}
+        {{> document_archive_request_pdf}}
+    {{/showRequstPDF}}
+{{/listHasValues}}
+
+{{^listHasValues}}
+    {{emptyListMessage}}
+{{/listHasValues}}

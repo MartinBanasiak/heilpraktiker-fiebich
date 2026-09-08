@@ -1,0 +1,102 @@
+/*
+
+
+   Magic Slideshow v1.1.6 DEMO
+   Copyright 2010 Magic Toolbox
+   You must buy a license to use this tool.
+   Go to www.magictoolbox.com/magicslideshow/
+
+
+*/
+
+div.MagicSlideshow {
+    border: none;
+    background: transparent;
+    display: none; /* hides all images until Magic Slideshow is ready */
+	margin: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	overflow: hidden;
+}
+
+/* Styles for images */
+img.MagicSlideshowImage {
+    border: 0px;
+}
+
+/* Styles for images container */
+div.MagicSlideshowImagesContainer {
+
+}
+
+/* Styles for thumbnails */
+img.MagicSlideshowThumbnail {
+    border: 1px solid transparent;
+    margin: 1px;
+}
+img.MagicSlideshowThumbnail.highlight {
+    border: 1px solid #696969;
+}
+
+/* Styles for thumbnails container */
+div.MagicSlideshowThumbnailsContainer {
+    padding: 0 1px;
+}
+div.MagicSlideshowThumbnailsContainerStyle {
+    background: #FFFFFF;
+}
+
+/* Styles for descriptions */
+.MagicSlideshowDescription {
+    line-height: 24px;
+	background-color:transparent;
+	background-image: url('/plugins/magicslideshow/graphics/text-back.png'); 
+    color: #000000;
+	padding: 20px 20px 20px 20px !important;
+	width: 400px !important;
+	margin: 0px 0px 40px 490px !important; /* oben, rechts, unten, links */
+}
+
+/* Styles for links if using text descriptions */
+.MagicSlideshowDescription a {
+    color: #CFCFCF;
+}
+.MagicSlideshowDescription a:visited {
+    color: #ACACAC;
+}
+.MagicSlideshowDescription a:hover {
+    color: #FFFFFF;
+}
+
+/* Style for loading box */
+div.MagicSlideshowLoadingBox {
+    background: #FFFFFF url('/plugins/magicslideshow/graphics/loader.gif') no-repeat 50% 2px;
+    padding: 4px 4px 4px 4px !important;
+    margin: 0px !important;
+    line-height: 15px;
+    color: #363636;
+    border: 1px solid #696969;
+    text-align: left;
+}
+
+/* Styles for arrows */
+a.MagicSlideshowArrow {
+    width: 66px;
+    height: 66px;
+    cursor: 'pointer';
+    background: url('/plugins/magicslideshow/graphics/arrows06.png');
+    padding: 0px !important;
+    margin: 0px !important;
+}
+a.MagicSlideshowArrowTop {
+    background-position: 66px 0;
+}
+a.MagicSlideshowArrowRight {
+    background-position: 0 0;
+}
+a.MagicSlideshowArrowBottom {
+    background-position: 66px 66px;
+}
+a.MagicSlideshowArrowLeft {
+    background-position: 0 66px;
+}

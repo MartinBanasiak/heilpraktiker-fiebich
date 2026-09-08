@@ -1,0 +1,777 @@
+@cookie-primary: @brand-primary;
+@cookie-black: @black;
+@cookie-white: @white;
+@cookie-gray-base: @gray-base;
+@cookie-light-gray: @light-gray;
+
+//@cookie-primary : #9BC243;
+//@cookie-black: #000000;
+//@cookie-white:  #ffffff;
+//@cookie-gray-base: #cccccc;
+//@cookie-light-gray: #eeeeee;
+
+@zindex-cookie: 6000;
+// --- Basics ---
+@cookie-font-color: @cookie-black;
+@background-cookie: @cookie-white;
+@border-color-cookie: @cookie-light-gray;
+@background-tab-hover-cookie: darken(@background-cookie, 5);
+// +++ Basics +++
+
+// --- Buttons ---
+// Base
+@background-cookie-buttons: @cookie-white;
+@border-cookie-buttons: @cookie-gray-base;
+@color-cookie-buttons: @cookie-black;
+
+// Hover
+@background-cookie-buttons-hover: darken(@background-cookie-buttons, 5);
+@border-cookie-buttons-hover: darken(@border-cookie-buttons, 5);
+@color-cookie-buttons-hover: @color-cookie-buttons;
+
+// Active/Focus
+@background-cookie-buttons-active: darken(@background-cookie-buttons, 10);
+@border-cookie-buttons-active: darken(@border-cookie-buttons, 10);
+@color-cookie-buttons-active: @color-cookie-buttons;
+// +++ Buttons +++
+
+// --- Action Buttons ---
+// Base
+@background-cookie-buttons-action: @cookie-primary;
+@border-cookie-buttons-action: @cookie-primary;
+@color-cookie-buttons-action: @cookie-white;
+
+// Hover
+@background-cookie-buttons-action-hover: darken(@background-cookie-buttons-action, 5);
+@border-cookie-buttons-action-hover: darken(@border-cookie-buttons-action, 5);
+@color-cookie-buttons-action-hover: @color-cookie-buttons-action;
+
+// Active/Focus
+@background-cookie-buttons-action-active: darken(@background-cookie-buttons-action, 10);
+@border-cookie-buttons-action-active: darken(@border-cookie-buttons-action, 10);
+@color-cookie-buttons-action-active: @color-cookie-buttons-action;
+// +++ Action Buttons +++
+
+// --- Links ---
+@color-cookie-link: @cookie-primary;
+@color-cookie-link-hover: darken(@color-cookie-link, 10);
+// +++ Links +++
+
+// --- Switches ---
+@background-switch-cookie: @cookie-light-gray;
+@background-switch-active-cookie: @cookie-primary;
+@background-switch-inactive-cookie: @cookie-black;
+// +++ Switches +++
+
+// --- Constants ---
+@font-size-cookiebar: 14px;
+@padding-cookie: 15px;
+@font-size-cookie-buttons: 16px;
+@font-weight-cookie-buttons: bold;
+@desktop-top-padding: 150px;
+// +++ Constants +++
+
+.flexbox(@direction:row,@align:center,@wrap:wrap) {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: @direction;
+  -ms-flex-direction: @direction;
+  flex-direction: @direction;
+  -ms-flex-align: @align;
+  -webkit-align-items: @align;
+  align-items: @align;
+  -webkit-flex-wrap: @wrap;
+  -ms-flex-wrap: @wrap;
+  flex-wrap: @wrap;
+}
+
+.transition (@transition) {
+  -webkit-transition: @transition;
+  -moz-transition: @transition;
+  -ms-transition: @transition;
+  -o-transition: @transition;
+}
+
+.box-shadow (@string) {
+  -webkit-box-shadow: @string;
+  -moz-box-shadow: @string;
+  box-shadow: @string;
+}
+
+.dcCookieBar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  line-height: 1.3;
+  width: 100%;
+  min-width: 320px;
+  .box-shadow(0 0 10px fade(#000000, 20));
+  z-index: @zindex-cookie;
+  padding: @padding-cookie;
+  padding-left: 90px;
+  background-color: @background-cookie;
+  font-size: @font-size-cookiebar;
+  color: @cookie-font-color;
+  box-sizing: border-box;
+
+  a {
+    color: @color-cookie-link;
+    text-decoration: underline;
+
+    &:hover {
+      color: @color-cookie-link-hover;
+    }
+  }
+
+  &__button {
+    line-height: 1.6;
+    padding: 5px 20px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    min-width: 40px;
+    width: auto;
+    font-size: @font-size-cookie-buttons;
+    font-weight: @font-weight-cookie-buttons;
+    color: @color-cookie-buttons;
+    border: 1px solid @border-cookie-buttons;
+    background-color: @background-cookie-buttons;
+    .transition(0.2s ease-in-out);
+
+    &:hover {
+      background-color: @background-cookie-buttons-hover;
+      border-color: @border-cookie-buttons-hover;
+      color: @color-cookie-buttons-hover;
+    }
+
+    &:active, &:focus {
+      background-color: @background-cookie-buttons-active;
+      border-color: @border-cookie-buttons-active;
+      color: @color-cookie-buttons-active;
+    }
+
+    @media (max-width: 1024px) {
+      font-size: @font-size-cookiebar;
+    }
+  }
+
+  &__buttonaction {
+    border-color: @border-cookie-buttons-action;
+    color: @color-cookie-buttons-action;
+    background-color: @background-cookie-buttons-action;
+
+    &:hover {
+      background-color: @background-cookie-buttons-action-hover;
+      border-color: @border-cookie-buttons-action-hover;
+      color: @color-cookie-buttons-action-hover;
+    }
+
+    &:active, &:focus {
+      background-color: @background-cookie-buttons-action-active;
+      border-color: @border-cookie-buttons-action-active;
+      color: @color-cookie-buttons-action-active;
+    }
+  }
+
+  &__buttons {
+    .flexbox(row, center, wrap);
+    justify-content: space-between;
+
+    .dcCookieBar__button {
+      flex-grow: 1;
+      margin-left: @padding-cookie/2;
+      margin-right: @padding-cookie/2;
+      margin-bottom: @padding-cookie;
+      box-sizing: border-box;
+      flex-basis: 0%;
+    }
+
+    @media (max-width: 767px) {
+      .dcCookieBar__button {
+        margin-bottom: @padding-cookie/2;
+      }
+
+      .dcCookieBar__buttonaction {
+        order: 1;
+        width: 100%;
+        flex-basis: 100%!important;
+      }
+    }
+  }
+
+  &__main {
+    text-align: center;
+  }
+
+  &__text {
+    padding-left: @padding-cookie/2;
+    padding-right: @padding-cookie/2;
+    padding-bottom: @padding-cookie;
+    text-align: left;
+  }
+
+  &__links {
+    text-align: right;
+    font-size: 12px;
+
+    a {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: @padding-cookie/2;
+      margin-right: @padding-cookie/2;
+    }
+  }
+  &__center {
+    text-align: center;
+
+    a {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: @padding-cookie/2;
+      margin-right: @padding-cookie/2;
+    }
+  }
+}
+
+.dcCookieModal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  background-color: fade(#000000, 30);
+  color: @cookie-font-color;
+  display: none;
+  padding-left: @padding-cookie;
+  padding-right: @padding-cookie;
+  z-index: @zindex-cookie + 1;
+  font-size: @font-size-cookiebar;
+
+  &.dcCookieTopPadding {
+    @media (min-width: 441px) {
+      padding-top: @desktop-top-padding;
+    }
+  }
+
+  &__dialog {
+    background-color: #ffffff;
+    padding: @padding-cookie*2;
+    width: 900px;
+    max-width: 100%;
+    margin: @padding-cookie auto;
+    .box-shadow(0 0 10px fade(#000000, 20));
+
+    @media (max-width: 767px) {
+      padding: @padding-cookie;
+    }
+  }
+
+  a {
+    color: @color-cookie-link;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      color: @color-cookie-link-hover;
+    }
+  }
+
+  .dcCookieBar {
+    &__button {
+      color: @color-cookie-buttons;
+      background-color: @background-cookie-buttons;
+      text-decoration: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: @background-cookie-buttons-hover;
+        border-color: @border-cookie-buttons-hover;
+        color: @color-cookie-buttons-hover;
+      }
+
+      &:active, &:focus {
+        background-color: @background-cookie-buttons-active;
+        border-color: @border-cookie-buttons-active;
+        color: @color-cookie-buttons-active;
+      }
+    }
+
+    &__buttonaction {
+      border-color: @background-cookie-buttons-action;
+      color: @color-cookie-buttons-action;
+      background-color: @background-cookie-buttons-action;
+      cursor: pointer;
+
+      &:hover {
+        background-color: @background-cookie-buttons-action-hover;
+        border-color: @border-cookie-buttons-action-hover;
+        color: @color-cookie-buttons-action-hover;
+      }
+
+      &:active, &:focus {
+        background-color: @background-cookie-buttons-action-active;
+        border-color: @border-cookie-buttons-action-active;
+        color: @color-cookie-buttons-action-active;
+      }
+    }
+
+    &__links {
+      margin-top: @padding-cookie;
+      text-align: left;
+
+      a {
+        margin-left: 0;
+        margin-right: @padding-cookie;
+      }
+    }
+  }
+
+  &.open {
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+.dcCookieModalBody {
+  &__headline {
+    font-size: 20px;
+    margin-bottom: @padding-cookie;
+  }
+
+  &__info {
+    margin-bottom: @padding-cookie;
+  }
+}
+
+.dcCookieBarSwitch {
+  width: 50px;
+  position: relative;
+  height: 26px;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 13px;
+  margin: 0;
+  background-color: @background-switch-cookie;
+
+  span {
+    font-style: normal;
+    position: absolute;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background-color: @background-switch-inactive-cookie;
+    top: 50%;
+    margin-top: -10px;
+    display: block;
+    pointer-events: none;
+    margin-bottom: 0;
+    border-radius: 50%;
+    transition: 0.1s ease-in-out;
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    width: 20px;
+    height: 20px;
+    left: 0;
+    top: 0;
+
+    &:checked {
+      + span {
+        left: 100%;
+        margin-left: -23px;
+        background-color: @background-switch-active-cookie;
+      }
+    }
+  }
+
+  &__label {
+    color: @cookie-font-color;
+    margin-bottom: 0;
+    line-height: 26px;
+    margin-right: 10px;
+  }
+}
+
+.dcCookieBarBox {
+  padding: @padding-cookie;
+  border: 2px solid @border-color-cookie;
+  margin-top: @padding-cookie;
+
+  &__head {
+    .flexbox(row, center, nowrap);
+    justify-content: space-between;
+    margin-bottom: @padding-cookie;
+  }
+
+  &__title {
+    margin-right: @padding-cookie*2;
+    font-size: 16px;
+  }
+
+  &__info {
+    margin-bottom: @padding-cookie;
+  }
+}
+
+.dcCookieBarMoreBox {
+  margin-top: @padding-cookie;
+  //display: none;
+
+  &.open {
+    display: block;
+  }
+}
+
+.dcCookieBarTable {
+  margin-top: @padding-cookie;
+
+  &__row {
+    padding: 8px 0;
+    border-bottom: 1px solid @border-color-cookie;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__cell {
+    &--description {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    &--switch {
+      .flexbox(row, center, nowrap);
+    }
+  }
+
+  @media (min-width: 768px) {
+    &__row {
+      .flexbox(row, center, nowrap);
+    }
+
+    &__cell {
+      flex-grow: 1;
+      text-align: left;
+
+      &:first-child {
+        padding-right: 10px;
+        flex-shrink: 0;
+        flex-grow: 0;
+        width: 200px;
+
+        &.dcCookieBarTable__cell--description {
+          width: 50%;
+        }
+      }
+
+      &--switch {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    &__cell:first-child {
+      margin-bottom: 4px;
+
+      &:after {
+        content: ":";
+      }
+    }
+  }
+}
+
+.dcCookieBarRecurringTable {
+  &__row {
+    padding: 8px 0;
+    border-bottom: 1px solid @border-color-cookie;
+    .flexbox(row, center, nowrap);
+    justify-content: space-between;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &--parent {
+      .dcCookieBarRecurringTable__label {
+        position: relative;
+        padding-left: 20px;
+
+        &:before {
+          content: "";
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 6px 0 6px 10px;
+          border-color: transparent transparent transparent @background-switch-inactive-cookie;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          margin-top: -6px;
+          .transition(0.2s ease-in-out);
+        }
+
+        &.active:before {
+          -webkit-transform: rotate(90deg);
+          -moz-transform: rotate(90deg);
+          -ms-transform: rotate(90deg);
+          -o-transform: rotate(90deg);
+          border-color: transparent transparent transparent @background-switch-active-cookie;
+        }
+      }
+    }
+
+    &--child {
+      padding-left: 20px;
+    }
+  }
+
+  &__label {
+    font-weight: bold;
+  }
+}
+
+.dcCookieBarHistoryTable {
+  font-size: 11px;
+
+  &__row {
+    padding: 8px 0;
+    border-bottom: 1px solid @border-color-cookie;
+    .flexbox(row, center, nowrap);
+    justify-content: space-between;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__label {
+    flex-grow: 1;
+    margin-right: 8px;
+  }
+
+  &__badge {
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-right: 8px;
+    margin-top: 1px;
+
+    &.active {
+      background-color: green;
+    }
+  }
+
+  &__active {
+    margin-left: 8px;
+    flex-shrink: 0;
+    width: 60px;
+    text-align: right;
+  }
+}
+
+.dcCookieBarRecurring {
+  z-index: @zindex-cookie+1;
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  box-sizing: border-box;
+}
+
+.dcCookieBarRecurringBox {
+  position: fixed;
+  z-index: @zindex-cookie+1;
+  left: 20px;
+  bottom: 80px;
+  background-color: @background-cookie;
+  box-shadow: 0 0 20px fade(#000000, 20);
+  width: 400px;
+  font-size: @font-size-cookiebar;
+
+  &__close {
+    height: 14px;
+    width: 14px;
+    cursor: pointer;
+
+    svg path {
+      fill: #000000;
+    }
+
+    &:hover {
+      svg path {
+        fill: @cookie-primary;
+      }
+    }
+  }
+
+  &__head {
+    padding: @padding-cookie;
+    border-bottom: 1px solid @border-color-cookie;
+    .flexbox(row, center, nowrap);
+    justify-content: space-between;
+  }
+
+  &__title {
+    margin-right: @padding-cookie;
+  }
+
+  &__footer {
+    .dcCookieBar__button {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+  }
+
+  @media (max-width: 440px) {
+    max-width: 100%;
+    left: 0;
+    bottom: 0;
+    max-height: 100vh;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}
+
+.dcCookieBarRecurringButton {
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
+  text-align: center;
+  background-color: @background-cookie-buttons-action;
+  color: @color-cookie-buttons-action;
+  font-size: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px fade(#000000, 20);
+
+  &:hover, &:focus {
+    background-color: @background-cookie-buttons-action-hover;
+  }
+
+  svg {
+    path {
+      fill: #000000;
+    }
+  }
+
+  .closelabel {
+    display: none;
+    position: relative;
+    top: 3px;
+  }
+
+  .openlabel {
+    position: relative;
+    top: 6px;
+  }
+
+  &.open {
+    .openlabel {
+      display: none;
+    }
+
+    .closelabel {
+      display: block;
+    }
+  }
+}
+
+.dcCookieBarTab {
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:not(.active) {
+    background-color: @border-color-cookie;
+  }
+
+  &:hover {
+    background-color: @background-tab-hover-cookie;
+  }
+}
+
+.dcCookieBarTabContent {
+  padding: @padding-cookie;
+  display: none;
+  height: 240px;
+  max-height: 50vh;
+  overflow: hidden;
+  overflow-y: auto;
+
+  &.active {
+    display: block;
+  }
+}
+
+.dcCookieBarTabs {
+  &__header {
+    .flexbox(row, stretch, nowrap);
+
+    .dcCookieBarTab {
+      flex-grow: 1;
+      width: 50%;
+    }
+  }
+}
+
+.dcCookieExternal {
+  .flexbox(row, center, nowrap);
+  justify-content: center;
+
+  &__info {
+    padding: @padding-cookie;
+    border: 1px solid @border-cookie-buttons;
+    background-color: #ffffff;
+    text-align: center;
+  }
+
+  &__button {
+    line-height: 1.6;
+    padding: 5px 20px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    min-width: 40px;
+    width: auto;
+    font-size: @font-size-cookie-buttons;
+    font-weight: @font-weight-cookie-buttons;
+    color: @color-cookie-buttons;
+    border: 1px solid @border-cookie-buttons;
+    background-color: @background-cookie-buttons;
+    .transition(0.2s ease-in-out);
+
+    &:hover {
+      background-color: @background-cookie-buttons-hover;
+      border-color: @border-cookie-buttons-hover;
+      color: @color-cookie-buttons-hover;
+    }
+
+    &:active, &:focus {
+      background-color: @background-cookie-buttons-active;
+      border-color: @border-cookie-buttons-active;
+      color: @color-cookie-buttons-active;
+    }
+  }
+}
+
+.hidden {
+  display: none !important;
+}

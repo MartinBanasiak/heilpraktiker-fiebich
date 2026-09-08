@@ -1,0 +1,88 @@
+
+
+#flashMessages {
+  position: fixed;
+  right:@spacer-base;
+  top: @spacer-base*4.5;
+  z-index:300;
+}
+
+.flashMessage {
+  width:350px;
+  max-width:100%;
+  margin-bottom: @spacer-base*2;
+  padding: @spacer-base*2 15px @spacer-base*2 55px;
+  background-color: @gray-base;
+  color: @black;
+  display: none;
+  .box-shadow(0px 0px 10px 0px fade(@black,25));
+  cursor: pointer;
+  position: relative;
+  .transition(background-color 0.2s ease-in-out);
+  .icon {
+    position: absolute;
+    left:15px;
+    top: 50%;
+    .border-radius(50%);
+    width:30px;
+    height: 30px;
+    background-color: fade(@white,40);
+    text-align: center;
+    line-height: 30px;
+    font-size: 20px;
+    margin-top:-15px;
+  }
+  .close_flash {
+    position: absolute;
+    right:5px;
+    top:5px;
+    color: fade(@white,70);
+    z-index: 1;
+    display: inline-block;
+    font-size: @font-size-base;
+    .border-radius(50%);
+    line-height: 20px;
+    width:20px;
+    height: 20px;
+    text-align: center;
+    .transition(0.2s ease-in-out);
+  }
+  &.flashMessage_warning {
+    background-color: @brand-warning;
+    color: @white;
+  }
+  &.flashMessage_error {
+    background-color: @brand-danger;
+    color: @white;
+  }
+  &.flashMessage_success {
+    background-color: @brand-success;
+    color: @white;
+  }
+  &.flashMessage_info {
+    background-color: @brand-info;
+    color: @white;
+  }
+  &:hover {
+    .close_flash {
+      background-color: fade(@white,40);
+      color: @white;
+    }
+    &.flashMessage_warning {
+      background-color: darken(@brand-warning,5);
+    }
+    &.flashMessage_error {
+      background-color: darken(@brand-danger,5);
+
+    }
+    &.flashMessage_success {
+      background-color: darken(@brand-success,5);
+    }
+  }
+}
+
+@media (max-width: @screen-xs) {
+  #flashMessages {
+    .calc(width,"100% - 20px");
+  }
+}

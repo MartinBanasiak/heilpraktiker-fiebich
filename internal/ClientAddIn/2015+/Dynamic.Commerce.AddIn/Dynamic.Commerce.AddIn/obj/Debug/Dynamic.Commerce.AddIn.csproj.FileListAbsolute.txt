@@ -1,0 +1,26 @@
+c:\users\lorenz.dc\documents\visual studio 2015\Projects\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\DynamicCommerce.DynamicCommerce.AddIn.dll
+c:\users\lorenz.dc\documents\visual studio 2015\Projects\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\DynamicCommerce.DynamicCommerce.AddIn.pdb
+c:\users\lorenz.dc\documents\visual studio 2015\Projects\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\Microsoft.Dynamics.Framework.UI.Extensibility.dll
+c:\users\lorenz.dc\documents\visual studio 2015\Projects\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\Microsoft.Dynamics.Framework.UI.Extensibility.xml
+c:\users\lorenz.dc\documents\visual studio 2015\Projects\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\DynamicCommerce.DynamicCommerce.AddIn.dll
+c:\users\lorenz.dc\documents\visual studio 2015\Projects\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\DynamicCommerce.DynamicCommerce.AddIn.pdb
+C:\gitRepos\mysydeshop-nav2016\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\DynamicCommerce.DynamicCommerce.AddIn.dll
+C:\gitRepos\mysydeshop-nav2016\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\DynamicCommerce.DynamicCommerce.AddIn.pdb
+C:\gitRepos\mysydeshop-nav2016\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\Microsoft.Dynamics.Framework.UI.Extensibility.dll
+C:\gitRepos\mysydeshop-nav2016\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\Microsoft.Dynamics.Framework.UI.Extensibility.xml
+C:\gitRepos\mysydeshop-nav2016\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\DynamicCommerce.DynamicCommerce.AddIn.dll
+C:\gitRepos\mysydeshop-nav2016\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\DynamicCommerce.DynamicCommerce.AddIn.pdb
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\DynamicCommerce.DynamicCommerce.AddIn.dll
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\DynamicCommerce.DynamicCommerce.AddIn.pdb
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\Microsoft.Dynamics.Framework.UI.Extensibility.dll
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\Microsoft.Dynamics.Framework.UI.Extensibility.xml
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\DynamicCommerce.DynamicCommerce.AddIn.dll
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\DynamicCommerce.DynamicCommerce.AddIn.pdb
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\2015+\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\DynamicCommerce.DynamicCommerce.AddIn.dll
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\2015+\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\DynamicCommerce.DynamicCommerce.AddIn.pdb
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\2015+\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\Dynamic.Commerce.AddIn.csproj.CoreCompileInputs.cache
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\2015+\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\DynamicCommerce.DynamicCommerce.AddIn.dll
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\2015+\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\DynamicCommerce.DynamicCommerce.AddIn.pdb
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\2015+\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\obj\Debug\Dynamic.Commerce.AddIn.csprojResolveAssemblyReference.cache
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\2015+\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\Microsoft.Dynamics.Framework.UI.Extensibility.dll
+C:\gitRepos\mysydeshop-nav2016\internal\ClientAddIn\2015+\Dynamic.Commerce.AddIn\Dynamic.Commerce.AddIn\bin\Debug\Microsoft.Dynamics.Framework.UI.Extensibility.xml
