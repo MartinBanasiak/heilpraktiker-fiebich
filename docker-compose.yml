@@ -1,0 +1,56 @@
+name: heilpraktiker-fiebich
+
+volumes:
+  dbdata:
+
+services:
+  mysql:
+    image: mariadb:10.11
+    command: --sql-mode="" --innodb-strict-mode=0 --max-allowed-packet=256M
+    environment:
+      MARIADB_ROOT_PASSWORD: "123"
+      MARIADB_DATABASE: web2105
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./docker/db/init:/docker-entrypoint-initdb.d:ro
+      - ./:/sqldump:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  web:
+    build:
+      context: ./docker/php
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/zz-dev.ini:ro
+      - ./docker/php/dev-prepend.php:/usr/local/etc/php/dev-prepend.php:ro
+      - ./docker/php/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+    environment:
+      # ueberschreiben die Werte aus config/.env (phpdotenv ueberschreibt gesetzte ENV-Vars nicht)
+      MAIN_MYSQL_DB_HOST: mysql
+      MAIN_MYSQL_DB_PORT: "3306"
+      MAIN_MYSQL_DB_USER: root
+      MAIN_MYSQL_DB_PASS: "123"
+      MAIN_MYSQL_DB_SCHEMA: web2105
+    depends_on:
+      mysql:
+        condition: service_healthy
