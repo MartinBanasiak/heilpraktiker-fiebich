@@ -122,6 +122,46 @@
 }
 
 .slideshow_box {
+  // Vor der Initialisierung von Owl stehen alle Slides untereinander im
+  // Dokument - bei vier Slides à 480px also rund 1920px, die beim Aufbau des
+  // Karussells auf 480px zusammenklappen. Alles darunter springt dabei nach
+  // oben; das war der groesste Anteil am gemessenen Layout-Shift der
+  // Startseite (CLS 0,29).
+  //
+  // Owl setzt .owl-loaded auf den Container, sobald es fertig ist. Bis dahin
+  // bleibt nur der erste Slide sichtbar, die Hoehe stimmt also von der
+  // ersten Darstellung an.
+  // Owl blendet den Container bis zum Aufbau des Karussells aus
+  // (.owl-carousel { display: none }). Der Banner startet damit mit null
+  // Hoehe und schiebt beim Erscheinen den gesamten Inhalt darunter nach
+  // unten - der groesste Anteil am Layout-Shift der Startseite.
+  //
+  // Deshalb den Platz von Anfang an reservieren. Die Grundhoehe kommt als
+  // Variable aus dem Slideshow-Modul, die Abstufungen entsprechen denen der
+  // .animated-Regeln weiter unten. overflow versteckt die uebrigen Slides,
+  // die vor dem Aufbau noch untereinander stehen.
+  .owl-carousel:not(.owl-loaded) {
+    display: block;
+    height: var(--slideshow-hoehe, 480px);
+    overflow: hidden;
+
+    .owl-carousel-item + .owl-carousel-item {
+      display: none;
+    }
+
+    @media (max-width: @screen-md-max) {
+      height: 400px;
+    }
+
+    @media (max-width: @screen-sm-max) {
+      height: 320px;
+    }
+
+    @media (max-width: @screen-xs-max) {
+      height: 260px;
+    }
+  }
+
   .owl-dots {
     display: none;
   }
