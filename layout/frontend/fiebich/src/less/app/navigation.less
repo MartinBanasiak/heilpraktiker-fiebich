@@ -175,6 +175,15 @@
 
   > ul > li {
     position: relative;
+
+    // Rueckfall, falls das JavaScript nicht laeuft: der Fokus im Menuepunkt
+    // klappt das Untermenue auf. Sobald einmal mit der Maus gehovert wurde,
+    // setzt jQuery inline display-Werte - dann uebernimmt das Fokus-Handling
+    // in script_new3.js.
+    &:focus-within > ul {
+      display: block;
+    }
+
     > ul {
       position: absolute;
       display: none;

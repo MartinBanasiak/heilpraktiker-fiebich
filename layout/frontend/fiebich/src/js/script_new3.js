@@ -50,6 +50,19 @@ $(document).ready(function () {
 
     $('#primary_navigation > ul > li').hoverIntent(configNavigation);
 
+    // Untermenues oeffnen bisher nur bei hover. Per Tastatur tabbte man an
+    // den Unterpunkten vorbei, ohne sie je zu sehen. focusin/focusout
+    // ergaenzen das um dieselben Funktionen, die auch die Maus benutzt.
+    $('#primary_navigation > ul > li').on('focusin', function () {
+        showUlNavigation.call(this);
+    }).on('focusout', function (event) {
+        // Nur schliessen, wenn der Fokus den Menuepunkt wirklich verlaesst
+        // und nicht nur zum naechsten Unterpunkt darin wandert.
+        if (!event.relatedTarget || !$.contains(this, event.relatedTarget)) {
+            hideUlNavigation.call(this);
+        }
+    });
+
 
     $('#primary_navigation_mobile ul li > a').click(function (event) {
         var nextUl = $(this).next('ul');
