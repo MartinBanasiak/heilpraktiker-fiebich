@@ -160,7 +160,7 @@
   })
 
 }(jQuery);
-;
+
 /* ========================================================================
  * Bootstrap: alert.js v3.3.7
  * http://getbootstrap.com/javascript/#alerts
@@ -255,7 +255,7 @@
   $(document).on('click.bs.alert.data-api', dismiss, Alert.prototype.close)
 
 }(jQuery);
-;
+
 /* ========================================================================
  * Bootstrap: button.js v3.3.7
  * http://getbootstrap.com/javascript/#buttons
@@ -381,7 +381,7 @@
     })
 
 }(jQuery);
-;
+
 /* ========================================================================
  * Bootstrap: modal.js v3.3.7
  * http://getbootstrap.com/javascript/#modals
@@ -721,7 +721,7 @@
   })
 
 }(jQuery);
-;
+
 /* ========================================================================
  * Bootstrap: tooltip.js v3.3.7
  * http://getbootstrap.com/javascript/#tooltip
@@ -1242,7 +1242,7 @@
   }
 
 }(jQuery);
-;
+
 /* ========================================================================
  * Bootstrap: transition.js v3.3.7
  * http://getbootstrap.com/javascript/#transitions
@@ -1302,4 +1302,3 @@
   })
 
 }(jQuery);
-;
