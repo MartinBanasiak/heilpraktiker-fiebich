@@ -72,7 +72,10 @@ function generate_content($language_code,$shop_code,$company) {
     $sitemap_co .= "	<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
 
     while ($content = mysqli_fetch_array($result)) {
-        $conurl = strtolower($content['code']."/");
+        // Kein strtolower: Die Navigationscodes werden im Frontend
+        // buchstabengetreu ausgewertet. "FAQ" kleingeschrieben ergibt eine
+        // 404-Adresse in der Sitemap.
+        $conurl = $content['code']."/";
 
         /*
         //ist shop sitepart?
@@ -88,7 +91,7 @@ function generate_content($language_code,$shop_code,$company) {
             if (mysqli_num_rows($subresult2) > 0) {
             */
         $sitemap_co .= "		<url>\n";
-        $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].$site['code']."/".$language['code']."/".$conurl)."</loc>\n";
+        $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].customizeUrl(true, $site, $language)."/".$conurl)."</loc>\n";
         $sitemap_co .= "			<changefreq>daily</changefreq>\n";
         $sitemap_co .= "			<priority>1</priority>\n";
         $sitemap_co .= "		</url>\n";
@@ -130,7 +133,7 @@ function get_content_rek($pid,$company,$shop,$language_code,$conurl,$language,$s
         while ($content_rek = mysqli_fetch_array($con_result_rek)) {
 
             $conurl2 = $content_rek["code"];
-            $conurl2 = strtolower($conurl.$conurl2."/");
+            $conurl2 = $conurl.$conurl2."/";
 
             /*
             $subquery = "SELECT id FROM main_navigation_has_sitepart WHERE main_navigation_id = '".$content_rek['id']."' AND main_sitepart_id = '7'";
@@ -145,7 +148,7 @@ function get_content_rek($pid,$company,$shop,$language_code,$conurl,$language,$s
                 if (mysqli_num_rows($subresult2) > 0) {
             */
             $sitemap_co .= "		<url>\n";
-            $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].$site['code']."/".$language['code']."/".$conurl2)."</loc>\n";
+            $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].customizeUrl(true, $site, $language)."/".$conurl2)."</loc>\n";
             $sitemap_co .= "			<changefreq>daily</changefreq>\n";
             $sitemap_co .= "			<priority>1</priority>\n";
             $sitemap_co .= "		</url>\n";
@@ -188,7 +191,7 @@ function generate_categories($language_code,$shop_code,$company) {
     $home_code = mysql_fetch_row($home_result);
 
     $sitemap_c .= "		<url>\n";
-    $sitemap_c .= "			<loc>https://".$GLOBALS['base_url'][$language['code']].$site['code']."/".$language['code']."/".$home_code[0]."/</loc>\n";
+    $sitemap_c .= "			<loc>https://".$GLOBALS['base_url'][$language['code']].customizeUrl(true, $site, $language)."/".$home_code[0]."/</loc>\n";
     $sitemap_c .= "			<changefreq>daily</changefreq>\n";
     $sitemap_c .= "			<priority>1</priority>\n";
     $sitemap_c .= "		</url>\n";*/
