@@ -16,11 +16,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libpng-dev \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
+        libwebp-dev \
         libxml2-dev \
         libbz2-dev \
     && apt-get clean
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
         gd intl zip bz2 soap exif mysqli pdo_mysql opcache
 
