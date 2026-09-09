@@ -1,356 +1,190 @@
+/*
+ * Frontend-Build
+ *
+ * Ueberarbeitet am 2026-09-09. Der alte Build (gulp 3, Plugins von 2016) liess
+ * sich auf aktuellem Node nicht mehr starten und hatte ausserdem einen
+ * Syntaxfehler ("break;f"). Aufgabenname und Ein-/Ausgaben sind unveraendert,
+ * nur die Werkzeuge darunter sind aktuell:
+ *
+ *   gulp public   -> dist/css/style.min.css, dist/css/fck.css, dist/js/*
+ *   gulp          -> dasselbe unminifiziert, danach watch
+ *
+ * Nicht uebernommen wurden die Tasks generate-iconfont, generate-favicon,
+ * minify-images und die FTP-Upload-Tasks. Sie brauchen Zugangsdaten
+ * beziehungsweise Werkzeuge, die im Repository fehlen; ihre Ergebnisse liegen
+ * als fertige Dateien in dist/ und aendern sich im Alltag nicht. Bei Bedarf
+ * lassen sie sich aus der Git-Historie zurueckholen.
+ */
 
-var config = "";
-var shopconfig = require('./config.json');
-var shoptype = shopconfig.shoptype;
+const gulp = require('gulp');
+const concat = require('gulp-concat');
+const less = require('gulp-less');
+const cleanCSS = require('gulp-clean-css');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
+const rename = require('gulp-rename');
+const sourcemaps = require('gulp-sourcemaps');
+const terser = require('gulp-terser');
 
-switch (shoptype) {
-    case 2:
-        config = shopconfig.b2b;
-        require('./gulptasks/gulp_b2b.js');
-        break;
-    case 3:
-        config = shopconfig.catalog;
-        require('./gulptasks/gulp_catalog.js');
-        break;f
-    case 4:
-        config = shopconfig.login;
-        require('./gulptasks/gulp_login.js');
-        break;
-    case 5:
-        config = shopconfig.salesperson;
-        require('./gulptasks/gulp_salesperson.js');
-        break;
-    default:
-        config = shopconfig.b2c;
-        require('./gulptasks/gulp_b2c.js');
+// Less 4 rechnet "/" ausserhalb von Klammern nicht mehr aus. Der urspruengliche
+// Build (Less 2) hat das getan, die Quellen verlassen sich darauf - ohne diese
+// Option landet woertlich "padding:10px/2" im CSS statt "padding:5px".
+const LESS_OPTIONS = { math: 'always' };
+
+const shopconfig = require('./config.json');
+
+const CONFIGS = {
+    1: 'b2c',
+    2: 'b2b',
+    3: 'catalog',
+    4: 'login',
+    5: 'salesperson',
+};
+
+const config = shopconfig[CONFIGS[shopconfig.shoptype] || 'b2c'];
+
+const bowerdir = config.bower.path;
+const layoutdir = config.layout.path + config.layout.code;
+const srcdir = layoutdir + '/' + config.layout.src;
+const builddir = layoutdir + '/' + config.layout.build;
+const distdir = layoutdir + '/' + config.layout.dist;
+const cssfile = config.layout.cssfile;
+const jsfile = config.layout.jsfile;
+
+// Reihenfolge ist relevant - normalize zuerst, Bootstrap vor den Komponenten,
+// die es ueberschreiben.
+const CSS_COMPONENTS = [
+    bowerdir + '/normalize-css/normalize.css',
+    bowerdir + '/font-awesome/css/font-awesome.min.css',
+    bowerdir + '/line-awesome/css/line-awesome-font-awesome.min.css',
+    builddir + '/css/bootstrap.css',
+    bowerdir + '/animate.css/animate.min.css',
+    bowerdir + '/owl.carousel/dist/assets/owl.carousel.min.css',
+    bowerdir + '/owl.carousel/dist/assets/owl.theme.default.min.css',
+    bowerdir + '/ekko-lightbox/dist/ekko-lightbox.css',
+];
+
+const JS_COMPONENTS = [
+    // Reihenfolge aus dem ausgelieferten dist/js/script_new3.js zurueckgerechnet.
+    // jquery.pin und jsvat sind bewusst nicht dabei - sie kommen im
+    // Auslieferungsstand nicht vor (jsvat prueft USt-IdNr. im Shop, den es
+    // auf dieser Seite nicht gibt).
+    './dc/common/common.js',
+    bowerdir + '/jquery/jquery.min.js',
+    bowerdir + '/jquery-hoverIntent/jquery.hoverIntent.js',
+    bowerdir + '/owl.carousel/dist/owl.carousel.min.js',
+    bowerdir + '/isotope/dist/isotope.pkgd.js',
+    bowerdir + '/ekko-lightbox/dist/ekko-lightbox.js',
+    builddir + '/js/bootstrap.js',
+];
+
+const BOOTSTRAP_JS = [
+    bowerdir + '/bootstrap/js/affix.js',
+    bowerdir + '/bootstrap/js/alert.js',
+    bowerdir + '/bootstrap/js/button.js',
+    bowerdir + '/bootstrap/js/modal.js',
+    bowerdir + '/bootstrap/js/tooltip.js',
+    bowerdir + '/bootstrap/js/transition.js',
+];
+
+function bootstrapCss() {
+    return gulp
+        .src(bowerdir + '/bootstrap/less/bootstrap_modified.less')
+        .pipe(less(LESS_OPTIONS))
+        .pipe(cleanCSS({ compatibility: 'ie8' }))
+        .pipe(rename('bootstrap.css'))
+        .pipe(gulp.dest(builddir + '/css/'));
 }
 
-var bowerdir = config.bower.path,
-    srcdir = config.layout.path + config.layout.code + "/" + config.layout.src,
-    builddir = config.layout.path + config.layout.code + "/" + config.layout.build,
-    distdir = config.layout.path + config.layout.code + "/" + config.layout.dist,
-    fontName = config.iconfont.name,
-    faviconTitle = config.favicon.title,
-    faviconBackground = config.favicon.background,
-    faviconColor = config.favicon.color,
-    faviconMasterpicture = config.layout.path + config.layout.code + "/" + config.layout.src + "/" + config.favicon.masterpicture_path + config.favicon.masterpicture_filename,
-    faviconDataFile = config.layout.path + config.layout.code + "/" + config.layout.dist + "/" + config.favicon.masterpicture_path + config.favicon.data_file,
-    autoupload = shopconfig.autoupload,
-    startLivereload = shopconfig.livereload;
-
-var gulp = require('gulp'),
-    changed = require('gulp-changed'),
-    concat = require ('gulp-concat'),
-    uglify = require ('gulp-uglify'),
-    rename = require('gulp-rename'),
-    imageMin = require ('gulp-imageMin'),
-    clean = require('gulp-clean'),
-    less = require ('gulp-less'),
-    minifyCSS = require ('gulp-clean-css'),
-    iconfont = require ('gulp-iconfont'),
-    iconfontCss = require('gulp-iconfont-css'),
-    realFavicon = require ('gulp-real-favicon'),
-    fs = require('fs'),
-    autoprefixer = require ('gulp-autoprefixer'),
-    runSequence = require('run-sequence'),
-    sourcemaps = require('gulp-sourcemaps'),
-    streamqueue = require('streamqueue'),
-    ftp = require('vinyl-ftp'),
-    gutil = require('gulp-util'),
-    insert = require('gulp-insert'),
-    livereload = require('gulp-livereload');
-
-var conn = ftp.create( {
-    host:     autoupload.host,
-    user:     autoupload.user,
-    password: autoupload.password,
-    port: autoupload.port,
-    parallel: 10,
-    log:      gutil.log
-});
-
-gulp.task('generate-iconfont', function(){
-    gulp.src([srcdir + '/icons_svg/*.svg'])
-        .pipe(iconfontCss({
-            fontName: fontName,
-            path: srcdir + '/less/template/_icons.less',
-            targetPath:  '../../../src/less/app/icons.less',
-            fontPath: builddir + '/fonts/icons/'
-        }))
-        .pipe(iconfont({
-            fontName: fontName
-        }))
-        .pipe(gulp.dest(builddir + '/fonts/icons/'));
-});
-
-gulp.task('clean-dist',function () {
-    return gulp.src([
-        distdir + "/css/components.css",
-        distdir + "/css/"+config.layout.cssfile+".css.map"
-    ], {read: false})
-        .pipe(clean());
-});
-
-gulp.task('generate-favicon', function(done) {
-    realFavicon.generateFavicon({
-        masterPicture: faviconMasterpicture,
-        dest: distdir + '/favicons/',
-        iconsPath: '/',
-        design: {
-            ios: {
-                pictureAspect: 'noChange',
-                assets: {
-                    ios6AndPriorIcons: false,
-                    ios7AndLaterIcons: false,
-                    precomposedIcons: false,
-                    declareOnlyDefaultIcon: true
-                }
-            },
-            desktopBrowser: {},
-            windows: {
-                pictureAspect: 'noChange',
-                backgroundColor: faviconBackground,
-                onConflict: 'override',
-                assets: {
-                    windows80Ie10Tile: false,
-                    windows10Ie11EdgeTiles: {
-                        small: false,
-                        medium: true,
-                        big: false,
-                        rectangle: false
-                    }
-                }
-            },
-            androidChrome: {
-                pictureAspect: 'noChange',
-                themeColor: faviconBackground,
-                manifest: {
-                    name: faviconTitle,
-                    display: 'standalone',
-                    orientation: 'notSet',
-                    onConflict: 'override',
-                    declared: true
-                },
-                assets: {
-                    legacyIcon: false,
-                    lowResolutionIcons: false
-                }
-            },
-            safariPinnedTab: {
-                pictureAspect: 'blackAndWhite',
-                threshold: 82.8125,
-                themeColor: faviconColor
-            }
-        },
-        settings: {
-            scalingAlgorithm: 'Mitchell',
-            errorOnImageTooSmall: false
-        },
-        markupFile: distdir + "/favicons/faviconData.json"
-    }, function() {
-        done();
-    });
-});
-
-gulp.task('check-for-favicon-update', function(done) {
-    var currentVersion = JSON.parse(fs.readFileSync(distdir + "/favicons/faviconData.json")).version;
-    realFavicon.checkForUpdates(currentVersion, function(err) {
-        if (err) {
-            throw err;
-        }
-    });
-});
-
-gulp.task('minify-images', function() {
-    var imgSrc = srcdir + '/images/**/*',
-        imgDst = distdir + '/images/';
-
-    gulp.src(imgSrc)
-        .pipe(changed(imgSrc))
-        .pipe(imageMin()).on('error', onError)
-        .pipe(gulp.dest(imgDst));
-});
-
-gulp.task('uglify-js', function () {
-    return gulp.src(distdir + '/js/*.js')
-        .pipe(uglify()).on('error', onError)
-        .pipe(gulp.dest(distdir + '/js/'));
-});
-
-gulp.task('minify-css', function() {
-    return gulp.src(distdir + '/css/*.css')
-        .pipe(minifyCSS({compatibility: 'ie8'})).on('error', onError)
-        .pipe(gulp.dest(distdir + '/css/'));
-});
-
-gulp.task('copy', function() {
-    gulp.src(srcdir + '/fonts/**/*')
-        .pipe(gulp.dest(distdir + '/fonts/'));
-    gulp.src(srcdir + '/images/**/*')
-        .pipe(gulp.dest(distdir + '/images/'));
-    gulp.src(builddir + '/favicons/**/*')
-        .pipe(gulp.dest(distdir + '/favicons/'));
-});
-
-gulp.task('styles_fck', function() {
-    gulp.src(srcdir + "/less/app/fck.less")
-        .pipe(less()).on('error', onError)
-        .pipe(minifyCSS({compatibility: 'ie8'})).on('error', onError)
-        .pipe(gulp.dest(distdir + "/css/"));
-});
-
-gulp.task('bootstrap-less',function () {
-    gulp.src(bowerdir + "/bootstrap/less/bootstrap_modified.less")
-        .pipe(less()).on('error', onError)
-        .pipe(minifyCSS({compatibility: 'ie8'})).on('error', onError)
-        .pipe(rename('bootstrap.css')).on('error', onError)
-        .pipe(gulp.dest(builddir + "/css/"));
-});
-
-gulp.task('bootstrap-js',function () {
-    gulp.src([
-        bowerdir + '/bootstrap/js/affix.js',
-        bowerdir + '/bootstrap/js/alert.js',
-        bowerdir + '/bootstrap/js/button.js',
-        //bowerdir + '/bootstrap/js/carousel.js',
-        //bowerdir + '/bootstrap/js/collapse.js',
-        //bowerdir + '/bootstrap/js/dropdown.js',
-        bowerdir + '/bootstrap/js/modal.js',
-        //bowerdir + '/bootstrap/js/popover.js',
-        //bowerdir + '/bootstrap/js/scrollspy.js',
-        //bowerdir + '/bootstrap/js/tab.js',
-        bowerdir + '/bootstrap/js/tooltip.js',
-        bowerdir + '/bootstrap/js/transition.js',
-        bowerdir + '/jsvat/dist/jsvat.js'
-    ])
-        .pipe(insert.append(';'))
+function bootstrapJs() {
+    return gulp
+        .src(BOOTSTRAP_JS, { allowEmpty: true })
         .pipe(concat('bootstrap.js'))
         .pipe(gulp.dest(builddir + '/js/'));
-});
-
-gulp.task('watch', function () {
-    if(startLivereload){
-        livereload.listen();
-    }
-    gulp.watch(srcdir + '/less/**/*.less',['deploy-css']);
-    gulp.watch(srcdir + '/js/**/*.js', ['deploy-js']);
-});
-
-gulp.task( 'upload-css', function () {
-    if(autoupload.active){
-        return gulp.src( distdir + "/css/*", { base: '.', buffer: false } )
-            .pipe( conn.dest( autoupload.remotePath ) );
-    }
-});
-
-gulp.task( 'upload-js', function () {
-    if(autoupload.active){
-        return gulp.src( distdir + "/js/*", { base: '.', buffer: false } )
-            .pipe( conn.dest( autoupload.remotePath ));
-    }
-});
-
-gulp.task('reloadBrowserCSS',function () {
-    if(startLivereload) {
-        return gulp.src([
-            distdir + '/css/*.css'
-        ])
-            .pipe(livereload());
-    }
-});
-
-gulp.task('deploy-css',function () {
-    runSequence(
-        'styles_dev',
-        'upload-css',
-        'reloadBrowserCSS'
-    )
-});
-
-gulp.task('deploy-js',function () {
-    runSequence(
-        'scripts',
-        'upload-js'
-    )
-});
-
-gulp.task('autoprefixer',function () {
-    gulp.src(distdir + '/css/*.css')
-        .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
-            cascade: false
-        })).on('error', onError)
-        .pipe(gulp.dest(distdir + '/css/'))
-});
-
-gulp.task('styles_dev', function() {
-    return gulp.src(builddir + '/css/components.css')
-        .pipe(gulp.dest(distdir + '/css/')),
-        gulp.src(srcdir + "/less/app/"+config.layout.cssfile+".less")
-            .pipe(sourcemaps.init())
-            .pipe(less())
-            .pipe(sourcemaps.write("."))
-            .pipe(gulp.dest(distdir + '/css/'))
-            .on('error', onError)
-            .pipe(concat(config.layout.cssfile+'.css')).on('error', onError)
-            .pipe(gulp.dest(distdir + '/css/'));
-});
-
-gulp.task('styles_public', function() {
-    return streamqueue({ objectMode: true},
-        gulp.src(builddir + '/css/components.css').on('error', onError),
-        gulp.src(srcdir + "/less/app/"+config.layout.cssfile+".less")
-            .pipe(less())
-            .pipe(gulp.dest(distdir + '/css/'))
-            .on('error', onError)
-    )
-        .pipe(concat(config.layout.cssfile+'.min.css')).on('error', onError)
-        .pipe(minifyCSS({compatibility: 'ie8'})).on('error', onError)
-        .pipe(gulp.dest(distdir + '/css/'));
-});
-
-gulp.task('scripts',function () {
-    return gulp.src([
-        builddir + '/js/components.js',
-        srcdir + '/js/'+config.layout.jsfile+'.js'
-    ])
-        .pipe(concat(config.layout.jsfile+'.js'))
-        .pipe(gulp.dest(distdir + '/js/'));
-});
-
-gulp.task('default', function(callback) {
-    runSequence(
-        'bootstrap-less',
-        'bootstrap-js',
-        'concat-css-components',
-        'concat-js-components',
-        'generate-iconfont',
-        'styles_dev',
-        'scripts',
-        'copy',
-        'watch',
-        callback);
-});
-
-gulp.task('public', function(callback) {
-    runSequence(
-        'clean-dist',
-        'bootstrap-less',
-        'bootstrap-js',
-        'concat-css-components',
-        'concat-js-components',
-        'generate-iconfont',
-        'styles_public',
-        'styles_fck',
-        'scripts',
-        'uglify-js',
-        'copy',
-        //'minify-images',
-        //'generate-favicon',
-        callback);
-});
-
-function onError(err) {
-    console.log(err);
-    this.emit('end');
 }
+
+function concatCssComponents() {
+    return gulp
+        .src(CSS_COMPONENTS, { allowEmpty: true })
+        .pipe(concat('components.css'))
+        .pipe(gulp.dest(builddir + '/css/'));
+}
+
+function concatJsComponents() {
+    return gulp
+        .src(JS_COMPONENTS, { allowEmpty: true })
+        .pipe(concat('components.js'))
+        .pipe(gulp.dest(builddir + '/js/'));
+}
+
+// Entwicklung: lesbar, mit Sourcemap, ohne Minifizierung.
+function stylesDev() {
+    return gulp
+        .src([builddir + '/css/components.css', srcdir + '/less/app/' + cssfile + '.less'])
+        .pipe(sourcemaps.init())
+        .pipe(less(LESS_OPTIONS))
+        .pipe(postcss([autoprefixer()]))
+        .pipe(concat(cssfile + '.css'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(distdir + '/css/'));
+}
+
+// Auslieferung: identische Quellen, zusaetzlich minifiziert.
+function stylesPublic() {
+    return gulp
+        .src([builddir + '/css/components.css', srcdir + '/less/app/' + cssfile + '.less'])
+        .pipe(less(LESS_OPTIONS))
+        .pipe(postcss([autoprefixer()]))
+        .pipe(concat(cssfile + '.min.css'))
+        .pipe(cleanCSS({ compatibility: 'ie8' }))
+        .pipe(gulp.dest(distdir + '/css/'));
+}
+
+// Stylesheet fuer den CKEditor-Inhaltsbereich im Backend.
+function stylesFck() {
+    return gulp
+        .src(srcdir + '/less/app/fck.less', { allowEmpty: true })
+        .pipe(less(LESS_OPTIONS))
+        .pipe(postcss([autoprefixer()]))
+        .pipe(gulp.dest(distdir + '/css/'));
+}
+
+function scripts() {
+    return gulp
+        .src([builddir + '/js/components.js', srcdir + '/js/' + jsfile + '.js'], { allowEmpty: true })
+        .pipe(concat(jsfile + '.js'))
+        .pipe(gulp.dest(distdir + '/js/'));
+}
+
+// Minifiziert an Ort und Stelle - genau wie der urspruengliche uglify-js-Task.
+// Das Template bindet script_new3.js ohne .min ein, die Datei ist also im
+// Auslieferungsstand minifiziert.
+function uglifyJs() {
+    return gulp
+        .src(distdir + '/js/' + jsfile + '.js')
+        .pipe(terser())
+        .pipe(gulp.dest(distdir + '/js/'));
+}
+
+function watch() {
+    gulp.watch(srcdir + '/less/**/*.less', gulp.series(stylesDev));
+    gulp.watch(srcdir + '/js/**/*.js', gulp.series(scripts));
+    return Promise.resolve();
+}
+
+const components = gulp.series(bootstrapCss, bootstrapJs, concatCssComponents, concatJsComponents);
+
+exports['bootstrap-css'] = bootstrapCss;
+exports['bootstrap-js'] = bootstrapJs;
+exports['concat-css-components'] = concatCssComponents;
+exports['concat-js-components'] = concatJsComponents;
+exports.styles_dev = stylesDev;
+exports.styles_public = stylesPublic;
+exports.styles_fck = stylesFck;
+exports.scripts = scripts;
+exports.watch = watch;
+
+exports['uglify-js'] = uglifyJs;
+
+exports.public = gulp.series(components, stylesPublic, stylesFck, scripts, uglifyJs);
+exports.default = gulp.series(components, stylesDev, scripts, watch);

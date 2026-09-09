@@ -36,7 +36,7 @@
 
   > ul > li {
     > a {
-      padding: @spacer-base*2 @spacer-base*1.5;
+      padding: @spacer-base*2 @spacer-base;
       position: relative;
       &:after {
         content: " ";
@@ -170,7 +170,7 @@
   .home {
     display: inline-block;
     vertical-align: middle;
-    padding-right: 15px;
+    padding-right: @spacer-base;
   }
 
   > ul > li {
@@ -216,8 +216,13 @@
       padding: 15px
     }
 
+    > ul > li > a {
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
     .home {
-      padding-right: 15px;
+      padding-right: 6px;
     }
   }
   @media (max-width: @screen-md-max){
@@ -226,7 +231,7 @@
       padding-right: @spacer-base;
     }
     a {
-      font-size: 16px;
+      font-size: 15px;
     }
   }
 }
