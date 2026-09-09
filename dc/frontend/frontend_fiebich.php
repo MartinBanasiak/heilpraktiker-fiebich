@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <?= get_canonical(); ?>
         <? create_meta_tags(); ?>
+        <? require __DIR__ . DIRECTORY_SEPARATOR . 'frontend_fiebich_meta.inc.php'; ?>
         <?//<link href="//cloud.typenetwork.com/projects/771/fontface.css/" rel="stylesheet" type="text/css">?>
         <script>
             var global_privacy_url = '<?= $GLOBALS["tc"]["global_privacy_url"] ?>';

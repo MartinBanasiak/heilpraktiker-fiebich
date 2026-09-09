@@ -3300,6 +3300,12 @@ function create_meta_tags() {
             $meta_keywords = $GLOBALS['meta_keywords'];
         }
     }
+    // Fuer Open-Graph-Tags, die im Layout danach ausgegeben werden. Ohne das
+    // muessten Titel und Beschreibung dort ein zweites Mal zusammengesetzt
+    // werden - mit dem Risiko, dass beides auseinanderlaeuft.
+    $GLOBALS['computed_site_title'] = $site_title;
+    $GLOBALS['computed_meta_description'] = $meta_description;
+
     if ($site_title <> '') {
         echo "<title>" . $site_title . "</title>\n";
     }
