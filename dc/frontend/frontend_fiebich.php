@@ -78,10 +78,18 @@
                 <div class="container">
                     <div class="header__container">
                         <div class="header__left">
-                            <div class="headerLogo"><? get_content("header_logo", TRUE,$IOCContainer); ?></div>
+                            <div class="headerLogo"><?
+                                // Bilder der Kopfzeile stehen immer im sichtbaren
+                                // Bereich und werden deshalb nicht lazy geladen.
+                                $GLOBALS['dc_bildbereich_kopf'] = true;
+                                get_content("header_logo", TRUE,$IOCContainer);
+                            ?></div>
                         </div>
                         <div class="header__right">
-                            <div class="headerTrust hidden-xs"><? get_content("header_trust", TRUE,$IOCContainer); ?></div>
+                            <div class="headerTrust hidden-xs"><?
+                                get_content("header_trust", TRUE,$IOCContainer);
+                                $GLOBALS['dc_bildbereich_kopf'] = false;
+                            ?></div>
                             <nav id="primary_navigation" class="hidden-xs hidden-sm" aria-label="<?=$GLOBALS['tc']['main_navigation_label']?>">
                                 <?
                                 $active = "";
