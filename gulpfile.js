@@ -65,17 +65,28 @@ const CSS_COMPONENTS = [
 ];
 
 const JS_COMPONENTS = [
-    // Reihenfolge aus dem ausgelieferten dist/js/script_new3.js zurueckgerechnet.
-    // jquery.pin und jsvat sind bewusst nicht dabei - sie kommen im
-    // Auslieferungsstand nicht vor (jsvat prueft USt-IdNr. im Shop, den es
-    // auf dieser Seite nicht gibt).
-    './dc/common/common.js',
+    // Reihenfolge und Umfang aus dem ausgelieferten dist/js/script_new3.js
+    // zurueckgerechnet - ueber markante Bezeichner, nicht ueber Dateiinhalte:
+    // das Bundle ist minifiziert, Quelltextzeilen kommen darin nicht woertlich
+    // vor. Ein erster Versuch ueber Zeilenvergleiche hatte jquery.pin
+    // faelschlich als "nicht enthalten" ausgewiesen.
+    //
+    // jsvat fehlt tatsaechlich - es prueft USt-IdNr. im Shop, den es auf
+    // dieser Seite nicht gibt.
+    //
+    // common.js steht bewusst am Ende: Die Datei beginnt mit einem
+    // $(document).ready(...)-Block. Steht sie vor jquery, wirft sie
+    // "ReferenceError: $ is not defined" - und ein ungefangener Fehler auf
+    // oberster Ebene bricht die Ausfuehrung des gesamten Bundles ab, jQuery
+    // eingeschlossen. Die Seite haette dann ueberhaupt kein JavaScript mehr.
     bowerdir + '/jquery/jquery.min.js',
     bowerdir + '/jquery-hoverIntent/jquery.hoverIntent.js',
     bowerdir + '/owl.carousel/dist/owl.carousel.min.js',
     bowerdir + '/isotope/dist/isotope.pkgd.js',
+    bowerdir + '/jquery.pin/jquery.pin.mod.js',
     bowerdir + '/ekko-lightbox/dist/ekko-lightbox.js',
     builddir + '/js/bootstrap.js',
+    './dc/common/common.js',
 ];
 
 const BOOTSTRAP_JS = [
