@@ -353,11 +353,21 @@
   display: none;
   float:right;
   cursor: pointer;
+  // Ist seit der Barrierefreiheits-Anpassung ein <button>. Die Browser-
+  // Vorgaben zuruecksetzen, damit die Optik unveraendert bleibt.
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
   .navigation-bar-inner {
+    display: block;
     width: 40px;
     margin-right: @spacer-base;
   }
   .navigation-bar {
+    display: block;
     height: 2px;
     width:100%;
     background-color: @middle-gray;
@@ -376,6 +386,10 @@
 
   @media (max-width: @screen-sm-max){
     .flexbox(row,center);
+  }
+
+  .navigation-bar-label {
+    display: block;
   }
 
   @media (max-width: @screen-xs){
@@ -403,6 +417,8 @@
     height: 60px;
     padding:0;
     background-color: transparent;
+    border: 0;
+    cursor: pointer;
     z-index: 1;
     &:before,&:after {
       position: absolute;

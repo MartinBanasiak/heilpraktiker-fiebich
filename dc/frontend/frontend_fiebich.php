@@ -60,7 +60,8 @@
         }
         ?>
         <div id="primary_navigation_mobile">
-            <a class="close_button_navigation_mobile"></a>
+            <button type="button" class="close_button_navigation_mobile"
+                    aria-label="<?=$GLOBALS['tc']['navigation_close_label']?>"></button>
             <div class="navigation_scrollbox">
                 <div class="navigation">
                     <? navigation_full_menu_area($site, $language, $navigation, 1); ?>
@@ -89,16 +90,17 @@
                                 </a>
                                 <? navigation_full_menu_area($site, $language, $navigation, 2); ?>
                             </div>
-                            <div id="toggle_navigation">
-                                <div class="navigation-bar-inner">
-                                    <div class="navigation-bar"></div>
-                                    <div class="navigation-bar"></div>
-                                    <div class="navigation-bar"></div>
-                                </div>
-                                <div class="navigation-bar-label">
+                            <button type="button" id="toggle_navigation"
+                                    aria-controls="primary_navigation_mobile" aria-expanded="false">
+                                <span class="navigation-bar-inner">
+                                    <span class="navigation-bar"></span>
+                                    <span class="navigation-bar"></span>
+                                    <span class="navigation-bar"></span>
+                                </span>
+                                <span class="navigation-bar-label">
                                     <?=$GLOBALS['tc']['toggle_navigation_label']?>
-                                </div>
-                            </div>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
