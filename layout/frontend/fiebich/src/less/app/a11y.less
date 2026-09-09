@@ -1,0 +1,28 @@
+// Barrierefreiheit
+//
+// Kleinteile, die keiner bestehenden Komponente gehoeren.
+
+// Sprungmarke: liegt ausserhalb des Sichtfelds, wird beim ersten Tab
+// sichtbar. Bewusst nicht display:none - das wuerde sie auch fuer
+// Screenreader und Tastatur entfernen.
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  z-index: 1000;
+  padding: @spacer-base @spacer-base*2;
+  background-color: @text-base;
+  color: @white;
+  text-decoration: underline;
+
+  &:focus {
+    left: 0;
+  }
+}
+
+// Sprungziel. Das Element bekommt per tabindex="-1" den Fokus, damit die
+// Sprungmarke in allen Browsern wirklich dorthin springt - ein Rahmen um
+// den halben Seiteninhalt waere dabei aber nur irritierend.
+main:focus {
+  outline: none;
+}

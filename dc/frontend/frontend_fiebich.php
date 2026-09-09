@@ -46,6 +46,8 @@
     ?>
     <body class="<?= $body_class ?>" data-site_code="<?=$GLOBALS["site"]["code"]?>" data-lang_code="<?=$GLOBALS["language"]["code"]?>">
 
+    <a class="skip-link" href="#main"><?=$GLOBALS['tc']['skip_to_content']?></a>
+
     <!-- paste this code immediately after the opening <body> tag: -->
     <!-- Google Tag Manager (noscript) -->
    <?  if ($GLOBALS["site"]["google_tag_container_id"] <> "") { ?>
@@ -59,7 +61,7 @@
             echo get_globals_and_sid_as_div();
         }
         ?>
-        <div id="primary_navigation_mobile">
+        <nav id="primary_navigation_mobile" aria-label="<?=$GLOBALS['tc']['main_navigation_label']?>">
             <button type="button" class="close_button_navigation_mobile"
                     aria-label="<?=$GLOBALS['tc']['navigation_close_label']?>"></button>
             <div class="navigation_scrollbox">
@@ -68,7 +70,7 @@
                     <? navigation_full_menu_area($site, $language, "info", 2); ?>
                 </div>
             </div>
-        </div>
+        </nav>
         <div id="overlay" class=""></div>
         <div id="container" class="">
             <header>
@@ -79,7 +81,7 @@
                         </div>
                         <div class="header__right">
                             <div class="headerTrust hidden-xs"><? get_content("header_trust", TRUE,$IOCContainer); ?></div>
-                            <div id="primary_navigation" class="hidden-xs hidden-sm">
+                            <nav id="primary_navigation" class="hidden-xs hidden-sm" aria-label="<?=$GLOBALS['tc']['main_navigation_label']?>">
                                 <?
                                 $active = "";
                                 if ($GLOBALS['language']['std_main_navigation_id'] == $navigation['id']) {
@@ -89,7 +91,7 @@
                                     <i class="fa fa-home"></i>
                                 </a>
                                 <? navigation_full_menu_area($site, $language, $navigation, 2); ?>
-                            </div>
+                            </nav>
                             <button type="button" id="toggle_navigation"
                                     aria-controls="primary_navigation_mobile" aria-expanded="false">
                                 <span class="navigation-bar-inner">
@@ -105,7 +107,7 @@
                     </div>
                 </div>
             </header>
-            <main>
+            <main id="main" tabindex="-1">
                 <div id="banner">
                     <? get_content("banner", FALSE, $IOCContainer, $category, $navigation); ?>
                 </div>
@@ -143,11 +145,11 @@
                                 <div class="row">
                                     <div class="hidden-xs hidden-sm col-md-4 col-lg-3">
                                         <div class="">
-                                            <div class="subnavigation">
+                                            <nav class="subnavigation" aria-label="<?=$GLOBALS['tc']['subnavigation_label']?>">
                                                 <?
                                                 navigation_menu($site, $language, $navigation, 1, 2);
                                                 ?>
-                                            </div>
+                                            </nav>
                                         </div>
                                         <div class="sidebar"><? get_content("sidebar", TRUE,$IOCContainer); ?></div>
                                     </div>
