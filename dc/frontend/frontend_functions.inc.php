@@ -1033,7 +1033,10 @@ function checkForActiveRedirects($pdo,\Psr\Http\Message\ServerRequestInterface $
 
         if (count($redirectRows) == 1) {
 
-            switch ($redirectRows[0]["rewriteCode"]) {
+            // Spalte heisst rewrite_code, nicht rewriteCode - vorher lief jede
+            // Regel in den default-Zweig und wurde als 301 ausgeliefert, auch
+            // wenn im Backend 302 eingestellt war.
+            switch ($redirectRows[0]["rewrite_code"]) {
                 case "302":
                     $redirect = "302 Found";
                     break;
