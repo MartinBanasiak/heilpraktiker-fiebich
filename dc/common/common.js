@@ -239,3 +239,46 @@ $.urlParam = function(name){
         return results[1] || 0;
     }
 }
+/*
+ * Klickbare Gruppen-Kacheln.
+ *
+ * show_group_content() in dc/frontend/frontend_functions.inc.php umschliesst
+ * eine Kachel mit <div class="link" data-href="...">. Frueher stand dort ein
+ * onClick: mit der Maus bedienbar, per Tastatur nicht erreichbar (WCAG 2.1.1).
+ *
+ * Enthaelt die Kachel bereits einen echten Link - auf der Startseite ist das
+ * durchweg "mehr erfahren" -, bleibt dieser der einzige Tabstopp. Nur Kacheln
+ * ohne eigenen Link werden selbst fokussierbar. So entstehen keine doppelten
+ * Tabstopps und Screenreader lesen jedes Ziel genau einmal vor.
+ */
+$(function () {
+    var $tiles = $('.link[data-href]');
+
+    if (!$tiles.length) {
+        return;
+    }
+
+    $tiles.each(function () {
+        if ($(this).find('a[href]').length === 0) {
+            $(this).attr({ 'tabindex': 0, 'role': 'link' });
+        }
+    });
+
+    $tiles.on('click', function (event) {
+        // Echte Bedienelemente behalten ihr eigenes Verhalten
+        if ($(event.target).closest('a[href], button, input, select, textarea, label').length) {
+            return;
+        }
+        window.location.href = $(this).data('href');
+    });
+
+    $tiles.on('keydown', function (event) {
+        if (this !== event.target) {
+            return;
+        }
+        if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+            event.preventDefault();
+            window.location.href = $(this).data('href');
+        }
+    });
+});

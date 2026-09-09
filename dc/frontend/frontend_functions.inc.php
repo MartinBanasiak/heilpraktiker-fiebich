@@ -176,7 +176,11 @@ function show_group_content( $_group , $backgroundImage = false, &$IOCContainer=
         echo "\">";
 
         echo "<div class='" . $_group["main_page_group_code"] . "'>";
-        echo $_group['main_page_group_link'] != "" ? "<div class='link' onClick='window.location.href=\"".$_group['main_page_group_link']."\"'>" : "";
+        // Kein onClick mehr: das war per Maus bedienbar, per Tastatur nicht.
+        // Das Ziel steht jetzt in data-href, die Bedienung uebernimmt
+        // dc/common/common.js - inklusive Tastatur, wo die Kachel keinen
+        // eigenen Link enthaelt.
+        echo $_group['main_page_group_link'] != "" ? "<div class='link' data-href=\"" . htmlspecialchars($_group['main_page_group_link'], ENT_QUOTES) . "\">" : "";
 
         while ($sitepart = @mysqli_fetch_array($result)) {
 
