@@ -26,3 +26,31 @@
 main:focus {
   outline: none;
 }
+
+// Fokusindikator
+//
+// In type.less stand frueher ein pauschales "* { &:focus { outline: 0 } }".
+// Damit war auf der gesamten Seite nicht erkennbar, wo man sich per Tastatur
+// gerade befindet (WCAG 2.4.7).
+//
+// :focus-visible statt :focus - der Browser entscheidet, ob der Fokus
+// angezeigt werden muss. Wer mit der Maus klickt, sieht weiterhin nichts.
+//
+// Schwarz statt @brand-primary: Ein Fokusrahmen braucht nach WCAG 2.4.11
+// mindestens 3:1 gegenueber dem Untergrund. Das Orange erreicht auf Weiss
+// nur 2,06:1 und waere als Rahmen zu schwach.
+:focus-visible {
+  outline: 3px solid @text-base;
+  outline-offset: 2px;
+}
+
+// Auf farbigem Untergrund den Rahmen zusaetzlich hell absetzen
+.bg-primary,
+.bg-ueber-mich,
+.bg-behandlungsmethoden,
+.bg-gebuehren,
+.bg-kontakt {
+  :focus-visible {
+    outline-color: @white;
+  }
+}
