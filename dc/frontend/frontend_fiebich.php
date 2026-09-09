@@ -172,6 +172,33 @@
                         <?}?>
                     </div>
                     <? get_content("content_full", FALSE, $IOCContainer, $category, $navigation); ?>
+                    <?
+                    // Bewertungs-Widget, nur auf der Startseite.
+                    //
+                    // Das Skript laedt von cdn.trustindex.io und uebertraegt dabei
+                    // die IP-Adresse an einen Dritten. Es ist deshalb ueber das
+                    // Consent-Plugin gesperrt: type="text/plain" haelt den Browser
+                    // davon ab, es auszufuehren, die Klasse DCCookie_trustindex gibt
+                    // es erst nach Zustimmung frei. Die Container-Klasse sorgt
+                    // dafuer, dass bis dahin an dieser Stelle der Hinweis mit der
+                    // Freigabe-Schaltflaeche erscheint statt einer leeren Flaeche.
+                    //
+                    // Das Skript steht bewusst NEBEN dem Container, nicht darin:
+                    // Bei Zustimmung leert das Plugin den Container (innerHTML = "")
+                    // und wuerde ein Skript darin mit loeschen. Google Maps ist im
+                    // Standard genauso aufgebaut.
+                    if ($GLOBALS['language']['std_main_navigation_id'] == $navigation['id']) {
+                    ?>
+                        <div class="container">
+                            <section class="reviewWidget" aria-label="<?=$GLOBALS['tc']['reviews_headline']?>">
+                                <h2><?=$GLOBALS['tc']['reviews_headline']?></h2>
+                                <div class="reviewWidget__frame DCCookie_trustindex_container"></div>
+                                <script class="DCCookie_trustindex" type="text/plain"
+                                        src="https://cdn.trustindex.io/loader.js?ecf479080ed0884f508662893e7"
+                                        defer async></script>
+                            </section>
+                        </div>
+                    <? } ?>
                 </div>
             </main>
             <footer>

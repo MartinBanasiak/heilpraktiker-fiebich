@@ -54,3 +54,24 @@ main:focus {
     outline-color: @white;
   }
 }
+
+// Bewertungs-Widget auf der Startseite
+//
+// Liegt hier statt in einer eigenen Datei, weil es ein einzelner Abschnitt
+// ist. Bei weiteren Widgets gehoert das in eine eigene LESS-Datei.
+.reviewWidget {
+  margin-top: @spacer-base*4;
+  margin-bottom: @spacer-base*4;
+  text-align: center;
+
+  h2 {
+    margin-bottom: @spacer-base*2;
+  }
+
+  // Bis zur Einwilligung steht hier der Hinweis des Consent-Dialogs.
+  // Die Mindesthoehe verhindert, dass der Inhalt darunter springt, sobald
+  // das Widget nachgeladen wird.
+  &__frame {
+    min-height: 120px;
+  }
+}

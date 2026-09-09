@@ -1457,6 +1457,8 @@ $text_constant['de']['main_navigation_label'] = "Hauptmenü";
 $text_constant['en']['main_navigation_label'] = "Main menu";
 $text_constant['de']['subnavigation_label'] = "Unterseiten";
 $text_constant['en']['subnavigation_label'] = "Subpages";
+$text_constant['de']['reviews_headline'] = "Bewertungen";
+$text_constant['en']['reviews_headline'] = "Reviews";
 
 
 $text_constant['de']['basket_error_item_not_active'] = 'Der Artikel ist derzeit nicht für den Verkauf aktiv.';
