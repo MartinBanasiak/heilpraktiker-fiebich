@@ -1,11 +1,11 @@
 <?php ?>
 <!doctype html>
-<html>
+<html lang="<?= htmlspecialchars($GLOBALS["language"]["code"] ?? 'de', ENT_QUOTES) ?>">
 
     <? require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'common/version_comment.inc.php'; ?>
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <?= get_canonical(); ?>
         <? create_meta_tags(); ?>
         <?//<link href="//cloud.typenetwork.com/projects/771/fontface.css/" rel="stylesheet" type="text/css">?>

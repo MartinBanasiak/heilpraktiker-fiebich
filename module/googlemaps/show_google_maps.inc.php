@@ -37,7 +37,6 @@ $mapcode = "
     
     function show_maps_$sitepart_id() {
     if (typeof google !== 'undefined' && document.getElementById(\"map_canvas_" . $sitepart_id . "\") !== null){
-	\$('head').append('<meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=yes\" />');\n
 	var image = '" . $icon_location . "';
 	var bounds = new google.maps.LatLngBounds();
 	var myOptions_" . $sitepart_id . ";\n
