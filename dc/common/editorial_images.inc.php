@@ -157,3 +157,23 @@ function dc_bild_abmessungen($pfad)
 
     return $bekannt[$pfad];
 }
+
+/**
+ * Baut ein <img>-Tag und reichert es genauso an wie Redaktionsinhalte.
+ *
+ * Fuer Vorlagen, die ihre Bilder selbst ausgeben - etwa die Collection-
+ * Ansichten. Ohne das haetten deren Bilder als einzige keine Abmessungen und
+ * kein Lazy Loading.
+ *
+ * Die Attribute werden bewusst nicht escaped: Die Vorlagen geben sie bisher
+ * ebenfalls unveraendert aus. Enthielte ein Wert bereits HTML-Entities,
+ * wuerde ein nachtraegliches Escapen sie doppelt kodiert anzeigen.
+ *
+ * @param string $src Pfad ab Projektwurzel
+ * @param string $alt Textalternative
+ * @return string
+ */
+function dc_image_tag($src, $alt = '')
+{
+    return dc_enrich_editorial_images('<img src="' . $src . '" alt="' . $alt . '" />');
+}
