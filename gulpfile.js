@@ -149,6 +149,14 @@ function stylesFck() {
         .pipe(gulp.dest(distdir + '/css/'));
 }
 
+// Symbole liegen als SVG im Quellordner und werden unveraendert
+// uebernommen - nichts zu kompilieren, nur zu kopieren.
+function icons() {
+    return gulp
+        .src(srcdir + '/icons/*.svg', { allowEmpty: true })
+        .pipe(gulp.dest(distdir + '/icons/'));
+}
+
 function scripts() {
     return gulp
         .src([builddir + '/js/components.js', srcdir + '/js/' + jsfile + '.js'], { allowEmpty: true })
@@ -181,10 +189,11 @@ exports['concat-js-components'] = concatJsComponents;
 exports.styles_dev = stylesDev;
 exports.styles_public = stylesPublic;
 exports.styles_fck = stylesFck;
+exports.icons = icons;
 exports.scripts = scripts;
 exports.watch = watch;
 
 exports['uglify-js'] = uglifyJs;
 
-exports.public = gulp.series(components, stylesPublic, stylesFck, scripts, uglifyJs);
-exports.default = gulp.series(components, stylesDev, scripts, watch);
+exports.public = gulp.series(components, stylesPublic, stylesFck, icons, scripts, uglifyJs);
+exports.default = gulp.series(components, stylesDev, icons, scripts, watch);

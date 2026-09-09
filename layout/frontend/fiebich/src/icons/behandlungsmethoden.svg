@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img"
+     aria-label="Behandlungsmethoden – allgemeine Informationen">
+  <!--
+    Symbol "Behandlungsmethoden allgemeine Informationen".
+
+    Nachgezeichnet im Stil der vorhandenen Symbole: einfarbige Strichzeichnung
+    in #737373, runde Enden, Motiv in einem Kreisrahmen. Die Strichstaerken
+    entsprechen den Messwerten der bestehenden PNG (Kreis 26px, Motiv 18px,
+    Details 14px – jeweils auf 1200px Kantenlaenge, hier auf 200 umgerechnet).
+
+    Motiv: aufgeschlagenes Buch mit austreibendem Blatt – Information und
+    Naturheilkunde. Das Blattmotiv greift die Homoeopathie-Kachel auf und
+    haelt das Set zusammen.
+    Die Farbe steht bewusst fest als #737373 und nicht als currentColor:
+    Die Symbole werden ueber <img src> eingebunden, und ein so eingebundenes
+    SVG ist ein eigenes Dokument - currentColor faellt dort auf Schwarz
+    zurueck. Wer die Symbole spaeter inline einbaut, kann die Farbe per CSS
+    ueberschreiben.
+  -->
+  <g fill="none" stroke="#737373" stroke-linecap="round" stroke-linejoin="round">
+
+    <circle cx="100" cy="100" r="92" stroke-width="4.3"/>
+
+    <!-- Buchruecken -->
+    <path d="M100 112v40" stroke-width="3"/>
+
+    <!-- linke Seite -->
+    <path d="M100 112c-13-9-30-13-48-13-3 0-5 2-5 5v34c0 3 2 5 5 5 18 0 35 4 48 13"
+          stroke-width="3"/>
+    <!-- rechte Seite -->
+    <path d="M100 112c13-9 30-13 48-13 3 0 5 2 5 5v34c0 3-2 5-5 5-18 0-35 4-48 13"
+          stroke-width="3"/>
+
+    <!-- angedeutete Zeilen -->
+    <path d="M62 114h24M62 127h20M114 114h24M114 127h20" stroke-width="2.3"/>
+
+    <!-- Trieb aus dem Buch -->
+    <path d="M100 108V72" stroke-width="3"/>
+    <path d="M100 90c-4-11-13-16-23-16-1 10 4 20 14 23 3 1 6 0 9-2z" stroke-width="2.6"/>
+    <path d="M100 80c4-12 13-17 24-17 1 11-5 21-15 24-3 1-7 0-9-2z" stroke-width="2.6"/>
+    <path d="M92 88c-3-3-6-5-10-6M108 78c3-4 7-6 11-7" stroke-width="2.1"/>
+  </g>
+</svg>
