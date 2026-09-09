@@ -75,7 +75,8 @@ let providers = [
     "cookie_consent",
     "google_tag_manager",
     "google_analytics",
-    "google_maps"
+    "google_maps",
+    "trustindex"
 ];
 altPrivatePolicyLink.de = '/de/info/datenschutz/';
 altImprintLink.de = '/de/info/impressum/';

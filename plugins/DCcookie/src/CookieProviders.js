@@ -119,6 +119,13 @@ const providers = [
         gtmVariable: "DCCookie_hubspot"
     },
     {
+        id: 'trustindex',
+        name: "Trustindex",
+        category: COOKIE_EXTERNAL_MEDIA,
+        scriptclass: "DCCookie_trustindex",
+        externalMediaContainerClass: "DCCookie_trustindex_container"
+    },
+    {
         id: 'trusted_shops',
         name: 'Trusted Shops',
         category: COOKIE_ESSENTIAL,
