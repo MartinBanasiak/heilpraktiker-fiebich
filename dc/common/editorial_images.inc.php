@@ -148,6 +148,12 @@ function dc_bild_abmessungen($pfad)
         return null;
     }
 
+    if (strtolower(pathinfo($echterPfad, PATHINFO_EXTENSION)) === 'svg') {
+        $bekannt[$pfad] = dc_svg_abmessungen($echterPfad);
+
+        return $bekannt[$pfad];
+    }
+
     $groesse = @getimagesize($echterPfad);
     if ($groesse === false || empty($groesse[0]) || empty($groesse[1])) {
         return null;
@@ -156,6 +162,43 @@ function dc_bild_abmessungen($pfad)
     $bekannt[$pfad] = [(int)$groesse[0], (int)$groesse[1]];
 
     return $bekannt[$pfad];
+}
+
+/**
+ * Liest die Abmessungen eines SVG.
+ *
+ * getimagesize() kann mit SVG nichts anfangen - es liest Bilddaten, und ein
+ * SVG ist Text. Die Groesse steht in der viewBox, ersatzweise in width und
+ * height. Ohne diese Auswertung waeren die Symbole die einzigen Bilder ohne
+ * Seitenverhaeltnis im Markup.
+ *
+ * @param string $datei
+ * @return array|null [breite, hoehe]
+ */
+function dc_svg_abmessungen($datei)
+{
+    // Der Kopf reicht - viewBox und Groesse stehen im oeffnenden svg-Tag.
+    $kopf = @file_get_contents($datei, false, null, 0, 1024);
+    if ($kopf === false) {
+        return null;
+    }
+
+    if (preg_match('/viewBox\s*=\s*"\s*[\d.eE+-]+[\s,]+[\d.eE+-]+[\s,]+([\d.eE+-]+)[\s,]+([\d.eE+-]+)/i', $kopf, $treffer)) {
+        $breite = (int)round((float)$treffer[1]);
+        $hoehe = (int)round((float)$treffer[2]);
+        if ($breite > 0 && $hoehe > 0) {
+            return [$breite, $hoehe];
+        }
+    }
+
+    if (preg_match('/\swidth\s*=\s*"(\d+)/i', $kopf, $b)
+        && preg_match('/\sheight\s*=\s*"(\d+)/i', $kopf, $h)) {
+        if ((int)$b[1] > 0 && (int)$h[1] > 0) {
+            return [(int)$b[1], (int)$h[1]];
+        }
+    }
+
+    return null;
 }
 
 /**
