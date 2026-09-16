@@ -36,7 +36,7 @@
 
   > ul > li {
     > a {
-      padding: @spacer-base*2 @spacer-base*1.5;
+      padding: @spacer-base*2 @spacer-base;
       position: relative;
       &:after {
         content: " ";
@@ -170,11 +170,20 @@
   .home {
     display: inline-block;
     vertical-align: middle;
-    padding-right: 15px;
+    padding-right: @spacer-base;
   }
 
   > ul > li {
     position: relative;
+
+    // Rueckfall, falls das JavaScript nicht laeuft: der Fokus im Menuepunkt
+    // klappt das Untermenue auf. Sobald einmal mit der Maus gehovert wurde,
+    // setzt jQuery inline display-Werte - dann uebernimmt das Fokus-Handling
+    // in script_new3.js.
+    &:focus-within > ul {
+      display: block;
+    }
+
     > ul {
       position: absolute;
       display: none;
@@ -216,8 +225,13 @@
       padding: 15px
     }
 
+    > ul > li > a {
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
     .home {
-      padding-right: 15px;
+      padding-right: 6px;
     }
   }
   @media (max-width: @screen-md-max){
@@ -226,7 +240,7 @@
       padding-right: @spacer-base;
     }
     a {
-      font-size: 16px;
+      font-size: 15px;
     }
   }
 }
@@ -348,11 +362,21 @@
   display: none;
   float:right;
   cursor: pointer;
+  // Ist seit der Barrierefreiheits-Anpassung ein <button>. Die Browser-
+  // Vorgaben zuruecksetzen, damit die Optik unveraendert bleibt.
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
   .navigation-bar-inner {
+    display: block;
     width: 40px;
     margin-right: @spacer-base;
   }
   .navigation-bar {
+    display: block;
     height: 2px;
     width:100%;
     background-color: @middle-gray;
@@ -371,6 +395,10 @@
 
   @media (max-width: @screen-sm-max){
     .flexbox(row,center);
+  }
+
+  .navigation-bar-label {
+    display: block;
   }
 
   @media (max-width: @screen-xs){
@@ -398,6 +426,8 @@
     height: 60px;
     padding:0;
     background-color: transparent;
+    border: 0;
+    cursor: pointer;
     z-index: 1;
     &:before,&:after {
       position: absolute;

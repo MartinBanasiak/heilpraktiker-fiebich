@@ -1,0 +1,39 @@
+// Startseite
+//
+// Die sechs Kacheln mit den Symbolen.
+//
+// Ausgangslage: .flexrow richtet seine Elemente mittig aus (align-items:
+// center). Kacheln mit einzeiliger Ueberschrift wie "Diagnostik" waren
+// dadurch niedriger als zweizeilige wie "HRV-Analyse (Herzratenvariabilitaet)"
+// und schwebten in der Reihe - die "mehr erfahren"-Links lagen auf drei
+// verschiedenen Hoehen.
+//
+// align-self hebt das fuer diese Kacheln auf, ohne .flexrow selbst zu
+// aendern: die mittige Ausrichtung wird an anderer Stelle gebraucht, etwa in
+// der Reihe darueber mit Bild und Text.
+//
+// Abgegrenzt ueber ".flexrow > .group": nur Kacheln, die selbst in einer
+// Reihe liegen. Die drei Bildkacheln weiter unten tragen zusaetzlich .box
+// und bleiben aussen vor, der umgebende Abschnitt ist zwar auch eine
+// .group, aber kein direktes Kind einer .flexrow.
+body.home {
+  .flexrow > .group:not(.box) {
+    align-self: stretch;
+
+    > .groupcode,
+    > .groupcode > .link {
+      height: 100%;
+    }
+
+    > .groupcode > .link > .textcontent {
+      .flexbox(column, stretch, nowrap);
+      height: 100%;
+
+      // schiebt "mehr erfahren" nach unten, damit die Links aller Kacheln
+      // einer Reihe auf einer Linie liegen
+      > div:last-child {
+        margin-top: auto;
+      }
+    }
+  }
+}

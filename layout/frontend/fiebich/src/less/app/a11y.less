@@ -1,0 +1,77 @@
+// Barrierefreiheit
+//
+// Kleinteile, die keiner bestehenden Komponente gehoeren.
+
+// Sprungmarke: liegt ausserhalb des Sichtfelds, wird beim ersten Tab
+// sichtbar. Bewusst nicht display:none - das wuerde sie auch fuer
+// Screenreader und Tastatur entfernen.
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  z-index: 1000;
+  padding: @spacer-base @spacer-base*2;
+  background-color: @text-base;
+  color: @white;
+  text-decoration: underline;
+
+  &:focus {
+    left: 0;
+  }
+}
+
+// Sprungziel. Das Element bekommt per tabindex="-1" den Fokus, damit die
+// Sprungmarke in allen Browsern wirklich dorthin springt - ein Rahmen um
+// den halben Seiteninhalt waere dabei aber nur irritierend.
+main:focus {
+  outline: none;
+}
+
+// Fokusindikator
+//
+// In type.less stand frueher ein pauschales "* { &:focus { outline: 0 } }".
+// Damit war auf der gesamten Seite nicht erkennbar, wo man sich per Tastatur
+// gerade befindet (WCAG 2.4.7).
+//
+// :focus-visible statt :focus - der Browser entscheidet, ob der Fokus
+// angezeigt werden muss. Wer mit der Maus klickt, sieht weiterhin nichts.
+//
+// Schwarz statt @brand-primary: Ein Fokusrahmen braucht nach WCAG 2.4.11
+// mindestens 3:1 gegenueber dem Untergrund. Das Orange erreicht auf Weiss
+// nur 2,06:1 und waere als Rahmen zu schwach.
+:focus-visible {
+  outline: 3px solid @text-base;
+  outline-offset: 2px;
+}
+
+// Auf farbigem Untergrund den Rahmen zusaetzlich hell absetzen
+.bg-primary,
+.bg-ueber-mich,
+.bg-behandlungsmethoden,
+.bg-gebuehren,
+.bg-kontakt {
+  :focus-visible {
+    outline-color: @white;
+  }
+}
+
+// Bewertungs-Widget auf der Startseite
+//
+// Liegt hier statt in einer eigenen Datei, weil es ein einzelner Abschnitt
+// ist. Bei weiteren Widgets gehoert das in eine eigene LESS-Datei.
+.reviewWidget {
+  margin-top: @spacer-base*4;
+  margin-bottom: @spacer-base*4;
+  text-align: center;
+
+  h2 {
+    margin-bottom: @spacer-base*2;
+  }
+
+  // Bis zur Einwilligung steht hier der Hinweis des Consent-Dialogs.
+  // Die Mindesthoehe verhindert, dass der Inhalt darunter springt, sobald
+  // das Widget nachgeladen wird.
+  &__frame {
+    min-height: 120px;
+  }
+}

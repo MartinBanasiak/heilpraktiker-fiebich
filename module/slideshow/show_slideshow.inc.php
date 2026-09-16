@@ -42,6 +42,16 @@ $result2 = @mysqli_query($GLOBALS['mysql_con'], $query2);
         });
     </script>
     <style>
+        /*
+         * Die eingestellte Hoehe wird zusaetzlich als CSS-Variable
+         * weitergereicht. Das Layout braucht sie, um den Platz schon vor dem
+         * Aufbau des Karussells zu reservieren - Owl blendet den Container
+         * bis dahin aus, wodurch der Banner mit null Hoehe startet und alles
+         * darunter beim Erscheinen nach unten springt.
+         */
+        .slideshow_box {
+            --slideshow-hoehe: <?php echo (int)$row1['height']; ?>px;
+        }
         .slideshow_box .owl-carousel-item.animated {
             -webkit-animation-duration : <?=$row1['effect_duration'] / 100?>s  ;
             animation-duration : <?=$row1['effect_duration'] /100?>s  ;

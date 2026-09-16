@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img"
+     aria-label="HRV-Analyse – Herzratenvariabilität">
+  <!--
+    Symbol "HRV-Analyse".
+
+    Nachgezeichnet im Stil der vorhandenen Symbole und motivgleich zu dem
+    Bild, das auf der Uebersichtsseite bereits fuer die HRV-Analyse steht:
+    Herzumriss mit durchlaufender Pulslinie im Kreisrahmen.
+
+    Strichstaerken wie im uebrigen Set (Kreis 4.3, Motiv 3, Details 2.3
+    bei 200er Zeichenflaeche), Farbe #737373, runde Enden.
+    Die Farbe steht bewusst fest als #737373 und nicht als currentColor:
+    Die Symbole werden ueber <img src> eingebunden, und ein so eingebundenes
+    SVG ist ein eigenes Dokument - currentColor faellt dort auf Schwarz
+    zurueck. Wer die Symbole spaeter inline einbaut, kann die Farbe per CSS
+    ueberschreiben.
+  -->
+  <g fill="none" stroke="#737373" stroke-linecap="round" stroke-linejoin="round">
+
+    <circle cx="100" cy="100" r="92" stroke-width="4.3"/>
+
+    <!-- Herz -->
+    <path d="M100 149C63 122 48 104 48 85c0-15 11-26 25-26 11 0 20 6 27 16
+             7-10 16-16 27-16 14 0 25 11 25 26 0 19-15 37-52 64z"
+          stroke-width="3"/>
+
+    <!-- Pulslinie, laeuft ueber das Herz hinaus -->
+    <path d="M30 102h34l7-13 10 34 12-52 11 44 8-13h58" stroke-width="3"/>
+  </g>
+</svg>

@@ -40,7 +40,28 @@ $(document).ready(function () {
         toggle_mobile_menu();
     });
 
+    // Escape schliesst das mobile Menue - erwartetes Verhalten fuer alles,
+    // was sich ueber die Seite legt.
+    $(document).on('keydown', function (event) {
+        if (event.key === 'Escape' && $('#container').hasClass('open_menu')) {
+            toggle_mobile_menu();
+        }
+    });
+
     $('#primary_navigation > ul > li').hoverIntent(configNavigation);
+
+    // Untermenues oeffnen bisher nur bei hover. Per Tastatur tabbte man an
+    // den Unterpunkten vorbei, ohne sie je zu sehen. focusin/focusout
+    // ergaenzen das um dieselben Funktionen, die auch die Maus benutzt.
+    $('#primary_navigation > ul > li').on('focusin', function () {
+        showUlNavigation.call(this);
+    }).on('focusout', function (event) {
+        // Nur schliessen, wenn der Fokus den Menuepunkt wirklich verlaesst
+        // und nicht nur zum naechsten Unterpunkt darin wandert.
+        if (!event.relatedTarget || !$.contains(this, event.relatedTarget)) {
+            hideUlNavigation.call(this);
+        }
+    });
 
 
     $('#primary_navigation_mobile ul li > a').click(function (event) {
@@ -144,17 +165,24 @@ function toggle_mobile_menu() {
         $('#container').addClass('open_menu');
         $('#overlay').addClass('open_menu');
 
+        // Zustand fuer Screenreader mitfuehren und den Fokus mitnehmen,
+        // sonst tabbt man nach dem Oeffnen weiter durch die Seite dahinter.
+        $('#toggle_navigation').attr('aria-expanded', 'true');
+        $('#primary_navigation_mobile .close_button_navigation_mobile').focus();
 
         $('#overlay').animate({
             opacity: 0.6
         }, 100);
     } else {
+        $('#toggle_navigation').attr('aria-expanded', 'false');
+
         $('#overlay').animate({
             opacity: 0
         }, 100, function () {
             $('#container').removeClass('open_menu');
             $('#overlay').removeClass('open_menu');
             $('#primary_navigation_mobile').fadeOut('fast');
+            $('#toggle_navigation').focus();
         });
     }
 }

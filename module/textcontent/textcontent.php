@@ -1,5 +1,7 @@
 <?
 
+require_once dirname(__DIR__, 2) . '/dc/common/editorial_images.inc.php';
+
 function textcontent_show( $sitepart_id ) {
     $query  = "SELECT * FROM textcontent_header WHERE id = '" . $sitepart_id . "' LIMIT 1";
     $result = @mysqli_query($GLOBALS['mysql_con'], $query);
@@ -13,11 +15,11 @@ function textcontent_show( $sitepart_id ) {
 
         if ($GLOBALS['background_image_path'] != '') {
             echo "\n<div class=\"textcontent hasBackground\" " . $ckeditorString . " style='background-image: url(" . $GLOBALS['background_image_path'] . ")' >\n";
-            echo $textcontent["content"] . "\n";
+            echo dc_enrich_editorial_images($textcontent["content"]) . "\n";
             echo "</div>\n";
         } else {
             echo "\n<div class=\"textcontent noBackground\" " . $ckeditorString . ">\n";
-            echo $textcontent["content"] . "\n";
+            echo dc_enrich_editorial_images($textcontent["content"]) . "\n";
             echo "</div>\n";
         }
     }

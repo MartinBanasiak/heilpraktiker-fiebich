@@ -1,3 +1,4 @@
+<?php require_once dirname(__DIR__, 2) . '/common/editorial_images.inc.php'; ?>
 <div class="row">
     <div class="col-xs-12 col-sm-8">
         <h2 class="collection__title">
@@ -17,7 +18,7 @@
     <div class="col-xs-12 xs-margin col-sm-4">
         <div class="collection__icon">
             <div class="image">
-                <img src="/userdata/collection/resize/<?=$collectionFullLines['icon']['data'] ?>" alt="<?=$collectionFullLines['headline']['data'] ?>" />
+                <?= dc_image_tag('/userdata/collection/resize/' . $collectionFullLines['icon']['data'], $collectionFullLines['headline']['data']) ?>
             </div>
         </div>
     </div>

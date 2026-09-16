@@ -85,6 +85,21 @@
 }
 
 .collectionmethoden {
+  // Der Rahmen um die Symbole ist ueber .image quadratisch und so breit wie
+  // die Karte - bei drei Spalten rund 318px. Die Symbole sind aber 200x200.
+  // Das ergab je Karte rund 118px Leerraum, gut die Haelfte davon als Luecke
+  // zwischen Symbol und Ueberschrift. Genau der Punkt aus dem Briefing:
+  // "in die Hoehe ist hier viel auseinander".
+  //
+  // Der Rahmen wird deshalb auf die Symbolgroesse begrenzt und zentriert.
+  // Auf schmalen Bildschirmen bleibt er bei 100% und die Symbole skalieren
+  // wie bisher mit.
+  .collection__icon .image {
+    max-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .collection__item {
     display: block;
     color: @text-base;
@@ -105,6 +120,7 @@
 
   &.isList {
     > div {
+      align-items: stretch;
       justify-content: center;
     }
     > .row > div {

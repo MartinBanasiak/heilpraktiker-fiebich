@@ -1,5 +1,9 @@
 AddDefaultCharset UTF-8
 
+# Aeltere Apache-Versionen kennen .webp nicht und liefern die Datei sonst mit
+# dem MIME-Typ des Originals aus.
+AddType image/webp .webp
+
 # Video support
 AddType video/ogg .ogv
 AddType video/mp4 .mp4
@@ -76,11 +80,30 @@ AddType text/srt .srt
 <ifmodule mod_headers.c>
     SetEnvIf Host ^dc-test\.de$ is_on_dev_site
     Header set X-Robots-Tag "noindex, nofollow" env=is_on_dev_site
+
+    # Ohne diesen Header koennte ein Proxy die WebP-Antwort an einen Browser
+    # weiterreichen, der damit nichts anfangen kann.
+    Header append Vary Accept env=WEBP_VARIANTE
 </ifmodule>
 
 RewriteEngine on
 
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# WebP ausliefern, wo es eine Variante gibt
+#
+# Die Bilder liegen als CKEditor-HTML in der Datenbank - die <img>-Tags
+# koennen wir also nicht einfach umschreiben. Stattdessen entscheidet der
+# Server: Akzeptiert der Browser image/webp und liegt neben bild.jpg auch
+# bild.jpg.webp, geht die kleinere Datei raus. Gleiche URL, gleiche
+# Abmessungen, nur ein anderes Format.
+#
+# Die Varianten erzeugt tools/webp-convert.php.
+# Zum Abschalten reicht es, diesen Block auszukommentieren.
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_FILENAME} \.(jpe?g|png)$ [NC]
+RewriteCond %{REQUEST_FILENAME}\.webp -f
+RewriteRule ^(.+)\.(jpe?g|png)$ $1.$2.webp [NC,T=image/webp,E=WEBP_VARIANTE:1,L]
 
 #FallbackResource /dc/frontend/frontend.php
 

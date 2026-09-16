@@ -186,6 +186,14 @@
       "text": "Dies ist ein Service, welcher statische Daten darüber erzeugt wie ein Besucher die Webseite nutzt und die Chatfunktionalität zur Verfügung stellt.",
       "website_owner": "HubSpot, Inc."
     },
+    "trustindex": {
+      "cookie_name": "-",
+      "cookie_time": "-",
+      "name": "Trustindex",
+      "private_polacy_link": "https://www.trustindex.io/privacy-policy/",
+      "text": "Zeigt die Bewertungen der Praxis an. Beim Laden wird die IP-Adresse an Trustindex übertragen.",
+      "website_owner": "Trustindex.io"
+    },
     "trusted_shops": {
       "cookie_name": "-",
       "cookie_time": "-",

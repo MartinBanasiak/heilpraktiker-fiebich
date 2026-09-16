@@ -9,7 +9,7 @@
       "build": "build",
       "dist": "dist",
       "cssfile": "style",
-      "jsfile": "script"
+      "jsfile": "script_new3"
     },
     "bower": {
       "path": "./components"

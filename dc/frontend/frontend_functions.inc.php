@@ -176,7 +176,11 @@ function show_group_content( $_group , $backgroundImage = false, &$IOCContainer=
         echo "\">";
 
         echo "<div class='" . $_group["main_page_group_code"] . "'>";
-        echo $_group['main_page_group_link'] != "" ? "<div class='link' onClick='window.location.href=\"".$_group['main_page_group_link']."\"'>" : "";
+        // Kein onClick mehr: das war per Maus bedienbar, per Tastatur nicht.
+        // Das Ziel steht jetzt in data-href, die Bedienung uebernimmt
+        // dc/common/common.js - inklusive Tastatur, wo die Kachel keinen
+        // eigenen Link enthaelt.
+        echo $_group['main_page_group_link'] != "" ? "<div class='link' data-href=\"" . htmlspecialchars($_group['main_page_group_link'], ENT_QUOTES) . "\">" : "";
 
         while ($sitepart = @mysqli_fetch_array($result)) {
 
@@ -1029,7 +1033,10 @@ function checkForActiveRedirects($pdo,\Psr\Http\Message\ServerRequestInterface $
 
         if (count($redirectRows) == 1) {
 
-            switch ($redirectRows[0]["rewriteCode"]) {
+            // Spalte heisst rewrite_code, nicht rewriteCode - vorher lief jede
+            // Regel in den default-Zweig und wurde als 301 ausgeliefert, auch
+            // wenn im Backend 302 eingestellt war.
+            switch ($redirectRows[0]["rewrite_code"]) {
                 case "302":
                     $redirect = "302 Found";
                     break;

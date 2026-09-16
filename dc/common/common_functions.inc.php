@@ -517,9 +517,32 @@ function get_canonical() {
                 }
             }
 
-            if($groupCode <> '')
+            // Den Slug der Detailseite aus main_collection.description bilden -
+            // genau daraus baut auch das Frontend die Adresse (siehe
+            // get_collection_rewrite() in frontend_functions.inc.php). Vorher
+            // stand hier die Bezeichnung der Collection-GRUPPE, und wenn die
+            // leer war - der Normalfall - wurde gar nichts angehaengt. Das
+            // Canonical zeigte dann auf die Uebersichtsseite und erklaerte
+            // Google damit jede Detailseite zum Duplikat der Uebersicht.
+            $collectionId = (int)filter_var($_GET['collection_id'], FILTER_SANITIZE_NUMBER_INT);
+            $collectionSlug = '';
+            if ($collectionId > 0) {
+                $query3 = "SELECT description FROM main_collection WHERE id = '" . $collectionId . "'";
+                $result3 = @mysqli_query($GLOBALS['mysql_con'], $query3);
+                $row3 = @mysqli_fetch_assoc($result3);
+                if (!empty($row3['description'])) {
+                    $collectionSlug = get_collection_rewrite($row3['description'], $collectionId);
+                }
+            }
+
+            if ($collectionSlug <> '')
             {
-                $path = $path ."/" .get_collection_rewrite($groupCode, filter_var($_GET['collection_id'],FILTER_SANITIZE_NUMBER_INT));
+                $path = rtrim($path, "/") . "/" . $collectionSlug;
+                $path = rtrim($path,"/");
+            }
+            elseif($groupCode <> '')
+            {
+                $path = $path ."/" .get_collection_rewrite($groupCode, $collectionId);
                 $path = rtrim($path,"/");
             }
 
@@ -528,12 +551,29 @@ function get_canonical() {
 
 
 
-        $path = "<link rel='canonical' href='https://" . $domain . "/" . customizeUrl(). "/" . $path . "/'/>";
+        // Die Startseite ist unter drei Adressen erreichbar: /, /de/ und
+        // /de/home/ (dem Code des Navigationseintrags). Das Canonical zeigte
+        // bisher auf die dritte - waehrend Logo und Sitemap auf die erste
+        // verweisen. Drei Adressen fuer eine Seite teilen die Bewertung auf.
+        // Fuer den Einstiegspunkt der Site ist deshalb die Wurzel massgeblich.
+        $istStartseite = isset($GLOBALS['language']['std_main_navigation_id'])
+            && (int)$GLOBALS['language']['std_main_navigation_id'] === (int)$GLOBALS['navigation']['id']
+            && !isset($_GET['collection_id']);
+
+        if ($istStartseite) {
+            $path = "<link rel='canonical' href='https://" . $domain . "/'/>";
+        } else {
+            $path = "<link rel='canonical' href='https://" . $domain . "/" . customizeUrl(). "/" . $path . "/'/>";
+        }
 
         if($noindexValue <> "")
         {
+            // robots und canonical schliessen sich nicht aus. Vorher ersetzte
+            // die robots-Angabe das Canonical - Impressum und Datenschutz
+            // standen dadurch ganz ohne Canonical da, obwohl dort nur
+            // "nofollow" gesetzt ist.
             $noindexValue = rtrim($noindexValue,', ');
-            $path = '<meta name="robots" content="'.$noindexValue.'">';
+            $path = '<meta name="robots" content="'.$noindexValue.'">' . "\n" . $path;
         }
     } else {
         //Artikelliste ohne Sortieroption
@@ -720,7 +760,11 @@ function get_canonical() {
         }
     }
     if ($path != $url) {
-        $path = strtolower($path);
+        // Frueher stand hier strtolower($path) - und zwar auf das komplette
+        // HTML-Tag. Damit wurde jede Adresse mit Grossbuchstaben kleingemacht:
+        // /de/FAQ/ ergab ein Canonical auf /de/faq/, und diese Adresse
+        // beantwortet die Seite mit 404. Die Artikeladressen im Shop werden
+        // weiter oben ohnehin schon einzeln kleingeschrieben.
         return $path;
     }
 }
@@ -3300,6 +3344,12 @@ function create_meta_tags() {
             $meta_keywords = $GLOBALS['meta_keywords'];
         }
     }
+    // Fuer Open-Graph-Tags, die im Layout danach ausgegeben werden. Ohne das
+    // muessten Titel und Beschreibung dort ein zweites Mal zusammengesetzt
+    // werden - mit dem Risiko, dass beides auseinanderlaeuft.
+    $GLOBALS['computed_site_title'] = $site_title;
+    $GLOBALS['computed_meta_description'] = $meta_description;
+
     if ($site_title <> '') {
         echo "<title>" . $site_title . "</title>\n";
     }

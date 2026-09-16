@@ -1,13 +1,14 @@
 <?php ?>
 <!doctype html>
-<html>
+<html lang="<?= htmlspecialchars($GLOBALS["language"]["code"] ?? 'de', ENT_QUOTES) ?>">
 
     <? require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'common/version_comment.inc.php'; ?>
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <?= get_canonical(); ?>
         <? create_meta_tags(); ?>
+        <? require __DIR__ . DIRECTORY_SEPARATOR . 'frontend_fiebich_meta.inc.php'; ?>
         <?//<link href="//cloud.typenetwork.com/projects/771/fontface.css/" rel="stylesheet" type="text/css">?>
         <script>
             var global_privacy_url = '<?= $GLOBALS["tc"]["global_privacy_url"] ?>';
@@ -46,6 +47,8 @@
     ?>
     <body class="<?= $body_class ?>" data-site_code="<?=$GLOBALS["site"]["code"]?>" data-lang_code="<?=$GLOBALS["language"]["code"]?>">
 
+    <a class="skip-link" href="#main"><?=$GLOBALS['tc']['skip_to_content']?></a>
+
     <!-- paste this code immediately after the opening <body> tag: -->
     <!-- Google Tag Manager (noscript) -->
    <?  if ($GLOBALS["site"]["google_tag_container_id"] <> "") { ?>
@@ -59,26 +62,35 @@
             echo get_globals_and_sid_as_div();
         }
         ?>
-        <div id="primary_navigation_mobile">
-            <a class="close_button_navigation_mobile"></a>
+        <nav id="primary_navigation_mobile" aria-label="<?=$GLOBALS['tc']['main_navigation_label']?>">
+            <button type="button" class="close_button_navigation_mobile"
+                    aria-label="<?=$GLOBALS['tc']['navigation_close_label']?>"></button>
             <div class="navigation_scrollbox">
                 <div class="navigation">
                     <? navigation_full_menu_area($site, $language, $navigation, 1); ?>
                     <? navigation_full_menu_area($site, $language, "info", 2); ?>
                 </div>
             </div>
-        </div>
+        </nav>
         <div id="overlay" class=""></div>
         <div id="container" class="">
             <header>
                 <div class="container">
                     <div class="header__container">
                         <div class="header__left">
-                            <div class="headerLogo"><? get_content("header_logo", TRUE,$IOCContainer); ?></div>
+                            <div class="headerLogo"><?
+                                // Bilder der Kopfzeile stehen immer im sichtbaren
+                                // Bereich und werden deshalb nicht lazy geladen.
+                                $GLOBALS['dc_bildbereich_kopf'] = true;
+                                get_content("header_logo", TRUE,$IOCContainer);
+                            ?></div>
                         </div>
                         <div class="header__right">
-                            <div class="headerTrust hidden-xs"><? get_content("header_trust", TRUE,$IOCContainer); ?></div>
-                            <div id="primary_navigation" class="hidden-xs hidden-sm">
+                            <div class="headerTrust hidden-xs"><?
+                                get_content("header_trust", TRUE,$IOCContainer);
+                                $GLOBALS['dc_bildbereich_kopf'] = false;
+                            ?></div>
+                            <nav id="primary_navigation" class="hidden-xs hidden-sm" aria-label="<?=$GLOBALS['tc']['main_navigation_label']?>">
                                 <?
                                 $active = "";
                                 if ($GLOBALS['language']['std_main_navigation_id'] == $navigation['id']) {
@@ -88,22 +100,23 @@
                                     <i class="fa fa-home"></i>
                                 </a>
                                 <? navigation_full_menu_area($site, $language, $navigation, 2); ?>
-                            </div>
-                            <div id="toggle_navigation">
-                                <div class="navigation-bar-inner">
-                                    <div class="navigation-bar"></div>
-                                    <div class="navigation-bar"></div>
-                                    <div class="navigation-bar"></div>
-                                </div>
-                                <div class="navigation-bar-label">
+                            </nav>
+                            <button type="button" id="toggle_navigation"
+                                    aria-controls="primary_navigation_mobile" aria-expanded="false">
+                                <span class="navigation-bar-inner">
+                                    <span class="navigation-bar"></span>
+                                    <span class="navigation-bar"></span>
+                                    <span class="navigation-bar"></span>
+                                </span>
+                                <span class="navigation-bar-label">
                                     <?=$GLOBALS['tc']['toggle_navigation_label']?>
-                                </div>
-                            </div>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
             </header>
-            <main>
+            <main id="main" tabindex="-1">
                 <div id="banner">
                     <? get_content("banner", FALSE, $IOCContainer, $category, $navigation); ?>
                 </div>
@@ -141,11 +154,11 @@
                                 <div class="row">
                                     <div class="hidden-xs hidden-sm col-md-4 col-lg-3">
                                         <div class="">
-                                            <div class="subnavigation">
+                                            <nav class="subnavigation" aria-label="<?=$GLOBALS['tc']['subnavigation_label']?>">
                                                 <?
                                                 navigation_menu($site, $language, $navigation, 1, 2);
                                                 ?>
-                                            </div>
+                                            </nav>
                                         </div>
                                         <div class="sidebar"><? get_content("sidebar", TRUE,$IOCContainer); ?></div>
                                     </div>
@@ -159,6 +172,33 @@
                         <?}?>
                     </div>
                     <? get_content("content_full", FALSE, $IOCContainer, $category, $navigation); ?>
+                    <?
+                    // Bewertungs-Widget, nur auf der Startseite.
+                    //
+                    // Das Skript laedt von cdn.trustindex.io und uebertraegt dabei
+                    // die IP-Adresse an einen Dritten. Es ist deshalb ueber das
+                    // Consent-Plugin gesperrt: type="text/plain" haelt den Browser
+                    // davon ab, es auszufuehren, die Klasse DCCookie_trustindex gibt
+                    // es erst nach Zustimmung frei. Die Container-Klasse sorgt
+                    // dafuer, dass bis dahin an dieser Stelle der Hinweis mit der
+                    // Freigabe-Schaltflaeche erscheint statt einer leeren Flaeche.
+                    //
+                    // Das Skript steht bewusst NEBEN dem Container, nicht darin:
+                    // Bei Zustimmung leert das Plugin den Container (innerHTML = "")
+                    // und wuerde ein Skript darin mit loeschen. Google Maps ist im
+                    // Standard genauso aufgebaut.
+                    if ($GLOBALS['language']['std_main_navigation_id'] == $navigation['id']) {
+                    ?>
+                        <div class="container">
+                            <section class="reviewWidget" aria-label="<?=$GLOBALS['tc']['reviews_headline']?>">
+                                <h2><?=$GLOBALS['tc']['reviews_headline']?></h2>
+                                <div class="reviewWidget__frame DCCookie_trustindex_container"></div>
+                                <script class="DCCookie_trustindex" type="text/plain"
+                                        src="https://cdn.trustindex.io/loader.js?ecf479080ed0884f508662893e7"
+                                        defer async></script>
+                            </section>
+                        </div>
+                    <? } ?>
                 </div>
             </main>
             <footer>

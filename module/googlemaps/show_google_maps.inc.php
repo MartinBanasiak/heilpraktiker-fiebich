@@ -28,16 +28,32 @@ $map_size = mysqli_fetch_assoc($qry_map);
 extract($map_size);
 
 
+// Der Google-Maps-Schluessel stand hier frueher fest im Quelltext. Er gehoert
+// nicht ins Repository - Google hat ihn dort selbst gefunden und gemeldet.
+// Jetzt kommt er aus config/.env, die nicht versioniert wird.
+//
+// Wichtig: Ein Maps-Schluessel fuer den Browser ist immer im Seitenquelltext
+// sichtbar, auch jetzt noch. Schuetzen laesst er sich nur ueber eine
+// HTTP-Referrer-Beschraenkung in der Google Cloud Console.
+$googleMapsApiKey = trim((string)getenv('GOOGLE_MAPS_API_KEY'));
+
+if ($googleMapsApiKey === '') {
+    // Ohne Schluessel laedt Google Maps nicht. Lieber gar kein Script-Tag als
+    // eines, das im Browser eine Fehlermeldung ueber die Karte legt.
+    error_log('Google Maps: GOOGLE_MAPS_API_KEY ist nicht gesetzt, Karte wird nicht eingebunden.');
+
+    return;
+}
+
 //Generiert Script-Tags, JQuery-Funktion zum Setzen eines neuen meta-tags im Seiten-Header,
 //Deklariert Optionsvariable und beginnt die Definition der Initialisierungsfunktion
 $mapcode = "
-	<script class='DCCookie_google_maps' type=\"text/plain\" src=\"//maps.google.com/maps/api/js?sensor=false&key=AIzaSyCoqeb8wf8wf3CKUzcemFl-aa5SVwBEZpo\"></script>
+	<script class='DCCookie_google_maps' type=\"text/plain\" src=\"//maps.google.com/maps/api/js?sensor=false&key=" . rawurlencode($googleMapsApiKey) . "\"></script>
 	<script class='DCCookie_google_maps' type=\"text/plain\">\n
 	show_maps_$sitepart_id();     
     
     function show_maps_$sitepart_id() {
     if (typeof google !== 'undefined' && document.getElementById(\"map_canvas_" . $sitepart_id . "\") !== null){
-	\$('head').append('<meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=yes\" />');\n
 	var image = '" . $icon_location . "';
 	var bounds = new google.maps.LatLngBounds();
 	var myOptions_" . $sitepart_id . ";\n

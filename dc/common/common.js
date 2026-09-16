@@ -239,3 +239,67 @@ $.urlParam = function(name){
         return results[1] || 0;
     }
 }
+;/*
+ * Klickbare Gruppen-Kacheln.
+ *
+ * Das fuehrende Semikolon ist Absicht: Die Zuweisung an $.urlParam direkt
+ * darueber endet ohne Semikolon. Ohne Trennung liest der Parser
+ * "$.urlParam = function(){...}(function(){...})()" - also einen Aufruf - und
+ * bricht mit "is not a function" ab.
+ *
+ * show_group_content() in dc/frontend/frontend_functions.inc.php umschliesst
+ * eine Kachel mit <div class="link" data-href="...">. Frueher stand dort ein
+ * onClick: mit der Maus bedienbar, per Tastatur nicht erreichbar (WCAG 2.1.1).
+ *
+ * Enthaelt die Kachel bereits einen echten Link - auf der Startseite ist das
+ * durchweg "mehr erfahren" -, bleibt dieser der einzige Tabstopp. Nur Kacheln
+ * ohne eigenen Link werden selbst fokussierbar. So entstehen keine doppelten
+ * Tabstopps und Screenreader lesen jedes Ziel genau einmal vor.
+ *
+ * Bewusst ohne jQuery: Diese Datei steht im Bundle des Fiebich-Layouts VOR
+ * jQuery. Ein $(...) an dieser Stelle wirft "ReferenceError: $ is not defined"
+ * - und ein ungefangener Fehler auf oberster Ebene bricht die Ausfuehrung der
+ * gesamten Datei ab, jQuery selbst eingeschlossen. Damit stuende die ganze
+ * Seite ohne JavaScript da.
+ */
+(function () {
+    function kachelnAktivieren() {
+        var kacheln = document.querySelectorAll('.link[data-href]');
+
+        if (!kacheln.length) {
+            return;
+        }
+
+        Array.prototype.forEach.call(kacheln, function (kachel) {
+            if (!kachel.querySelector('a[href]')) {
+                kachel.setAttribute('tabindex', '0');
+                kachel.setAttribute('role', 'link');
+            }
+
+            kachel.addEventListener('click', function (ereignis) {
+                // Echte Bedienelemente behalten ihr eigenes Verhalten
+                var ziel = ereignis.target;
+                if (ziel && ziel.closest && ziel.closest('a[href], button, input, select, textarea, label')) {
+                    return;
+                }
+                window.location.href = kachel.getAttribute('data-href');
+            });
+
+            kachel.addEventListener('keydown', function (ereignis) {
+                if (ereignis.target !== kachel) {
+                    return;
+                }
+                if (ereignis.key === 'Enter' || ereignis.key === ' ' || ereignis.key === 'Spacebar') {
+                    ereignis.preventDefault();
+                    window.location.href = kachel.getAttribute('data-href');
+                }
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', kachelnAktivieren);
+    } else {
+        kachelnAktivieren();
+    }
+})();

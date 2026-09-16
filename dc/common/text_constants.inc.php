@@ -1449,6 +1449,16 @@ $text_constant['en']['change'] = 'change';
 
 $text_constant['de']['toggle_navigation_label'] = "Menü";
 $text_constant['en']['toggle_navigation_label'] = "Menu";
+$text_constant['de']['navigation_close_label'] = "Menü schließen";
+$text_constant['en']['navigation_close_label'] = "Close menu";
+$text_constant['de']['skip_to_content'] = "Direkt zum Inhalt";
+$text_constant['en']['skip_to_content'] = "Skip to content";
+$text_constant['de']['main_navigation_label'] = "Hauptmenü";
+$text_constant['en']['main_navigation_label'] = "Main menu";
+$text_constant['de']['subnavigation_label'] = "Unterseiten";
+$text_constant['en']['subnavigation_label'] = "Subpages";
+$text_constant['de']['reviews_headline'] = "Bewertungen";
+$text_constant['en']['reviews_headline'] = "Reviews";
 
 
 $text_constant['de']['basket_error_item_not_active'] = 'Der Artikel ist derzeit nicht für den Verkauf aktiv.';

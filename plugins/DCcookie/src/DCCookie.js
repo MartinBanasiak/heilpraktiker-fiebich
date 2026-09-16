@@ -39,10 +39,45 @@ export default class DCCookie {
         await cookieRenderHelper.renderAllExternalMediaFrames();
         if(cookieHelper.getSettingsAlreadySet()){
             await cookieRenderHelper.renderRecurrentPage();
-        }else{
+        }else if(!this.isLegalPage(localizationData)){
             await cookieRenderHelper.renderMainPage();
         }
         cookieRenderHelper.addEventListenerNavigation();
+    }
+
+    /**
+     * Checks whether the current page is the imprint or the privacy policy.
+     *
+     * Both must stay reachable without giving consent, so the banner is not
+     * shown on top of them. Nothing is consented to by this: without consent
+     * every third party script stays blocked, and the external media
+     * placeholders are still rendered.
+     *
+     * The two pages are taken from the links the banner itself points to,
+     * so the list never drifts apart from the actual page structure.
+     *
+     * @param localizationData
+     * @returns {boolean}
+     */
+    isLegalPage(localizationData) {
+        const normalize = (path) => {
+            if (!path) return '';
+            try {
+                return new URL(path, window.location.origin).pathname
+                    .replace(/\/+$/, '')
+                    .toLowerCase();
+            } catch (e) {
+                return '';
+            }
+        };
+
+        const current = normalize(window.location.pathname);
+        if (current === '') return false;
+
+        return [
+            localizationData.general.imprint_link,
+            localizationData.general.private_polacy_link,
+        ].map(normalize).filter(Boolean).includes(current);
     }
 
     /**
