@@ -20,13 +20,43 @@
 -- dem Einspielen aendert sich an der Ausgabe also nichts - nur der Ort, an dem
 -- es gepflegt wird.
 --
--- ADD COLUMN IF NOT EXISTS ist MariaDB-eigen. Der Stack laeuft auf MariaDB
--- 10.11; auf MySQL muesste die Pruefung ueber information_schema laufen.
+-- Zur Schreibweise: Die erste Fassung benutzte ADD COLUMN IF NOT EXISTS. Das
+-- ist MariaDB-eigen - auf dem Server lief es auf einen Syntaxfehler. Die
+-- Pruefung laeuft deshalb ueber information_schema und ein vorbereitetes
+-- Statement. Das versteht MySQL ab 5.7 genauso wie jedes MariaDB.
 -- ============================================================================
 
-ALTER TABLE main_language
-    ADD COLUMN IF NOT EXISTS og_image VARCHAR(255) NOT NULL DEFAULT '' AFTER meta_keywords,
-    ADD COLUMN IF NOT EXISTS structured_data MEDIUMTEXT NULL AFTER og_image;
+-- og_image
+SET @vorhanden = (
+    SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'main_language'
+       AND COLUMN_NAME = 'og_image'
+);
+SET @befehl = IF(
+    @vorhanden = 0,
+    "ALTER TABLE main_language ADD COLUMN og_image VARCHAR(255) NOT NULL DEFAULT '' AFTER meta_keywords",
+    "DO 0"
+);
+PREPARE anlegen FROM @befehl;
+EXECUTE anlegen;
+DEALLOCATE PREPARE anlegen;
+
+-- structured_data
+SET @vorhanden = (
+    SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'main_language'
+       AND COLUMN_NAME = 'structured_data'
+);
+SET @befehl = IF(
+    @vorhanden = 0,
+    "ALTER TABLE main_language ADD COLUMN structured_data MEDIUMTEXT NULL AFTER og_image",
+    "DO 0"
+);
+PREPARE anlegen FROM @befehl;
+EXECUTE anlegen;
+DEALLOCATE PREPARE anlegen;
 
 -- Startwerte fuer Deutsch (Sprache 53). Nur setzen, solange nichts gepflegt
 -- ist - ein erneuter Lauf ueberschreibt keine Redaktionsaenderung.
