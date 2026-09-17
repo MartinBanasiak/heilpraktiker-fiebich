@@ -361,6 +361,31 @@ if (count($messages)) {
 }
 ?>
 
+<script type="text/javascript">
+    // Vorschaubild ueber die Dateiverwaltung waehlen.
+    //
+    // Gleiches Muster wie bei den Layout-Einbindungen: CKFinder oeffnet sich
+    // als Fenster, die Auswahl landet als Pfad im Feld. Tippen geht weiterhin,
+    // das Feld bleibt ein normales Textfeld - so laesst sich auch ein Pfad
+    // einsetzen, der noch nicht hochgeladen ist.
+    function language_cardform_browseOgImage() {
+        CKFinder.popup({
+            chooseFiles: true,
+            onInit: function (finder) {
+                finder.on('files:choose', function (evt) {
+                    var file = evt.data.files.first();
+                    // getUrl() liefert die Adresse inklusive Host; gespeichert
+                    // wird nur der Pfad, damit ein Umzug auf eine andere
+                    // Domain die Angabe nicht entwertet.
+                    var url = file.getUrl();
+                    var pfad = url.replace(/^https?:\/\/[^\/]+/, '');
+                    $('#input_og_image', jQuery('#form_language_card')).val(decodeURIComponent(pfad));
+                });
+            }
+        });
+    }
+</script>
+
 <form id="<?= $formname ?>" name="<?= $formname ?>" method="post">
     <input name="input_id" type="hidden" value="<?= $input_language["id"] ?>">
 
@@ -405,6 +430,28 @@ if (count($messages)) {
                     "textarea",
                     $input_language["meta_keywords"]
                 ) ?>
+                <br/>
+                <? input(
+                    $translation->get("og_image"),
+                    "input_og_image",
+                    "text",
+                    $input_language["og_image"] ?? '',
+                    255
+                ) ?>
+                <div class="input">
+                    <div class="browse_button"
+                         onclick="javascript: language_cardform_browseOgImage();"><?= $translation->get("browse") ?>
+                    </div>
+                </div>
+                <div class="label"><?= $translation->get("og_image_hint") ?></div>
+                <br/>
+                <? input(
+                    $translation->get("structured_data"),
+                    "input_structured_data",
+                    "textarea",
+                    $input_language["structured_data"] ?? ''
+                ) ?>
+                <div class="label"><?= $translation->get("structured_data_hint") ?></div>
             </td>
             <td>
                 <? input(

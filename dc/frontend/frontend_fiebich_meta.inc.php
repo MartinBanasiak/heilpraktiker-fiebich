@@ -17,6 +17,14 @@
  * Vereinbarung, feste Sprechzeiten stehen nirgends auf der Seite - erfundene
  * Zeiten in strukturierten Daten waeren schlimmer als gar keine.
  *
+ * Gepflegt wird beides in der Redaktion an der Sprache (main_language.og_image
+ * und main_language.structured_data, siehe db-patches/2026-09-17-02). Dort
+ * stehen schon Browsertitel, Meta-Beschreibung und Meta-Suchwoerter - eine
+ * Adressaenderung braucht damit kein Deployment mehr. Die Werte im Code
+ * bleiben als Rueckfall stehen: Ist das Feld leer oder enthaelt es kein
+ * gueltiges JSON, wird der Stand von hier ausgegeben. Eine kaputte Eingabe
+ * darf nicht dazu fuehren, dass Google gar keine Daten mehr bekommt.
+ *
  * Eingebunden aus dc/frontend/frontend_fiebich.php, nach create_meta_tags().
  */
 
@@ -28,10 +36,36 @@ $og_schema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https
 $og_pfad = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 $og_url = $og_schema . '://' . $og_host . $og_pfad;
 
-// Vorschaubild beim Teilen. Das Logo ist mit 1294x440 das einzige Bild im
-// Bestand, das dafuer taugt. Empfohlen sind 1200x630 - ein eigens dafuer
-// angelegtes Bild waere besser und ist als Aufgabe vermerkt.
-$og_bild = $og_schema . '://' . $og_host . '/userdata/images/Logo%202024_1.jpeg';
+// Vorschaubild beim Teilen.
+//
+// Der Pfad kommt aus der Sprache; ohne Pflege bleibt es beim Logo. Empfohlen
+// sind 1200x630 - das Logo hat 1294x440 und ist damit nur die Notloesung.
+$og_bild_pfad = trim((string)($GLOBALS['language']['og_image'] ?? ''));
+if ($og_bild_pfad === '') {
+    $og_bild_pfad = '/userdata/images/Logo 2024_1.jpeg';
+}
+if (strpos($og_bild_pfad, '/') !== 0) {
+    $og_bild_pfad = '/' . $og_bild_pfad;
+}
+
+// Die Abmessungen werden aus der Datei gelesen statt fest eingetragen. Sonst
+// stuenden nach dem ersten Bildwechsel in der Redaktion falsche Werte im
+// Quelltext - und Facebook baut seine Vorschau genau darauf.
+$og_bild_breite = 1294;
+$og_bild_hoehe = 440;
+$og_bild_datei = rtrim(dirname(dirname(__DIR__)), '/\\') . rawurldecode($og_bild_pfad);
+if (is_file($og_bild_datei)) {
+    $og_masse = @getimagesize($og_bild_datei);
+    if (is_array($og_masse) && !empty($og_masse[0]) && !empty($og_masse[1])) {
+        $og_bild_breite = (int)$og_masse[0];
+        $og_bild_hoehe = (int)$og_masse[1];
+    }
+}
+
+// Leerzeichen und Umlaute im Dateinamen muessen in der URL kodiert sein, die
+// Schraegstriche aber nicht.
+$og_bild = $og_schema . '://' . $og_host . '/'
+    . implode('/', array_map('rawurlencode', explode('/', ltrim($og_bild_pfad, '/'))));
 
 $og_seitenname = 'Naturheilpraxis Christian Fiebich';
 
@@ -48,17 +82,44 @@ $e = function ($wert) {
 <?php } ?>
 <meta property="og:url" content="<?= $e($og_url) ?>" />
 <meta property="og:image" content="<?= $e($og_bild) ?>" />
-<meta property="og:image:width" content="1294" />
-<meta property="og:image:height" content="440" />
-<meta property="og:image:alt" content="Logo der Naturheilpraxis Christian Fiebich" />
+<meta property="og:image:width" content="<?= (int)$og_bild_breite ?>" />
+<meta property="og:image:height" content="<?= (int)$og_bild_hoehe ?>" />
+<meta property="og:image:alt" content="<?= $e($og_seitenname) ?>" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="<?= $e($og_titel) ?>" />
 <?php if ($og_beschreibung !== '') { ?>
 <meta name="twitter:description" content="<?= $e(html_entity_decode($og_beschreibung, ENT_QUOTES, 'UTF-8')) ?>" />
 <?php } ?>
 <meta name="twitter:image" content="<?= $e($og_bild) ?>" />
-<script type="application/ld+json">
-<?= json_encode([
+<?php
+// Strukturierte Daten
+//
+// Erste Wahl ist das Feld an der Sprache. Es wird vor der Ausgabe geprueft:
+// Nur was sich als JSON lesen laesst und ein Objekt ergibt, geht raus. Sonst
+// greift der fest hinterlegte Stand darunter - lieber die alten Daten als
+// gar keine, und ein Syntaxfehler in der Redaktion darf die Seite nicht mit
+// kaputtem JSON-LD ausliefern.
+//
+// Ausgegeben wird der Text der Redaktion nicht woertlich, sondern neu
+// kodiert. Das normalisiert die Formatierung und schliesst aus, dass ein
+// </script> im Feld das Skript-Tag vorzeitig beendet.
+$strukturierte_daten = null;
+$sd_gepflegt = trim((string)($GLOBALS['language']['structured_data'] ?? ''));
+if ($sd_gepflegt !== '') {
+    $sd_gelesen = json_decode($sd_gepflegt, true);
+    if (is_array($sd_gelesen) && $sd_gelesen !== []) {
+        $strukturierte_daten = $sd_gelesen;
+    } else {
+        error_log(
+            'frontend_fiebich_meta: structured_data der Sprache '
+            . (int)($GLOBALS['language']['id'] ?? 0) . ' ist kein gueltiges JSON ('
+            . json_last_error_msg() . '), Rueckfall auf die Angaben im Code.'
+        );
+    }
+}
+
+if ($strukturierte_daten === null) {
+    $strukturierte_daten = [
     '@context' => 'https://schema.org',
     '@type' => 'MedicalBusiness',
     'name' => 'Naturheilpraxis Christian Fiebich',
@@ -93,5 +154,9 @@ $e = function ($wert) {
         ['@type' => 'MedicalTest', 'name' => 'HRV-Analyse (Herzratenvariabilität)'],
         ['@type' => 'MedicalTherapy', 'name' => 'Individuelle Gesundheitsberatung'],
     ],
-], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?>
+];
+}
+?>
+<script type="application/ld+json">
+<?= json_encode($strukturierte_daten, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_HEX_TAG) ?>
 </script>

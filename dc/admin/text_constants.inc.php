@@ -401,6 +401,17 @@ $text_constant["en"]["meta_description"] = 		"Meta description";
 $text_constant["de"]["meta_keywords"] = 		"Meta-Suchwörter";
 $text_constant["en"]["meta_keywords"] = 		"Meta keywords";
 
+// Vorschaubild und strukturierte Daten, gepflegt an der Sprache.
+// Siehe db-patches/2026-09-17-02 und dc/frontend/frontend_fiebich_meta.inc.php.
+$text_constant["de"]["og_image"] = 		"Vorschaubild für soziale Netzwerke";
+$text_constant["en"]["og_image"] = 		"Social media preview image";
+$text_constant["de"]["og_image_hint"] = 		"Wird beim Teilen auf Facebook, Instagram oder WhatsApp angezeigt. Empfohlen sind 1200 × 630 Pixel. Leer lassen für das Logo.";
+$text_constant["en"]["og_image_hint"] = 		"Shown when the site is shared on Facebook, Instagram or WhatsApp. Recommended size is 1200 × 630 pixels. Leave empty to use the logo.";
+$text_constant["de"]["structured_data"] = 		"Strukturierte Daten (JSON-LD)";
+$text_constant["en"]["structured_data"] = 		"Structured data (JSON-LD)";
+$text_constant["de"]["structured_data_hint"] = 		"Angaben zum Unternehmen für Google, im Format JSON-LD. Bei leerem oder fehlerhaftem Inhalt werden die im Code hinterlegten Angaben ausgegeben.";
+$text_constant["en"]["structured_data_hint"] = 		"Company details for Google, in JSON-LD format. If empty or invalid, the values stored in the code are used instead.";
+
 $text_constant["de"]["logout_page"] = 		"Login/Logout-Seite";
 $text_constant["en"]["logout_page"] = 		"Login/Logout page";
 

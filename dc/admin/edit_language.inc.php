@@ -165,6 +165,8 @@ function save_language() {
                         site_title_name = '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_site_title_name"]) . "', 
                         meta_description = '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_meta_description"]) . "', 
                         meta_keywords = '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_meta_keywords"]) . "', 
+                        og_image = '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_og_image"]) . "', 
+                        structured_data = '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_structured_data"]) . "', 
                         main_layout_id = " . (int)$_REQUEST["input_main_layout_id"] . ", 
                         logout_site_id = " . (int)$_REQUEST["input_login_site"] . ", 
                         logout_language_id = " . (int)$_REQUEST["input_login_language"] . ", 
@@ -175,7 +177,7 @@ function save_language() {
         $inserted = FALSE;
         $input_id = $_REQUEST["input_id"];
     } else {
-        $query    = "INSERT INTO main_language (id, main_site_id, code,locale_code,name,site_name,std_main_navigation_id,site_title_name,meta_description,meta_keywords,main_layout_id,company,shop_code,shop_language_code,logout_site_id,logout_language_id,logout_navigation_id,related_language_codes, active) 
+        $query    = "INSERT INTO main_language (id, main_site_id, code,locale_code,name,site_name,std_main_navigation_id,site_title_name,meta_description,meta_keywords,og_image,structured_data,main_layout_id,company,shop_code,shop_language_code,logout_site_id,logout_language_id,logout_navigation_id,related_language_codes, active) 
                     VALUES (
                         NULL, 
                         " . (int)$GLOBALS["site"]["id"] . ", 
@@ -187,6 +189,8 @@ function save_language() {
                         '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_site_title_name"]) . "',
                         '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_meta_description"]) . "',
                         '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_meta_keywords"]) . "',
+                        '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_og_image"]) . "',
+                        '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_structured_data"]) . "',
                         " . (int)$_REQUEST["input_main_layout_id"] . ",
                         '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_company"]) . "',
                         '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $_REQUEST["input_shopcode"]) . "',
@@ -244,6 +248,8 @@ function save_language() {
         $input_language["site_title_name"]            = $_REQUEST["input_site_title_name"];
         $input_language["meta_description"]           = $_REQUEST["input_meta_description"];
         $input_language["meta_keywords"]              = $_REQUEST["input_meta_keywords"];
+        $input_language["og_image"]                   = $_REQUEST["input_og_image"];
+        $input_language["structured_data"]            = $_REQUEST["input_structured_data"];
         $input_language["main_navigation_id"]         = $_REQUEST["input_main_layout_id"];
         $input_language["no_of_navigation"]           = (int)@mysqli_num_rows(@mysqli_query($GLOBALS['mysql_con'], "SELECT id FROM main_navigation WHERE main_language_id = '" . $_REQUEST["input_id"]."'"));
         $input_language["related_language_codes"]     = $_REQUEST["input_related_language_codes"];
