@@ -58,11 +58,16 @@ PREPARE anlegen FROM @befehl;
 EXECUTE anlegen;
 DEALLOCATE PREPARE anlegen;
 
--- Startwerte fuer Deutsch (Sprache 53). Nur setzen, solange nichts gepflegt
--- ist - ein erneuter Lauf ueberschreibt keine Redaktionsaenderung.
+-- Startwerte fuer Deutsch. Nur setzen, solange nichts gepflegt ist - ein
+-- erneuter Lauf ueberschreibt keine Redaktionsaenderung.
+--
+-- Angesprochen ueber den Sprachcode, nicht ueber die ID: Eine falsch geratene
+-- ID wuerde hier keinen Fehler werfen, sondern einfach keine Zeile treffen.
+-- Die Spalten waeren dann da und leer, das Frontend faellt auf die Angaben im
+-- Code zurueck - und niemand merkt, dass der Patch nur halb gewirkt hat.
 UPDATE main_language
    SET og_image = '/userdata/images/Logo 2024_1.jpeg'
- WHERE id = 53 AND og_image = '';
+ WHERE code = 'de' AND og_image = '';
 
 UPDATE main_language
    SET structured_data = '{
@@ -110,4 +115,4 @@ UPDATE main_language
         }
     ]
 }'
- WHERE id = 53 AND (structured_data IS NULL OR structured_data = '');
+ WHERE code = 'de' AND (structured_data IS NULL OR structured_data = '');
