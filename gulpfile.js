@@ -53,6 +53,31 @@ const jsfile = config.layout.jsfile;
 
 // Reihenfolge ist relevant - normalize zuerst, Bootstrap vor den Komponenten,
 // die es ueberschreiben.
+// Schriften duerfen den Text nicht verstecken
+//
+// Lighthouse "Font display": Ohne font-display haelt der Browser den Text bis
+// zu drei Sekunden unsichtbar, waehrend er auf die Schriftdatei wartet
+// ("Flash of invisible text"). Betroffen sind hier line-awesome und
+// font-awesome - also reine Symbolschriften. Ein Symbol, das 30 ms spaeter
+// erscheint, faellt niemandem auf; fehlender Text schon.
+//
+// Der Wert wird beim Bauen ergaenzt, nicht in den Bower-Komponenten von Hand
+// gesetzt: die werden bei jedem "bower install" ueberschrieben. Eigene
+// @font-face-Regeln mit bereits gesetztem font-display bleiben unangetastet.
+const fontDisplaySwap = {
+    postcssPlugin: 'font-display-swap',
+    AtRule: {
+        'font-face': (regel) => {
+            const gesetzt = regel.nodes.some(
+                (knoten) => knoten.prop && knoten.prop.toLowerCase() === 'font-display'
+            );
+            if (!gesetzt) {
+                regel.append({ prop: 'font-display', value: 'swap' });
+            }
+        },
+    },
+};
+
 const CSS_COMPONENTS = [
     bowerdir + '/normalize-css/normalize.css',
     bowerdir + '/font-awesome/css/font-awesome.min.css',
@@ -134,7 +159,7 @@ function stylesDev() {
         .src([builddir + '/css/components.css', srcdir + '/less/app/' + cssfile + '.less'])
         .pipe(sourcemaps.init())
         .pipe(less(LESS_OPTIONS))
-        .pipe(postcss([autoprefixer()]))
+        .pipe(postcss([autoprefixer(), fontDisplaySwap]))
         .pipe(concat(cssfile + '.css'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(distdir + '/css/'));
@@ -145,7 +170,7 @@ function stylesPublic() {
     return gulp
         .src([builddir + '/css/components.css', srcdir + '/less/app/' + cssfile + '.less'])
         .pipe(less(LESS_OPTIONS))
-        .pipe(postcss([autoprefixer()]))
+        .pipe(postcss([autoprefixer(), fontDisplaySwap]))
         .pipe(concat(cssfile + '.min.css'))
         .pipe(cleanCSS({ compatibility: 'ie8' }))
         .pipe(gulp.dest(distdir + '/css/'));
@@ -156,7 +181,7 @@ function stylesFck() {
     return gulp
         .src(srcdir + '/less/app/fck.less', { allowEmpty: true })
         .pipe(less(LESS_OPTIONS))
-        .pipe(postcss([autoprefixer()]))
+        .pipe(postcss([autoprefixer(), fontDisplaySwap]))
         .pipe(gulp.dest(distdir + '/css/'));
 }
 
