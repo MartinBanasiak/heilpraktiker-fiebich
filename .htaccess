@@ -149,6 +149,26 @@ RewriteCond %{REQUEST_FILENAME} \.(jpe?g|png)$ [NC]
 RewriteCond %{REQUEST_FILENAME}\.webp -f
 RewriteRule ^(.+)\.(jpe?g|png)$ $1.$2.webp [NC,T=image/webp,E=WEBP_VARIANTE:1,L]
 
+# Fehlt die Variante, einmalig erzeugen
+#
+# Das CMS wandelt hochgeladene Bilder nicht von sich aus um. Ohne diese Regel
+# bliebe jedes neue Redaktionsbild unkomprimiert - es ginge nichts kaputt, der
+# Vorteil verfiele nur still mit jedem Bild ein Stueck weiter.
+#
+# Greift nur, wenn alle vier Bedingungen zutreffen: Der Browser akzeptiert
+# WebP, die angefragte Datei existiert, sie ist ein JPEG oder PNG, und daneben
+# liegt noch keine Variante. tools/webp-serve.php wandelt dann um, legt die
+# Datei ab und liefert sie aus. Jeder weitere Abruf laeuft an dem Skript
+# vorbei, weil dann die Regel darueber greift.
+#
+# Bewusst auf userdata/ begrenzt: Dort liegen die Redaktionsbilder. Was unter
+# layout/ liegt, gehoert zum Build und wird dort behandelt.
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} \.(jpe?g|png)$ [NC]
+RewriteCond %{REQUEST_FILENAME}\.webp !-f
+RewriteRule ^(userdata/.+\.(?:jpe?g|png))$ /tools/webp-serve.php?bild=$1 [NC,L,QSA]
+
 #FallbackResource /dc/frontend/frontend.php
 
 
