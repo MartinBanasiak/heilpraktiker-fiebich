@@ -26,7 +26,7 @@ h6,
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   line-height: 1.2;
-  color: #FF9F03;
+  color: #EE993A;
   margin-top: 0;
   margin-bottom: 1em;
 }
@@ -100,7 +100,7 @@ h6,
 }
 a,
 .link {
-  color: #FF9F03;
+  color: #EE993A;
   text-decoration: none;
   cursor: pointer;
 }
@@ -297,22 +297,22 @@ label {
 }
 .button_primary,
 .btn-primary {
-  color: #FF9F03;
-  border-color: #FF9F03;
+  color: #EE993A;
+  border-color: #EE993A;
 }
 .button_primary:hover,
 .btn-primary:hover,
 .button_primary:focus,
 .btn-primary:focus {
   color: #ffffff;
-  border-color: #e99000;
-  background-color: #e99000;
+  border-color: #ec8d23;
+  background-color: #ec8d23;
 }
 .button_primary:active,
 .btn-primary:active {
   color: #ffffff;
-  border-color: #cf8000;
-  background-color: #cf8000;
+  border-color: #e28013;
+  background-color: #e28013;
 }
 .button_second,
 .btn-second {
@@ -534,7 +534,7 @@ select:not([type=submit]):focus,
 textarea:not([type=submit]):focus {
   outline: 0;
   border-width: 4px;
-  border-color: #FF9F03;
+  border-color: #EE993A;
 }
 input.error,
 select.error,
@@ -715,7 +715,7 @@ textarea {
   -moz-transition: opacity 0.1s ease-in;
   -ms-transition: opacity 0.1s ease-in;
   -o-transition: opacity 0.1s ease-in;
-  background-color: #FF9F03;
+  background-color: #EE993A;
   border-radius: 50%;
   -moz-background-clip: padding;
   -webkit-background-clip: padding-box;
@@ -740,7 +740,7 @@ textarea {
   color: #919191;
 }
 .specialradiobox:active {
-  color: #FF9F03;
+  color: #EE993A;
 }
 .specialradiobox:active label:after {
   -webkit-opacity: 0.7;
@@ -782,7 +782,7 @@ textarea {
   left: 0;
   content: "\f17b";
   font-family: fontawesome;
-  color: #FF9F03;
+  color: #EE993A;
   top: 0;
   -webkit-opacity: 0;
   -moz-opacity: 0;
@@ -817,10 +817,10 @@ textarea {
 .specialcheckbox input:hover + label,
 .specialcheckbox input:active + label,
 .specialcheckbox input:focus + label {
-  border-color: #FF9F03;
+  border-color: #EE993A;
 }
 .specialcheckbox:active {
-  color: #FF9F03;
+  color: #EE993A;
 }
 .specialcheckbox:active label:after {
   -webkit-opacity: 0.7;
