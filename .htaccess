@@ -44,37 +44,81 @@ AddType text/srt .srt
  AddOutputFilterByType DEFLATE application/x-shockwave-flash
 </IfModule>
 
-# turns cache on for 1 month
+# Browser-Caching
+#
+# Lighthouse "Use efficient cache lifetimes" bemaengelte drei Faelle: Schriften
+# und SVG-Symbole gingen voellig ohne Angabe raus, das Stylesheet mit sieben
+# Tagen. Der Wert richtet sich danach, ob die Adresse sich aendert, wenn sich
+# die Datei aendert:
+#
+#   CSS/JS      werden mit ?time=<filemtime> eingebunden (siehe
+#               frontend_functions.inc.php) - nach jedem Build eine neue
+#               Adresse, ein alter Stand kann gar nicht haengen bleiben.
+#   Schriften   tragen ?v=<version> aus dem Stylesheet, gleiche Lage.
+#   Bilder/SVG  behalten ihre Adresse. Hier bleibt es bei 30 Tagen: ein
+#               ausgetauschtes Bild soll nicht ein Jahr lang alt bleiben.
+#   HTML        kommt aus dem CMS und wird nie zwischengespeichert. PHP setzt
+#               dafuer bereits no-store, die Regel unten war wirkungslos -
+#               und waere, wenn sie gegriffen haette, ein Fehler gewesen:
+#               eine Textaenderung waere einen Monat lang nicht sichtbar.
+#
+# Wichtig zur Reihenfolge: mod_headers gewinnt gegen mod_expires. Was unten in
+# FilesMatch steht, ueberschreibt also jede ExpiresByType-Angabe - deshalb sind
+# die beiden Bloecke aufeinander abgestimmt und nicht mehr gegenlaeufig.
 <IfModule mod_expires.c>
  ExpiresActive On
- ExpiresByType text/css "access plus 1 month"
- ExpiresByType text/javascript "access plus 1 month"
- ExpiresByType text/html "access plus 1 month"
- ExpiresByType application/javascript "access plus 1 month"
+ ExpiresByType text/css "access plus 1 year"
+ ExpiresByType text/javascript "access plus 1 year"
+ ExpiresByType application/javascript "access plus 1 year"
+ ExpiresByType font/woff2 "access plus 1 year"
+ ExpiresByType font/woff "access plus 1 year"
+ ExpiresByType font/ttf "access plus 1 year"
+ ExpiresByType font/otf "access plus 1 year"
+ ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+ ExpiresByType image/svg+xml "access plus 1 month"
+ ExpiresByType image/webp "access plus 1 month"
+ ExpiresByType image/avif "access plus 1 month"
  ExpiresByType image/gif "access plus 1 month"
  ExpiresByType image/jpeg "access plus 1 month"
  ExpiresByType image/png "access plus 1 month"
  ExpiresByType image/x-icon "access plus 1 month"
 </IfModule>
-<ifmodule mod_headers.c>
- <filesmatch "\\.(ico|jpe?g|png|gif|swf)$">
-  Header set Cache-Control "max-age=2592000, public"
- </filesmatch>
- <filesmatch "\\.(css)$">
-  Header set Cache-Control "max-age=604800, public"
- </filesmatch>
- <filesmatch "\\.(js)$">
-  Header set Cache-Control "max-age=216000, private"
- </filesmatch>
-</ifmodule>
 
-# Deflate Compression by MimeType
-<IfModule mod_deflate.c>
- <FilesMatch "\.(js|jpg|jpeg|gif|png|css)$">
-  ExpiresActive on
-  ExpiresDefault "access plus 1 month"
-  SetOutputFilter DEFLATE
+# Aeltere Apache-Versionen kennen die Schrift-MIME-Typen nicht und liefern die
+# Dateien sonst als application/octet-stream aus - ExpiresByType greift dann
+# nicht. Die FilesMatch-Regeln unten haengen nicht am MIME-Typ und wirken
+# trotzdem, aber richtig ausgezeichnet ist besser.
+<IfModule mod_mime.c>
+ AddType font/woff2 .woff2
+ AddType font/woff .woff
+ AddType font/ttf .ttf
+ AddType font/otf .otf
+ AddType application/vnd.ms-fontobject .eot
+ AddType image/svg+xml .svg
+</IfModule>
+
+<IfModule mod_headers.c>
+ # Versionierte Adresse - ein Jahr, unveraenderlich. "immutable" erspart dem
+ # Browser die Rueckfrage beim Neuladen der Seite.
+ <FilesMatch "\.(css|js|woff2?|ttf|otf|eot)$">
+  Header set Cache-Control "max-age=31536000, public, immutable"
  </FilesMatch>
+
+ # Gleichbleibende Adresse - 30 Tage.
+ <FilesMatch "\.(ico|jpe?g|png|gif|webp|avif|svg|swf)$">
+  Header set Cache-Control "max-age=2592000, public"
+ </FilesMatch>
+</IfModule>
+
+# Komprimierung fuer die Dateitypen, die nicht schon ueber AddOutputFilterByType
+# oben abgedeckt sind. woff2 und die Bildformate sind bereits komprimiert und
+# gehoeren bewusst nicht dazu - ein zweiter Durchgang kostet Rechenzeit und
+# bringt nichts.
+<IfModule mod_deflate.c>
+ AddOutputFilterByType DEFLATE image/svg+xml
+ AddOutputFilterByType DEFLATE application/json
+ AddOutputFilterByType DEFLATE font/ttf
+ AddOutputFilterByType DEFLATE font/otf
 </IfModule>
 
 <ifmodule mod_headers.c>
