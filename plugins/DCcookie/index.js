@@ -10,7 +10,7 @@ let langCode = getLangCode();
  * (aka set to current date if you add a consent to reset it for all users)
  * @type {Date}
  */
-let lastReset = new Date('2021-03-05T12:00:00');
+let lastReset = new Date('2026-09-17T10:00:00');
 /**
  * Controls the visibility of the lock in the bottom left corner
  * @type {boolean}
