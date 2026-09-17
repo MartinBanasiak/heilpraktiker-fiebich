@@ -19,10 +19,19 @@
  *   php tools/webp-convert.php --dry-run       # nur zeigen, was passieren wuerde
  *   php tools/webp-convert.php --quality=78    # Qualitaet abweichend setzen
  *   php tools/webp-convert.php --force         # auch bestehende neu erzeugen
+ *   php tools/webp-convert.php --quiet         # nur melden, wenn etwas passiert
  *   php tools/webp-convert.php userdata/images # anderer Startordner
  *
  * Im Docker-Container:
  *   docker compose exec web php tools/webp-convert.php
+ *
+ * Neu hochgeladene Bilder wandelt das CMS NICHT von sich aus um. Damit der
+ * Vorteil nicht mit jedem Redaktionsbild ein Stueck weiter verfaellt, gehoert
+ * dieser Aufruf in einen Cron - der Lauf ist billig, weil er bestehende
+ * Varianten ueberspringt. Mit --quiet meldet er sich nur, wenn er etwas
+ * erzeugt hat oder etwas schiefging; ein Cron, der jede Nacht eine Mail ohne
+ * Inhalt schickt, wird nach zwei Wochen weggefiltert und faellt dann auch im
+ * Fehlerfall niemandem mehr auf.
  */
 
 const STANDARD_QUALITAET = 82;
@@ -31,6 +40,7 @@ const STANDARD_ORDNER = 'userdata';
 $optionen = [
     'dry-run' => false,
     'force' => false,
+    'quiet' => false,
     'quality' => STANDARD_QUALITAET,
 ];
 $ordner = null;
@@ -40,6 +50,8 @@ foreach (array_slice($argv, 1) as $argument) {
         $optionen['dry-run'] = true;
     } elseif ($argument === '--force') {
         $optionen['force'] = true;
+    } elseif ($argument === '--quiet') {
+        $optionen['quiet'] = true;
     } elseif (strpos($argument, '--quality=') === 0) {
         $optionen['quality'] = (int)substr($argument, strlen('--quality='));
     } elseif (strpos($argument, '--') === 0) {
@@ -132,7 +144,9 @@ foreach ($dateien as $datei) {
     // .htaccess sogar bevorzugt ausgeliefert. Also wieder weg damit.
     if ($nachher >= $vorher) {
         unlink($ziel);
-        printf("  uebersprungen (WebP waere groesser): %s\n", $relativ);
+        if (!$optionen['quiet']) {
+            printf("  uebersprungen (WebP waere groesser): %s\n", $relativ);
+        }
         $zaehler['uebersprungen']++;
         continue;
     }
@@ -141,30 +155,41 @@ foreach ($dateien as $datei) {
     $bytesNachher += $nachher;
     $zaehler['erzeugt']++;
 
-    printf(
-        "%-58s %7s -> %7s  (%d%% kleiner)\n",
-        mb_strimwidth($relativ, 0, 58, '...'),
-        formatiereBytes($vorher),
-        formatiereBytes($nachher),
-        (int)round((1 - $nachher / $vorher) * 100)
-    );
+    if (!$optionen['quiet']) {
+        printf(
+            "%-58s %7s -> %7s  (%d%% kleiner)\n",
+            mb_strimwidth($relativ, 0, 58, '...'),
+            formatiereBytes($vorher),
+            formatiereBytes($nachher),
+            (int)round((1 - $nachher / $vorher) * 100)
+        );
+    }
 }
 
-echo str_repeat('-', 100), "\n";
-printf(
-    "erzeugt: %d   uebersprungen: %d   Fehler: %d\n",
-    $zaehler['erzeugt'],
-    $zaehler['uebersprungen'],
-    $zaehler['fehler']
-);
+// Im Cron-Betrieb nur melden, wenn es etwas zu melden gibt. Ein Lauf, der
+// nichts gefunden hat, schweigt - jede Ausgabe wuerde sonst eine Mail
+// ausloesen und die echten Meldungen im Rauschen begraben.
+$stillhalten = $optionen['quiet'] && $zaehler['erzeugt'] === 0 && $zaehler['fehler'] === 0;
 
-if ($bytesVorher > 0) {
+if (!$stillhalten) {
+    if (!$optionen['quiet']) {
+        echo str_repeat('-', 100), "\n";
+    }
     printf(
-        "Uebertragungsvolumen dieser Bilder: %s statt %s - %d%% weniger\n",
-        formatiereBytes($bytesNachher),
-        formatiereBytes($bytesVorher),
-        (int)round((1 - $bytesNachher / $bytesVorher) * 100)
+        "erzeugt: %d   uebersprungen: %d   Fehler: %d\n",
+        $zaehler['erzeugt'],
+        $zaehler['uebersprungen'],
+        $zaehler['fehler']
     );
+
+    if ($bytesVorher > 0) {
+        printf(
+            "Uebertragungsvolumen dieser Bilder: %s statt %s - %d%% weniger\n",
+            formatiereBytes($bytesNachher),
+            formatiereBytes($bytesVorher),
+            (int)round((1 - $bytesNachher / $bytesVorher) * 100)
+        );
+    }
 }
 
 exit($zaehler['fehler'] > 0 ? 1 : 0);
