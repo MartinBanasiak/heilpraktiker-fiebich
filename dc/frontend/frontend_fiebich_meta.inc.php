@@ -42,7 +42,7 @@ $og_url = $og_schema . '://' . $og_host . $og_pfad;
 // sind 1200x630 - das Logo hat 1294x440 und ist damit nur die Notloesung.
 $og_bild_pfad = trim((string)($GLOBALS['language']['og_image'] ?? ''));
 if ($og_bild_pfad === '') {
-    $og_bild_pfad = '/userdata/images/Logo 2024_1.jpeg';
+    $og_bild_pfad = '/userdata/images/og-image.jpg';
 }
 if (strpos($og_bild_pfad, '/') !== 0) {
     $og_bild_pfad = '/' . $og_bild_pfad;
