@@ -1,0 +1,27 @@
+T5447312-F10-P8629-A1031-L999:Zahlungsbedingungscode
+T5447312-F11-P8629-A1031-L999:Zahlungsformcode
+T5447312-F12-P8629-A1031-L999:Gebühren
+T5447312-F1-P8629-A1031-L999:Shopcode
+T5447312-F20-P8629-A1031-L999:Checkout
+T5447312-F20-P8632-A1031-L999: ,Lastschrift,Kreditkarte,Kreditkarte verzögert,Paypal,Paypal verzögert,Rechnung Billpay,Lastschrift Billpay,Ratenkauf Billpay,sofortüberweisung.de,PayDirekt,Amazon Payments,EPS,Postfinance,iDeal,Klarna,Paymorrow,Payolution,RatePay
+T5447312-F21-P8629-A1031-L999:Checkout Status
+T5447312-F21-P8632-A1031-L999: ,Testphase,Live
+T5447312-F22-P8629-A1031-L999:Auto Zahlungsausgleich
+T5447312-F23-P8629-A1031-L999:Buch.-Blattvorlage Zahlungsausgleich
+T5447312-F24-P8629-A1031-L999:Buch.-Blattname Zahlungsausgleich
+T5447312-F2-P8629-A1031-L999:Sprachcode
+T5447312-F3-P8629-A1031-L999:Zeilennr.
+T5447312-F40-P8629-A1031-L999:Sachkonto Zahlungsausgleich
+T5447312-F41-P8629-A1031-L999:Bonitätsprüfung
+T5447312-F42-P8629-A1031-L999:Digitaler Gutschein ist erlaubt
+T5447312-F43-P8629-A1031-L999:Aktiv für Abonements
+T5447312-F44-P8629-A1031-L999:Hat Icon
+T5447312-F45-P8629-A1031-L999:Hat Beschreibung
+T5447312-F46-P8629-A1031-L999:Reihenfolge
+T5447312-F47-P8629-A1031-L999:Auftrag Textbaustein
+T5447312-F48-P8629-A1031-L999:Text Rechnungsmail
+T5447312-F49-P8629-A1031-L999:Alternativer Text Bestellbestätigung
+T5447312-F4-P8629-A1031-L999:Ist Aktiv
+T5447312-F5-P8629-A1031-L999:Beschreibung
+T5447312-F6-P8629-A1031-L999:Ländercode
+T5447312-P8629-A1031-L999:Webshop Zahlungsart

@@ -1,0 +1,62 @@
+OBJECT Table 5447315 Webshop Cust. Pseudo Pay. Data
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Kunden Pseudo-Zahlungsdaten;
+               ENU=Webshop Customer Pseudo Payment-Data];
+  }
+  FIELDS
+  {
+    { 1   ;   ;Customer No.        ;Code30        ;TableRelation=Customer.No.;
+                                                   CaptionML=[DEU=Kundennr.;
+                                                              ENU=Customer No.] }
+    { 2   ;   ;Line No.            ;Integer       ;AutoIncrement=Yes;
+                                                   CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.] }
+    { 3   ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Kreditkarte,Lastschrift;
+                                                                    ENU=Credit Card,Direct Debit];
+                                                   OptionString=CreditCard,DirectDebit }
+    { 4   ;   ;Card Type           ;Option        ;CaptionML=[DEU=Kartentyp;
+                                                              ENU=Card Type];
+                                                   OptionCaptionML=[DEU=,VISA,MasterCard,Maestro,AMEX,JCB,CBN,SWITCH,SOLO,Diners,ELO,AURA,Hipercard;
+                                                                    ENU=,VISA,MasterCard,Maestro,AMEX,JCB,CBN,SWITCH,SOLO,Diners,ELO,AURA,Hipercard];
+                                                   OptionString=,VISA,MasterCard,Maestro,AMEX,JCB,CBN,SWITCH,SOLO,Diners,ELO,AURA,Hipercard }
+    { 5   ;   ;Holder / Owner Name ;Text120       ;CaptionML=[DEU=Halter / Inhaber Name;
+                                                              ENU=Holder / Owner Name] }
+    { 6   ;   ;PCNr                ;Text20        ;CaptionML=[DEU=Pseudokartennummer;
+                                                              ENU=Pseudo Card Number] }
+    { 7   ;   ;CCExpire            ;Date          ;CaptionML=[DEU=Ablaufdatum;
+                                                              ENU=Expiry Date] }
+    { 8   ;   ;BIC                 ;Text40        ;CaptionML=[DEU=BIC;
+                                                              ENU=BIC] }
+    { 9   ;   ;PBAN                ;Text40        ;CaptionML=[DEU=Pseudo-IBAN;
+                                                              ENU=Pseudo-IBAN] }
+    { 10  ;   ;Bank Name           ;Text50        ;CaptionML=[DEU=Bank Name;
+                                                              ENU=Bank Name] }
+  }
+  KEYS
+  {
+    {    ;Customer No.,Line No.                   ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

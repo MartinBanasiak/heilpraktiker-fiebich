@@ -1,0 +1,223 @@
+OBJECT Table 5447347 Webshop Camp. Sales Ord. Adj.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Permissions=TableData 5447345=ri,
+                TableData 5447347=rimd;
+    OnInsert=BEGIN
+               "Adjustment Datetime" := CURRENTDATETIME;
+             END;
+
+    OnModify=VAR
+               Error001@1000000000 : TextConst 'DEU=Modify ist f�r Ereignis-verfolgende Datens�tze nicht erlaubt.\Datens�tze k�nnen nur durch die Benutzung der Unapply-Funktion\zum vollst�ndigem r�ckgangig Machen der Anpassungen einer Kampagne\an einer Verkaufsbestellung gel�scht werden.;ENU=Modify is not permitted for event-tracking records.\Records can only be deleted by using the Unapply-function\to completely revert the adjustments of a Campaign\to a Sales Order.';
+             BEGIN
+               ERROR(Error001);
+             END;
+
+    OnDelete=VAR
+               Error001@1000000000 : TextConst 'DEU=Delete ist nur mittels der Unapply-Funktion erlaubt.;ENU=Delete is only allowed via the Unapply-function.';
+             BEGIN
+             END;
+
+    OnRename=VAR
+               Error001@1000000000 : TextConst 'DEU=Rename ist f�r Ereignis-verfolgende Datens�tze nicht erlaubt.\Datens�tze k�nnen nur durch die Benutzung der Unapply-Funktion\zum vollst�ndigem r�ckgangig Machen der Anpassungen einer Kampagne\an einer Verkaufsbestellung gel�scht werden.;ENU=Rename is not permitted for event-tracking records.\Records can only be deleted by using the Unapply-function\to completely revert the adjustments of a Campaign\to a Sales Order.';
+             BEGIN
+               //ERROR(Error001);
+             END;
+
+  }
+  FIELDS
+  {
+    { 1   ;   ;Campaign Code       ;Code20        ;TableRelation="Webshop Campaign Header".Code }
+    { 2   ;   ;Order No.           ;Code20        ;TableRelation="Sales Header".No. WHERE (Document Type=CONST(Order)) }
+    { 3   ;   ;Line No.            ;Integer       ;TableRelation="Sales Line"."Line No." WHERE (Document Type=CONST(Order),
+                                                                                                Document No.=FIELD(Order No.)) }
+    { 4   ;   ;Adjustment Line No. ;Integer        }
+    { 5   ;   ;Previous Qty.       ;Decimal        }
+    { 6   ;   ;Adjusted Qty.       ;Decimal        }
+    { 7   ;   ;Previous Line Amnt. ;Decimal        }
+    { 8   ;   ;Adjusted Line Amnt. ;Decimal        }
+    { 9   ;   ;Previous Line Disc. %;Decimal       }
+    { 10  ;   ;Adjusted Line Disc. %;Decimal       }
+    { 11  ;   ;Previous Unit Price ;Decimal        }
+    { 12  ;   ;Adjusted Unit Price ;Decimal        }
+    { 13  ;   ;Adjustment Datetime ;DateTime       }
+  }
+  KEYS
+  {
+    {    ;Campaign Code,Order No.,Line No.,Adjustment Line No.;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      AllowDelete@1000000000 : Boolean;
+
+    PROCEDURE SetCampaignsAppliedToSalesOrder@1000000013(OrderNo@1000000000 : Code[20];VAR AppliedWebshopCampaignsTmp@1000000001 : TEMPORARY Record 5447345);
+    VAR
+      WebshopCampaignHeader@1000000002 : Record 5447345;
+      Error001@1000000003 : TextConst 'DEU=Der Parameter AppliedWebshopCampaignsTmp muss tempor�r sein!;ENU=The parameter AppliedWebshopCampaignsTmp has to be temporary!';
+    BEGIN
+      IF NOT AppliedWebshopCampaignsTmp.ISTEMPORARY THEN
+        ERROR(Error001);
+
+      SETRANGE("Order No.",OrderNo);
+      IF FINDSET(FALSE,FALSE) THEN REPEAT
+        WebshopCampaignHeader.RESET;
+        IF NOT AppliedWebshopCampaignsTmp.GET("Campaign Code") THEN BEGIN
+          WebshopCampaignHeader.GET("Campaign Code");
+          AppliedWebshopCampaignsTmp := WebshopCampaignHeader;
+          AppliedWebshopCampaignsTmp.INSERT(FALSE);
+        END;
+      UNTIL NEXT = 0;
+    END;
+
+    PROCEDURE UnapplyAllCampaignsForSalesOrder@1000000003(OrderNo@1000000000 : Code[20]);
+    VAR
+      SalesHeader@1000000001 : Record 36;
+      SalesLine@1000000002 : Record 37;
+    BEGIN
+      IF SalesHeader.GET(SalesHeader."Document Type"::Order,OrderNo) THEN BEGIN
+        SalesHeader.LOCKTABLE;
+        SalesLine.SETRANGE("Document Type",SalesLine."Document Type"::Order);
+        SalesLine.SETRANGE("Document No.","Order No.");
+        SalesLine.LOCKTABLE;
+        SETRANGE("Order No.",OrderNo);
+        ASCENDING(FALSE);
+        IF FINDSET(FALSE,FALSE) THEN REPEAT
+          UnapplyCampaignAdjustmentLineForSalesOrder(Rec,SalesHeader);
+        UNTIL NEXT = 0;
+
+        AllowDelete := TRUE;
+        DELETEALL(TRUE);
+        AllowDelete := FALSE;
+        COMMIT;
+      END;
+    END;
+
+    PROCEDURE UnapplyCampaignAdjustmentForSalesOrder@1000000004(SalesOrder@1000000000 : Record 36;CampaignCode@1000000001 : Code[20]);
+    VAR
+      SalesLine@1000000002 : Record 37;
+      Error001@1000000003 : TextConst 'DEU=Der �bgergebene Sales Header Record zeigt auf keinen eindeutigen Verkaufsauftrag!;ENU=The passed Sales Header Record does not point to a unique Sales Order!';
+    BEGIN
+      IF (SalesOrder."Document Type" = SalesOrder."Document Type"::Order) AND SalesOrder.GET(SalesOrder."Document Type",SalesOrder."No.") THEN BEGIN
+        SalesOrder.LOCKTABLE;
+        SalesLine.SETRANGE("Document Type",SalesOrder."Document Type");
+        SalesLine.SETRANGE("Document No.",SalesOrder."No.");
+        SalesLine.LOCKTABLE;
+
+        SETRANGE("Campaign Code",CampaignCode);
+        SETRANGE("Order No.",SalesOrder."No.");
+        IF FINDSET(FALSE,FALSE) THEN REPEAT
+          UnapplyCampaignAdjustmentLineForSalesOrder(Rec,SalesOrder);
+        UNTIL NEXT = 0;
+
+        AllowDelete := TRUE;
+        DELETEALL(TRUE);
+        AllowDelete := FALSE;
+      END ELSE
+        ERROR(Error001);
+      COMMIT;
+    END;
+
+    LOCAL PROCEDURE UnapplyCampaignAdjustmentLineForSalesOrder@1000000008(AdjustmentLine@1000000000 : Record 5447347;SalesOrder@1000000001 : Record 36);
+    VAR
+      SalesLine@1000000002 : Record 37;
+      Error001@1000000003 : TextConst 'DEU=Der �bergebene Sales Header Record muss dem in der Adjustment Zeile angegebenen eindeutigen Verkaufsauftrag entsprechen!;ENU=The passed Sales Header Record must match the unique Sales Order specified in the Adjustment Line!';
+      SalesLineTmp@1000000011 : TEMPORARY Record 37;
+      SignFactor@1000000004 : Integer;
+      RevQtyAdjustment@1000000005 : Decimal;
+      NewQty@1000000009 : Decimal;
+      RevLineAmntAdjustment@1000000006 : Decimal;
+      RevLineDiscPercentAdjustment@1000000007 : Decimal;
+      RevUnitPriceAdjustment@1000000008 : Decimal;
+      Deleted@1000000010 : Boolean;
+    BEGIN
+      IF (SalesOrder."Document Type" = SalesOrder."Document Type"::Order) AND
+        SalesOrder.GET(SalesOrder."Document Type",SalesOrder."No.") AND
+        (SalesOrder."No." = AdjustmentLine."Order No.") AND
+        SalesLine.GET(SalesOrder."Document Type",SalesOrder."No.",AdjustmentLine."Line No.") THEN BEGIN
+          SalesLineTmp := SalesLine;
+          Deleted := FALSE;
+          SalesLine.LOCKTABLE;
+
+          IF AdjustmentLine."Previous Qty." <> AdjustmentLine."Adjusted Qty." THEN BEGIN
+            RevQtyAdjustment := AdjustmentLine."Previous Qty." - AdjustmentLine."Adjusted Qty.";
+            NewQty := SalesLine.Quantity + RevQtyAdjustment;
+            IF (NewQty <= 0) THEN BEGIN
+              SalesLine.DELETE(TRUE);
+              Deleted := TRUE;
+            END ELSE
+              SalesLine.VALIDATE(Quantity,SalesLineTmp.Quantity + RevQtyAdjustment);
+          END;
+
+          IF (NOT Deleted) AND (AdjustmentLine."Previous Line Disc. %" <> AdjustmentLine."Adjusted Line Disc. %") THEN BEGIN
+            RevLineDiscPercentAdjustment := AdjustmentLine."Previous Line Disc. %" - AdjustmentLine."Adjusted Line Disc. %";
+            SalesLine.VALIDATE("Line Discount %",SalesLineTmp."Line Discount %" + RevLineDiscPercentAdjustment);
+          END;
+
+          IF (NOT Deleted) AND (AdjustmentLine."Previous Unit Price" <> AdjustmentLine."Adjusted Unit Price") THEN BEGIN
+            RevUnitPriceAdjustment := AdjustmentLine."Previous Unit Price" - AdjustmentLine."Adjusted Unit Price";
+            SalesLine.VALIDATE("Unit Price",SalesLineTmp."Unit Price" + RevUnitPriceAdjustment);
+          END;
+
+          IF (NOT Deleted) AND (AdjustmentLine."Previous Line Amnt." <> AdjustmentLine."Adjusted Line Amnt.") THEN BEGIN
+            RevLineAmntAdjustment := AdjustmentLine."Previous Line Amnt." - AdjustmentLine."Adjusted Line Amnt.";
+            SalesLine.VALIDATE("Line Amount",SalesLineTmp."Line Amount" + RevLineAmntAdjustment);
+          END;
+
+          IF (NOT Deleted) THEN
+            SalesLine.MODIFY(TRUE);
+      END ELSE
+       ERROR(Error001);
+    END;
+
+    PROCEDURE GetNextAdjustmentLineNoForPartialKey@1000000000(CampaignCode@1000000000 : Code[20];OrderNo@1000000001 : Code[20];LineNo@1000000002 : Integer) NextLineNo : Integer;
+    BEGIN
+      NextLineNo := 10000;
+      SETRANGE("Campaign Code",CampaignCode);
+      SETRANGE("Order No.",OrderNo);
+      SETRANGE("Line No.",LineNo);
+      IF FINDLAST THEN
+        NextLineNo += "Adjustment Line No.";
+    END;
+
+    PROCEDURE InsertNewAdjustmentLine@1000000001(CampaignCode@1000000000 : Code[20];OrderNo@1000000001 : Code[20];LineNo@1000000002 : Integer;PrevQty@1000000003 : Decimal;AdjQty@1000000004 : Decimal;PrevLineAmnt@1000000005 : Decimal;AdjLineAmnt@1000000006 : Decimal;PrevLineDiscPerc@1000000007 : Decimal;AdjLineDiscPerc@1000000008 : Decimal;PrevUnitPrice@1000000009 : Decimal;AdjUnitPrice@1000000010 : Decimal);
+    VAR
+      NewAdjLineNo@1000000011 : Integer;
+    BEGIN
+      SETRANGE("Campaign Code",CampaignCode);
+      SETRANGE("Order No.",OrderNo);
+      SETRANGE("Line No.",LineNo);
+      LOCKTABLE;
+      NewAdjLineNo := GetNextAdjustmentLineNoForPartialKey(CampaignCode,OrderNo,LineNo);
+      INIT;
+      "Campaign Code" := CampaignCode;
+      "Order No." := OrderNo;
+      "Line No." := LineNo;
+      "Adjustment Line No." := NewAdjLineNo;
+      "Previous Qty." := PrevQty;
+      "Adjusted Qty." := AdjQty;
+      "Previous Line Amnt." := PrevLineAmnt;
+      "Adjusted Line Amnt." := AdjLineAmnt;
+      "Previous Line Disc. %" := PrevLineDiscPerc;
+      "Adjusted Line Disc. %" := AdjLineDiscPerc;
+      "Previous Unit Price" := PrevUnitPrice;
+      "Adjusted Unit Price" := AdjUnitPrice;
+      INSERT(TRUE);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

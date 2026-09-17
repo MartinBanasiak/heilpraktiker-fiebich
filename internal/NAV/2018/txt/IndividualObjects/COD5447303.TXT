@@ -1,0 +1,188 @@
+OBJECT Codeunit 5447303 Webshop Update All Data
+{
+  OBJECT-PROPERTIES
+  {
+    Date=28.02.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    TableNo=472;
+    OnRun=BEGIN
+            // Webshop Gesamtakualisierung Aufruf f�r Projektwarteschlange
+            EVALUATE(ParameterPriority,"Parameter String");
+            IF ParameterPriority = 'reset' THEN
+              ResetJobQueue
+            ELSE
+              UpdateAllData();
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000001 : Record 5447300;
+      Text001@1000000005 : TextConst 'DEU=Webshop Gesamtaktualisierung;ENU=Webshop complete update';
+      Text002@1000000002 : TextConst 'DEU=Webshop kundenspezifische Gesamtaktualisierung;ENU=Webshop customized complete update';
+      WebshopManagement@1000000003 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+      CustWebshopUpdateManagement@1000000004 : Codeunit 5447302;
+      WebshopMarketplaceUpdate@1000000011 : Codeunit 5447312;
+      CountRecords@1000000007 : Boolean;
+      i@1000000006 : Integer;
+      WebshopUpdateBuffer@1000000008 : Record 5447314;
+      JobQueueEntry@1000000010 : Record 472;
+      ParameterPriority@1000000009 : Text[250];
+      Text003@1000000012 : TextConst 'DEU=Bitte Verbindungsadresse eintragen;ENU=Please fill out the http address';
+
+    PROCEDURE UpdateAllData@1000000049();
+    BEGIN
+      WebshopSetup.GET;
+      IF WebshopSetup."Server Synch. Endpoint URL" <> '' THEN BEGIN
+
+        WebshopUpdateBuffer.SendRequest('','',TRUE,FALSE);
+
+        // Kundenspezifische Aktualisierung Gesamtdaten
+        CustWebshopUpdateManagement.StateIndicatorOpen(Text002);
+        CountRecords := TRUE;
+        FOR i := 1 TO 2 DO BEGIN
+          CustUpdate;
+          CountRecords := FALSE;
+        END;
+        CustWebshopUpdateManagement.StateIndicatorClose();
+
+
+        // Allgemeine Aktualisierung Gesamtdaten
+        WebshopUpdateManagement.StateIndicatorOpen(Text001);
+        CountRecords := TRUE;
+        FOR i := 1 TO 2 DO BEGIN
+          Update;
+          CountRecords := FALSE;
+        END;
+        WebshopUpdateManagement.StateIndicatorClose();
+
+        // Marketplace Aktualisierung Gesamtdaten
+        IF WebshopSetup."Update Marketplaces" THEN BEGIN
+          WebshopMarketplaceUpdate.StateIndicatorOpen(Text001);
+          CountRecords := TRUE;
+          FOR i := 1 TO 2 DO BEGIN
+            MarketplaceUpdate;
+            CountRecords := FALSE;
+          END;
+          WebshopMarketplaceUpdate.StateIndicatorClose();
+        END;
+
+        // Datum Aktualisierung Bewegungsdaten in Webshop-Setup setzten
+        WebshopSetup."Time Last Full Update" := CURRENTDATETIME;
+        IF NOT GUIALLOWED THEN
+          WebshopSetup."Time Last Auto Full Update" := CURRENTDATETIME;
+        WebshopSetup.MODIFY;
+
+        WebshopUpdateBuffer.SendRequest('','',TRUE,FALSE);
+      END ELSE BEGIN
+        IF GUIALLOWED THEN
+          ERROR(Text003);
+      END;
+    END;
+
+    PROCEDURE Update@1000000002();
+    BEGIN
+      // Allgemeine Aktualisierung
+      WebshopSetup.GET;
+      WebshopUpdateManagement.UpdateAllWebshopSetup(CountRecords);
+      WebshopUpdateManagement.UpdateAllShop(CountRecords);
+      WebshopUpdateManagement.UpdateAllLanguage(CountRecords);
+      WebshopUpdateManagement.UpdateAllCountry(CountRecords);
+      WebshopUpdateManagement.UpdateAllPaymentOptions(CountRecords);
+      WebshopUpdateManagement.UpdateAllVATPostingSetup(CountRecords);
+      WebshopUpdateManagement.UpdateAllShippingClasses(CountRecords);
+      WebshopUpdateManagement.UpdateAllShippingOptions(CountRecords);
+      IF WebshopSetup."Process Coupons" THEN BEGIN
+        WebshopUpdateManagement.GetAllCouponLine(CountRecords);
+        WebshopUpdateManagement.UpdateAllCouponHeader(CountRecords);
+      END;
+      IF WebshopSetup."Update Items" THEN
+        WebshopUpdateManagement.UpdateAllWebshopItem(CountRecords);
+      IF WebshopSetup."Update Item Customizations" THEN
+        WebshopUpdateManagement.UpdateAllItemCustomizations(CountRecords);
+      IF WebshopSetup."Update Webshop Categories" THEN
+        WebshopUpdateManagement.UpdateAllCategory(CountRecords);
+      IF WebshopSetup."Update Webshop Categories" THEN
+        WebshopUpdateManagement.UpdateAllWebshopItemCategory(CountRecords);
+      IF WebshopSetup."Update Active Customers" OR WebshopSetup."Update All Customers" THEN
+        WebshopUpdateManagement.UpdateAllCustomer(CountRecords);
+      IF WebshopSetup."Update Salespeople" THEN
+        WebshopUpdateManagement.UpdateAllSalesperson(CountRecords);
+      IF WebshopSetup."Update Sales Line Discounts" THEN
+        WebshopUpdateManagement.UpdateAllSalesLineDiscount(CountRecords);
+      IF WebshopSetup."Update Invoice Discounts" THEN
+        WebshopUpdateManagement.UpdateAllInvoiceDiscount(CountRecords);
+      IF WebshopSetup."Update Sales Orders" THEN
+        WebshopUpdateManagement.UpdateAllSalesOrder(CountRecords);
+      IF WebshopSetup."Update Posted Sales Invoices" THEN
+        WebshopUpdateManagement.UpdateAllSalesInvoiceHeader(CountRecords);
+      IF (WebshopSetup."Update Posted Sales Shipments") AND (NOT WebshopSetup."Confirm Marketplace Orders") THEN
+        WebshopUpdateManagement.UpdateAllSalesShipmentHeader(CountRecords);
+      IF WebshopSetup."Update Posted Sales Cr. Memos" THEN
+        WebshopUpdateManagement.UpdateAllSalesCrMemoHeader(CountRecords);
+      IF WebshopSetup."Update Return Orders" THEN
+        WebshopUpdateManagement.UpdateAllReturnOrders(CountRecords);
+      IF WebshopSetup."Update Item Attributes" THEN BEGIN
+        WebshopUpdateManagement.UpdateAllAttribute(CountRecords);
+        WebshopUpdateManagement.UpdateAllAttributeOption(CountRecords);
+      END;
+      IF WebshopSetup."Fetch Subscription Orders" THEN
+        WebshopUpdateManagement.GetAllSubscriptionCustomerLink(CountRecords);
+      IF WebshopSetup."Update Subscriptions" THEN
+        WebshopUpdateManagement.UpdateAllSubscriptionHeader(CountRecords);
+      IF WebshopSetup."Update Subscr. Seq. Steps" THEN
+        WebshopUpdateManagement.UpdateAllSubscSeqStep(CountRecords);
+      IF WebshopSetup."Update Subscr. Item Links" THEN
+        WebshopUpdateManagement.UpdateAllSubscItemLink(CountRecords);
+      IF WebshopSetup."Update Subscr. Cust. Links" THEN
+        WebshopUpdateManagement.UpdAllSubscCustLink(CountRecords);
+      IF WebshopSetup."Update Permissions" THEN BEGIN
+        WebshopUpdateManagement.UpdateAllPermissionGroup(CountRecords);
+        WebshopUpdateManagement.UpdateAllPermGroupLink(CountRecords);
+      END;
+    END;
+
+    PROCEDURE CustUpdate@1000000003();
+    BEGIN
+      // Kundenspezifische Aktualisierung
+    END;
+
+    PROCEDURE MarketplaceUpdate@1000000001();
+    BEGIN
+      // Marketplace aktualisierung
+      WebshopSetup.GET;
+      IF WebshopSetup."Update Marketplaces" THEN BEGIN
+        IF WebshopSetup."Update Marketplace Items" THEN
+          WebshopMarketplaceUpdate.UpdateMarketplaceItems(CountRecords);
+        IF WebshopSetup."Update Marketplace Prices" THEN
+          WebshopMarketplaceUpdate.UpdateMarketplacePrice(CountRecords);
+        IF WebshopSetup."Update Marketplace Inventory" THEN
+          WebshopMarketplaceUpdate.UpdateMarketplaceInventory(CountRecords);
+      END;
+    END;
+
+    PROCEDURE ResetJobQueue@1000000000();
+    BEGIN
+      JobQueueEntry.SETFILTER("Object ID to Run",'5447303');
+      JobQueueEntry.SETFILTER(Status,'%1',JobQueueEntry.Status::Error);
+      IF JobQueueEntry.FINDFIRST THEN BEGIN
+        JobQueueEntry.SetStatus(JobQueueEntry.Status::Ready);
+        JobQueueEntry.MODIFY(TRUE);
+        COMMIT;
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

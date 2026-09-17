@@ -1,0 +1,148 @@
+OBJECT Page 5447331 Webshop Coupon Header List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.03.18;
+    Time=16:00:00;
+    Version List=MYSW14.00,DCCW11.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Gutschein �bersicht;
+               ENU=Coupon List];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    SourceTable=Table5447471;
+    PageType=List;
+    PromotedActionCategoriesML=[DEU=Neu,Verwalten,Reports,Vorgang;
+                                ENU=New,Manage,Report,Process];
+    ActionList=ACTIONS
+    {
+      { 1000000003;0 ;ActionContainer;
+                      ActionContainerType=NewDocumentItems }
+      { 1000000010;1 ;Action    ;
+                      Name=New;
+                      ShortCutKey=Return;
+                      CaptionML=[DEU=Neu;
+                                 ENU=New];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=NewDocument;
+                      PromotedCategory=New;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 CouponHeader@1000000000 : Record 5447471;
+                                 WebshopCouponHeaderCard@1000000001 : Page 5447329;
+                               BEGIN
+                                 WebshopCouponHeaderCard.SetShopCode(ShopCode);
+                                 WebshopCouponHeaderCard.SetFilter;
+                                 WebshopCouponHeaderCard.RUN;
+                               END;
+                                }
+      { 1000000008;1 ;Action    ;
+                      Name=Edit;
+                      ShortCutKey=Return;
+                      CaptionML=[DEU=Bearbeiten;
+                                 ENU=Edit];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Edit;
+                      PromotedCategory=Process;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 CouponHeader@1000000000 : Record 5447471;
+                                 WebshopCouponHeaderCard@1000000001 : Page 5447329;
+                               BEGIN
+                                 CouponHeader.GET(Code);
+                                 WebshopCouponHeaderCard.SETRECORD(CouponHeader);
+                                 WebshopCouponHeaderCard.SetShopCode(ShopCode);
+                                 WebshopCouponHeaderCard.RUN;
+                               END;
+                                }
+      { 1000000016;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000015;1 ;ActionGroup;
+                      Name=Funktion;
+                      CaptionML=[DEU=Funktion;
+                                 ENU=Function] }
+      { 1000000009;2 ;Action    ;
+                      CaptionML=[DEU=Gutscheinzeilen erzeugen;
+                                 ENU=Create Coupon Lines];
+                      Promoted=Yes;
+                      Image=PostedVoucherGroup;
+                      PromotedCategory=Category4;
+                      OnAction=VAR
+                                 ReportCreate@1000000000 : Report 5447470;
+                                 CouponHeader@1000000001 : Record 5447471;
+                               BEGIN
+                                 CouponHeader.SETRANGE(CouponHeader.Code,Code);
+                                 CreateCouponCodes.SetRecord(Code);
+                                 CreateCouponCodes.SETTABLEVIEW(CouponHeader);
+                                 CreateCouponCodes.RUN;
+                               END;
+                                }
+      { 1000000012;1 ;ActionGroup;
+                      Name=Zeile;
+                      CaptionML=[DEU=Zeile;
+                                 ENU=Line];
+                      ActionContainerType=NewDocumentItems }
+      { 1000000011;2 ;Action    ;
+                      Name=Gutscheinzeilen;
+                      CaptionML=[DEU=Gutscheinzeilen;
+                                 ENU=Coupon Lines];
+                      RunObject=Page 5447474;
+                      RunPageLink=Code=FIELD(Code);
+                      Promoted=No;
+                      Image=VoucherDescription;
+                      PromotedCategory=Category4 }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Code }
+
+    { 1000000005;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Coupon Group" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr=Amount }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="No. of Coupon Codes" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="No. of Coupon Codes Active" }
+
+  }
+  CODE
+  {
+    VAR
+      CreateCouponCodes@1000000000 : Report 5447470;
+      ShopCode@1000000001 : Code[20];
+
+    PROCEDURE SetShopCode@1000000001(ParaShopCode@1000000000 : Code[20]);
+    BEGIN
+      ShopCode := ParaShopCode;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,344 @@
+OBJECT Page 5447337 Webshop Permissions Group Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Berechtigungsverkn�pfung;
+               ENU=Webshop Permissions Group Link];
+    SourceTable=Table5447337;
+    DelayedInsert=Yes;
+    PageType=List;
+    OnOpenPage=BEGIN
+                 CustomerNoVisible := FALSE;
+                 CustomerNameVisible := FALSE;
+                 ItemNoVisible := FALSE;
+                 ItemDescriptionVisible := FALSE;
+                 PermissionGroupCodeVisible := FALSE;
+                 PermissionGroupDescVisible := FALSE;
+                 ShopCodeVisible:= FALSE;
+                 LangCodeVisible := FALSE;
+                 LineNoVisible := FALSE;
+                 CategoryPathControlVisible := FALSE;
+                 ContactNoVisible := FALSE;
+                 ContactNameVisible := FALSE;
+
+
+                 CASE GETFILTER(Type) OF
+                   'CustomerGroup': BEGIN
+                     IF GETFILTER("Customer No.") <> '' THEN BEGIN
+                       PermissionGroupCodeVisible := TRUE;
+                       PermissionGroupDescVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text001,GETFILTER("Customer No.")));
+                     END ELSE IF GETFILTER("Permission Group Code") <> '' THEN BEGIN
+                       CustomerNoVisible := TRUE;
+                       CustomerNameVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text002,GETFILTER("Permission Group Code")));
+                     END;
+                   END;
+                   'ItemGroup': BEGIN
+                     IF GETFILTER("Item No.") <> '' THEN BEGIN
+                       PermissionGroupCodeVisible := TRUE;
+                       PermissionGroupDescVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text003,GETFILTER("Item No.")));
+                     END ELSE IF GETFILTER("Permission Group Code") <> '' THEN BEGIN
+                       ItemNoVisible := TRUE;
+                       ItemDescriptionVisible :=TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text004,GETFILTER("Permission Group Code")));
+                     END;
+                   END;
+                   'CustomerItem': BEGIN
+                     IF GETFILTER("Customer No.") <> '' THEN BEGIN
+                       ItemNoVisible := TRUE;
+                       ItemDescriptionVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text005,GETFILTER("Customer No.")));
+                     END ELSE IF GETFILTER("Item No.") <> '' THEN BEGIN
+                       CustomerNoVisible := TRUE;
+                       CustomerNameVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text006,GETFILTER("Item No.")));
+                     END;
+                   END;
+                   'CustomerCategory': BEGIN
+                     IF GETFILTER("Customer No.") <> '' THEN BEGIN
+                       ShopCodeVisible:= TRUE;
+                       LangCodeVisible := TRUE;
+                      LineNoVisible := TRUE;
+                       CategoryPathControlVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text008,GETFILTER("Customer No.")));
+                     END ELSE IF GETFILTER("Line No.") <> '' THEN BEGIN
+                       CustomerNoVisible := TRUE;
+                       CustomerNameVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text007,GETFILTER("Line No.")));
+                     END;
+                   END;
+                   'CategoryGroup': BEGIN
+                     IF GETFILTER("Line No.") <> '' THEN BEGIN
+                       PermissionGroupCodeVisible := TRUE;
+                       PermissionGroupDescVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text009,GETFILTER("Line No.")));
+                     END ELSE IF GETFILTER("Permission Group Code") <> '' THEN BEGIN
+                       ShopCodeVisible:= TRUE;
+                       LangCodeVisible := TRUE;
+                       LineNoVisible := TRUE;
+                       CategoryPathControlVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text010,GETFILTER("Permission Group Code")));
+                     END;
+                   END;
+                   'CustomerShipping': BEGIN
+                     IF GETFILTER("Customer No.") <> '' THEN BEGIN
+                       ShopCodeVisible:= TRUE;
+                       LangCodeVisible := TRUE;
+                       LineNoVisible := TRUE;
+
+                       CurrPage.CAPTION(STRSUBSTNO(Text018,GETFILTER("Customer No.")));
+                     END ELSE IF GETFILTER("Line No.") <> '' THEN BEGIN
+                       CustomerNoVisible := TRUE;
+                       CustomerNameVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text017,GETFILTER("Line No.")));
+                     END;
+                   END;
+                   'ShippingGroup': BEGIN
+                     IF GETFILTER("Line No.") <> '' THEN BEGIN
+                       PermissionGroupCodeVisible := TRUE;
+                       PermissionGroupDescVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text019,GETFILTER("Line No.")));
+                     END ELSE IF GETFILTER("Permission Group Code") <> '' THEN BEGIN
+                       ShopCodeVisible:= TRUE;
+                       LangCodeVisible := TRUE;
+                       LineNoVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text020,GETFILTER("Permission Group Code")));
+                     END;
+                   END;
+                   'CustomerPayment': BEGIN
+                     IF GETFILTER("Customer No.") <> '' THEN BEGIN
+                       ShopCodeVisible:= TRUE;
+                       LangCodeVisible := TRUE;
+                       LineNoVisible := TRUE;
+
+                       CurrPage.CAPTION(STRSUBSTNO(Text024,GETFILTER("Customer No.")));
+                     END ELSE IF GETFILTER("Line No.") <> '' THEN BEGIN
+                       CustomerNoVisible := TRUE;
+                       CustomerNameVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text023,GETFILTER("Line No.")));
+                     END;
+                   END;
+                   'PaymentGroup': BEGIN
+                     IF GETFILTER("Line No.") <> '' THEN BEGIN
+                       PermissionGroupCodeVisible := TRUE;
+                       PermissionGroupDescVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text021,GETFILTER("Line No.")));
+                     END ELSE IF GETFILTER("Permission Group Code") <> '' THEN BEGIN
+                       ShopCodeVisible:= TRUE;
+                       LangCodeVisible := TRUE;
+                       LineNoVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text022,GETFILTER("Permission Group Code")));
+                     END;
+                   END;
+
+
+
+                   {
+                   'ContactGroup': BEGIN
+                     IF GETFILTER("Variant Code") <> '' THEN BEGIN
+                       PermissionGroupCodeVisible := TRUE;
+                       PermissionGroupDescVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text011,GETFILTER("Variant Code")));
+                     END ELSE IF GETFILTER("Permisson Group Code") <> '' THEN BEGIN
+                       ContactNoVisible := TRUE;
+                       ContactNameVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text002,GETFILTER("Permisson Group Code")));
+                     END;
+                   END;
+                   'ContactItem': BEGIN
+                     IF GETFILTER("Variant Code") <> '' THEN BEGIN
+                       ItemNoVisible := TRUE;
+                       ItemDescriptionVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text012,GETFILTER("Variant Code")));
+                     END ELSE IF GETFILTER("Item No.") <> '' THEN BEGIN
+                       ContactNoVisible := TRUE;
+                       ContactNameVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text006,GETFILTER("Item No.")));
+                     END;
+                   END;
+
+                   'ContactCategory': BEGIN
+                     IF GETFILTER("Variant Code") <> '' THEN BEGIN
+                       CategoryShopCodeVisible:= TRUE;
+                       CategoryLangCodeVisible := TRUE;
+                       CategoryLineNoVisible := TRUE;
+                       CategoryPathControlVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text013,GETFILTER("Variant Code")));
+                     END ELSE IF GETFILTER("Category Line No.") <> '' THEN BEGIN
+                       ContactNoVisible := TRUE;
+                       ContactNameVisible := TRUE;
+                       CurrPage.CAPTION(STRSUBSTNO(Text007,GETFILTER("Category Line No.")));
+                     END;
+                   END;
+                   }
+                 END;
+
+                 CLEAR(ItemNoFilter);
+                 CLEAR(CustomerNoFilter);
+                 CLEAR(ShopCodeFilter);
+                 CLEAR(LangCodeFilter);
+                 CLEAR(LineNoFilter);
+                 IF GETFILTER(Type)<>'' THEN BEGIN
+                   TypeFilter := GETFILTER(Type);
+                   SETRANGE(Type);
+                   IF GETFILTER("Item No.")<>'' THEN BEGIN
+                     ItemNoFilter := GETFILTER("Item No.");
+
+                     SETRANGE("Item No.");
+
+                     FILTERGROUP(2);
+                     SETFILTER(Type,TypeFilter);
+                     SETFILTER("Item No.",ItemNoFilter);
+                     FILTERGROUP(0);
+                   END ELSE IF GETFILTER("Customer No.")<>'' THEN BEGIN
+                     CustomerNoFilter := GETFILTER("Customer No.");
+
+                     SETRANGE("Customer No.");
+
+                     FILTERGROUP(2);
+                     SETFILTER(Type,TypeFilter);
+                     SETFILTER("Customer No.",CustomerNoFilter);
+                     FILTERGROUP(0);
+                   END ELSE IF GETFILTER("Line No.")<>'' THEN BEGIN
+                     LineNoFilter := GETFILTER("Line No.");
+                     ShopCodeFilter := GETFILTER("Shop Code");
+                     LangCodeFilter := GETFILTER("Language Code");
+
+                     SETRANGE("Shop Code");
+                     SETRANGE("Language Code");
+                     SETRANGE("Line No.");
+
+                     FILTERGROUP(2);
+                     SETFILTER(Type,TypeFilter);
+                     SETFILTER("Shop Code",ShopCodeFilter);
+                     SETFILTER("Language Code",LangCodeFilter);
+                     SETFILTER("Line No.",LineNoFilter);
+                     FILTERGROUP(0);
+                   END;
+                 END;
+               END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Type;
+                Visible=FALSE }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Customer No.";
+                Visible=CustomerNoVisible }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Item No.";
+                Visible=ItemNoVisible }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Permission Group Code";
+                TableRelation="Webshop Permission Group".Code;
+                Visible=PermissionGroupCodeVisible }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Shop Code";
+                Visible=ShopCodeVisible }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Language Code";
+                Visible=LangCodeVisible }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Line No.";
+                Visible=LineNoVisible }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Customer Name";
+                Visible=CustomerNameVisible }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Item Description";
+                Visible=ItemDescriptionVisible }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Permission Group Description";
+                Visible=PermissionGroupDescVisible }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Category Name";
+                Visible=CategoryPathControlVisible }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Shipping Description";
+                Visible=ItemDescriptionVisible }
+
+  }
+  CODE
+  {
+    VAR
+      Item@1000000003 : Record 27;
+      Customer@1000000002 : Record 18;
+      PermissionGroup@1000000001 : Record 5447336;
+      LinkDescription@1000000000 : Text[30];
+      Text001@1000000013 : TextConst 'DEU=Gruppenberechtigungen f�r Debitor %1;ENU=Group permissions for customer %1';
+      Text002@1000000012 : TextConst 'DEU=Debitorberechtigungen f�r Gruppe %1;ENU=Customer permissions for group %1';
+      Text003@1000000011 : TextConst 'DEU=Gruppenberechtigungen f�r Artikel %1;ENU=Group permissions for item %1';
+      Text004@1000000010 : TextConst 'DEU=Artikelberechtigungen f�r Gruppe %1;ENU=Item permissions for group %1';
+      Text005@1000000009 : TextConst 'DEU=Artikelberechtigungen f�r Debitor %1;ENU=Item permissions for customer %1';
+      Text006@1000000008 : TextConst 'DEU=Debitorberechtigungen f�r Artikel %1;ENU=Customer permissions for item %1';
+      Text009@1000000007 : TextConst 'DEU=Gruppenberechtigungen f�r Kategorie %1;ENU=Group permissions for category %1';
+      Text010@1000000006 : TextConst 'DEU=Kategorieberechtigungen f�r Gruppe %1;ENU=Category permissions for group %1';
+      Text007@1000000005 : TextConst 'DEU=Debitorberechtigungen f�r Kategorie %1;ENU=Customer permissions for category %1';
+      Text008@1000000004 : TextConst 'DEU=Kategorieberechtigungen f�r Debitor %1;ENU=Category permissions for customer %1';
+      CustomerNoVisible@1000000025 : Boolean INDATASET;
+      CustomerNameVisible@1000000024 : Boolean INDATASET;
+      ItemNoVisible@1000000020 : Boolean INDATASET;
+      ItemDescriptionVisible@1000000019 : Boolean INDATASET;
+      PermissionGroupCodeVisible@1000000018 : Boolean INDATASET;
+      PermissionGroupDescVisible@1000000017 : Boolean INDATASET;
+      ShopCodeVisible@1000000016 : Boolean INDATASET;
+      LangCodeVisible@1000000015 : Boolean INDATASET;
+      CategoryPathControlVisible@1000000014 : Boolean INDATASET;
+      LineNoVisible@1000000023 : Boolean INDATASET;
+      ContactNoVisible@1000000022 : Boolean INDATASET;
+      ContactNameVisible@1000000021 : Boolean INDATASET;
+      Text011@1000000028 : TextConst 'DEU=Gruppenberechtigungen f�r Kontakt %1;ENU=Group permissions for contact %1';
+      Text012@1000000027 : TextConst 'DEU=Artikelberechtigungen f�r Kontakt %1;ENU=Item permissions for contact %1';
+      Text013@1000000026 : TextConst 'DEU=Kategorieberechtigungen f�r Kontakt %1;ENU=Category permissions for contact %1';
+      TypeFilter@1000000030 : Text;
+      ItemNoFilter@1000000031 : Text;
+      CustomerNoFilter@1000000032 : Text;
+      LineNoFilter@1000000033 : Text;
+      Category@1000000034 : Record 5447303;
+      ShopCodeFilter@1000000029 : Text;
+      LangCodeFilter@1000000035 : Text;
+      Text019@1000000039 : TextConst 'DEU=Gruppenberechtigungen f�r Versandoption %1;ENU=Group permissions for shipping option %1';
+      Text020@1000000038 : TextConst 'DEU=Versandoptionberechtigungen f�r Gruppe %1;ENU=Shipping option permissions for group %1';
+      Text017@1000000037 : TextConst 'DEU=Debitorberechtigungen f�r Versandoption %1;ENU=Customer permissions for shipping option %1';
+      Text018@1000000036 : TextConst 'DEU=Versandoptionberechtigungen f�r Debitor %1;ENU=Shipping option permissions for customer %1';
+      Text021@1000000043 : TextConst 'DEU=Gruppenberechtigungen f�r Zahlungsoption %1;ENU=Group permissions for payment option %1';
+      Text022@1000000042 : TextConst 'DEU=Zahlungsberechtigungen f�r Gruppe %1;ENU=Payment option permission for group %1';
+      Text023@1000000041 : TextConst 'DEU=Debitorberechtigungen f�r Zahlungsoptionoption %1;ENU=Customer permissions for payment option %1';
+      Text024@1000000040 : TextConst 'DEU=Zahlungsberechtigungenberechtigungen f�r Debitor %1;ENU=Payment option permissions for customer %1';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

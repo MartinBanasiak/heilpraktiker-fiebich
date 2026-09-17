@@ -1,0 +1,15 @@
+R5447310-N2-C5447301-P8629-A1031-L999:Optionen
+R5447310-N2-C5447302-P8629-A1031-L999:Shopcode
+R5447310-N2-C5447303-P8629-A1031-L999:Sprachcode
+R5447310-N2-C5447304-P8629-A1031-L999:Nav-Stammartikel anlegen
+R5447310-N2-C5447305-P8629-A1031-L999:Artikelnummernserie
+R5447310-N2-C5447306-P8629-A1031-L999:Import Typ
+R5447310-N2-C5447306-P8632-A1031-L999:Kategorie,Artikel
+R5447310-Q1000000045-P26171-A1031-L999:Bitte wählen Sie einen Shop.
+R5447310-Q1000000046-P26171-A1031-L999:Bitte wählen Sie eine Sprache.
+R5447310-Q1000000049-P26171-A1031-L999:Import abgeschlossen.
+R5447310-Q5447323-P26171-A1031-L999:Es wurden Zeilen ohne Artikelnummer gefunden und keine Nummernserie ausgewählt.\\Der Import kann nicht durchgeführt werden.
+R5447310-Q5447325-P26171-A1031-L999:Import wird ausgeführt
+R5447310-Q5447350-P26171-A1031-L999:Der Import konnte für folgende Zeilen nicht durchgeführt werden: \\ %1
+R5447310-U6-Q1000000002-P26171-A1031-L999:Tabellenblatt auswählen
+R5447310-U6-Q1000000003-P26171-A1031-L999:Sie müssen einen Dateinamen angeben.

@@ -1,0 +1,343 @@
+OBJECT Page 5447352 Webshop Totals Chart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table485;
+    PageType=CardPart;
+    OnOpenPage=BEGIN
+                 WebshopRoleCenterMgmt.SetGlobalWorkdate(WORKDATE);
+                 WebshopRoleCenterMgmt.SetGlobalCharttype(ChartType::StackedColumn);
+                 WebshopRoleCenterMgmt.SetGlobalMeasure(Measure::Amount);
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000003;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000015;1 ;ActionGroup;
+                      Name=Measure;
+                      CaptionML=[DEU=Ma�einheit;
+                                 ENU=Measure] }
+      { 1000000016;2 ;Action    ;
+                      Name=Amount;
+                      CaptionML=[DEU=Gesamtumsatz (Summe Betr�ge Geb. Verk.-Rechnungen - Summe Betr�ge Geb. Verk.-Gutschriften);
+                                 ENU=Total (Sum Amounts Posted Sales Inv. - Sum Amounts Posted Sales Cr.Memos)];
+                      OnAction=BEGIN
+                                 Measure := Measure::Amount;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000017;2 ;Action    ;
+                      Name=AmountVAT;
+                      CaptionML=[DEU=Gesamtumsatz (Summe Betr�ge inkl. MwSt. Geb. Verk.-Rechnungen - Summe Betr�ge inkl. MwSt. Geb. Verk.-Gutschriften);
+                                 ENU=Total (Sum Amounts incl. VAT Posted Sales Inv. - Sum Amounts incl. VAT Posted Sales Cr.Memos)];
+                      OnAction=BEGIN
+                                 Measure := Measure::AmountVAT;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000018;2 ;Action    ;
+                      Name=NoOfPostedInvoices;
+                      CaptionML=[DEU=Anzahl gebuchte Verkaufsrechnungen;
+                                 ENU=Number of posted sales invoices];
+                      OnAction=BEGIN
+                                 Measure := Measure::NoOfPostedInvoices;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000019;2 ;Action    ;
+                      Name=NoOfPostedCrMemos;
+                      CaptionML=[DEU=Anzahl gebuchte Gutschriften;
+                                 ENU=Number of posted sales credit memos];
+                      OnAction=BEGIN
+                                 Measure := Measure::NoOfPostedCrMemos;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000004;1 ;ActionGroup;
+                      Name=PeriodLength;
+                      CaptionML=[DEU=Zeitraum;
+                                 ENU=Period Length] }
+      { 1000000005;2 ;Action    ;
+                      Name=Day;
+                      CaptionML=[DEU=Tag;
+                                 ENU=Day];
+                      OnAction=BEGIN
+                                 PeriodLength := PeriodLength::Day;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000006;2 ;Action    ;
+                      Name=Week;
+                      CaptionML=[DEU=Woche;
+                                 ENU=Week];
+                      OnAction=BEGIN
+                                 PeriodLength := PeriodLength::Week;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000007;2 ;Action    ;
+                      Name=Month;
+                      CaptionML=[DEU=Monat;
+                                 ENU=Month];
+                      OnAction=BEGIN
+                                 PeriodLength := PeriodLength::Month;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000008;2 ;Action    ;
+                      Name=Quarter;
+                      CaptionML=[DEU=Quartal;
+                                 ENU=Quarter];
+                      OnAction=BEGIN
+                                 PeriodLength := PeriodLength::Quarter;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000009;2 ;Action    ;
+                      Name=Year;
+                      CaptionML=[DEU=Jahr;
+                                 ENU=Year];
+                      OnAction=BEGIN
+                                 PeriodLength := PeriodLength::Year;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000010;1 ;Action    ;
+                      Name=PreviousPeriod;
+                      CaptionML=[DEU=Voriger Zeitraum;
+                                 ENU=Previous Period];
+                      OnAction=BEGIN
+                                 UpdateChart(MovePeriod::Previous);
+                               END;
+                                }
+      { 1000000011;1 ;Action    ;
+                      Name=NextPeriod;
+                      CaptionML=[DEU=N�chster Zeitraum;
+                                 ENU=Next Period];
+                      OnAction=BEGIN
+                                 UpdateChart(MovePeriod::Next);
+                               END;
+                                }
+      { 1000000014;1 ;ActionGroup;
+                      Name=ChartType;
+                      CaptionML=[DEU=Diagrammtyp;
+                                 ENU=Chart Type] }
+      { 1000000020;2 ;Action    ;
+                      Name=Point;
+                      CaptionML=[DEU=Punkte;
+                                 ENU=Points];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Point;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000021;2 ;Action    ;
+                      Name=Bubble;
+                      CaptionML=[DEU=Kreise;
+                                 ENU=Bubbles];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Bubble;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000022;2 ;Action    ;
+                      Name=Line;
+                      CaptionML=[DEU=Linien;
+                                 ENU=Lines];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Line;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000023;2 ;Action    ;
+                      Name=StepLine;
+                      CaptionML=[DEU=Abgestufte Linien;
+                                 ENU=Step lines];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::StepLine;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000024;2 ;Action    ;
+                      Name=Column;
+                      CaptionML=[DEU=Balken;
+                                 ENU=Columns];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Column;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000025;2 ;Action    ;
+                      Name=StackedColumn;
+                      CaptionML=[DEU=Gestapelte Balken;
+                                 ENU=Stacked columns];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::StackedColumn;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000026;2 ;Action    ;
+                      Name=StackedColumn100;
+                      CaptionML=[DEU=Gestapelte Balken (100%);
+                                 ENU=Stacked columns (100%)];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::StackedColumn100;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000027;2 ;Action    ;
+                      Name=Area;
+                      CaptionML=[DEU=Bereiche;
+                                 ENU=Areas];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Area;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000028;2 ;Action    ;
+                      Name=StackedArea;
+                      CaptionML=[DEU=Gestapelte Bereiche;
+                                 ENU=Stacked areas];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::StackedArea;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000029;2 ;Action    ;
+                      Name=StackedArea100;
+                      CaptionML=[DEU=Gestapelte Bereiche (100%);
+                                 ENU=Stacked areas (100%)];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::StackedArea100;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000030;2 ;Action    ;
+                      Name=Pie;
+                      CaptionML=[DEU=Torte;
+                                 ENU=Pie];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Pie;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000031;2 ;Action    ;
+                      Name=Doughnut;
+                      CaptionML=[DEU=Doughnut;
+                                 ENU=Doughnut];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Doughnut;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000032;2 ;Action    ;
+                      Name=Range;
+                      CaptionML=[DEU=Bereich;
+                                 ENU=Range];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Range;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000033;2 ;Action    ;
+                      Name=Radar;
+                      CaptionML=[DEU=Radar;
+                                 ENU=Radar];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Radar;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000034;2 ;Action    ;
+                      Name=Funnel;
+                      CaptionML=[DEU=Trichter;
+                                 ENU=Funnel];
+                      OnAction=BEGIN
+                                 ChartType := ChartType::Funnel;
+                                 UpdateChart(MovePeriod::" ");
+                               END;
+                                }
+      { 1000000012;1 ;Separator  }
+      { 1000000013;1 ;Action    ;
+                      Name=Refresh;
+                      CaptionML=[DEU=Aktualisieren;
+                                 ENU=Refresh];
+                      Visible=FALSE;
+                      OnAction=BEGIN
+                                 UpdateChart(MovePeriod::" ")
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Field  ;
+                SourceExpr=StatusText }
+
+    { 1000000002;1;Field  ;
+                Name=BusinessChart;
+                ControlAddIn=[Microsoft.Dynamics.Nav.Client.BusinessChart;PublicKeyToken=31bf3856ad364e35] }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopRoleCenterMgmt@1000000000 : Codeunit 5447310;
+      StatusText@1000000001 : Text[250];
+      MovePeriod@1000000002 : ' ,Next,Previous';
+      PeriodLength@1000000003 : 'Day,Week,Month,Quarter,Year';
+      ChartType@1000000004 : 'Point,,Bubble,Line,,StepLine,,,,,Column,StackedColumn,StackedColumn100,Area,,StackedArea,StackedArea100,Pie,Doughnut,,,Range,,,,Radar,,,,,,,,Funnel';
+      Measure@1000000005 : 'Amount,AmountVAT,NoOfPostedInvoices,NoOfPostedCrMemos';
+
+    PROCEDURE UpdateChart@1000000003(MovePeriod@1000000000 : ' ,Next,Previous');
+    BEGIN
+      WebshopRoleCenterMgmt.SetGlobalCharttype(ChartType);
+      WebshopRoleCenterMgmt.SetGlobalMeasure(Measure);
+      WebshopRoleCenterMgmt.UpdateWebshopOrderSalesChart(Rec, MovePeriod, PeriodLength);
+      Update(CurrPage.BusinessChart);
+
+      StatusText := WebshopRoleCenterMgmt.GetChartStatusText;
+    END;
+
+    EVENT BusinessChart@-1000000002::DataPointClicked@1(point@1000000000 : DotNet "'Microsoft.Dynamics.Nav.Client.BusinessChart.Model, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.Client.BusinessChart.BusinessChartDataPoint");
+    BEGIN
+      SetDrillDownIndexes(point);
+      WebshopRoleCenterMgmt.ChartDrillDown(Rec);
+    END;
+
+    EVENT BusinessChart@-1000000002::DataPointDoubleClicked@2(point@1000000000 : DotNet "'Microsoft.Dynamics.Nav.Client.BusinessChart.Model, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.Client.BusinessChart.BusinessChartDataPoint");
+    BEGIN
+    END;
+
+    EVENT BusinessChart@-1000000002::AddInReady@3();
+    BEGIN
+      PeriodLength := PeriodLength::Week;
+      ChartType := ChartType::StackedColumn;
+      Measure := Measure::Amount;
+      WebshopRoleCenterMgmt.SetGlobalWorkdate(WORKDATE);
+
+      UpdateChart(MovePeriod::" ");
+    END;
+
+    EVENT BusinessChart@-1000000002::Refresh@4();
+    BEGIN
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

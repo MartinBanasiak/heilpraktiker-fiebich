@@ -1,0 +1,63 @@
+T5447304-F100-P8629-A1031-L999:Ebay Artikelzustand
+T5447304-F100-P8632-A1031-L999:Neu,Neu (Sonstige),Neu mit Defekt,Vom Hersteller Generalüberholt,Vom Verkäufer generalüberholt,Gebraucht,Sehr Gut,Gut,Akzeptabel,Als Ersatzteil / Defekt;ENU=New,New (other),New with defects,Manufacturer refurbished,Seller refurbished,Used,Very Good,Good,Acceptable,For parts or not working
+T5447304-F101-P8629-A1031-L999:Marketplace Ebay Artikeltemplate
+T5447304-F105-P8629-A1031-L999:Google Produktkategorie
+T5447304-F10-P8629-A1031-L999:Hauptkategorie Zeilennr.
+T5447304-F110-P8629-A1031-L999:Grußkarte
+T5447304-F11-P8629-A1031-L999:Kurztext
+T5447304-F12-P8629-A1031-L999:Letztes Aktualisierungsdatum
+T5447304-F13-P8629-A1031-L999:Letztes Bearbeitungsdatum
+T5447304-F14-P8629-A1031-L999:Benutzer letzte Änderung
+T5447304-F15-P8629-A1031-L999:Hauptbildname
+T5447304-F16-P8629-A1031-L999:Hauptkategoriename
+T5447304-F17-P8629-A1031-L999:Schwellenwert geringer Lagerbestand
+T5447304-F18-P8629-A1031-L999:Suchwörter
+T5447304-F19-P8629-A1031-L999:Lagerbestand letztes Update
+T5447304-F1-P8629-A1031-L999:Shopcode
+T5447304-F20-P8629-A1031-L999:Ist Variante
+T5447304-F21-P8629-A1031-L999:Einheinheitencode
+T5447304-F22-P8629-A1031-L999:Mindestbestellmenge
+T5447304-F23-P8629-A1031-L999:Menge Verpackungseinheit
+T5447304-F24-P8629-A1031-L999:Bestellen nur pro Verpackungseinheit
+T5447304-F2-P8629-A1031-L999:Sprachcode
+T5447304-F30-P8629-A1031-L999:Geschenkverpackung möglich
+T5447304-F31-P8629-A1031-L999:Ist Geschenkverpackung
+T5447304-F32-P8629-A1031-L999:Meta Schlüsselwörter
+T5447304-F33-P8629-A1031-L999:Meta Beschreibung
+T5447304-F34-P8629-A1031-L999:Webseitentitel
+T5447304-F35-P8629-A1031-L999:Erstellungsdatum
+T5447304-F3-P8629-A1031-L999:Artikelnr.
+T5447304-F4-P8629-A1031-L999:Beschreibung
+T5447304-F50-P8629-A1031-L999:Anzahl Passende Artikel
+T5447304-F51-P8629-A1031-L999:Anzahl Kategorien
+T5447304-F52-P8629-A1031-L999:Anzahl Beschreibungen
+T5447304-F53-P8629-A1031-L999:Anzahl Varianten
+T5447304-F54-P8629-A1031-L999:Anzahl Zubehörartikel
+T5447304-F55-P8629-A1031-L999:Anzahl Ersatzteile
+T5447304-F56-P8629-A1031-L999:Anzahl Alternative Artikel
+T5447304-F58-P8629-A1031-L999:Anzahl Bilder
+T5447304-F59-P8629-A1031-L999:Anzahl Videos
+T5447304-F5-P8629-A1031-L999:Variantenbeschreibung
+T5447304-F60-P8629-A1031-L999:Anzahl Dokumente
+T5447304-F61-P8629-A1031-L999:Mutterartikelnr.
+T5447304-F63-P8629-A1031-L999:Hat Varianten
+T5447304-F6-P8629-A1031-L999:Ist Aktiv
+T5447304-F70-P8629-A1031-L999:Gruppenberechtigungen
+T5447304-F71-P8629-A1031-L999:Debitorberechtigungen
+T5447304-F7-P8629-A1031-L999:Startdatum
+T5447304-F80-P8629-A1031-L999:Anzahl Artikelmerkmale
+T5447304-F81-P8629-A1031-L999:Letzter übertragener Retail Price
+T5447304-F82-P8629-A1031-L999:Letzter übertragener Base Price
+T5447304-F8-P8629-A1031-L999:Enddatum
+T5447304-F90-P8629-A1031-L999:Anzahl Individualisierungen
+T5447304-F91-P8629-A1031-L999:Individualisierbarkeit
+T5447304-F91-P8632-A1031-L999:keine,optional,ausschließlich
+T5447304-F92-P8629-A1031-L999:Versandkategorie
+T5447304-F92-P8632-A1031-L999:Keine Kategorie,Kategorie 1,Kategorie 2,Kategorie 3,Kategorie 4,Kategorie 5,Kategorie 6
+T5447304-F93-P8629-A1031-L999:Berechnung Artikelverfügbarkeit
+T5447304-F93-P8632-A1031-L999:Shop-Einstellung,Nach Verfügbarkeit,Nie verfügbar,Immer verfügbar
+T5447304-F94-P8629-A1031-L999:Artikel-URL
+T5447304-F9-P8629-A1031-L999:Hauptbild Zeilennr.
+T5447304-P8629-A1031-L999:Webshop Artikel
+T5447304-Q1000000007-P26171-A1031-L999:Sie dürfen den Datensatz nicht umbenennen
+T5447304-Q1000000009-P26171-A1031-L999:Für die Versandkategorie %1 ist in folgenden Shop(s) / Sprache(n) mindestens eine Versandoption mit der gleichen Kategorie nötig: %2

@@ -1,0 +1,1154 @@
+OBJECT Table 5447345 Webshop Campaign Header
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnModify=BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnDelete=BEGIN
+               WebshopUpdateManagement.DeleteCampaignByCode(Rec.Code);
+             END;
+
+    OnRename=VAR
+               WebshopCampaignElement@1000000000 : Record 5447346;
+             BEGIN
+               WebshopCampaignElement.SETRANGE("Link-to Header Code",xRec.Code);
+               IF WebshopCampaignElement.FINDSET(TRUE,TRUE) THEN REPEAT
+                 WebshopCampaignElement."Link-to Header Code" := Rec.Code;
+                 WebshopCampaignElement.RENAME(TRUE);
+               UNTIL WebshopCampaignElement.NEXT = 0;
+               WebshopUpdateManagement.DeleteCampaignHeader(xRec);
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code20        ;CaptionML=[DEU=Code;
+                                                              ENU=Code] }
+    { 2   ;   ;Description         ;Text80        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 3   ;   ;Active              ;Boolean       ;CaptionML=[DEU=Aktiv;
+                                                              ENU=Active] }
+    { 4   ;   ;Active from Date    ;Date          ;CaptionML=[DEU=Aktiv ab Datum;
+                                                              ENU=Active from date] }
+    { 5   ;   ;Active to Date      ;Date          ;CaptionML=[DEU=Aktiv bis Datum;
+                                                              ENU=Active to date] }
+    { 6   ;   ;Active from Time    ;Time          ;CaptionML=[DEU=Aktiv ab Uhrzeit;
+                                                              ENU=Active from time] }
+    { 7   ;   ;Active to Time      ;Time          ;CaptionML=[DEU=Aktiv bis Uhrzeit;
+                                                              ENU=Active to time] }
+    { 8   ;   ;Multiply applicable ;Boolean       ;CaptionML=[DEU=Mehrfach anwendbar;
+                                                              ENU=Multiply applicable] }
+    { 9   ;   ;Priority            ;Option        ;CaptionML=[DEU=Priorit�t;
+                                                              ENU=Priority];
+                                                   OptionCaptionML=[DEU=1,2,3,4,5,6,7,8,9,10;
+                                                                    ENU=1,2,3,4,5,6,7,8,9,10];
+                                                   OptionString=1,2,3,4,5,6,7,8,9,10 }
+    { 20  ;   ;Cond. Sum Amnt. All Items GTE;Decimal;
+                                                   CaptionML=[DEU=Gesamtsumme Artikel mind.;
+                                                              ENU=Sum total items min.] }
+    { 21  ;   ;Cond. Sum Amnt. Sing. Item GTE;Decimal;
+                                                   CaptionML=[DEU=Gesamtsumme einzelnes Artikels mind.;
+                                                              ENU=Sum total single item min.] }
+    { 22  ;   ;Cond. No. diff. Items GTE;Integer  ;CaptionML=[DEU=Anzahl versch. Artikel mind.;
+                                                              ENU=No. of different items min.] }
+    { 23  ;   ;Cond. Total Item Qty. GTE;Decimal  ;CaptionML=[DEU=Gesamtmenge Artikel mind.;
+                                                              ENU=Total qty. items min.] }
+    { 24  ;   ;Cond. Qty. Single Item GTE;Decimal ;CaptionML=[DEU=Menge einzelnes Artikels mind.;
+                                                              ENU=Qty. single item min.] }
+    { 25  ;   ;Cond. Basket Total GTE;Decimal     ;CaptionML=[DEU=Summe Warenkorb mind.;
+                                                              ENU=Sum basket min.] }
+    { 26  ;   ;Cond. Sum Amnt. Each Item GTE;Decimal;
+                                                   CaptionML=[DEU=Gesamtsumme jedes Artikels mind.;
+                                                              ENU=Sum total each item min.] }
+    { 27  ;   ;Cond. Qty. Each Item GTE;Decimal   ;CaptionML=[DEU=Menge jedes Artikels mind.;
+                                                              ENU=Qty. each item min.] }
+    { 40  ;   ;Discount Amnt.      ;Decimal       ;CaptionML=[DEU=Rabatt Betrag;
+                                                              ENU=Discount amount] }
+    { 41  ;   ;Discount Amnt. applies to;Option   ;CaptionML=[DEU=Rabatt Betrag g�ltig f�r;
+                                                              ENU=Discount amount applies to];
+                                                   OptionCaptionML=[DEU=" ,Aktuellen Konditions-Artikel,Alle Konditions-Artikel,Alle Aktions-Artikel,Warenkorb";
+                                                                    ENU=" ,Current condition-item,All condition-items,All action-items,basket"];
+                                                   OptionString=None,CurrCondItem,AllCondItem,AllActItem,Basket }
+    { 42  ;   ;Discount Percent    ;Decimal       ;CaptionML=[DEU=Rabatt Prozent;
+                                                              ENU=Discount Percent] }
+    { 43  ;   ;Discount Percent applies to;Option ;CaptionML=[DEU=Rabatt Prozenz g�ltig f�r;
+                                                              ENU=Discount percent applies to];
+                                                   OptionCaptionML=[DEU=" ,Aktuellen Konditions-Artikel,Alle Konditions-Artikel,G�nstigster Konditions-Artikel,Alle Aktions-Artikel,Warenkorb";
+                                                                    ENU=" ,Current condition-item,All condition-items,Least expensive condition-item,All action-items,basket"];
+                                                   OptionString=None,CurrCondItem,AllCondItem,LeastExpCondItem,AllActItem,Basket }
+    { 44  ;   ;Qty. Free Item      ;Decimal       ;CaptionML=[DEU=Menge kostenloser Artikel;
+                                                              ENU=Qty. Free Item] }
+    { 45  ;   ;Type Free Item      ;Option        ;CaptionML=[DEU=Kostenloser Artikel Typ;
+                                                              ENU=Type free item];
+                                                   OptionCaptionML=[DEU=" ,Aktueller Konditions-Artikel,G�nstigster Konditions-Artikel,Alle Aktions-Artikel";
+                                                                    ENU=" ,Current condition-item,Least expensive condition-item,All action-items"];
+                                                   OptionString=[ ,CurrConditem,LeastExpCondItem,AllActItem] }
+    { 46  ;   ;Alternative Shipping Option;Boolean;CaptionML=[DEU=Abweichende Versandoption;
+                                                              ENU=Alternative shipping option] }
+    { 47  ;   ;Discount applies to Qty. (max);Decimal;
+                                                   CaptionML=[DEU=Rabatt g�ltig f�r Menge (max.);
+                                                              ENU=Discount applies to Qty. (max)] }
+    { 60  ;   ;Icon Condition Items;Boolean       ;CaptionML=[DEU=Icon Konditions-Artikel;
+                                                              ENU=Icon condition-items];
+                                                   Editable=No }
+    { 61  ;   ;Banner Condition Items;Boolean     ;CaptionML=[DEU=Banner Konditions-Artikel;
+                                                              ENU=Banner condition-items];
+                                                   Editable=No }
+    { 62  ;   ;Text Condition Items;Code20        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Konditions-Artikel;
+                                                              ENU=Text condition-items] }
+    { 63  ;   ;Icon Action Items   ;Boolean       ;CaptionML=[DEU=Icon Aktions-Artikel;
+                                                              ENU=Icon action-items];
+                                                   Editable=No }
+    { 64  ;   ;Banner Action Items ;Boolean       ;CaptionML=[DEU=Banner Aktions-Artikel;
+                                                              ENU=Banner action-items];
+                                                   Editable=No }
+    { 65  ;   ;Text Action Items   ;Code20        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Aktions-Artikel;
+                                                              ENU=Text action-items] }
+    { 66  ;   ;Banner Basket       ;Boolean       ;CaptionML=[DEU=Banner Warenkorb;
+                                                              ENU=Banner basket];
+                                                   Editable=No }
+    { 67  ;   ;Text Basket         ;Code20        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Warenkorb;
+                                                              ENU=Text basket] }
+    { 68  ;   ;Shop Code           ;Code20        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Webshop Code;
+                                                              ENU=Webshop Code] }
+    { 69  ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Webshop Sprachcode;
+                                                              ENU=Webshop Language Code] }
+    { 72  ;   ;Date Last Modified  ;DateTime      ;CaptionML=[DEU=Datum letzte �nderung;
+                                                              ENU=Date Last Modified] }
+    { 73  ;   ;Date Last Updated   ;DateTime      ;CaptionML=[DEU=Datum letzte Aktualisierung;
+                                                              ENU=Date Last Updated] }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+    {    ;Priority,Code                            }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      Error001@1000000000 : TextConst 'DEU=Es kann nur ein Konditionsfeld pro Kampagne gef�llt sein.;ENU=Only one condition-field can be set per campaign.';
+      Error002@1000000001 : TextConst 'DEU=Es kann nur eine Aktion pro Kampagne ausgew�hlt werden.;ENU=Only one action can be set per campaign.';
+      WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+      AllItemsFullfillmentKey@1000000003 : TextConst 'ENU=All';
+      AllCondItemsFulfillmentKey@1000000004 : TextConst 'ENU=AllCond';
+
+    PROCEDURE ApplyActiveCampaignsToSalesOrder@1000000000(OrderNo@1000000000 : Code[20]);
+    VAR
+      SalesHeader@1000000001 : Record 36;
+      SalesLine@1000000004 : Record 37;
+      WebshopCampaignHeader@1000000002 : Record 5447345;
+      WebshopCampaignElement@1000000003 : Record 5447346;
+      SalesLineItemsTmp@1000000006 : TEMPORARY Record 37;
+      SalesLineCondItemsTmp@1000000005 : TEMPORARY Record 37;
+      SalesLineActItemsTmp@1000000013 : TEMPORARY Record 37;
+      ItemFullfillmentFactors@1000000007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      CampaignApplication@1000000008 : Record 5447347;
+      ExistingApplicationHandlingDialog@1000000009 : Dialog;
+      ExistingApplicationHandlingQuestion@1000000010 : TextConst 'DEU=Die anwendbare Kampagne mit dem Code %1 wurde bereits auf diese Verkaufsbestellung angewandt.\Wie soll mit der Kampagne verfahren werden?;ENU=The applicable Campaign with Code %1 has already been applied to this Sales Order.\How should the Campaign be handled?';
+      ExistingApplicationHandlingOptions@1000000011 : TextConst 'DEU=�berspringen,Ein weiteres Mal anwenden,R�ckg�ngig machen und neu anwenden;ENU=Skip,Apply a further time,Revert and apply anew';
+      SelectedHandlingOption@1000000012 : Integer;
+      NoOfAppliedCampaigns@1000000014 : Integer;
+      ExitMessage@1000000015 : TextConst 'DEU=Die folgenden Kampagnen sind nun auf die Verkaufsbestellung angewandt:\%1;ENU=The following Campaigns are now applied to the Sales Order:\%1';
+      DateFilter1@1000000016 : TextConst 'ENU="''''|<=%1"';
+      DateFilter2@1000000017 : TextConst 'ENU="''''|>=%1"';
+      CampaignString@1000000018 : Text;
+    BEGIN
+      IF SalesHeader.GET(SalesHeader."Document Type"::Order,OrderNo) THEN BEGIN
+
+        NoOfAppliedCampaigns := 0;
+        ItemFullfillmentFactors := ItemFullfillmentFactors.Dictionary;
+
+        WebshopCampaignHeader.SETRANGE(Active,TRUE);
+        WebshopCampaignHeader.SETFILTER("Active from Date",DateFilter1,WORKDATE);
+        WebshopCampaignHeader.SETFILTER("Active to Date",DateFilter2,WORKDATE);
+        WebshopCampaignHeader.SETFILTER("Active from Time",DateFilter1,TIME);
+        WebshopCampaignHeader.SETFILTER("Active to Time",DateFilter2,TIME);
+        IF WebshopCampaignHeader.FINDSET(FALSE,FALSE) THEN REPEAT
+          // Make Tmp Copy of Item Sales Lines for Campaign Condition/Action-Item Evaluation
+          // Do inside loop because applications of campaigns need to get the itemset
+          // as previously modified by other campaigns in the loop
+          SalesLineItemsTmp.RESET;
+          SalesLineItemsTmp.DELETEALL(FALSE);
+          SalesLine.RESET;
+          SalesLine.SETRANGE("Document Type",SalesLine."Document Type"::Order);
+          SalesLine.SETRANGE("Document No.",OrderNo);
+          SalesLine.SETRANGE(Type,SalesLine.Type::Item);
+          IF SalesLine.FINDSET(FALSE,FALSE) THEN REPEAT
+            SalesLineItemsTmp := SalesLine;
+            SalesLineItemsTmp.INSERT(FALSE);
+          UNTIL SalesLine.NEXT = 0;
+
+          IF SalesLineItemsTmp.COUNT > 0 THEN BEGIN
+            // Check if Campaign was already applied to Sales Order when GUIALLOWED
+            // Let user select Skipping, Applying a further time, and Reverting before applying again
+            // Pre-Select "Skip" if campaign is not multiply applicable, "Apply a further time" otherwise
+            IF WebshopCampaignHeader."Multiply applicable" THEN
+              SelectedHandlingOption := 2
+            ELSE
+              SelectedHandlingOption := 1;
+            IF GUIALLOWED THEN BEGIN
+              CampaignApplication.RESET;
+              CampaignApplication.SETRANGE("Campaign Code",WebshopCampaignHeader.Code);
+              CampaignApplication.SETRANGE("Order No.",SalesHeader."No.");
+              IF (NOT CampaignApplication.ISEMPTY) AND WebshopCampaignHeader."Multiply applicable" THEN
+                SelectedHandlingOption := DIALOG.STRMENU(ExistingApplicationHandlingOptions,SelectedHandlingOption,STRSUBSTNO(ExistingApplicationHandlingQuestion,WebshopCampaignHeader.Code));
+            END;
+            IF CampaignApplication.ISEMPTY OR (SelectedHandlingOption > 1) THEN BEGIN // 1 = Skip
+              IF SelectedHandlingOption = 3 THEN // 3 = Revert before applying
+                  CampaignApplication.UnapplyCampaignAdjustmentForSalesOrder(SalesHeader,WebshopCampaignHeader.Code);
+              SalesLineCondItemsTmp.RESET;
+              SalesLineCondItemsTmp.DELETEALL(FALSE);
+              ItemFullfillmentFactors.Clear;
+              IF DoesCampaignApplyToSalesOrder(WebshopCampaignHeader,SalesHeader,SalesLineCondItemsTmp,ItemFullfillmentFactors) THEN BEGIN
+                FilterSalesOrderLinesIntoTmpByCampaignElements(SalesLineItemsTmp,SalesLineActItemsTmp,WebshopCampaignHeader,1); // 1 = Action
+                COMMIT;
+                ApplyCampaignToSalesOrder(SalesHeader,WebshopCampaignHeader,SalesLineCondItemsTmp,SalesLineActItemsTmp,ItemFullfillmentFactors);
+              END;
+            END;
+          END;
+        UNTIL WebshopCampaignHeader.NEXT = 0;
+        IF GUIALLOWED THEN
+          CampaignApplication.RESET;
+          CampaignApplication.SETRANGE("Order No.",OrderNo);
+          IF CampaignApplication.FINDSET(FALSE,FALSE) THEN REPEAT
+            IF WebshopCampaignHeader.GET(CampaignApplication."Campaign Code") AND (STRPOS(CampaignString,WebshopCampaignHeader.Description) = 0) THEN BEGIN
+              IF  CampaignString <> '' THEN
+                CampaignString += '\';
+              CampaignString += ' - ' + WebshopCampaignHeader.Description;
+            END;
+          UNTIL CampaignApplication.NEXT = 0;
+          MESSAGE(STRSUBSTNO(ExitMessage,CampaignString));
+      END;
+    END;
+
+    LOCAL PROCEDURE DoesCampaignApplyToSalesOrder@1000000001(WebshopCampaignHeader@1000000002 : Record 5447345;SalesHeader@1000000000 : Record 36;VAR SalesLineCondItemsTmp@1000000004 : TEMPORARY Record 37;VAR ItemFullfillmentFactors@1000000008 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") IsApplicable : Boolean;
+    VAR
+      Error001@1000000001 : TextConst 'DEU=Es muss extakt ein Webshop Kampagnen Kopf als Parameter an die Funktion\DoesCampaignHeaderApplyToSalesOrder �bergeben werden!;ENU=Exactly one Webshop Campaign Header record must be passed\to the function DoesCampaignHeaderApplyToSalesOrder!';
+      Error002@1000000003 : TextConst 'DEU=Es muss exakt ein Verkaufskopf an die Funktion\DoesCampaignApplyToSalesOrder �bergeben werden!;ENU=Exactly one Sales Header must be passed\to the function DoesCampaignApplyToSalesOrder!';
+      Error003@1000000005 : TextConst 'DEU=Der SalesLineCondItemsTmp Parameter muss tempor�r sein!;ENU=The SalesLineCondItemsTmp parameter must be temporary!';
+      SalesLine@1000000007 : Record 37;
+      CompiledErrorMessage@1000000006 : Text;
+      HasError@1000000009 : Boolean;
+    BEGIN
+      //  Pass a non-filtered, empty temporary Sales Line Record Variable as
+      //  the value of SalesLineCondItemsTmp. If the function returns true,
+      //  the variable will contain the filtered condition items of the Sales Order.
+
+      CompiledErrorMessage := '';
+      IF NOT WebshopCampaignHeader.GET(WebshopCampaignHeader.Code) THEN BEGIN
+        HasError := TRUE;
+        CompiledErrorMessage += Error001;
+      END;
+      IF NOT SalesHeader.GET(SalesHeader."Document Type",SalesHeader."No.") THEN BEGIN
+        IF HasError THEN
+          CompiledErrorMessage += '\';
+        CompiledErrorMessage += Error002;
+        HasError := TRUE;
+      END;
+      IF NOT SalesLineCondItemsTmp.ISTEMPORARY THEN BEGIN
+        IF HasError THEN
+         CompiledErrorMessage += '\';
+        CompiledErrorMessage += Error003;
+        HasError := TRUE;
+      END;
+      IF HasError THEN
+        ERROR(CompiledErrorMessage);
+
+      SalesLine.SETRANGE("Document Type",SalesLine."Document Type"::Order);
+      SalesLine.SETRANGE("Document No.",SalesHeader."No.");
+      SalesLine.SETRANGE(Type,SalesLine.Type::Item);
+
+      FilterSalesOrderLinesIntoTmpByCampaignElements(SalesLine,SalesLineCondItemsTmp,WebshopCampaignHeader,0); // 0 = Condition
+
+      IF ((WebshopCampaignHeader."Cond. Total Item Qty. GTE" = 0) AND (WebshopCampaignHeader."Cond. Sum Amnt. Sing. Item GTE" = 0) AND (WebshopCampaignHeader."Cond. Sum Amnt. Each Item GTE" = 0) AND
+        (WebshopCampaignHeader."Cond. Sum Amnt. All Items GTE" = 0) AND (WebshopCampaignHeader."Cond. Qty. Single Item GTE" = 0) AND (WebshopCampaignHeader."Cond. Qty. Each Item GTE" = 0) AND
+        (WebshopCampaignHeader."Cond. No. diff. Items GTE" = 0) AND (WebshopCampaignHeader."Cond. Basket Total GTE" = 0)) THEN
+        IsApplicable := TRUE;
+
+      IF NOT WebshopCampaignHeader.Active THEN
+        IsApplicable := FALSE
+      ELSE IF ((WebshopCampaignHeader."Cond. Basket Total GTE" > 0) AND IsItemSalesLineTotalAmntGTE(SalesLine,WebshopCampaignHeader."Cond. Basket Total GTE",ItemFullfillmentFactors)) OR
+        ((WebshopCampaignHeader."Cond. No. diff. Items GTE" > 0) AND IsNoOfDistSalesLineCondItemsGTE(SalesLineCondItemsTmp,WebshopCampaignHeader."Cond. No. diff. Items GTE",ItemFullfillmentFactors)) OR
+        ((WebshopCampaignHeader."Cond. Qty. Each Item GTE" > 0) AND IsEachSalesLineCondItemQtyGTE(SalesLineCondItemsTmp,WebshopCampaignHeader."Cond. Qty. Each Item GTE",ItemFullfillmentFactors)) OR
+        ((WebshopCampaignHeader."Cond. Qty. Single Item GTE" > 0) AND IsAnySalesLineCondItemQtyGTE(SalesLineCondItemsTmp,WebshopCampaignHeader."Cond. Qty. Single Item GTE",ItemFullfillmentFactors)) OR
+        ((WebshopCampaignHeader."Cond. Sum Amnt. All Items GTE" > 0) AND IsItemSalesLineTotalAmntGTE(SalesLineCondItemsTmp,WebshopCampaignHeader."Cond. Sum Amnt. All Items GTE",ItemFullfillmentFactors)) OR
+        ((WebshopCampaignHeader."Cond. Sum Amnt. Each Item GTE" > 0) AND IsAmntEachSalesLineCondItemGTE(SalesLineCondItemsTmp,WebshopCampaignHeader."Cond. Sum Amnt. Each Item GTE",ItemFullfillmentFactors)) OR
+        ((WebshopCampaignHeader."Cond. Sum Amnt. Sing. Item GTE" > 0) AND IsAmntAnySalesLineCondItemGTE(SalesLineCondItemsTmp,WebshopCampaignHeader."Cond. Sum Amnt. Sing. Item GTE",ItemFullfillmentFactors)) OR
+        ((WebshopCampaignHeader."Cond. Total Item Qty. GTE" > 0) AND IsCondItemTotalQtyGTE(SalesLineCondItemsTmp,WebshopCampaignHeader."Cond. Total Item Qty. GTE",ItemFullfillmentFactors)) THEN
+        IsApplicable := TRUE;
+    END;
+
+    LOCAL PROCEDURE ApplyCampaignToSalesOrder@1000000010(SalesHeader@1000000000 : Record 36;WebshopCampaignHeader@1000000001 : Record 5447345;VAR FilteredCondItemSalesLinesTmp@1000000002 : TEMPORARY Record 37;VAR FilteredActItemSalesLinesTmp@1000000016 : TEMPORARY Record 37;VAR ItemFullfillmentFactors@1000000003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2");
+    VAR
+      ActionType@1000000014 : 'Discount,FreeItem,SpecialShipping';
+      ActionApplicationTarget@1000000015 : 'None,CurrCondItem,AllCondItem,LeastExpCondItem,AllActItem,Basket';
+      DictvalueVariant@1000000005 : Variant;
+      ItemCriteriaFullfillmentFactor@1000000004 : Decimal;
+      WebshopCampaignElement@1000000011 : Record 5447346;
+      ItemNo@1000000006 : Code[20];
+      SalesLine@1000000007 : Record 37;
+      DiscountValue@1000000008 : Decimal;
+      DiscountType@1000000009 : 'Percent,Amount';
+      FreeItemNo@1000000010 : Code[20];
+      WebshopItemCategory@1000000012 : Record 5447305;
+      WebshopCategory@1000000013 : Record 5447303;
+    BEGIN
+      IF (WebshopCampaignHeader."Discount Amnt." > 0) OR (WebshopCampaignHeader."Discount Percent" > 0) THEN
+        ApplyCampaignDiscountToSalesOrder(WebshopCampaignHeader,SalesHeader,FilteredCondItemSalesLinesTmp,FilteredActItemSalesLinesTmp,ItemFullfillmentFactors)
+      ELSE IF (WebshopCampaignHeader."Qty. Free Item" > 0) THEN
+        AddCampaignFreeItemsToSalesOrder(WebshopCampaignHeader,SalesHeader,FilteredCondItemSalesLinesTmp,ItemFullfillmentFactors)
+      ELSE IF WebshopCampaignHeader."Alternative Shipping Option" THEN
+        AddCampaignShippingToSalesLineSet(WebshopCampaignHeader,SalesHeader);
+
+      IF ItemFullfillmentFactors.TryGetValue(ItemNo,DictvalueVariant) AND DictvalueVariant.ISDECIMAL THEN
+        ItemCriteriaFullfillmentFactor := DictvalueVariant;
+      COMMIT;
+    END;
+
+    LOCAL PROCEDURE IsItemSalesLineTotalAmntGTE@1000000002(VAR ItemSalesLines@1000000002 : Record 37;Limit@1000000001 : Decimal;VAR ItemFullfillmentFactors@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") IsGreaterOrEqual : Boolean;
+    VAR
+      SumAmounts@1000000003 : Decimal;
+      Factor@1000000004 : Decimal;
+      KeyVariant@1000000005 : Variant;
+      ValueVariant@1000000006 : Variant;
+    BEGIN
+      IF ItemSalesLines.FINDSET(FALSE,FALSE) THEN REPEAT
+        SumAmounts += ItemSalesLines."Line Amount"
+      UNTIL ItemSalesLines.NEXT = 0;
+      IF (SumAmounts >= Limit) AND (Limit > 0) AND (SumAmounts > 0) THEN BEGIN
+        IsGreaterOrEqual := TRUE;
+        Factor := ROUND((SumAmounts / Limit),1,'<');
+        IF Factor < 1 THEN
+          Factor := 1;
+        KeyVariant := AllItemsFullfillmentKey;
+        ValueVariant := Factor;
+        ItemFullfillmentFactors.Item(KeyVariant,ValueVariant);
+      END;
+    END;
+
+    LOCAL PROCEDURE IsNoOfDistSalesLineCondItemsGTE@1000000003(VAR SalesLineConditionItems@1000000002 : TEMPORARY Record 37;Limit@1000000001 : Decimal;VAR ItemFullfillmentFactors@1000000003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") IsGreaterOrEqual : Boolean;
+    VAR
+      Count@1000000006 : Integer;
+      Factor@1000000005 : Decimal;
+      KeyVariant@1000000004 : Variant;
+      ValueVariant@1000000000 : Variant;
+    BEGIN
+      Count := SalesLineConditionItems.COUNT;
+      IF (Count >= Limit) AND (Count > 0) AND (Limit > 0) THEN BEGIN
+        IsGreaterOrEqual := TRUE;
+        Factor := ROUND((Count / Limit),1,'<');
+        IF Factor < 1 THEN
+          Factor := 1;
+        KeyVariant := AllItemsFullfillmentKey;
+        ValueVariant := Factor;
+        ItemFullfillmentFactors.Item(KeyVariant,ValueVariant);
+      END;
+    END;
+
+    LOCAL PROCEDURE IsEachSalesLineCondItemQtyGTE@1000000004(VAR SalesLineConditionItems@1000000002 : TEMPORARY Record 37;Limit@1000000001 : Decimal;VAR ItemFullfillmentFactors@1000000003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") IsGreaterOrEqual : Boolean;
+    VAR
+      Factor@1000000005 : Decimal;
+      KeyVariant@1000000004 : Variant;
+      ValueVariant@1000000000 : Variant;
+    BEGIN
+      IsGreaterOrEqual := TRUE;
+      IF SalesLineConditionItems.FINDSET(FALSE,FALSE) THEN REPEAT
+        IF SalesLineConditionItems.Quantity < Limit THEN
+          IsGreaterOrEqual := FALSE
+        ELSE IF (SalesLineConditionItems.Quantity > 0) AND (Limit > 0) THEN BEGIN
+          Factor := ROUND((SalesLineConditionItems.Quantity / Limit),1,'<');
+          IF Factor < 1 THEN
+            Factor := 1;
+          KeyVariant := SalesLineConditionItems."No.";
+          ValueVariant := Factor;
+          ItemFullfillmentFactors.Item(KeyVariant,ValueVariant);
+        END
+      UNTIL SalesLineConditionItems.NEXT = 0;
+    END;
+
+    LOCAL PROCEDURE IsAnySalesLineCondItemQtyGTE@1000000005(VAR SalesLineConditionItems@1000000002 : TEMPORARY Record 37;Limit@1000000001 : Decimal;VAR ItemFullfillmentFactors@1000000003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") IsGreaterOrEqual : Boolean;
+    VAR
+      Factor@1000000005 : Decimal;
+      KeyVariant@1000000004 : Variant;
+      ValueVariant@1000000000 : Variant;
+    BEGIN
+      IsGreaterOrEqual := FALSE;
+      IF SalesLineConditionItems.FINDSET(FALSE,FALSE) THEN REPEAT
+        IF (SalesLineConditionItems.Quantity >= Limit) AND (SalesLineConditionItems.Quantity > 0) AND (Limit > 0) THEN BEGIN
+          IsGreaterOrEqual := TRUE;
+          Factor := ROUND((SalesLineConditionItems.Quantity / Limit),1,'<');
+          IF Factor < 1 THEN
+            Factor := 1;
+          KeyVariant := SalesLineConditionItems."No.";
+          ValueVariant := Factor;
+          ItemFullfillmentFactors.Item(KeyVariant,ValueVariant);
+        END
+      UNTIL SalesLineConditionItems.NEXT = 0;
+    END;
+
+    LOCAL PROCEDURE IsAmntEachSalesLineCondItemGTE@1000000007(VAR SalesLineConditionItems@1000000002 : TEMPORARY Record 37;Limit@1000000001 : Decimal;VAR ItemFullfillmentFactors@1000000004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") IsGreaterOrEqual : Boolean;
+    VAR
+      Factor@1000000006 : Decimal;
+      KeyVariant@1000000005 : Variant;
+      ValueVariant@1000000000 : Variant;
+    BEGIN
+      IsGreaterOrEqual := TRUE;
+      IF SalesLineConditionItems.FINDSET(FALSE,FALSE) THEN REPEAT
+        IF SalesLineConditionItems."Line Amount" < Limit THEN
+          IsGreaterOrEqual := FALSE
+        ELSE IF (SalesLineConditionItems."Line Amount" > 0) AND (Limit > 0) THEN BEGIN
+          Factor := ROUND((SalesLineConditionItems."Line Amount" / Limit),1,'<');
+          IF Factor < 1 THEN
+            Factor := 1;
+          KeyVariant := SalesLineConditionItems."No.";
+          ValueVariant := Factor;
+          ItemFullfillmentFactors.Item(KeyVariant,ValueVariant);
+        END
+      UNTIL SalesLineConditionItems.NEXT = 0;
+    END;
+
+    LOCAL PROCEDURE IsAmntAnySalesLineCondItemGTE@1000000008(VAR SalesLineConditionItems@1000000002 : TEMPORARY Record 37;Limit@1000000001 : Decimal;VAR ItemFullfillmentFactors@1000000004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") IsGreaterOrEqual : Boolean;
+    VAR
+      Factor@1000000006 : Decimal;
+      KeyVariant@1000000005 : Variant;
+      ValueVariant@1000000000 : Variant;
+    BEGIN
+      IsGreaterOrEqual := FALSE;
+      IF SalesLineConditionItems.FINDSET(FALSE,FALSE) THEN REPEAT
+        IF (SalesLineConditionItems.Quantity >= Limit) AND (SalesLineConditionItems.Quantity > 0) AND (Limit > 0) THEN BEGIN
+          IsGreaterOrEqual := TRUE;
+          Factor := ROUND((SalesLineConditionItems.Quantity / Limit),1,'<');
+          IF Factor < 1 THEN
+            Factor := 1;
+          KeyVariant := SalesLineConditionItems."No.";
+          ValueVariant := Factor;
+          ItemFullfillmentFactors.Item(KeyVariant,ValueVariant);
+        END
+      UNTIL SalesLineConditionItems.NEXT = 0;
+    END;
+
+    LOCAL PROCEDURE IsCondItemTotalQtyGTE@1000000022(VAR SalesLineConditionItems@1000000002 : TEMPORARY Record 37;Limit@1000000001 : Decimal;VAR ItemFullfillmentFactors@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") IsGreaterOrEqual : Boolean;
+    VAR
+      SumQtys@1000000003 : Decimal;
+      Factor@1000000004 : Decimal;
+      KeyVariant@1000000005 : Variant;
+      ValueVariant@1000000006 : Variant;
+    BEGIN
+      IF SalesLineConditionItems.FINDSET(FALSE,FALSE) THEN REPEAT
+        SumQtys += SalesLineConditionItems.Quantity;
+      UNTIL SalesLineConditionItems.NEXT = 0;
+      IF (SumQtys >= Limit) AND (Limit > 0) AND (SumQtys > 0) THEN BEGIN
+        IsGreaterOrEqual := TRUE;
+        Factor := ROUND((SumQtys / Limit),1,'<');
+        IF Factor < 1 THEN
+          Factor := 1;
+        KeyVariant := AllItemsFullfillmentKey;
+        ValueVariant := Factor;
+        ItemFullfillmentFactors.Item(KeyVariant,ValueVariant);
+      END;
+    END;
+
+    LOCAL PROCEDURE FilterSalesOrderLinesIntoTmpByCampaignElements@1000000009(VAR SourceSalesOrderLines@1000000006 : Record 37;VAR TargetSalesOrderLinesTmp@1000000000 : TEMPORARY Record 37;WebshopCampaignHeader@1000000001 : Record 5447345;FilterType@1000000003 : 'Condition,Action');
+    VAR
+      Error001@1000000004 : TextConst 'DEU=Der Verkaufsauftragszeilen-Parameter, welche an die Funktion\FilterSalesorderLinesForConditems �bergeben wird muss tempor�r sein!;ENU=The Sales Order Lines Parameter passed to the function\FiltersalesOrderLinesForCondItems must be temporary!';
+      Error002@1000000005 : TextConst 'DEU=Es muss exat ein Webshop Kampagnen Kopf an die Funktion\FilterSalesOrderLinesForConditems �bergeben werden!;ENU=Exactly one Webshop Campaign Header must be passed\to the function FilterSalesorderLinesForConditems';
+      ElementType@1000000002 : 'Condition,Action';
+    BEGIN
+      IF NOT TargetSalesOrderLinesTmp.ISTEMPORARY THEN
+        ERROR(Error001);
+      IF NOT WebshopCampaignHeader.GET(WebshopCampaignHeader.Code) THEN
+        ERROR(Error002);
+
+      TargetSalesOrderLinesTmp.RESET;
+      TargetSalesOrderLinesTmp.DELETEALL(FALSE);
+
+      IF SourceSalesOrderLines.FINDSET(TRUE,TRUE) THEN REPEAT
+        IF (SourceSalesOrderLines.Type = SourceSalesOrderLines.Type::Item) AND DoesItemMatchCampaignElements(SourceSalesOrderLines."No.",SourceSalesOrderLines."Variant Code",WebshopCampaignHeader,FilterType) THEN BEGIN
+          TargetSalesOrderLinesTmp := SourceSalesOrderLines;
+          TargetSalesOrderLinesTmp.INSERT(FALSE);
+        END;
+      UNTIL SourceSalesOrderLines.NEXT = 0;
+    END;
+
+    LOCAL PROCEDURE DoesItemMatchCampaignElements@1000000012(ItemNo@1000000000 : Code[20];VariantCode@1000000015 : Code[10];WebshopCampaignHeader@1000000001 : Record 5447345;ElementType@1000000023 : 'Condition,Action') Matches : Boolean;
+    VAR
+      WebshopCampaignElement@1000000014 : Record 5447346;
+      WebshopItem@1000000003 : Record 5447304;
+      WebshopShop@1000000018 : Record 5447301;
+      WebshopShopList@1000000016 : Page 5447302;
+      ShopCode@1000000017 : Code[20];
+      WebshopLanguage@1000000019 : Record 5447302;
+      WebshopLanguageList@1000000020 : Page 5447304;
+      LanguageCode@1000000021 : Code[10];
+      WebshopItemCategory@1000000002 : Record 5447305;
+      Error001@1000000004 : TextConst 'DEU=Es muss exat ein Webshop Kampagnen Kopf an die Funktion\FilterSalesOrderLinesForConditems �bergeben werden!;ENU=Exactly one Webshop Campaign Header must be passed\to the function FilterSalesorderLinesForConditems';
+      Error002@1000000005 : TextConst 'DEU=Der Vorgang wird beendet - Grund:\kein Shop Code in Webshop Kampagne gesetzt trotz Kategorie-Konditionen.;ENU=The process is being terminated - reason:\No Shop Code set in Webshop Campaign despite category conditions.';
+      ItemCategoriesWithAncestorsTmp@1000000022 : TEMPORARY Record 5447303;
+      HasCategoryIncludes@1000000006 : Boolean;
+      HasCategoryExcludes@1000000007 : Boolean;
+      HasCategoryConditions@1000000008 : Boolean;
+      HasItemIncludes@1000000009 : Boolean;
+      HasItemExcludes@1000000010 : Boolean;
+      HasItemConditions@1000000011 : Boolean;
+      HasIncludes@1000000012 : Boolean;
+      HasExcludes@1000000013 : Boolean;
+    BEGIN
+      IF NOT WebshopCampaignHeader.GET(WebshopCampaignHeader.Code) THEN
+        ERROR(Error001);
+
+      WebshopCampaignElement.SETRANGE("Link-to Header Code",WebshopCampaignHeader.Code);
+      WebshopCampaignElement.SETRANGE("Link Type",ElementType);
+      IF WebshopCampaignElement.FINDSET(FALSE,FALSE) THEN REPEAT
+        IF WebshopCampaignElement."Include / Exclude" = WebshopCampaignElement."Include / Exclude"::"0" THEN BEGIN
+          HasIncludes := TRUE;
+          IF WebshopCampaignElement."Item No." <> '' THEN BEGIN
+            HasItemIncludes := TRUE;
+            HasItemConditions := TRUE;
+          END ELSE IF WebshopCampaignElement."Category Line No." <> 0 THEN BEGIN
+            HasCategoryIncludes := TRUE;
+            HasCategoryConditions := TRUE;
+          END;
+        END ELSE BEGIN
+          HasExcludes := TRUE;
+          IF WebshopCampaignElement."Item No." <> '' THEN BEGIN
+            HasItemExcludes := TRUE;
+            HasItemConditions := TRUE;
+          END ELSE IF WebshopCampaignElement."Category Line No." <> 0 THEN BEGIN
+            HasCategoryExcludes := TRUE;
+            HasCategoryConditions := TRUE;
+          END;
+        END;
+      UNTIL WebshopCampaignElement.NEXT = 0;
+
+      // Prepare Category checks if necessary
+      IF HasCategoryConditions THEN BEGIN
+
+        IF WebshopCampaignHeader."Shop Code" = '' THEN
+          IF GUIALLOWED AND (WebshopShopList.RUNMODAL = ACTION::LookupOK) THEN BEGIN
+            WebshopShopList.GETRECORD(WebshopShop);
+            ShopCode := WebshopShop.Code;
+          END ELSE
+            ERROR(Error002)
+        ELSE
+          ShopCode := WebshopCampaignHeader."Shop Code";
+
+        IF WebshopCampaignHeader."Language Code" = '' THEN BEGIN
+          WebshopLanguage.SETRANGE(WebshopLanguage."Shop Code",ShopCode);
+          WebshopLanguageList.SETTABLEVIEW(WebshopLanguage);
+          IF GUIALLOWED AND (WebshopLanguageList.RUNMODAL = ACTION::LookupOK) THEN BEGIN
+            WebshopLanguageList.GETRECORD(WebshopLanguage);
+            LanguageCode := WebshopLanguage.Code;
+          END ELSE
+            ERROR(Error002)
+        END ELSE
+          LanguageCode := WebshopCampaignHeader."Language Code";
+
+        WebshopItemCategory.SetItemCategoriesWithAncestors(ShopCode,LanguageCode,ItemNo,ItemCategoriesWithAncestorsTmp);
+
+      END;
+
+
+      //  If there are no inclusive conditions
+      //  Item will match per default
+      //  If there are inclusive conditions
+      //  The default is no match
+
+      IF NOT HasIncludes THEN BEGIN
+
+        Matches := TRUE;
+        IF HasItemExcludes THEN BEGIN
+          WebshopCampaignElement.RESET;
+          WebshopCampaignElement.SETRANGE("Link-to Header Code",WebshopCampaignHeader.Code);
+          WebshopCampaignElement.SETRANGE("Link Type",ElementType);
+          WebshopCampaignElement.SETRANGE("Include / Exclude",WebshopCampaignElement."Include / Exclude"::"1");
+          WebshopCampaignElement.SETRANGE("Item No.",ItemNo);
+          IF VariantCode <> '' THEN
+            WebshopCampaignElement.SETRANGE("Item Variant Code",VariantCode);
+          IF NOT WebshopCampaignElement.ISEMPTY THEN
+            Matches := FALSE
+        END;
+
+        IF HasCategoryExcludes  AND ItemCategoriesWithAncestorsTmp.FINDSET(FALSE,FALSE) THEN REPEAT
+          WebshopCampaignElement.RESET;
+          WebshopCampaignElement.SETRANGE("Link-to Header Code",WebshopCampaignHeader.Code);
+          WebshopCampaignElement.SETRANGE("Link Type",ElementType);
+          WebshopCampaignElement.SETRANGE("Include / Exclude",WebshopCampaignElement."Include / Exclude"::"1");
+          WebshopCampaignElement.SETRANGE("Category Line No.",ItemCategoriesWithAncestorsTmp."Line No.");
+          IF NOT WebshopCampaignElement.ISEMPTY THEN
+            Matches := FALSE
+        UNTIL ItemCategoriesWithAncestorsTmp.NEXT = 0;
+
+      END ELSE BEGIN
+
+        Matches := FALSE;
+
+        IF HasItemIncludes THEN BEGIN
+          WebshopCampaignElement.RESET;
+          WebshopCampaignElement.SETRANGE("Link-to Header Code",WebshopCampaignHeader.Code);
+          WebshopCampaignElement.SETRANGE("Link Type",ElementType);
+          WebshopCampaignElement.SETRANGE("Include / Exclude",WebshopCampaignElement."Include / Exclude"::"0");
+          WebshopCampaignElement.SETRANGE("Item No.",ItemNo);
+          IF NOT WebshopCampaignElement.ISEMPTY THEN
+            Matches := TRUE
+        END;
+
+        IF HasCategoryIncludes AND ItemCategoriesWithAncestorsTmp.FINDSET(FALSE,FALSE) THEN REPEAT
+          WebshopCampaignElement.RESET;
+          WebshopCampaignElement.SETRANGE("Link-to Header Code",WebshopCampaignHeader.Code);
+          WebshopCampaignElement.SETRANGE("Link Type",ElementType);
+          WebshopCampaignElement.SETRANGE("Include / Exclude",WebshopCampaignElement."Include / Exclude"::"0");
+          WebshopCampaignElement.SETRANGE("Category Line No.",ItemCategoriesWithAncestorsTmp."Line No.");
+          IF NOT WebshopCampaignElement.ISEMPTY THEN
+            Matches := TRUE
+        UNTIL ItemCategoriesWithAncestorsTmp.NEXT = 0;
+        ItemCategoriesWithAncestorsTmp.RESET;
+
+        IF HasItemExcludes THEN BEGIN
+          WebshopCampaignElement.RESET;
+          WebshopCampaignElement.SETRANGE("Link-to Header Code",WebshopCampaignHeader.Code);
+          WebshopCampaignElement.SETRANGE("Link Type",ElementType);
+          WebshopCampaignElement.SETRANGE("Include / Exclude",WebshopCampaignElement."Include / Exclude"::"1");
+          WebshopCampaignElement.SETRANGE("Item No.",ItemNo);
+          IF VariantCode <> '' THEN
+            WebshopCampaignElement.SETRANGE("Item Variant Code",VariantCode);
+          IF NOT WebshopCampaignElement.ISEMPTY THEN
+            Matches := FALSE
+        END;
+
+        IF HasCategoryExcludes  AND ItemCategoriesWithAncestorsTmp.FINDSET(FALSE,FALSE) THEN REPEAT
+          WebshopCampaignElement.RESET;
+          WebshopCampaignElement.SETRANGE("Link-to Header Code",WebshopCampaignHeader.Code);
+          WebshopCampaignElement.SETRANGE("Link Type",ElementType);
+          WebshopCampaignElement.SETRANGE("Include / Exclude",WebshopCampaignElement."Include / Exclude"::"1");
+          WebshopCampaignElement.SETRANGE("Category Line No.",ItemCategoriesWithAncestorsTmp."Line No.");
+          IF NOT WebshopCampaignElement.ISEMPTY THEN
+            Matches := FALSE
+        UNTIL ItemCategoriesWithAncestorsTmp.NEXT = 0;
+
+      END;
+    END;
+
+    LOCAL PROCEDURE ApplyCampaignDiscountToSalesOrder@1000000017(WebshopCampaign@1000000003 : Record 5447345;SalesOrder@1000000002 : Record 36;VAR FilteredCondItemOrderSalesLinesTmp@1000000001 : TEMPORARY Record 37;VAR FilteredActItemOrderSalesLinesTmp@1000000004 : TEMPORARY Record 37;ItemFullfillmentFactors@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2");
+    VAR
+      OrderSalesLine@1000000005 : Record 37;
+      DiscountApplicationTarget@1000000009 : 'None,CurrCondItem,AllCondItem,LeastExpCondItem,AllActItem,Basket';
+      InitialDiscountValue@1000000010 : Decimal;
+      FinalDiscountValue@1000000018 : Decimal;
+      DiscountType@1000000011 : 'Amount,Percent';
+      DictvalueVariant@1000000008 : Variant;
+      ItemCriteriaFullfillmentFactor@1000000007 : Decimal;
+      WebshopCampaignElement@1000000006 : Record 5447346;
+      ErrorString@1000000012 : Text;
+      Error001@1000000017 : TextConst 'DEU=WebshopCampaign muss ein eindeutiger Kampagnen-Kopf sein.;ENU=WebshopCampaign must be a unique Campaign Header.';
+      Error002@1000000016 : TextConst 'DEU=Die Kampagne muss Betrags- oder Prozentrabatt als Aktion haben.;ENU=The Campaign must have an amount- or percent-discount action.';
+      Error003@1000000015 : TextConst 'DEU=SalesHeader muss ein eindeutiger Verkaufskopf sein.;ENU=SalesHeader must be a unique Sales Header.';
+      Error004@1000000014 : TextConst 'DEU=SalesHeader muss ein Verkaufsauftrag sein.;ENU=SalesHeader must be a Sales Order.';
+      Error005@1000000013 : TextConst 'DEU=Verkaufsauftrag darf nicht den Status "Freigegeben" haben.;ENU=Sales Order must not have the status "Released".';
+      DictionaryValue@1000000020 : Variant;
+      DictionaryKey@1000000019 : Variant;
+      SalesLineCopy@1000000021 : Record 37;
+      InsertModify@1000000022 : 'Insert,Modify';
+      QtyToDiscount@1000000023 : Decimal;
+      LineDiscPercent@1000000024 : Decimal;
+      NewLineAmount@1000000025 : Decimal;
+      FilterBySet@1000000026 : RecordRef;
+      OrderSalesLineTmp@1000000027 : TEMPORARY Record 37;
+      LeastExpCondItemLineNo@1000000028 : Integer;
+      LeastExptCondItemUnitPrice@1000000029 : Decimal;
+      CampaignApplicationLine@1000000030 : Record 5447347;
+      PrevQty@1000000031 : Decimal;
+      NewQty@1000000032 : Decimal;
+      PrevLineDiscountPercent@1000000033 : Decimal;
+      NewLineDiscountPercent@1000000034 : Decimal;
+      PrevLineDiscountAmount@1000000035 : Decimal;
+      NewLineDiscountAmount@1000000036 : Decimal;
+      PrevLineAmnt@1000000037 : Decimal;
+      LineNoFieldRef@1000000038 : FieldRef;
+      CurrLineNo@1000000039 : Integer;
+      PrevUnitPrice@1000000040 : Decimal;
+      NewUnitPrice@1000000041 : Decimal;
+      NewAdjustmentLineNo@1000000042 : Integer;
+      LinesInserted@1000000043 : Integer;
+    BEGIN
+      IF (NOT WebshopCampaign.GET(WebshopCampaign.Code)) THEN
+        ErrorString += Error001;
+      IF (NOT((WebshopCampaign."Discount Amnt." > 0) OR (WebshopCampaign."Discount Percent" > 0))) THEN BEGIN
+        IF ErrorString <> '' THEN
+          ErrorString += '\';
+        ErrorString += Error002;
+      END;
+      IF (NOT SalesOrder.GET(SalesOrder."Document Type",SalesOrder."No.")) OR (NOT(SalesOrder."Document Type" = SalesOrder."Document Type"::Order)) THEN BEGIN
+        IF ErrorString <> '' THEN
+          ErrorString += '\';
+        ErrorString += Error003;
+      END;
+      IF (SalesOrder.Status = SalesOrder.Status::Released) THEN BEGIN
+        IF ErrorString <> '' THEN
+          ErrorString += '\';
+        ErrorString += Error005;
+      END;
+      IF ErrorString <> '' THEN
+        ERROR(ErrorString);
+
+
+      IF (WebshopCampaign."Discount Amnt." > 0) THEN BEGIN
+        DiscountType := DiscountType::Amount;
+        InitialDiscountValue := WebshopCampaign."Discount Amnt.";
+        CASE WebshopCampaign."Discount Amnt. applies to" OF
+          WebshopCampaign."Discount Amnt. applies to"::CurrCondItem:
+            DiscountApplicationTarget := DiscountApplicationTarget::CurrCondItem;
+          WebshopCampaign."Discount Amnt. applies to"::AllCondItem:
+            DiscountApplicationTarget := DiscountApplicationTarget::AllCondItem;
+          WebshopCampaign."Discount Amnt. applies to"::AllActItem:
+            DiscountApplicationTarget := DiscountApplicationTarget::AllActItem;
+          WebshopCampaign."Discount Amnt. applies to"::Basket:
+            DiscountApplicationTarget := DiscountApplicationTarget::Basket;
+        END;
+      END ELSE IF (WebshopCampaign."Discount Percent" > 0) THEN BEGIN
+        DiscountType := DiscountType::Percent;
+        InitialDiscountValue := WebshopCampaign."Discount Percent";
+        CASE WebshopCampaign."Discount Percent applies to" OF
+          WebshopCampaign."Discount Percent applies to"::CurrCondItem:
+            DiscountApplicationTarget := DiscountApplicationTarget::CurrCondItem;
+          WebshopCampaign."Discount Percent applies to"::AllCondItem:
+            DiscountApplicationTarget := DiscountApplicationTarget::AllCondItem;
+          WebshopCampaign."Discount Percent applies to"::LeastExpCondItem:
+            DiscountApplicationTarget := DiscountApplicationTarget::LeastExpCondItem;
+          WebshopCampaign."Discount Percent applies to"::AllActItem:
+            DiscountApplicationTarget := DiscountApplicationTarget::AllActItem;
+          WebshopCampaign."Discount Percent applies to"::Basket:
+            DiscountApplicationTarget := DiscountApplicationTarget::Basket;
+        END;
+      END;
+
+      OrderSalesLine.SETRANGE("Document Type",SalesOrder."Document Type");
+      OrderSalesLine.SETRANGE("Document No.",SalesOrder."No.");
+      OrderSalesLine.LOCKTABLE;
+
+      CASE DiscountApplicationTarget OF
+        DiscountApplicationTarget::AllCondItem:
+          FilterBySet.GETTABLE(FilteredCondItemOrderSalesLinesTmp);
+        DiscountApplicationTarget::CurrCondItem:
+          BEGIN
+            IF (NOT FilteredCondItemOrderSalesLinesTmp.GET(FilteredCondItemOrderSalesLinesTmp."Document Type",FilteredCondItemOrderSalesLinesTmp."Document No.",FilteredCondItemOrderSalesLinesTmp."Line No.")) AND
+              (FilteredCondItemOrderSalesLinesTmp.COUNT > 0) THEN
+              FilteredCondItemOrderSalesLinesTmp.FINDLAST;
+            IF FilteredCondItemOrderSalesLinesTmp.GET(FilteredCondItemOrderSalesLinesTmp."Document Type",FilteredCondItemOrderSalesLinesTmp."Document No.",FilteredCondItemOrderSalesLinesTmp."Line No.") THEN
+              IF (FilteredCondItemOrderSalesLinesTmp.Type = FilteredCondItemOrderSalesLinesTmp.Type::Item) AND (FilteredCondItemOrderSalesLinesTmp.Quantity > 0) THEN BEGIN
+                OrderSalesLineTmp := FilteredCondItemOrderSalesLinesTmp;
+                OrderSalesLineTmp.INSERT(FALSE);
+                FilterBySet.GETTABLE(OrderSalesLineTmp);
+              END;
+          END;
+        DiscountApplicationTarget::LeastExpCondItem:
+          BEGIN
+            IF FilteredCondItemOrderSalesLinesTmp.FINDSET(FALSE,FALSE) THEN REPEAT
+              IF (FilteredCondItemOrderSalesLinesTmp."Unit Price" > 0) AND ((FilteredCondItemOrderSalesLinesTmp."Unit Price" < LeastExptCondItemUnitPrice) OR (LeastExptCondItemUnitPrice = 0)) THEN BEGIN
+                LeastExpCondItemLineNo := FilteredCondItemOrderSalesLinesTmp."Line No.";
+                LeastExptCondItemUnitPrice := FilteredCondItemOrderSalesLinesTmp."Unit Price";
+              END;
+            UNTIL FilteredCondItemOrderSalesLinesTmp.NEXT = 0;
+            IF FilteredCondItemOrderSalesLinesTmp.GET(SalesOrder."Document Type",SalesOrder."No.",LeastExpCondItemLineNo) AND (FilteredCondItemOrderSalesLinesTmp.Quantity > 0) THEN BEGIN
+              OrderSalesLineTmp := FilteredActItemOrderSalesLinesTmp;
+              OrderSalesLineTmp.INSERT(FALSE);
+              FilterBySet.GETTABLE(OrderSalesLineTmp);
+            END;
+          END;
+        DiscountApplicationTarget::AllActItem:
+          FilterBySet.GETTABLE(FilteredActItemOrderSalesLinesTmp);
+        DiscountApplicationTarget::Basket:
+          BEGIN
+            IF OrderSalesLine.FINDSET(FALSE,FALSE) THEN REPEAT
+              IF (OrderSalesLine.Type = OrderSalesLine.Type::Item) AND (OrderSalesLine.Quantity > 0) THEN BEGIN
+                OrderSalesLineTmp := OrderSalesLine;
+                OrderSalesLineTmp.INSERT(FALSE);
+              END;
+            UNTIL OrderSalesLine.NEXT = 0;
+            FilterBySet.GETTABLE(OrderSalesLineTmp);
+          END;
+      END;
+
+      LinesInserted := 0;
+      //FilterBySet.ASCENDING(FALSE);
+      IF (FilterBySet.NUMBER > 0) AND FilterBySet.FINDSET(FALSE,FALSE) THEN REPEAT
+        LineNoFieldRef := FilterBySet.FIELD(4);// 4 = Line No.
+        CurrLineNo := LineNoFieldRef.VALUE;
+        CurrLineNo += (LinesInserted * 10000);
+        IF OrderSalesLine.GET(SalesOrder."Document Type",SalesOrder."No.",CurrLineNo) THEN BEGIN
+          DictionaryKey := OrderSalesLine."No.";
+          IF (WebshopCampaign."Cond. Basket Total GTE" > 0) OR
+            (WebshopCampaign."Cond. Sum Amnt. All Items GTE" > 0) OR
+            (WebshopCampaign."Cond. No. diff. Items GTE" > 0) OR
+            (WebshopCampaign."Cond. Total Item Qty. GTE" > 0) THEN
+            DictionaryKey := AllItemsFullfillmentKey;
+
+          CLEAR(DictionaryValue);
+          IF ItemFullfillmentFactors.TryGetValue(DictionaryKey,DictionaryValue) AND (DictionaryValue.ISDECIMAL OR DictionaryValue.ISINTEGER) THEN
+            ItemCriteriaFullfillmentFactor := ROUND(DictionaryValue);
+          IF ItemCriteriaFullfillmentFactor < 1 THEN // So we don't multiply by 0
+            ItemCriteriaFullfillmentFactor := 1;
+
+          InsertModify := InsertModify::Modify;
+          QtyToDiscount := OrderSalesLine.Quantity;
+          PrevLineAmnt := OrderSalesLine."Line Amount";
+          NewLineAmount := PrevLineAmnt;
+          PrevLineDiscountAmount := OrderSalesLine."Line Discount Amount";
+          NewLineDiscountAmount := PrevLineDiscountAmount;
+          PrevLineDiscountPercent := OrderSalesLine."Line Discount %";
+          NewLineDiscountPercent := PrevLineDiscountPercent;
+          PrevUnitPrice := OrderSalesLine."Unit Price";
+          NewUnitPrice := PrevUnitPrice;
+          PrevQty := OrderSalesLine.Quantity;
+          NewQty := PrevQty;
+
+
+          // Split SalesLine if Discount applies to Qty smaller than Line's Qty
+          IF (WebshopCampaign."Discount applies to Qty. (max)" > 0) AND (WebshopCampaign."Discount applies to Qty. (max)" < OrderSalesLine.Quantity) THEN BEGIN
+            SalesLineCopy := OrderSalesLine;
+            MoveDownAllSalesLinesAfterLineNoByNLines(SalesOrder,OrderSalesLine."Line No.",1);
+            LinesInserted += 1;
+            OrderSalesLine.VALIDATE(Quantity,(OrderSalesLine.Quantity - WebshopCampaign."Discount applies to Qty. (max)"));
+            OrderSalesLine.MODIFY(TRUE);
+
+            CampaignApplicationLine.InsertNewAdjustmentLine(WebshopCampaign.Code,SalesOrder."No.",OrderSalesLine."Line No.",SalesLineCopy.Quantity,OrderSalesLine.Quantity,0,0,0,0,0,0);
+
+            NewQty := WebshopCampaign."Discount applies to Qty. (max)";
+            OrderSalesLine.INIT;
+            OrderSalesLine := SalesLineCopy;
+            OrderSalesLine."Line No." += 10000; // Default distance
+            OrderSalesLine.VALIDATE(Quantity,NewQty);
+            InsertModify := InsertModify::Insert;
+            QtyToDiscount := NewQty;
+            PrevLineDiscountAmount := OrderSalesLine."Line Discount Amount";
+            PrevLineDiscountPercent := OrderSalesLine."Line Discount %";
+            PrevLineAmnt := OrderSalesLine."Line Amount";
+            PrevQty := 0;
+          END;
+
+          CASE DiscountType OF
+            DiscountType::Amount:
+              BEGIN
+                FinalDiscountValue := InitialDiscountValue * QtyToDiscount;
+                IF WebshopCampaign."Multiply applicable" THEN
+                  FinalDiscountValue := InitialDiscountValue * ItemCriteriaFullfillmentFactor;
+                NewLineAmount := PrevLineAmnt - ABS(FinalDiscountValue);
+                IF NewLineAmount < 0 THEN
+                  NewLineAmount := 0;
+                NewUnitPrice := NewLineAmount / OrderSalesLine.Quantity;
+                OrderSalesLine.VALIDATE("Unit Price",NewUnitPrice);
+                OrderSalesLine.VALIDATE("Line Amount",NewLineAmount);
+              END;
+            DiscountType::Percent:
+              BEGIN
+                FinalDiscountValue := InitialDiscountValue;
+                IF WebshopCampaign."Multiply applicable" THEN
+                  FinalDiscountValue := InitialDiscountValue * ItemCriteriaFullfillmentFactor;
+                PrevLineDiscountPercent := OrderSalesLine."Line Discount %";
+                NewLineDiscountPercent := FinalDiscountValue + PrevLineDiscountPercent;
+                IF NewLineDiscountPercent > 100 THEN
+                  NewLineDiscountPercent := 100;
+                OrderSalesLine.VALIDATE("Line Discount %",NewLineDiscountPercent);
+                NewLineAmount := OrderSalesLine."Line Amount";
+              END;
+          END;
+          IF InsertModify = InsertModify::Insert THEN
+            OrderSalesLine.INSERT(TRUE)
+          ELSE
+            OrderSalesLine.MODIFY(TRUE);
+
+          IF PrevQty = NewQty THEN BEGIN
+            PrevQty := 0;
+            NewQty := 0;
+          END;
+          IF PrevLineAmnt = NewLineAmount THEN BEGIN
+            PrevLineAmnt := 0;
+            NewLineAmount := 0;
+          END;
+          IF PrevLineDiscountPercent = NewLineDiscountPercent THEN BEGIN
+            PrevLineDiscountPercent := 0;
+            NewLineDiscountPercent := 0;
+          END;
+          IF PrevUnitPrice = NewUnitPrice THEN BEGIN
+            PrevUnitPrice := 0;
+            NewUnitPrice := 0;
+          END;
+
+          CampaignApplicationLine.InsertNewAdjustmentLine(WebshopCampaign.Code,SalesOrder."No.",OrderSalesLine."Line No.",PrevQty,NewQty,PrevLineAmnt,NewLineAmount,PrevLineDiscountPercent,NewLineDiscountPercent,PrevUnitPrice,NewUnitPrice);
+
+        END;
+      UNTIL FilterBySet.NEXT = 0;
+    END;
+
+    LOCAL PROCEDURE AddCampaignFreeItemsToSalesOrder@1000000015(WebshopCampaign@1000000000 : Record 5447345;SalesOrder@1000000002 : Record 36;VAR FilteredCondItemOrderSalesLinesTmp@1000000001 : TEMPORARY Record 37;ItemFullfillmentFactors@1000000003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2");
+    VAR
+      OrderSalesLine@1000000004 : Record 37;
+      ActionApplicationTarget@1000000008 : 'None,CurrCondItem,AllCondItem,LeastExpCondItem,AllActItem,Basket';
+      DictvalueVariant@1000000007 : Variant;
+      ItemCriteriaFullfillmentFactor@1000000006 : Decimal;
+      WebshopCampaignElement@1000000005 : Record 5447346;
+      ErrorString@1000000009 : Text;
+      Error001@1000000014 : TextConst 'DEU=WebshopCampaign muss ein eindeutiger Kampagnen-Kopf sein.;ENU=WebshopCampaign must be a unique Campaign Header.';
+      Error002@1000000013 : TextConst 'DEU=Die Kampagne muss vom Typ kostenloser Artikel sein.;ENU=The Campaign must be of the Free Item type.';
+      Error003@1000000012 : TextConst 'DEU=SalesHeader muss ein eindeutiger Verkaufskopf sein.;ENU=SalesHeader must be a unique Sales Header.';
+      Error004@1000000011 : TextConst 'DEU=SalesHeader muss ein Verkaufsauftrag sein.;ENU=SalesHeader must be a Sales Order.';
+      Item@1000000016 : Record 27;
+      ItemTmp@1000000015 : TEMPORARY Record 27;
+      LeastExpCondItemNo@1000000017 : Code[20];
+      LeastExpCondItemUnitPrice@1000000018 : Decimal;
+      NoOfLinesToInsert@1000000019 : Integer;
+      NewSalesLineNo@1000000020 : Integer;
+      DictionaryKey@1000000021 : Variant;
+      DictionaryValue@1000000022 : Variant;
+      Error005@1000000023 : TextConst 'DEU=Verkaufsauftrag darf nicht den Status "Freigegeben" haben.;ENU=Sales Order must not have the status "Released".';
+      CampaignApplicationLine@1000000010 : Record 5447347;
+      NewQty@1000000024 : Decimal;
+    BEGIN
+      IF (NOT WebshopCampaign.GET(WebshopCampaign.Code)) THEN
+        ErrorString += Error001;
+      IF NOT (WebshopCampaign."Qty. Free Item" > 0) THEN BEGIN
+        IF ErrorString <> '' THEN
+          ErrorString += '\';
+        ErrorString += Error002;
+      END;
+      IF (NOT SalesOrder.GET(SalesOrder."Document Type",SalesOrder."No.")) OR (NOT(SalesOrder."Document Type" = SalesOrder."Document Type"::Order)) THEN BEGIN
+        IF ErrorString <> '' THEN
+          ErrorString += '\';
+        ErrorString += Error003;
+      END;
+      IF (SalesOrder.Status = SalesOrder.Status::Released) THEN BEGIN
+        IF ErrorString <> '' THEN
+          ErrorString += '\';
+        ErrorString += Error005;
+      END;
+      IF ErrorString <> '' THEN
+        ERROR(ErrorString);
+
+      CASE WebshopCampaign."Type Free Item" OF
+        WebshopCampaign."Type Free Item"::" ":
+          BEGIN
+            IF FilteredCondItemOrderSalesLinesTmp.FINDLAST AND Item.GET(FilteredCondItemOrderSalesLinesTmp."No.")THEN BEGIN
+              ItemTmp := Item;
+              ItemTmp.INSERT(FALSE);
+            END;
+          END;
+        WebshopCampaign."Type Free Item"::LeastExpCondItem:
+          BEGIN
+            // Only included Items, don't resolve categories
+            WebshopCampaignElement.SETRANGE("Link Type",WebshopCampaignElement."Link Type"::Action);
+            WebshopCampaignElement.SETRANGE(Type,WebshopCampaignElement.Type::"0");
+            IF WebshopCampaignElement.FINDSET(FALSE,FALSE) THEN REPEAT
+              IF Item.GET(WebshopCampaignElement."Item No.") THEN BEGIN
+                ItemTmp := Item;
+                ItemTmp.INSERT(FALSE);
+              END;
+            UNTIL WebshopCampaignElement.NEXT = 0;
+          END;
+        WebshopCampaign."Type Free Item"::CurrConditem:
+          BEGIN
+            IF FilteredCondItemOrderSalesLinesTmp.FINDSET(FALSE,FALSE) THEN REPEAT
+              IF (FilteredCondItemOrderSalesLinesTmp."Unit Price" > 0) AND ((FilteredCondItemOrderSalesLinesTmp."Unit Price" < LeastExpCondItemUnitPrice) OR (LeastExpCondItemUnitPrice = 0)) THEN BEGIN
+                LeastExpCondItemNo := FilteredCondItemOrderSalesLinesTmp."No.";
+                LeastExpCondItemUnitPrice := FilteredCondItemOrderSalesLinesTmp."Unit Price";
+              END;
+            UNTIL FilteredCondItemOrderSalesLinesTmp.NEXT = 0;
+            IF Item.GET(LeastExpCondItemNo) THEN BEGIN
+              ItemTmp := Item;
+              ItemTmp.INSERT(FALSE);
+            END;
+          END;
+      END;
+
+
+      NoOfLinesToInsert := ItemTmp.COUNT;
+      OrderSalesLine.SETRANGE("Document Type",SalesOrder."Document Type");
+      OrderSalesLine.SETRANGE("Document No.",SalesOrder."No.");
+      OrderSalesLine.LOCKTABLE;
+      OrderSalesLine.SETRANGE(Type,OrderSalesLine.Type::Item);
+      IF OrderSalesLine.FINDLAST THEN BEGIN
+        NewSalesLineNo := OrderSalesLine."Line No." + 10000; // Default distance
+        MoveDownAllSalesLinesAfterLineNoByNLines(SalesOrder,OrderSalesLine."Line No.",NoOfLinesToInsert);
+      END ELSE BEGIN
+        OrderSalesLine.RESET;
+        OrderSalesLine.SETRANGE("Document Type",SalesOrder."Document Type");
+        OrderSalesLine.SETRANGE("Document No.",SalesOrder."No.");
+        IF OrderSalesLine.FINDLAST THEN
+          NewSalesLineNo := OrderSalesLine."Line No." + 10000
+        ELSE
+          NewSalesLineNo := 10000;
+      END;
+
+
+      IF ItemTmp.FINDSET(FALSE,FALSE) THEN REPEAT
+        DictionaryKey := OrderSalesLine."No.";
+        IF (WebshopCampaign."Cond. Basket Total GTE" > 0) OR
+          (WebshopCampaign."Cond. Sum Amnt. All Items GTE" > 0) OR
+          (WebshopCampaign."Cond. No. diff. Items GTE" > 0) OR
+          (WebshopCampaign."Cond. Total Item Qty. GTE" > 0) THEN
+          DictionaryKey := AllItemsFullfillmentKey;
+
+        IF WebshopCampaign."Multiply applicable" AND ItemFullfillmentFactors.TryGetValue(DictionaryKey,DictionaryValue) AND (DictionaryValue.ISDECIMAL OR DictionaryValue.ISINTEGER) THEN
+          ItemCriteriaFullfillmentFactor := ROUND(DictionaryValue);
+
+        IF ItemCriteriaFullfillmentFactor < 1 THEN // So we don't multiply by 0
+          ItemCriteriaFullfillmentFactor := 1;
+
+        NewQty := WebshopCampaign."Qty. Free Item" * ABS(ItemCriteriaFullfillmentFactor);
+
+        OrderSalesLine.INIT;
+        OrderSalesLine.VALIDATE("Document Type",SalesOrder."Document Type");
+        OrderSalesLine.VALIDATE("Document No.",SalesOrder."No.");
+        OrderSalesLine.VALIDATE("Line No.",NewSalesLineNo);
+        OrderSalesLine.VALIDATE(Type,OrderSalesLine.Type::Item);
+        OrderSalesLine.VALIDATE("No.",ItemTmp."No.");
+        OrderSalesLine.VALIDATE("Unit Price",0);
+        OrderSalesLine.VALIDATE(Quantity,NewQty);
+        OrderSalesLine.VALIDATE("Line Amount",0);
+        OrderSalesLine.INSERT(TRUE);
+
+        CampaignApplicationLine.InsertNewAdjustmentLine(WebshopCampaign.Code,SalesOrder."No.",OrderSalesLine."Line No.",0,NewQty,0,0,0,0,0,0);
+
+        NewSalesLineNo += 10000;
+      UNTIL ItemTmp.NEXT = 0;
+    END;
+
+    LOCAL PROCEDURE AddCampaignShippingToSalesLineSet@1000000016(WebshopCampaign@1000000000 : Record 5447345;SalesOrder@1000000001 : Record 36);
+    VAR
+      OrderSalesLine@1000000002 : Record 37;
+      Error001@1000000003 : TextConst 'DEU=Shop Code und Sprache m�ssen an der Kampagne hinterlegt sein, um Lieferoptionen zu beziehen.;ENU=Shop Code and Language Code have to be set in the Campaign in order to check Shipping Options.';
+      Confirm001@1000000004 : TextConst 'DEU=Welche Lieferoption soll hinzugef�gt werden?;ENU=Which Shipping Option shall be added?';
+      ErrorString@1000000006 : Text;
+      MaxShipCat@1000000005 : Integer;
+      WebshopShop@1000000007 : Record 5447301;
+      WebshopItem@1000000008 : Record 5447304;
+      WebshopShippingOption@1000000009 : Record 5447311;
+      WebshopShippingOptions@1000000010 : Page 5447355;
+      ShippingSalesLineType@1000000011 : 'G/L Account,Resource,Item,Charge';
+      ShippingSalesLineNo@1000000012 : Code[20];
+      SalesLineTotal@1000000013 : Decimal;
+      MaxLineNo@1000000014 : Integer;
+      CampaignApplicationLine@1000000015 : Record 5447347;
+      NewLineNo@1000000016 : Integer;
+    BEGIN
+      MaxShipCat := 0;
+      OrderSalesLine.SETRANGE("Document Type",SalesOrder."Document Type");
+      OrderSalesLine.SETRANGE("Document No.",SalesOrder."No.");
+      IF OrderSalesLine.FINDSET(FALSE,FALSE) THEN REPEAT
+        MaxLineNo := OrderSalesLine."Line No.";
+        SalesLineTotal += OrderSalesLine."Line Amount";
+        IF (OrderSalesLine.Type = OrderSalesLine.Type::Item) AND WebshopItem.GET(WebshopCampaign."Shop Code",WebshopCampaign."Language Code",OrderSalesLine."No.") AND (WebshopItem."Shipping Category" > MaxShipCat) THEN
+          MaxShipCat := WebshopItem."Shipping Category";
+      UNTIL OrderSalesLine.NEXT = 0;
+
+      NewLineNo := MaxLineNo + 10000;
+
+      WebshopShippingOption.SETRANGE("Shop Code",WebshopCampaign."Shop Code");
+      WebshopShippingOption.SETRANGE("Language Code",WebshopCampaign."Language Code");
+      WebshopShippingOption.SETRANGE("Campaign Code",WebshopCampaign.Code);
+      IF MaxShipCat > 0 THEN
+        WebshopShippingOption.SETFILTER("Max. Shipping Category",'%1..',MaxShipCat);
+      WebshopShippingOption.SETCURRENTKEY("Shipping Cost");
+      WebshopShippingOption.ASCENDING(FALSE);
+
+      IF (WebshopShippingOption.COUNT > 1) AND GUIALLOWED THEN BEGIN
+        WebshopShippingOptions.SETTABLEVIEW(WebshopShippingOption);
+        IF WebshopShippingOptions.RUNMODAL = ACTION::LookupOK THEN
+          WebshopShippingOptions.GETRECORD(WebshopShippingOption);
+      END;
+
+      IF WebshopShippingOption.FINDFIRST AND WebshopShop.GET(WebshopCampaign."Shop Code") THEN BEGIN
+        OrderSalesLine.INIT;
+        OrderSalesLine.VALIDATE("Document Type",SalesOrder."Document Type");
+        OrderSalesLine.VALIDATE("Document No.",SalesOrder."No.");
+        OrderSalesLine.VALIDATE("Line No.",NewLineNo);
+        CASE WebshopShop."Posting Type Disc. / Markups" OF
+          WebshopShop."Posting Type Disc. / Markups"::Item:
+            OrderSalesLine.VALIDATE(Type,OrderSalesLine.Type::Item);
+          WebshopShop."Posting Type Disc. / Markups"::Resource:
+            OrderSalesLine.VALIDATE(Type,OrderSalesLine.Type::Resource);
+          WebshopShop."Posting Type Disc. / Markups"::"G/L Account":
+            OrderSalesLine.VALIDATE(Type,OrderSalesLine.Type::"G/L Account");
+          WebshopShop."Posting Type Disc. / Markups"::Charge:
+            OrderSalesLine.VALIDATE(Type,OrderSalesLine.Type::"Charge (Item)");
+        END;
+        OrderSalesLine.VALIDATE("No.",WebshopShop."Sales No. Shipping Cost");
+        OrderSalesLine.VALIDATE(Quantity,1);
+        IF WebshopShippingOption.Exemption <= SalesLineTotal THEN
+          OrderSalesLine.VALIDATE("Unit Price",0)
+        ELSE
+          OrderSalesLine.VALIDATE("Unit Price",WebshopShippingOption."Shipping Cost");
+        OrderSalesLine.INSERT(TRUE);
+
+        CampaignApplicationLine.InsertNewAdjustmentLine(WebshopCampaign.Code,SalesOrder."No.",NewLineNo,0,1,0,0,0,0,0,0);
+      END;
+    END;
+
+    LOCAL PROCEDURE MoveDownAllSalesLinesAfterLineNoByNLines@1000000006(SalesHeader@1000000000 : Record 36;MoveAllAfterLineNo@1000000002 : Integer;MoveByNSteps@1000000003 : Integer);
+    VAR
+      SalesLine@1000000001 : Record 37;
+      ErrorString@1000000004 : Text;
+      Error001@1000000005 : TextConst 'DEU=SalesHeader muss ein eindeutiger Verkaufskopf sein.;ENU=SalesHeader must be a unique Sales Header.';
+      Error002@1000000006 : TextConst 'DEU=SalesHeader muss ein Verkaufsauftrag sein.;ENU=SalesHeader must be a Sales Order.';
+      IntToAddToLineNo@1000000008 : Integer;
+      Error003@1000000009 : TextConst 'DEU=Verkaufsauftrag darf nicht den Status "Freigegeben" haben.;ENU=Sales Order must not have the status "Released".';
+      SalesLineTmp@1000000007 : TEMPORARY Record 37;
+    BEGIN
+      IF (NOT SalesHeader.GET(SalesHeader."Document Type",SalesHeader."No.")) THEN
+        ErrorString += Error001;
+      IF (NOT(SalesHeader."Document Type" = SalesHeader."Document Type"::Order)) THEN BEGIN
+        IF ErrorString <> '' THEN
+          ErrorString += '\';
+        ErrorString += Error002;
+      END;
+      IF (SalesHeader.Status = SalesHeader.Status::Released) THEN BEGIN
+        IF ErrorString <> '' THEN
+          ErrorString += '\';
+        ErrorString += Error003;
+      END;
+      IF ErrorString <> '' THEN
+        ERROR(ErrorString);
+
+      IntToAddToLineNo := 10000 * MoveByNSteps;
+
+      SalesLine.SETRANGE("Document Type",SalesHeader."Document Type");
+      SalesLine.SETRANGE("Document No.",SalesHeader."No.");
+      SalesLine.LOCKTABLE;
+      SalesLine.SETFILTER("Line No.",'>%1',MoveAllAfterLineNo);
+      SalesLine.SETCURRENTKEY("Document Type","Document No.","Line No.");
+      SalesLine.ASCENDING(FALSE);
+      IF SalesLine.FINDSET(TRUE,TRUE) THEN REPEAT
+        SalesLineTmp := SalesLine;
+        SalesLineTmp.INSERT(FALSE);
+        SalesLine.DELETE(TRUE);
+        SalesLine := SalesLineTmp;
+        SalesLine."Line No." += IntToAddToLineNo;
+        SalesLine.INSERT(TRUE);
+      UNTIL SalesLine.NEXT = 0;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+      @TODO:
+        Change ApplyDiscount Functions so it loops by filtered temp rec, but applies to physical table
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,54 @@
+OBJECT Codeunit 5447302 Webshop Customized Update Mgt.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Permissions=TableData 36=rimd,
+                TableData 110=rimd,
+                TableData 112=rimd,
+                TableData 114=rimd;
+    OnRun=VAR
+            Item@1000000000 : Record 27;
+          BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000001 : Codeunit 5447301;
+      WebshopSetup@1000000002 : Record 5447300;
+
+    PROCEDURE "--- WebshopManagement ---"@1000000040();
+    BEGIN
+    END;
+
+    PROCEDURE AddVar@1000000041(VAR Data@1000000002 : Text[1024];VarName@1000000001 : Text[100];VarValue@1000000000 : Variant);
+    BEGIN
+      WebshopManagement.AddVar(Data,VarName,VarValue);
+    END;
+
+    PROCEDURE StateIndicatorOpen@1000000014(Title@1000 : Text[250]);
+    BEGIN
+      WebshopManagement.StateIndicatorOpen(Title);
+    END;
+
+    PROCEDURE StateIndicatorClose@1();
+    BEGIN
+      WebshopManagement.StateIndicatorClose();
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

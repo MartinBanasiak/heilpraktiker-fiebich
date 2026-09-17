@@ -1,0 +1,47 @@
+OBJECT Page 5447328 Webshop Customer Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=28.05.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Debitor Verkn�pfung;
+               ENU=Webshop Customer Link];
+    SourceTable=Table5447316;
+    DelayedInsert=Yes;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Shop Code" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Language Code" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Vendor Search Active" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Customer No.";
+                Visible=false }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

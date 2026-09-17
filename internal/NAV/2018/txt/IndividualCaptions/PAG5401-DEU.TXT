@@ -1,0 +1,8 @@
+N5401-C13-P8631-A1031-L999:Gibt die Nummer der Artikelkarte an, von der aus Sie das Fenster "Artikelvariantenübersetzungen" geöffnet haben.
+N5401-C2-P8631-A1031-L999:Gibt einen Code zum Kennzeichnen der Variante an.
+N5401-C4-P8631-A1031-L999:Gibt beschreibenden Text für die Artikelvariante an.
+N5401-C6-P8631-A1031-L999:Gibt die Artikelvariante detaillierter als im Feld "Beschreibung" an.
+N5401-P55242-G11-P8629-A1031-L999:&Variante
+N5401-P55242-G12-P8629-A1031-L999:Übersetzungen
+N5401-P55242-G12-P8631-A1031-L999:Zeigt übersetzte Artikelbeschreibungen an oder bearbeitet sie. Übersetzte Artikelbeschreibungen werden automatisch gemäß dem Sprachcode in Belege eingefügt.
+N5401-P8629-A1031-L999:Artikelvarianten

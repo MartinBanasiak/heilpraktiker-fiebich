@@ -1,0 +1,61 @@
+OBJECT Codeunit 5447307 Webshop Support Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Permissions=TableData 36=rimd,
+                TableData 110=rimd,
+                TableData 112=rimd,
+                TableData 114=rimd;
+    OnRun=VAR
+            CurrRec@1000000000 : Text[1024];
+            GetRec@1000000001 : Text[1024];
+            DecVar@1000000002 : Decimal;
+            DateVar@1000000003 : Date;
+            IntVar@1000000004 : Integer;
+            DateTimeVar@1000000005 : DateTime;
+          BEGIN
+            WebshopSetup.GET;
+            WebshopSetup.TESTFIELD("Support URL");
+            HYPERLINK(WebshopSetup."Support URL");
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000014 : Record 5447300;
+      Window@1000000015 : Dialog;
+      Text55000@1000000020 : TextConst 'DEU=Konvertiere Daten;ENU=Convert data';
+      Text55001@1000000019 : TextConst 'DEU=Total Fortschritt;ENU=Total progress';
+      Text55002@1000000018 : TextConst 'DEU=Tabelle;ENU=Table';
+      Text55003@1000000017 : TextConst 'DEU=Anzahl Datens�tze;ENU=Number of records';
+      Text55004@1000000016 : TextConst 'DEU=Fortschritt;ENU=Progress';
+      MainTableCaption@1000000013 : ARRAY [100] OF Text[250];
+      MainTableCount@1000000012 : ARRAY [100] OF Integer;
+      NoOfMainTable@1000000011 : Integer;
+      NoOfMainRecord@1000000010 : Integer;
+      NoOfMainRecord2@1000000009 : Integer;
+      NoOfMainRecord3@1000000008 : Integer;
+      MainRecord@1000000007 : Boolean;
+      NoOfRecords@1000000006 : Integer;
+      RecordNo@1000000005 : Integer;
+      NewProgress@1000000004 : Integer;
+      OldProgress@1000000003 : Integer;
+      NewProgress2@1000000002 : Integer;
+      OldProgress2@1000000001 : Integer;
+      NextRecordNo@1000000000 : Integer;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

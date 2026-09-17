@@ -1,0 +1,154 @@
+OBJECT Report 5447321 Webshop Copy Attributes
+{
+  OBJECT-PROPERTIES
+  {
+    Date=28.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Artikelmerkmale kopieren;
+               ENU=Webshop Copy Attributes];
+    ProcessingOnly=Yes;
+  }
+  DATASET
+  {
+    { 1000000000;;DataItem;                  ;
+               DataItemTable=Table5447304;
+               DataItemTableView=SORTING(Shop Code,Language Code,Item No.)
+                                 ORDER(Ascending);
+               OnPreDataItem=BEGIN
+                               IF COUNT <> 1 THEN
+                                 ERROR(Text001);
+                             END;
+
+               OnAfterGetRecord=BEGIN
+                                  CASE FromType OF
+                                    FromType::Template: BEGIN
+                                      IF FromTemplateCode = '' THEN
+                                        ERROR(Text003);
+                                      FromAttributeLink.SETRANGE(Type,FromAttributeLink.Type::Template);
+                                      FromAttributeLink.SETRANGE("No.",FromTemplateCode);
+                                      FromAttributeTranslation.SETRANGE(Type,FromAttributeTranslation.Type::"Attribute Template");
+                                      FromAttributeTranslation.SETRANGE("Attribute Link No.",FromTemplateCode);
+                                    END;
+                                    FromType::Item: BEGIN
+                                      IF FromItemNo = '' THEN
+                                        ERROR(Text004);
+                                      FromAttributeLink.SETRANGE(Type,FromAttributeLink.Type::Item);
+                                      FromAttributeLink.SETRANGE("No.",FromItemNo);
+                                      FromAttributeTranslation.SETRANGE(Type,FromAttributeTranslation.Type::"Attribute Link");
+                                      FromAttributeTranslation.SETRANGE("Attribute Link No.",FromItemNo);
+                                    END;
+                                  END;
+
+                                  IF FromAttributeLink.FINDSET THEN BEGIN
+                                    REPEAT
+                                      IF NOT ToAttributeLink.GET(ToAttributeLink.Type::Item,"Item No.",FromAttributeLink."Shop Code",
+                                                                 FromAttributeLink."Language Code",FromAttributeLink."Category Line No.",
+                                                                 FromAttributeLink."Attribute Code",FromAttributeLink."Value Option") THEN BEGIN
+                                        ToAttributeLink.INIT;
+                                        ToAttributeLink.TRANSFERFIELDS(FromAttributeLink);
+                                        ToAttributeLink.Type := ToAttributeLink.Type::Item;
+                                        ToAttributeLink."No." := "Item No.";
+                                        ToAttributeLink.Sorting := FromAttributeLink.Sorting;
+                                        CASE FromType OF
+                                           FromType::Template: BEGIN
+                                              ToAttributeLink."Shop Code" := "Shop Code";
+                                              ToAttributeLink."Language Code" := "Language Code";
+                                           END;
+                                          FromType::Item: BEGIN
+                                              ToAttributeLink."Shop Code" := FromAttributeLink."Shop Code";
+                                              ToAttributeLink."Language Code" := FromAttributeLink."Language Code";
+                                          END;
+                                        END;
+                                        ToAttributeLink.INSERT(TRUE);
+                                        Counter += 1;
+                                      END;
+                                    UNTIL FromAttributeLink.NEXT = 0;
+                                    IF FromAttributeTranslation.FINDSET THEN REPEAT
+                                      IF NOT ToAttributeTranslation.GET(ToAttributeTranslation.Type::"Attribute Link",FromAttributeTranslation."Attribute Code",
+                                                                        "Item No.",FromAttributeTranslation."Language Code") THEN BEGIN
+                                        ToAttributeTranslation.INIT;
+                                        ToAttributeTranslation.TRANSFERFIELDS(FromAttributeTranslation);
+                                        ToAttributeTranslation.Type := ToAttributeTranslation.Type::"Attribute Link";
+                                        ToAttributeTranslation."Attribute Link No." := "Item No.";
+                                        ToAttributeTranslation.INSERT(TRUE);
+                                      END;
+                                    UNTIL FromAttributeTranslation.NEXT = 0;
+                                  END;
+                                END;
+
+               OnPostDataItem=BEGIN
+                                MESSAGE(Text002,Counter);
+                              END;
+                               }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+      { 1000000000;;Container;
+                  ContainerType=ContentArea }
+
+      { 1000000002;1;Group  ;
+                  CaptionML=[DEU=Optionen;
+                             ENU=Options];
+                  GroupType=Group }
+
+      { 1000000001;2;Field  ;
+                  CaptionML=[DEU=Kopieren von;
+                             ENU="Copy "];
+                  OptionCaptionML=[DEU=Merkmalvorlage,Artikel;
+                                   ENU=Attribute Template,Item];
+                  SourceExpr=FromType }
+
+      { 1000000003;2;Field  ;
+                  CaptionML=[DEU=Artikelnr.;
+                             ENU=Item No.];
+                  SourceExpr=FromItemNo;
+                  TableRelation=Item.No. }
+
+      { 1000000004;2;Field  ;
+                  CaptionML=[DEU=Vorlagencode;
+                             ENU=Template Code];
+                  SourceExpr=FromTemplateCode;
+                  TableRelation="Webshop Attribute Template".Code }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      FromType@1000000007 : 'Template,Item';
+      FromItemNo@1000000006 : Code[20];
+      FromTemplateCode@1000000005 : Code[20];
+      FromAttributeLink@1000000004 : Record 5447321;
+      FromAttributeTranslation@1000000003 : Record 5447323;
+      ToAttributeLink@1000000002 : Record 5447321;
+      ToAttributeTranslation@1000000001 : Record 5447323;
+      Counter@1000000000 : Integer;
+      Text001@1000000011 : TextConst 'DEU=Die Funktion muss einem einzelnen Artikel aufgerufen werden;ENU=This function needs to be called from a single item';
+      Text002@1000000010 : TextConst 'DEU=Es wurden %1 Merkmale kopiert;ENU=%1 attributes have been copied';
+      Text003@1000000009 : TextConst 'DEU=Vorlagencode darf nicht leer sein;ENU=Template code must not be empty';
+      Text004@1000000008 : TextConst 'DEU=Artikelnr. darf nicht leer sein;ENU=Item No. must not be empty';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

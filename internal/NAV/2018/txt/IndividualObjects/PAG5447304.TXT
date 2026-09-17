@@ -1,0 +1,474 @@
+OBJECT Page 5447304 Webshop Language List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.04.18;
+    Time=16:00:00;
+    Version List=MYSW14.11;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop Sprach�bersicht;
+               ENU=Webshop Language list];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    SourceTable=Table5447302;
+    SourceTableView=SORTING(Shop Code,Code)
+                    ORDER(Ascending);
+    PageType=List;
+    CardPageID=Webshop Language Card;
+    PromotedActionCategoriesML=[DEU=Neu,Vorgang,Bericht,Aktualisierung,Einstellungen;
+                                ENU=New,Process,Report,Update,Setup];
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000014;  ;ActionContainer;
+                      Name=<Action1000000057>;
+                      ActionContainerType=ActionItems }
+      { 1       ;1   ;Action    ;
+                      Name=UpdateSetup;
+                      CaptionML=[DEU=Grundeinrichtung aktualisieren;
+                                 ENU=Update Setup];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text002@1000000000 : TextConst 'DEU=Webshop Einrichtung aktualisieren;ENU=Update Webshop Setup';
+                                 CountRecords@1000000002 : Boolean;
+                                 i@1000000001 : Integer;
+                               BEGIN
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   WebshopUpdateManagement.StateIndicatorOpen(Text002);
+                                   CountRecords := TRUE;
+                                   WebshopUpdateManagement.SetSendNow(TRUE);
+                                   FOR i := 1 TO 2 DO BEGIN
+                                     WebshopUpdateManagement.UpdateAllWebshopSetup(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShop(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllLanguage(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllCountry(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllPaymentOptions(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShippingClasses(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShippingOptions(CountRecords);
+                                     CountRecords := FALSE;
+                                   END;
+                                   WebshopUpdateManagement.SetSendNow(FALSE);
+                                   WebshopUpdateManagement.StateIndicatorClose();
+                                 END;
+                               END;
+                                }
+      { 1000000028;1 ;ActionGroup;
+                      CaptionML=[DEU=Bilder;
+                                 ENU=Images] }
+      { 1000000027;2 ;ActionGroup;
+                      CaptionML=[DEU=Platzhalterbild;
+                                 ENU=Placeholder Image];
+                      Image=Picture }
+      { 1000000026;3 ;Action    ;
+                      Name=EditItemPlaceholderImage;
+                      CaptionML=[DEU=Platzhalterbild �ndern;
+                                 ENU=Edit Placeholder Image];
+                      Image=Picture;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                     CLEAR(WebshopWebform);
+                                     //DynamicCommerceAddIn
+                                     WebshopWebform.SetWebformType(WebformType::Placeholder);
+                                     WebshopWebform.SetShopCode("Shop Code");
+                                     WebshopWebform.SetLanguageCode(Code);
+                                     WebshopWebform.LOOKUPMODE(TRUE);
+                                     WebshopWebform.RUNMODAL();
+                                   END ELSE BEGIN
+                                     //Legacy
+                                     CLEAR(EditWebshopPlaceholder);
+                                     TempLanguage.SETRANGE("Shop Code","Shop Code");
+                                     TempLanguage.SETRANGE(Code,Code);
+                                     EditWebshopPlaceholder.SETTABLEVIEW(TempLanguage);
+                                     EditWebshopPlaceholder.RUNMODAL();
+                                   END;
+                                  CurrPage.UPDATE(FALSE);
+                                 END;
+                               END;
+                                }
+      { 1000000025;3 ;Action    ;
+                      Name=DeleteItemPlaceholderImage;
+                      CaptionML=[DEU=Platzhalterbild l�schen;
+                                 ENU=Delete item placeholder image];
+                      Image=VoidElectronicDocument;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text001@1000000000 : TextConst 'DEU=Platzhalterbild gel�scht;ENU=Placeholder deleted';
+                               BEGIN
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.DeleteItemPlaceholderImage(Rec);
+                                   MESSAGE(Text001);
+                                   CurrPage.UPDATE(FALSE);
+                                 END;
+                               END;
+                                }
+      { 1000000024;2 ;ActionGroup;
+                      Name=Gutscheine;
+                      CaptionML=[DEU=Gutscheinmotive;
+                                 ENU=Coupons];
+                      ActionContainerType=NewDocumentItems;
+                      Image=Voucher }
+      { 1000000023;3 ;Action    ;
+                      Name=UpdateBackground1;
+                      CaptionML=[DEU=Hintergrundbild 1 �ndern;
+                                 ENU=Background 1 update];
+                      Image=TransmitElectronicDoc;
+                      OnAction=BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+
+                                   IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                     CLEAR(WebshopWebform);
+                                     //DynamicCommerceAddIn
+                                     WebshopWebform.SetWebformType(WebformType::CouponBackground);
+                                     WebshopWebform.SetShopCode("Shop Code");
+                                     WebshopWebform.SetLanguageCode(Code);
+                                     WebshopWebform.SetBackgroundNo(1);
+                                     WebshopWebform.LOOKUPMODE(TRUE);
+                                     WebshopWebform.RUNMODAL();
+                                   END ELSE BEGIN
+                                     //Legacy
+                                     CLEAR(EditDCFile);
+                                     EditDCFile.SetNo(1,"Shop Code",Code);
+                                     EditDCFile.RUNMODAL();
+                                   END;
+
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,1);
+                                   CurrPage.UPDATE(FALSE);
+                                 END;
+                               END;
+                                }
+      { 1000000022;3 ;Action    ;
+                      Name=DeleteBackground1;
+                      CaptionML=[DEU=Hintergrundbild 1 l�schen;
+                                 ENU=Background 1 delete];
+                      Image=VoidElectronicDocument;
+                      OnAction=BEGIN
+                                 IF "Digital Coupon Background 1" THEN BEGIN
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   WebshopUpdateManagement.DeleteDCFiles(Rec,1);
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,1);
+                                   MESSAGE(Text001);
+                                 END;
+                               END;
+                                }
+      { 1000000021;3 ;Action    ;
+                      Name=UpdateBackground2;
+                      CaptionML=[DEU=Hintergrundbild 2 �ndern;
+                                 ENU=Background 2 update];
+                      Image=TransmitElectronicDoc;
+                      OnAction=BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                     CLEAR(WebshopWebform);
+                                     //DynamicCommerceAddIn
+                                     WebshopWebform.SetWebformType(WebformType::CouponBackground);
+                                     WebshopWebform.SetShopCode("Shop Code");
+                                     WebshopWebform.SetLanguageCode(Code);
+                                     WebshopWebform.SetBackgroundNo(2);
+                                     WebshopWebform.LOOKUPMODE(TRUE);
+                                     WebshopWebform.RUNMODAL();
+                                   END ELSE BEGIN
+                                     //Legacy
+                                     CLEAR(EditDCFile);
+                                     EditDCFile.SetNo(2,"Shop Code",Code);
+                                     EditDCFile.RUNMODAL();
+                                   END;
+
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,2);
+                                   CurrPage.UPDATE(FALSE);
+                                 END;
+                               END;
+                                }
+      { 1000000020;3 ;Action    ;
+                      Name=DeleteBackground2;
+                      CaptionML=[DEU=Hintergrundbild 2 l�schen;
+                                 ENU=Background 3 delete];
+                      Image=VoidElectronicDocument;
+                      OnAction=BEGIN
+                                 IF "Digital Coupon Background 2" THEN BEGIN
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   WebshopUpdateManagement.DeleteDCFiles(Rec,2);
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,2);
+                                   MESSAGE(Text001);
+                                 END;
+                               END;
+                                }
+      { 1000000019;3 ;Action    ;
+                      Name=UpdateBackground3;
+                      CaptionML=[DEU=Hintergrundbild 3 �ndern;
+                                 ENU=Background 3 update];
+                      Image=TransmitElectronicDoc;
+                      OnAction=BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                     CLEAR(WebshopWebform);
+                                     //DynamicCommerceAddIn
+                                     WebshopWebform.SetWebformType(WebformType::CouponBackground);
+                                     WebshopWebform.SetShopCode("Shop Code");
+                                     WebshopWebform.SetLanguageCode(Code);
+                                     WebshopWebform.SetBackgroundNo(3);
+                                     WebshopWebform.LOOKUPMODE(TRUE);
+                                     WebshopWebform.RUNMODAL();
+                                   END ELSE BEGIN
+                                     //Legacy
+                                     CLEAR(EditDCFile);
+                                     EditDCFile.SetNo(3,"Shop Code",Code);
+                                     EditDCFile.RUNMODAL();
+                                   END;
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,3);
+                                   CurrPage.UPDATE(FALSE);
+                                 END;
+                               END;
+                                }
+      { 1000000018;3 ;Action    ;
+                      Name=DeleteBackground3;
+                      CaptionML=[DEU=Hintergrundbild 3 l�schen;
+                                 ENU=Background 3 delete];
+                      Image=VoidElectronicDocument;
+                      OnAction=BEGIN
+                                 IF "Digital Coupon Background 3" THEN BEGIN
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   WebshopUpdateManagement.DeleteDCFiles(Rec,3);
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,3);
+                                   MESSAGE(Text001);
+                                 END;
+                               END;
+                                }
+      { 1000000017;3 ;Action    ;
+                      Name=UpdateBackground4;
+                      CaptionML=[DEU=Hintergrundbild 4 �ndern;
+                                 ENU=Background 4 update];
+                      Image=TransmitElectronicDoc;
+                      OnAction=BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                     CLEAR(WebshopWebform);
+                                     //DynamicCommerceAddIn
+                                     WebshopWebform.SetWebformType(WebformType::CouponBackground);
+                                     WebshopWebform.SetShopCode("Shop Code");
+                                     WebshopWebform.SetLanguageCode(Code);
+                                     WebshopWebform.SetBackgroundNo(4);
+                                     WebshopWebform.LOOKUPMODE(TRUE);
+                                     WebshopWebform.RUNMODAL();
+                                   END ELSE BEGIN
+                                     //Legacy
+                                     CLEAR(EditDCFile);
+                                     EditDCFile.SetNo(4,"Shop Code",Code);
+                                     EditDCFile.RUNMODAL();
+                                   END;
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,4);
+                                   CurrPage.UPDATE(FALSE);
+                                 END;
+                               END;
+                                }
+      { 1000000016;3 ;Action    ;
+                      Name=DeleteBackground4;
+                      CaptionML=[DEU=Hintergrundbild 4 l�schen;
+                                 ENU=Background 4 delete];
+                      Image=VoidElectronicDocument;
+                      OnAction=BEGIN
+                                 IF "Digital Coupon Background 4" THEN BEGIN
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   WebshopUpdateManagement.DeleteDCFiles(Rec,4);
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,4);
+                                   MESSAGE(Text001);
+                                 END;
+                               END;
+                                }
+      { 1000000013;3 ;Action    ;
+                      Name=UpdateBackground5;
+                      CaptionML=[DEU=Hintergrundbild 5 �ndern;
+                                 ENU=Background 5 update];
+                      Image=TransmitElectronicDoc;
+                      OnAction=BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                     CLEAR(WebshopWebform);
+                                     //DynamicCommerceAddIn
+                                     WebshopWebform.SetWebformType(WebformType::CouponBackground);
+                                     WebshopWebform.SetShopCode("Shop Code");
+                                     WebshopWebform.SetLanguageCode(Code);
+                                     WebshopWebform.SetBackgroundNo(5);
+                                     WebshopWebform.LOOKUPMODE(TRUE);
+                                     WebshopWebform.RUNMODAL();
+                                   END ELSE BEGIN
+                                     //Legacy
+                                     CLEAR(EditDCFile);
+                                     EditDCFile.SetNo(5,"Shop Code",Code);
+                                     EditDCFile.RUNMODAL();
+                                   END;
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,5);
+                                   CurrPage.UPDATE(FALSE);
+                                 END;
+                               END;
+                                }
+      { 1000000007;3 ;Action    ;
+                      Name=DeleteBackground5;
+                      CaptionML=[DEU=Hintergrundbild 5 l�schen;
+                                 ENU=Background 1 delete];
+                      Image=VoidElectronicDocument;
+                      OnAction=BEGIN
+                                 IF "Digital Coupon Background 5" THEN BEGIN
+                                   WebshopUpdateManagement.UpdateLanguage(Rec);
+                                   WebshopUpdateManagement.DeleteDCFiles(Rec,5);
+                                   WebshopUpdateManagement.CheckDCFiles(Rec,5);
+                                   MESSAGE(Text001);
+                                 END;
+                               END;
+                                }
+      { 1000000008;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000012;1 ;Action    ;
+                      Name=Categories;
+                      CaptionML=[DEU=Kategorien;
+                                 ENU=Categories];
+                      RunObject=Page 5447306;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Code);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=ViewPage;
+                      PromotedCategory=Category5 }
+      { 1000000015;1 ;Action    ;
+                      Name=Items;
+                      CaptionML=[DEU=Webshopartikel;
+                                 ENU=Webshop items];
+                      RunObject=Page 5447309;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Code);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Web;
+                      PromotedCategory=Category5 }
+      { 1000000009;1 ;Action    ;
+                      Name=Countries;
+                      CaptionML=[DEU=L�nder;
+                                 ENU=Countries];
+                      RunObject=Page 5447353;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Code);
+                      Promoted=Yes;
+                      Image=AdjustExchangeRates;
+                      PromotedCategory=Category5 }
+      { 1000000011;1 ;Action    ;
+                      Name=PaymentOptions;
+                      CaptionML=[DEU=Zahlungsoptionen;
+                                 ENU=Payment Options];
+                      RunObject=Page 5447357;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Code);
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=CalculateCost;
+                      PromotedCategory=Category5 }
+      { 1000000029;1 ;Action    ;
+                      Name=Ratings;
+                      CaptionML=[DEU=Bewertungen;
+                                 ENU=Ratings];
+                      RunObject=Page 5447335;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Code);
+                      Promoted=Yes;
+                      Image=ViewComments;
+                      PromotedCategory=Category5 }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                CaptionML=DEU=Webshop Code;
+                SourceExpr="Shop Code" }
+
+    { 1000000030;2;Field  ;
+                SourceExpr="Webshop Description" }
+
+    { 1000000003;2;Field  ;
+                CaptionML=DEU=Code;
+                SourceExpr=Code }
+
+    { 1000000004;2;Field  ;
+                CaptionML=DEU=Beschreibung;
+                SourceExpr=Description }
+
+    { 1000000005;2;Field  ;
+                CaptionML=DEU=Std. W�hrungscode;
+                SourceExpr="Default Currency Code" }
+
+    { 1000000006;2;Field  ;
+                CaptionML=DEU=Std. L�ndercode;
+                SourceExpr="Default Country Code" }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000001 : Codeunit 5447301;
+      EditDCFile@1000000002 : Page 5447333;
+      Text001@1000000003 : TextConst 'DEU=Gutscheinbild gel�scht;ENU=Coupon Background deleted';
+      EditWebshopPlaceholder@1000000011 : Page 5447364;
+      TempLanguage@1000000010 : Record 5447302;
+      ClientAddInType@1000000008 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000007 : Codeunit 5447320;
+      WebshopWebform@1000000006 : Page 5447366;
+      Type@1000000005 : 'Description1,Promotion,Description2';
+      WebformType@1000000004 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection';
+      Text007@1000000009 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

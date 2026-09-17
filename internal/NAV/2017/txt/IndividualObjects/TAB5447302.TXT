@@ -1,0 +1,299 @@
+OBJECT Table 5447302 Webshop Language
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnDelete=BEGIN
+               // L�nder l�schen
+               WebshopCountry.SETRANGE("Shop Code","Shop Code");
+               WebshopCountry.SETRANGE("Language Code",Code);
+               WebshopCountry.DELETEALL;
+
+               // Versandarten l�schen
+               WebshopShippingOption.SETRANGE("Shop Code","Shop Code");
+               WebshopShippingOption.SETRANGE("Language Code",Code);
+               WebshopShippingOption.DELETEALL;
+
+               // Zahlungsarten l�schen
+               WebshopPaymentOption.SETRANGE("Shop Code","Shop Code");
+               WebshopPaymentOption.SETRANGE("Language Code",Code);
+               WebshopPaymentOption.DELETEALL;
+             END;
+
+    CaptionML=[DEU=Webshop Sprache;
+               ENU=Webshop Language];
+    LookupPageID=Page5447304;
+    DrillDownPageID=Page5447304;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Webshop Code;
+                                                              ENU=Shop Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Code                ;Code10        ;TableRelation=Language.Code;
+                                                   CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 4   ;   ;Default Currency Code;Code10       ;TableRelation=Currency.Code;
+                                                   CaptionML=[DEU=Std. W�hrungscode;
+                                                              ENU=Default Currency Code] }
+    { 5   ;   ;Default Country Code;Code10        ;TableRelation="Webshop Country"."Country Code" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                         Language Code=FIELD(Code));
+                                                   CaptionML=[DEU=Std. L�ndercode;
+                                                              ENU=Default Country Code] }
+    { 6   ;   ;Default Payment Option Line No;Integer;
+                                                   TableRelation="Webshop Payment Option"."Line No." WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                            Language Code=FIELD(Code));
+                                                   CaptionML=[DEU=Std. Zahungsart;
+                                                              ENU=Default Payment Option Line No] }
+    { 7   ;   ;Report Dimension    ;Code20        ;TableRelation=Dimension.Code;
+                                                   CaptionML=[DEU=Dimension;
+                                                              ENU=Report Dimension] }
+    { 8   ;   ;Report Dimension Value;Code20      ;TableRelation="Dimension Value".Code WHERE (Dimension Code=FIELD(Report Dimension));
+                                                   CaptionML=[DEU=Dimensionswert;
+                                                              ENU=Report Dimension Value] }
+    { 9   ;   ;NAV Language Code   ;Code10        ;TableRelation=Language.Code;
+                                                   CaptionML=[DEU=NAV Sprachcode;
+                                                              ENU=NAV Language Code] }
+    { 10  ;   ;Online Discount Text;Code30        ;TableRelation="Standard Text".Code;
+                                                   CaptionML=[DEU=Online-Rabatt Textbaustein;
+                                                              ENU=Online Discount Text] }
+    { 11  ;   ;Small Quantity Charge Text;Code30  ;TableRelation="Standard Text".Code;
+                                                   CaptionML=[DEU=Mindestbestellwert Textbaustein;
+                                                              ENU=Small Quantity Charge Text] }
+    { 12  ;   ;Your Reference Text ;Code30        ;TableRelation="Standard Text".Code;
+                                                   CaptionML=[DEU=Ihre Referenz Textbaustein;
+                                                              ENU=Your Reference Text] }
+    { 13  ;   ;Online Order No Text;Code30        ;TableRelation="Standard Text".Code;
+                                                   CaptionML=[DEU=Belstellnr. Textbaustein;
+                                                              ENU=Online Order No Text] }
+    { 14  ;   ;Item Placeholder Image;Boolean     ;CaptionML=[DEU=Platzhalter Artikelbild;
+                                                              ENU=Item Placeholder Image];
+                                                   Editable=No }
+    { 15  ;   ;Currency Filter     ;Text100       ;CaptionML=[DEU=W�hrungsfilter;
+                                                              ENU=Currency Filter] }
+    { 20  ;   ;E-Mail Order 1      ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Bestellbest�tigung;
+                                                              ENU=E-Mail Order 1] }
+    { 21  ;   ;E-Mail Order 2      ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Auftragsbest�tigung;
+                                                              ENU=E-Mail Order 2] }
+    { 22  ;   ;E-Mail Order 3      ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Versandbenachrichtigung;
+                                                              ENU=E-Mail Order 3] }
+    { 23  ;   ;E-Mail Login        ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Zugangsdaten;
+                                                              ENU=E-Mail Login] }
+    { 24  ;   ;E-Mail Password     ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Passwort vergessen;
+                                                              ENU=E-Mail Password] }
+    { 25  ;   ;E-Mail Invoice Copy ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Rechnungskopie;
+                                                              ENU=E-Mail Invoice Copy] }
+    { 26  ;   ;E-Mail Shipment Copy;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Lieferscheinkopie;
+                                                              ENU=E-Mail Shipment Copy] }
+    { 27  ;   ;E-Mail Order 4      ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Rechnungsversand;
+                                                              ENU=E-Mail Order 3] }
+    { 28  ;   ;E-Mail Item Recommendation;Code30  ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Artikelempfehlung;
+                                                              ENU=E-Mail Item Recommendation] }
+    { 29  ;   ;E-Mail Cr. Memo     ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Gutschriftversand;
+                                                              ENU=Coupon delivery] }
+    { 30  ;   ;Text Shopping Basket;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Warenkorb;
+                                                              ENU=Text Shopping Basket] }
+    { 31  ;   ;Text Order Step 1   ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Bestellschritt 1;
+                                                              ENU=Text Billpay AGB] }
+    { 32  ;   ;Text Order Step 2   ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Bestellschritt 2;
+                                                              ENU=Text Order Step 2] }
+    { 33  ;   ;Text Order Step 3   ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Bestellschritt 3;
+                                                              ENU=Text Order Step 3] }
+    { 34  ;   ;Text Order Complete ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Bestellung abgeschlossen;
+                                                              ENU=Text Order Complete] }
+    { 35  ;   ;Text Search Results ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Suchergebnisse;
+                                                              ENU=Text Payment Error] }
+    { 36  ;   ;Text Payment Error  ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Zahlung fehlgeschlagen;
+                                                              ENU=Text Payment Error] }
+    { 37  ;   ;Text Checkout Confirmation;Code30  ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Checkbox Bestellabschluss;
+                                                              ENU=Checkbox Checkout] }
+    { 38  ;   ;Text Newsletter Registration;Code30;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Checkbox Newsletteranmeldung;
+                                                              ENU=Newsletter Registration] }
+    { 39  ;   ;E-Mail Cr Memo Copy ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Gutschriftkopie;
+                                                              ENU=E-Mail Cr.Memo Copy] }
+    { 40  ;   ;PDF Temp File Path  ;Text100       ;CaptionML=[DEU=Tempor�rer Pfad PDF Belege;
+                                                              ENU=PDF Temp File Path] }
+    { 41  ;   ;PDF Background File ;Text100       ;CaptionML=[DEU=Hintergrunddatei PDF Belege;
+                                                              ENU=PDF Background File] }
+    { 42  ;   ;Report PDF Order Confirmation;Integer;
+                                                   TableRelation=Object.ID WHERE (Type=CONST(Report));
+                                                   CaptionML=[DEU=Bericht PDF Auftragsbest�tigung;
+                                                              ENU=Report PDF Order Confirmation] }
+    { 43  ;   ;Report PDF Shipment ;Integer       ;TableRelation=Object.ID WHERE (Type=CONST(Report));
+                                                   CaptionML=[DEU=Bericht PDF Lieferschein;
+                                                              ENU=Report PDF Shipment] }
+    { 44  ;   ;Report PDF Invoice  ;Integer       ;TableRelation=Object.ID WHERE (Type=CONST(Report));
+                                                   CaptionML=[DEU=Bericht PDF Rechnung;
+                                                              ENU=Report PDF Invoice] }
+    { 45  ;   ;Text Order Queue    ;Code20        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Zwischenseite;
+                                                              ENU=Text Order Queue] }
+    { 46  ;   ;Login Welcome Text  ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Login Begr��ung;
+                                                              ENU=Text Login Greeting] }
+    { 47  ;   ;Text Billpay AGB    ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Checkbox Billpay AGB;
+                                                              ENU=Checkbox Billpay AGB] }
+    { 48  ;   ;Digital Coupon Active;Boolean      ;CaptionML=[DEU=Ditgitaler Gutscheinversand aktiv;
+                                                              ENU=Digital Coupon Active] }
+    { 49  ;   ;Coupon Header Digital Coupon;Code20;TableRelation="Webshop Coupon Header".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Gutschein Digitaler Gutscheinversand;
+                                                              ENU=Coupon Header Digital Coupon] }
+    { 50  ;   ;Digital Coupon Background 1;Boolean;CaptionML=[DEU=Hintergrundbild 1;
+                                                              ENU=Digital Coupon Background 1] }
+    { 51  ;   ;Digital Coupon Background 2;Boolean;CaptionML=[DEU=Hintergrundbild 2;
+                                                              ENU=Digital Coupon Background 2] }
+    { 52  ;   ;Digital Coupon Background 3;Boolean;CaptionML=[DEU=Hintergrundbild 3;
+                                                              ENU=Digital Coupon Background 3] }
+    { 53  ;   ;Digital Coupon Background 4;Boolean;CaptionML=[DEU=Hintergrundbild 4;
+                                                              ENU=Digital Coupon Background 4] }
+    { 54  ;   ;Digital Coupon Background 5;Boolean;CaptionML=[DEU=Hintergrundbild 5;
+                                                              ENU=Digital Coupon Background 5] }
+    { 55  ;   ;Digital Coupon Amount 1;Decimal    ;CaptionML=[DEU=Betrag 1;
+                                                              ENU=Digital Coupon Amount 1] }
+    { 56  ;   ;Digital Coupon Amount 2;Decimal    ;CaptionML=[DEU=Betrag 2;
+                                                              ENU=Digital Coupon Amount 2] }
+    { 57  ;   ;Digital Coupon Amount 3;Decimal    ;CaptionML=[DEU=Betrag 3;
+                                                              ENU=Digital Coupon Amount 3] }
+    { 58  ;   ;Digital Coupon Amount 4;Decimal    ;CaptionML=[DEU=Betrag 4;
+                                                              ENU=Digital Coupon Amount 4] }
+    { 59  ;   ;Digital Coupon Amount 5;Decimal    ;CaptionML=[DEU=Betrag 5;
+                                                              ENU=Digital Coupon Amount 5] }
+    { 60  ;   ;Minimum Coupon Amount;Decimal      ;CaptionML=[DEU=Minimalbetrag;
+                                                              ENU=Minimum Coupon Amount] }
+    { 61  ;   ;Max Coupon Amount   ;Decimal       ;CaptionML=[DEU=Maximalbetrag;
+                                                              ENU=Max Coupon Amount] }
+    { 62  ;   ;Text Email Digital Coupon;Code30   ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Text Digitaler Gutschein;
+                                                              ENU=Text Email Digital Coupon] }
+    { 63  ;   ;Digital Coupon Cat. Line No.;Integer;
+                                                   CaptionML=[DEU=Kategorie-Zeilennummer Digitaler Gutschein;
+                                                              ENU=Category Line No. Digital Coupon] }
+    { 64  ;   ;Text Empty Basket   ;Code30        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text leerer Warenkorb;
+                                                              ENU=Text empty basket] }
+    { 65  ;   ;E-Mail Return Order ;Code20        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Verkaufsreklamation;
+                                                              ENU=E-Mail Sales Return Order] }
+    { 66  ;   ;Return Order No Text;Code30        ;TableRelation="Standard Text".Code;
+                                                   CaptionML=[DEU=Reklamationsnr. Text;
+                                                              ENU=Return Order No. Text] }
+    { 67  ;   ;Return Order Reference Text;Code30 ;TableRelation="Standard Text".Code;
+                                                   CaptionML=[DEU=Reklamation "Ihre Referenz" Text;
+                                                              ENU=Return Order "Your Reference" Text] }
+    { 68  ;   ;E-Mail Return Order Confirm;Code30 ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Verkaufsreklamationen best�tigen;
+                                                              ENU=E-Mail Confirm Return Order] }
+    { 69  ;   ;Text Return Order Complete;Code30  ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text R�cksendung erfolgreich angelegt;
+                                                              ENU=Text return order successfully placed] }
+    { 70  ;   ;E-Mail Availability Notify;Code30  ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Wiederverf�gbarkeitsbenachrichtigung;
+                                                              ENU=E-Mail Availability Notification] }
+    { 71  ;   ;Newsletter Coupon Active;Boolean   ;CaptionML=[DEU=Newsletter Gutschein Aktiv;
+                                                              ENU=Newsletter Coupon Active] }
+    { 72  ;   ;Newsletter Coupon Header;Code20    ;TableRelation="Webshop Coupon Header".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Newsletter Gutscheinkopf;
+                                                              ENU=Newsletter Coupon Header] }
+    { 73  ;   ;Share Facebook      ;Boolean       ;CaptionML=[DEU=Auf Facebook teilen;
+                                                              ENU=Share on Facebook] }
+    { 74  ;   ;Share Google        ;Boolean       ;CaptionML=[DEU=Auf Google teilen;
+                                                              ENU=Share on Google] }
+    { 75  ;   ;Share Twitter       ;Boolean       ;CaptionML=[DEU=Auf Twitter teilen;
+                                                              ENU=Share on Twitter] }
+    { 76  ;   ;Share Pinterest     ;Boolean       ;CaptionML=[DEU=Auf Pinterest teilen;
+                                                              ENU=Share on Pinterest] }
+    { 77  ;   ;Share Xing          ;Boolean       ;CaptionML=[DEU=Auf Xing teilen;
+                                                              ENU=Share on Xing] }
+    { 78  ;   ;Share Mail          ;Boolean       ;CaptionML=[DEU=Per E-Mail teilen;
+                                                              ENU=Share with email] }
+    { 79  ;   ;Report PDF Cr.Memo  ;Integer       ;TableRelation=Object.ID WHERE (Type=CONST(Report));
+                                                   CaptionML=[DEU=Bericht PDF Gutschrift;
+                                                              ENU=Report PDF Cr.Memo] }
+    { 80  ;   ;Text Itemcard Trustbox;Text30      ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Trustbox Artikelkarte;
+                                                              ENU=Text Trustbox Itemcard] }
+    { 81  ;   ;Text Itemcard Trustbox 2;Text30    ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text Trustbox Artikelkarte unten;
+                                                              ENU=Text Trustbox Itemcard bottom] }
+    { 90  ;   ;Marketplace Cancellation Text;Code30;
+                                                   TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Marketplace Ebay Widerruf Text;
+                                                              ENU=Marketplace Ebay Cancellation Text] }
+    { 91  ;   ;Marketplace Ebay Item Template;Code20;
+                                                   TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Marketplace Ebay Artikeltemplate;
+                                                              ENU=Marketplace Ebay Item Template] }
+    { 100 ;   ;Number of Items per Page;Integer   ;InitValue=24;
+                                                   CaptionML=[DEU=Anzahl Artikel pro Seite;
+                                                              ENU=Number of Items per Page] }
+    { 101 ;   ;Fitting Items Text  ;Text100       ;CaptionML=[DEU=Abw. Bezeichnung Passende Artikel;
+                                                              ENU=Fitting Items Text] }
+    { 102 ;   ;Alternative Items Text;Text100     ;CaptionML=[DEU=Abw. Bezeichnung Alternative Artikel;
+                                                              ENU=Alternative Items Text] }
+    { 103 ;   ;Accessories Items Text;Text100     ;CaptionML=[DEU=Abw. Bezeichnung Zubeh�rartikel;
+                                                              ENU=Accessories Items Text] }
+    { 104 ;   ;Spare Parts Text    ;Text100       ;CaptionML=[DEU=Abw. Bezeichnung Ersatzteile;
+                                                              ENU=Spare Parts Text] }
+    { 105 ;   ;Address Validation Active;Boolean  ;CaptionML=[DEU=Adressvalidierung aktiv;
+                                                              ENU=Address validation active] }
+    { 106 ;   ;Address Validation Login;Text45    ;CaptionML=[DEU=Adressvalidierung Login;
+                                                              ENU=Address validation Login] }
+    { 107 ;   ;Address Validation Password;Text45 ;ExtendedDatatype=Masked;
+                                                   CaptionML=[DEU=Adressvalidierung Passwort;
+                                                              ENU=Address validation password] }
+    { 108 ;   ;Shipment Notification Tracking;Boolean;
+                                                   CaptionML=[DEU=Versandbenachrichtigung nur bei vorhandener Trackingnummer;
+                                                              ENU=Shipment Notification only with tracking number] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Code                          ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopCountry@1000000000 : Record 5447310;
+      WebshopShippingOption@1000000001 : Record 5447311;
+      WebshopPaymentOption@1000000002 : Record 5447312;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

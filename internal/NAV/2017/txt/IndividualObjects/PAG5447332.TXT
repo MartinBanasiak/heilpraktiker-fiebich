@@ -1,0 +1,56 @@
+OBJECT Page 5447332 Webshop Coupon Line List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Gutscheinzeilen;
+               ENU=Webshop Coupon Line List];
+    SourceTable=Table5447329;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000001;2;Field  ;
+                SourceExpr="Coupon Code" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Customer No." }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Times Used" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Max No. of Uses" }
+
+    { 1000000009;2;Field  ;
+                SourceExpr=Amount }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Amount Left" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Date Last Used" }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

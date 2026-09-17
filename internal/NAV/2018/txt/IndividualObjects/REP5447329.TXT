@@ -1,0 +1,576 @@
+OBJECT Report 5447329 Webshop Create Coupon Codes
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Gutscheincodes erzeugen;
+               ENU=Webshop Create Coupon Codes];
+    ProcessingOnly=Yes;
+    OnInitReport=BEGIN
+                   CharArray[1] :=  '0';
+                   CharArray[2] :=  '1';
+                   CharArray[3] :=  '2';
+                   CharArray[4] :=  '3';
+                   CharArray[5] :=  '4';
+                   CharArray[6] :=  '5';
+                   CharArray[7] :=  '6';
+                   CharArray[8] :=  '7';
+                   CharArray[9] :=  '8';
+                   CharArray[10] :=  '9';
+
+                   CharArray[11] := 'a';
+                   CharArray[12] := 'b';
+                   CharArray[13] := 'c';
+                   CharArray[14] := 'd';
+                   CharArray[15] := 'e';
+                   CharArray[16] := 'f';
+                   CharArray[17] := 'g';
+                   CharArray[18] := 'h';
+                   CharArray[19] := 'i';
+                   CharArray[20] := 'j';
+                   CharArray[21] := 'k';
+                   CharArray[22] := 'l';
+                   CharArray[23] := 'm';
+                   CharArray[24] := 'n';
+                   CharArray[25] := 'o';
+                   CharArray[26] := 'p';
+                   CharArray[27] := 'q';
+                   CharArray[28] := 'r';
+                   CharArray[29] := 's';
+                   CharArray[30] := 't';
+                   CharArray[31] := 'u';
+                   CharArray[32] := 'v';
+                   CharArray[33] := 'w';
+                   CharArray[34] := 'x';
+                   CharArray[35] := 'y';
+                   CharArray[36] := 'z';
+
+                   CharArray[37] := 'A';
+                   CharArray[38] := 'B';
+                   CharArray[39] := 'C';
+                   CharArray[40] := 'D';
+                   CharArray[41] := 'E';
+                   CharArray[42] := 'F';
+                   CharArray[43] := 'G';
+                   CharArray[44] := 'H';
+                   CharArray[45] := 'I';
+                   CharArray[46] := 'J';
+                   CharArray[47] := 'K';
+                   CharArray[48] := 'L';
+                   CharArray[49] := 'M';
+                   CharArray[50] := 'N';
+                   CharArray[51] := 'O';
+                   CharArray[52] := 'P';
+                   CharArray[53] := 'Q';
+                   CharArray[54] := 'R';
+                   CharArray[55] := 'S';
+                   CharArray[56] := 'T';
+                   CharArray[57] := 'U';
+                   CharArray[58] := 'V';
+                   CharArray[59] := 'W';
+                   CharArray[60] := 'X';
+                   CharArray[61] := 'Y';
+                   CharArray[62] := 'Z';
+
+                   CharArray[63] := '!';
+                   CharArray[64] := '�';
+                   CharArray[65] := '$';
+                   CharArray[66] := '%';
+                   CharArray[67] := '&';
+                   CharArray[68] := '(';
+                   CharArray[69] := ')';
+                   CharArray[70] := '-';
+                   CharArray[71] := '_';
+                   CharArray[72] := '#';
+
+                   CharArray1[1] :=  '0';
+                   CharArray1[2] :=  '1';
+                   CharArray1[3] :=  '2';
+                   CharArray1[4] :=  '3';
+                   CharArray1[5] :=  '4';
+                   CharArray1[6] :=  '5';
+                   CharArray1[7] :=  '6';
+                   CharArray1[8] :=  '7';
+                   CharArray1[9] :=  '8';
+                   CharArray1[10] :=  '9';
+
+                   CharArray1[11] := 'A';
+                   CharArray1[12] := 'B';
+                   CharArray1[13] := 'C';
+                   CharArray1[14] := 'D';
+                   CharArray1[15] := 'E';
+                   CharArray1[16] := 'F';
+                   CharArray1[17] := 'G';
+                   CharArray1[18] := 'H';
+                   CharArray1[19] := 'I';
+                   CharArray1[20] := 'J';
+                   CharArray1[21] := 'K';
+                   CharArray1[22] := 'L';
+                   CharArray1[23] := 'M';
+                   CharArray1[24] := 'N';
+                   CharArray1[25] := 'O';
+                   CharArray1[26] := 'P';
+                   CharArray1[27] := 'Q';
+                   CharArray1[28] := 'R';
+                   CharArray1[29] := 'S';
+                   CharArray1[30] := 'T';
+                   CharArray1[31] := 'U';
+                   CharArray1[32] := 'V';
+                   CharArray1[33] := 'W';
+                   CharArray1[34] := 'X';
+                   CharArray1[35] := 'Y';
+                   CharArray1[36] := 'Z';
+
+                   CharArray1[37] := '!';
+                   CharArray1[38] := '&';
+                   CharArray1[39] := '.';
+                   CharArray1[40] := '#';
+                   CharArray1[41] := '+';
+                 END;
+
+    OnPostReport=BEGIN
+                   IF TempCouponLine.FINDSET THEN REPEAT
+                     CouponLine.RESET;
+                     IF NOT CouponLine.GET(TempCouponLine.Code,TempCouponLine."Coupon Code",TempCouponLine."Shop Code",TempCouponLine."Language Code") THEN BEGIN
+                       CouponLine.INIT;
+                       CouponLine.TRANSFERFIELDS(TempCouponLine);
+                       CouponLine.INSERT(TRUE);
+                       IF SetActive THEN
+                         CouponLine.SetCouponActiveFromSource("Webshop Coupon Shipping Line");
+                       IF UpdateToWeb THEN
+                         WebshopUpdateManagment.UpdateCouponLine(CouponLine);
+                     END;
+                   UNTIL TempCouponLine.NEXT = 0;
+                   TempCouponLine.DELETEALL;
+                 END;
+
+  }
+  DATASET
+  {
+    { 9594;    ;DataItem;                    ;
+               DataItemTable=Table5447330;
+               DataItemTableView=SORTING(Code)
+                                 ORDER(Ascending) }
+
+    { 5444;1   ;DataItem;                    ;
+               DataItemTable=Table2000000026;
+               DataItemTableView=SORTING(Number)
+                                 ORDER(Ascending);
+               OnPreDataItem=BEGIN
+                               SETRANGE(Number,1,NoOfCoupon);
+                             END;
+
+               OnAfterGetRecord=VAR
+                                  RandomSeed@1000 : Integer;
+                                  CodeExists@1001 : Boolean;
+                                  TimeText@1002 : Code[10];
+                                  Milliseconds@1003 : Integer;
+                                  WebshopManagement@1000000000 : Codeunit 5447300;
+                                BEGIN
+
+                                  RandomStr  := '';
+                                  RandomText := '';
+                                  CodeExists := FALSE;
+                                  //Wenn Gesamtl�nge inkl. Pr�fix und Suffix kleiner gleich Feldl�nge und gen�gend unterschiedliche Codes f�r alle
+                                  //zu erzeugenden Gutscheinzeilen erstellt werden k�nnen
+                                  IF (STRLEN(PrefixCode)+RandomStrLen+STRLEN(SuffixCode) <= 20) AND (POWER(41,RandomStrLen)>=(20*NoOfCoupon)) THEN BEGIN
+
+                                    //Erzeugung von Pseudo-Zufallszahl als Seed f�r Randomize-Funktion
+                                    RANDOMIZE();
+
+                                    WHILE (STRLEN(RandomText)<RandomStrLen) DO BEGIN
+                                      IF (STRLEN(RandomText)<RandomStrLen) THEN
+                                        RandomText := RandomText+FORMAT(CharArray1[RANDOM(41)]);
+                                      IF EVALUATE(RandomStr,RandomText) THEN BEGIN
+                                        TempCouponLine.RESET;
+                                        TempCouponLine.SETRANGE("Coupon Code",PrefixCode+RandomStr+SuffixCode);
+                                        IF (STRLEN(RandomText)=RandomStrLen) AND (NOT TempCouponLine.ISEMPTY) THEN BEGIN
+                                          RandomStr := '';
+                                          RandomText := '';
+                                        END;
+                                      END;
+                                      //Wichtig f�r Erzeugung von Pseudo-Zufallszahlen
+                                      SLEEP(1);
+                                    END;
+
+                                    CLEAR(WebshopCouponLine);
+                                    WebshopCouponLine.RESET;
+                                    //WebshopCouponLine.SETRANGE(WebshopCouponLine."Shop Code","Webshop Coupon Header"."Shop Code");
+                                    //WebshopCouponLine.SETRANGE(WebshopCouponLine."Language Code","Webshop Coupon Header"."Language Code");
+                                    WebshopCouponLine.SETRANGE(WebshopCouponLine."Coupon Code",PrefixCode+RandomStr+SuffixCode);
+                                    IF WebshopCouponLine.ISEMPTY THEN BEGIN
+                                      TempCouponLine.RESET;
+                                      TempCouponLine.INIT;
+                                      TempCouponLine.Code := "Webshop Coupon Shipping Line".Code;
+                                      TempCouponLine."Shop Code" := "Webshop Coupon Shipping Line"."Shop Code";
+                                      TempCouponLine."Language Code" := "Webshop Coupon Shipping Line"."Language Code";
+                                      TempCouponLine."Coupon Code" := PrefixCode+RandomStr+SuffixCode;
+                                      TempCouponLine."Amount Editable" := Amount;
+                                      TempCouponLine.Percentage := Percentage;
+                                      TempCouponLine."Amount From" := AmountFrom;
+                                      TempCouponLine."Category Line No." := CategroyLineNo;
+                                      TempCouponLine."Ending Date" := EndingDate;
+                                      TempCouponLine."Is Category Coupon" := IsCategoryCoupon;
+                                      TempCouponLine."Is Posted" := FALSE;
+                                      TempCouponLine."Item No." := ItemNo;
+                                      TempCouponLine."Max No. of Uses" := MaxNoOfUsages;
+                                      TempCouponLine."Starting Date" := StartingDate;
+                                      TempCouponLine."Value Coupon" := ValueCoupon;
+                                      TempCouponLine."Value Type" := ValueType;
+                                      TempCouponLine.INSERT(FALSE);
+                                      TempCounter := TempCouponLine.COUNT;
+                                    END;
+
+                                    IF TempCounter = NoOfCoupon THEN
+                                      EXIT;
+
+                                  END ELSE BEGIN
+                                    IF (POWER(41,RandomStrLen)>=(20*NoOfCoupon)) THEN
+                                      ERROR(Error001)
+                                    ELSE
+                                      ERROR(Error002);
+                                  END;
+                                END;
+                                 }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+      OnOpenPage=BEGIN
+                   ValueType := RequestWebshopCouponHeader."Shipping Coupon Value";
+                   ValueCoupon := RequestWebshopCouponHeader."Value Coupon";
+                   ShowEnableFields(TRUE);
+                 END;
+
+    }
+    CONTROLS
+    {
+      { 3   ;    ;Container ;
+                  CaptionML=[DEU=Konfiguration;
+                             ENU=Configuration];
+                  ContainerType=ContentArea }
+
+      { 1000000000;1;Group  ;
+                  CaptionML=[DEU=Konfiguration;
+                             ENU=Configuration];
+                  GroupType=Group }
+
+      { 1   ;2   ;Field     ;
+                  Name=Prefix;
+                  CaptionML=[DEU=Pr�fix;
+                             ENU=Prefix];
+                  SourceExpr=PrefixCode;
+                  OnValidate=BEGIN
+                               IF COPYSTR(LOWERCASE(PrefixCode),1,2) = 'dc' THEN
+                                 ERROR(STRSUBSTNO(Error005,COPYSTR(PrefixCode,1,2)));
+
+                               IF COPYSTR(LOWERCASE(PrefixCode),1,2) = 'nc' THEN
+                                 ERROR(STRSUBSTNO(Error006,COPYSTR(PrefixCode,1,2)));
+                             END;
+                              }
+
+      { 4   ;2   ;Field     ;
+                  Name=Suffix;
+                  CaptionML=[DEU=Suffix;
+                             ENU=Suffix];
+                  SourceExpr=SuffixCode }
+
+      { 5   ;2   ;Field     ;
+                  Name=NoOfRandomCharacters;
+                  CaptionML=[DEU=Anzahl Zuf�llige Zeichen;
+                             ENU=No. of random characters];
+                  SourceExpr=RandomStrLen }
+
+      { 2   ;2   ;Field     ;
+                  Name=NoOfCouponLines;
+                  CaptionML=[DEU=Anzahl Gutscheinzeilen;
+                             ENU=No. of Coupon Lines];
+                  SourceExpr=NoOfCoupon }
+
+      { 1000000013;1;Group  ;
+                  CaptionML=[DEU=Gutscheinart;
+                             ENU=Coupontype];
+                  GroupType=Group }
+
+      { 1000000010;2;Field  ;
+                  Name=Amount;
+                  CaptionML=[DEU=Betrag;
+                             ENU=Amount];
+                  SourceExpr=Amount;
+                  Enabled=AmountVisible }
+
+      { 1000000008;2;Field  ;
+                  Name=Percentage;
+                  CaptionML=[DEU=Rabatt %;
+                             ENU=Percentage];
+                  SourceExpr=Percentage;
+                  Enabled=PercentageVisible }
+
+      { 1000000007;2;Field  ;
+                  Name=ItemNo;
+                  CaptionML=[DEU=Artikelnummer;
+                             ENU=Item No.];
+                  SourceExpr=ItemNo;
+                  TableRelation="Webshop Item"."Item No.";
+                  Enabled=ItemNoVisible;
+                  OnLookup=VAR
+                             WebshopItem@1000000000 : Record 5447304;
+                             WebshopItemList@1000000001 : Page 5447309;
+                           BEGIN
+                             WebshopItem.RESET;
+                             WebshopItem.SETFILTER(WebshopItem."Shop Code",HeaderShopCode);
+                             WebshopItem.SETFILTER(WebshopItem."Language Code",HeaderLanguageCode);
+                             WebshopItemList.SETTABLEVIEW(WebshopItem);
+                             WebshopItemList.EDITABLE(FALSE);
+                             WebshopItemList.LOOKUPMODE := TRUE;
+                             IF WebshopItemList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                               WebshopItemList.GETRECORD(WebshopItem);
+                               ItemNo := WebshopItem."Item No.";
+                             END;
+                           END;
+                            }
+
+      { 1000000014;1;Group  ;
+                  CaptionML=[DEU=Bedingungen;
+                             ENU=Conditions];
+                  GroupType=Group }
+
+      { 1000000009;2;Field  ;
+                  Name=AmountFrom;
+                  CaptionML=[DEU=Ab Betrag;
+                             ENU=Amount From];
+                  SourceExpr=AmountFrom;
+                  Enabled=AmountFromVisible }
+
+      { 1000000006;2;Field  ;
+                  Name=IsCategoryCoupon;
+                  CaptionML=[DEU=Ist Kategoriegutschein;
+                             ENU=Is Category Coupon];
+                  SourceExpr=IsCategoryCoupon;
+                  Enabled=CategoryCouponVisible;
+                  OnValidate=BEGIN
+                               CategoryLineNoVisible := IsCategoryCoupon;
+                             END;
+                              }
+
+      { 1000000005;2;Field  ;
+                  Name=CategoryLineNo;
+                  CaptionML=[DEU=Kategoriezeilennr.;
+                             ENU=Category Line No.];
+                  SourceExpr=CategroyLineNo;
+                  Enabled=CategoryLineNoVisible;
+                  OnValidate=BEGIN
+                               IF CategroyLineNo = 0 THEN
+                                 CategoryName := '';
+                             END;
+
+                  OnLookup=VAR
+                             WebshopCategory@1000000000 : Record 5447303;
+                             WebshopCategoryList@1000000001 : Page 5447307;
+                           BEGIN
+                             WebshopCategory.RESET;
+                             WebshopCategory.SETFILTER(WebshopCategory."Shop Code",HeaderShopCode);
+                             WebshopCategory.SETFILTER(WebshopCategory."Language Code",HeaderLanguageCode);
+                             WebshopCategoryList.SETTABLEVIEW(WebshopCategory);
+                             WebshopCategoryList.EDITABLE(FALSE);
+                             WebshopCategoryList.LOOKUPMODE := TRUE;
+                             IF WebshopCategoryList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                               WebshopCategoryList.GETRECORD(WebshopCategory);
+                               CategroyLineNo := WebshopCategory."Line No.";
+                               CategoryName := WebshopCategory.Name;
+                             END;
+                           END;
+                            }
+
+      { 1000000004;2;Field  ;
+                  Name=CategoryName;
+                  CaptionML=[DEU=Kategoriename;
+                             ENU=Category Name];
+                  SourceExpr=CategoryName;
+                  Enabled=CategoryLineNoVisible;
+                  Editable=False }
+
+      { 1000000003;2;Field  ;
+                  Name=MaxNoOfUses;
+                  CaptionML=[DEU=Max. Anzahl Verwendungen;
+                             ENU=Max No of Uses];
+                  SourceExpr=MaxNoOfUsages;
+                  Enabled=MaxNoofUsageVisible }
+
+      { 1000000015;1;Group  ;
+                  CaptionML=[DEU=G�ltigkeit;
+                             ENU=Validity];
+                  GroupType=Group }
+
+      { 1000000002;2;Field  ;
+                  Name=StartingDate;
+                  CaptionML=[DEU=Startdatum;
+                             ENU=Starting Date];
+                  SourceExpr=StartingDate }
+
+      { 1000000001;2;Field  ;
+                  Name=EndingDate;
+                  CaptionML=[DEU=Enddatum;
+                             ENU=Ending Date];
+                  SourceExpr=EndingDate }
+
+      { 1000000016;2;Field  ;
+                  Name=SetCreatedCouponsActive;
+                  CaptionML=[DEU=Erzeugte Gutscheine aktivieren;
+                             ENU=Set created coupons active];
+                  SourceExpr=SetActive }
+
+      { 1000000017;2;Field  ;
+                  CaptionML=[DEU=Gutscheine ins Web �bertragen;
+                             ENU=Update Coupons to Web];
+                  SourceExpr=UpdateToWeb }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopUpdateManagment@1000000032 : Codeunit 5447301;
+      StartCouponCode@1000000000 : Code[20];
+      NoOfCoupon@1000000001 : Integer;
+      CouponLine@1000000002 : Record 5447329;
+      CharArray@1000 : ARRAY [72] OF Char;
+      RandomStrLen@1001 : Integer;
+      RandomStr@1002 : Code[20];
+      PrefixCode@1003 : Code[20];
+      SuffixCode@1004 : Code[20];
+      CharArray1@1005 : ARRAY [41] OF Char;
+      TempCouponLine@1006 : TEMPORARY Record 5447329;
+      Error001@1007 : TextConst 'DEU=Die Gesamtzeichenl�nge ist gr��er als erlaubt. Pr�fix + zuf�llige Zeichen + Suffix darf maximal 20 Zeichen lang sein.;ENU=The total character length is larger than allowed. Prefix + random characters + suffix must not exceed a length of 20 characters.';
+      RandomText@1008 : Text;
+      Error002@1009 : TextConst 'DEU=Die aktuell angegebene Anzahl zuf�lliger Zeichen ist unzureichend um genug ausreichend zuf�llige Codes zu erzeugen. Bitte erh�hen Sie die Anzahl zuf�lliger Zeichen oder verringern Sie die Anzahl  der zu generierenden Gutscheinzeilen;ENU=The currently given number of random characters is insufficient to generate enough sufficiently random codes. Please increase the number of random characters or decrease the number of coupon lines to be generated.';
+      TempCounter@1010 : Integer;
+      SetActive@1000000003 : Boolean;
+      UpdateToWeb@1000000031 : Boolean;
+      ValueType@1000000004 : Option;
+      ValueCoupon@1000000005 : Boolean;
+      Amount@1000000006 : Decimal;
+      Percentage@1000000007 : Decimal;
+      AmountFrom@1000000008 : Decimal;
+      ItemNo@1000000009 : Code[10];
+      IsCategoryCoupon@1000000010 : Boolean;
+      CategroyLineNo@1000000011 : Integer;
+      CategoryName@1000000012 : Text;
+      MaxNoOfUsages@1000000013 : Integer;
+      StartingDate@1000000014 : Date;
+      EndingDate@1000000015 : Date;
+      CouponHeaderCode@1000000016 : Code[20];
+      RequestWebshopCouponHeader@1000000017 : Record 5447330;
+      ValueCouponVisible@1000000024 : Boolean INDATASET;
+      AmountVisible@1000000023 : Boolean INDATASET;
+      PercentageVisible@1000000022 : Boolean INDATASET;
+      AmountFromVisible@1000000021 : Boolean INDATASET;
+      ItemNoVisible@1000000020 : Boolean INDATASET;
+      CategoryCouponVisible@1000000019 : Boolean INDATASET;
+      CategoryLineNoVisible@1000000028 : Boolean INDATASET;
+      MaxNoofUsageVisible@1000000018 : Boolean INDATASET;
+      WebshopCouponLine@1000000025 : Record 5447329;
+      Error003@1000000027 : TextConst 'DEU=Pro Gutscheingruppe d�rfen Gutscheine nur eine Wertart besitzten.;ENU=Only one value type per coupon group allowed.';
+      Error004@1000000026 : TextConst 'DEU=Gutscheincode ist f�r den Shop Code %1 und die Sprache %2 bereits vergeben (Gutscheingruppe %3).;ENU=Coupon Code already assigned for Shop Code %1 and Language Code %2 (Coupon Group %3).';
+      HeaderShopCode@1000000029 : Code[10];
+      HeaderLanguageCode@1000000030 : Code[10];
+      Error005@1000000033 : TextConst 'DEU=Der Pr�fix darf nicht mit ''%1'' beginnen. ''%1'' ist reserviert f�r digitale Gutscheine.;ENU=The prefix can not start with ''%1''. ''%1'' is reserved for digital coupons.';
+      Error006@1000000034 : TextConst 'DEU=Der Pr�fix darf nicht mit ''%1'' beginnen. ''%1'' ist reserviert f�r Newsletter Gutscheine.;ENU=The prefix can not start with ''%1''. ''%1'' is reserved for newsletter coupons.';
+
+    PROCEDURE SetRecord@1000000013(ParaCouponHeaderCode@1000000000 : Code[20];ParaShopCode@1000000001 : Code[10];ParaLanguageCode@1000000002 : Code[10]);
+    BEGIN
+      RequestWebshopCouponHeader.GET(ParaCouponHeaderCode,ParaShopCode,ParaLanguageCode);
+      WebshopCouponLine.SETRANGE(WebshopCouponLine."Shop Code",RequestWebshopCouponHeader."Shop Code");
+      WebshopCouponLine.SETRANGE(WebshopCouponLine."Language Code",RequestWebshopCouponHeader."Language Code");
+      WebshopCouponLine.SETRANGE(WebshopCouponLine.Code,RequestWebshopCouponHeader.Code);
+      IF NOT WebshopCouponLine.ISEMPTY THEN BEGIN
+        WebshopCouponLine.FINDFIRST;
+        ValueType := WebshopCouponLine."Value Type";
+      END;
+      HeaderShopCode := ParaShopCode;
+      HeaderLanguageCode := ParaLanguageCode;
+    END;
+
+    PROCEDURE ShowEnableFields@1000000002(ResetValues@1000000000 : Boolean);
+    BEGIN
+       CASE ValueType OF
+        //Betrag
+        0:
+          BEGIN
+            ValueCouponVisible := TRUE;
+            AmountVisible := TRUE;
+            PercentageVisible := FALSE;
+            IF ResetValues THEN
+              Percentage := 0;
+            IF ValueCoupon THEN BEGIN
+              AmountFromVisible := FALSE;
+              IF ResetValues THEN
+                AmountFrom := 0;
+              CategoryCouponVisible := FALSE;
+              MaxNoofUsageVisible := FALSE;
+            END ELSE BEGIN
+              AmountFromVisible := TRUE;
+              CategoryCouponVisible := TRUE;
+              MaxNoofUsageVisible := TRUE;
+            END;
+            ItemNoVisible := FALSE;
+          END;
+        //Prozent
+        1:
+          BEGIN
+            ValueCouponVisible := FALSE;
+            AmountVisible := FALSE;
+            PercentageVisible := TRUE;
+            AmountFromVisible := TRUE;
+            CategoryCouponVisible := TRUE;
+            MaxNoofUsageVisible := TRUE;
+            ItemNoVisible := FALSE;
+          END;
+        //Artikel
+        2:
+          BEGIN
+            ValueCouponVisible := FALSE;
+            AmountVisible := FALSE;
+            PercentageVisible := FALSE;
+            AmountFromVisible := TRUE;
+            CategoryCouponVisible := TRUE;
+            MaxNoofUsageVisible := TRUE;
+            ItemNoVisible := TRUE;
+          END;
+        //Versand
+        3:
+          BEGIN
+            ValueCouponVisible := FALSE;
+            AmountVisible := FALSE;
+            PercentageVisible := FALSE;
+            AmountFromVisible := FALSE;
+            CategoryCouponVisible := FALSE;
+            MaxNoofUsageVisible := TRUE;
+            ItemNoVisible := FALSE;
+          END;
+       END;
+       IF ResetValues THEN
+        RequestOptionsPage.UPDATE;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

@@ -1,0 +1,246 @@
+N22-C10-P8631-A1033-L999:Specifies the default currency for the customer.
+N22-C1102601000-P8631-A1033-L999:Specifies the maximum amount you allow the customer to exceed the payment balance before warnings are issued.
+N22-C1102601002-P8631-A1033-L999:Specifies that the related record is blocked from being posted in transactions, for example a customer that is declared insolvent or an item that is placed in quarantine.
+N22-C1102601004-P8631-A1033-L999:Specifies when the customer card was last modified.
+N22-C1102601006-P8631-A1033-L999:Specifies how to apply payments to entries for this customer.
+N22-C1102601008-P8631-A1033-L999:Specifies if several orders delivered to the customer can appear on the same sales invoice.
+N22-C1102601010-P8631-A1033-L999:Specifies whether items will never, automatically (Always), or optionally be reserved for this customer. Optional means that you must manually reserve items for this customer.
+N22-C1102601012-P8631-A1033-L999:Specifies if the customer accepts partial shipment of orders.
+N22-C1102601014-P8631-A1033-L999:Specifies the code for the shipping agent who is transporting the items.
+N22-C1102601016-P8631-A1033-L999:Specifies a customizable calendar for shipment planning that holds the customer's working days and holidays.
+N22-C12-P8631-A1033-L999:Specifies an alternate name that you can use to search for the record in question when you cannot remember the value in the Name field.
+N22-C2-P8631-A1033-L999:Specifies the number of the involved entry or record, according to the specified number series.
+N22-C30-P8631-A1033-L999:Specifies the country/region of the address.
+N22-C32-P8631-A1033-L999:Specifies the total net amount of sales to the customer in LCY.
+N22-C34-P8631-A1033-L999:Specifies the name of the person you regularly contact when you do business with this customer.
+N22-C36-P8631-A1033-L999:Specifies a code for the salesperson who normally handles this customer's account.
+N22-C38-P8631-A1033-L999:Specifies the customer's market type to link business transactions to.
+N22-C40-P8631-A1033-L999:Specifies the code of the responsibility center, such as a distribution hub, that is associated with the involved user, company, customer, or vendor.
+N22-C43-P8631-A1033-L999:Specifies from which location sales to this customer will be processed by default.
+N22-C46-P8631-A1033-L999:Specifies the customer price group code, which you can use to set up special sales prices in the Sales Prices window.
+N22-C48-P8631-A1033-L999:Specifies the code for the involved finance charges in case of late payment.
+N22-C4-P8631-A1033-L999:Specifies the customer's name. This name will appear on all sales documents for the customer. You can enter a maximum of 50 characters, both numbers and letters.
+N22-C50-P8631-A1033-L999:Specifies the language that is used when translating specified text on documents to foreign business partner, such as an item description on an order confirmation.
+N22-C52-P8631-A1033-L999:Specifies the VAT specification of the involved customer or vendor to link transactions made for this record with the appropriate general ledger account according to the VAT posting setup.
+N22-C54-P8631-A1033-L999:Specifies the postal code.
+N22-C56-P8631-A1033-L999:Specifies the customer's trade type to link transactions made for this customer with the appropriate general ledger account according to the general posting setup.
+N22-C59-P8631-A1033-L999:Specifies payments from the customer that are overdue per today's date.
+N22-C61-P8631-A1033-L999:Specifies how reminders about late payments are handled for this customer.
+N22-C62-P8631-A1033-L999:Specifies the payment amount that the customer owes for completed sales. This value is also known as the customer's balance.
+N22-C6-P8631-A1033-L999:Specifies the customer's telephone number.
+N22-C72-P8631-A1033-L999:Specifies the customer discount group code, which you can use as a criterion to set up special discounts in the Sales Line Discounts window.
+N22-C79-P8631-A1033-L999:Specifies the customer's intercompany partner code.
+N22-C861-P8629-A1033-L999:Power BI Reports
+N22-C8-P8631-A1033-L999:Specifies a formula that calculates the payment due date, payment discount date, and payment discount amount.
+N22-P55132-A1033-L999:New,Process,Report,Approve,New Document,Request Approval,Customer
+N22-P55242-G1000000000-P8629-A1033-L999:Payment Permissions
+N22-P55242-G1000000001-P8629-A1033-L999:Webshop Permissions
+N22-P55242-G1000000002-P8629-A1033-L999:Category Permissions
+N22-P55242-G1000000003-P8629-A1033-L999:Shipping Permissions
+N22-P55242-G1000000004-P8629-A1033-L999:Item permissions
+N22-P55242-G1000000005-P8629-A1033-L999:Group permissions
+N22-P55242-G1000000006-P8629-A1033-L999:Permissions
+N22-P55242-G1000000008-P55160-Q1000000000-P26171-A1033-L999:Customer has been updated
+N22-P55242-G100-P8629-A1033-L999:Prices
+N22-P55242-G100-P8631-A1033-L999:View or set up different prices for items that you sell to the selected customer. An item price is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.
+N22-P55242-G101-P8629-A1033-L999:Invoice &Discounts
+N22-P55242-G101-P8631-A1033-L999:Set up different discounts applied to invoices for the selected customer. An invoice discount is automatically granted to the customer when the total on a sales invoice exceeds a certain amount.
+N22-P55242-G102-P8629-A1033-L999:Prices and Discounts
+N22-P55242-G103-P8629-A1033-L999:Ledger E&ntries
+N22-P55242-G103-P8631-A1033-L999:View the history of transactions that have been posted for the selected record.
+N22-P55242-G104-P8629-A1033-L999:History
+N22-P55242-G1055-P8629-A1033-L999:Statement
+N22-P55242-G1055-P8631-A1033-L999:View a list of a customer's transactions for a selected period, for example, to send to the customer at the close of an accounting period. You can choose to have all overdue balances displayed regardless of the period specified, or you can choose to include an aging band.
+N22-P55242-G105-P8629-A1033-L999:Display
+N22-P55242-G106-P8629-A1033-L999:Show/Hide Power BI Reports
+N22-P55242-G106-P8631-A1033-L999:Select if the Power BI FactBox is visible or not.
+N22-P55242-G108-P8629-A1033-L999:Apply Template
+N22-P55242-G108-P8631-A1033-L999:Apply a template to update one or more entities with your standard settings for a certain type of entity.
+N22-P55242-G11-P8629-A1033-L999:Documents
+N22-P55242-G13-P8629-A1033-L999:Manage Approval Workflows
+N22-P55242-G13-P8631-A1033-L999:View or edit existing approval workflows for creating or changing customers.
+N22-P55242-G14-P8629-A1033-L999:Service
+N22-P55242-G15-P8629-A1033-L999:Create Approval Workflow
+N22-P55242-G15-P8631-A1033-L999:Set up an approval workflow for creating or changing customers, by going through a few pages that will guide you.
+N22-P55242-G16-P8629-A1033-L999:&Customer
+N22-P55242-G17-P8629-A1033-L999:Create Customer in Dynamics NAV
+N22-P55242-G17-P8631-A1033-L999:Generate the customer in the coupled Dynamics 365 for Sales account.
+N22-P55242-G18-P8629-A1033-L999:Statistics
+N22-P55242-G18-P8631-A1033-L999:View statistical information, such as the value of posted entries, for the record.
+N22-P55242-G1900172506-P8629-A1033-L999:Customer - Order Detail
+N22-P55242-G1900172506-P8631-A1033-L999:View a list of orders divided by customer. The order amounts are totaled for each customer and for the entire list. The report can be used, for example, to obtain an overview of sales over the short term or to analyze possible shipment problems.
+N22-P55242-G1900246505-P8629-A1033-L999:Sales Quote
+N22-P55242-G1900246505-P8631-A1033-L999:Offer items or services to a customer.
+N22-P55242-G1900711606-P8629-A1033-L999:Aged Accounts Receivable
+N22-P55242-G1900711606-P8631-A1033-L999:View an overview of when customer payments are due or overdue, divided into four periods. You must specify the date you want aging calculated from and the length of the period that each column will contain data for.
+N22-P55242-G1900760706-P8629-A1033-L999:Customer/Item Sales
+N22-P55242-G1900760706-P8631-A1033-L999:View a list of item sales for each customer during a selected time period. The report contains information on quantity, sales amount, profit, and possible discounts. It can be used, for example, to analyze a company's customer groups.
+N22-P55242-G1900839804-P8629-A1033-L999:Cash Receipt Journal
+N22-P55242-G1900839804-P8631-A1033-L999:Open the cash receipt journal to post incoming payments.
+N22-P55242-G1901007206-P8629-A1033-L999:Customer Register
+N22-P55242-G1901007206-P8631-A1033-L999:View posted customer ledger entries divided into, and sorted according to, registers. By using a filter, you can select exactly the entries in the registers that you need to see. If you have created many entries and you do not set a filter, the report will print a large amount of information.
+N22-P55242-G1901102005-P8629-A1033-L999:Finance Charge Memo
+N22-P55242-G1901102005-P8631-A1033-L999:Create a new finance charge memo.
+N22-P55242-G1901662105-P8629-A1033-L999:Service Credit Memo
+N22-P55242-G1901662105-P8631-A1033-L999:Create a new service credit memo for the customer.
+N22-P55242-G1902079405-P8629-A1033-L999:Service Invoice
+N22-P55242-G1902079405-P8631-A1033-L999:Create a new service invoice for the customer.
+N22-P55242-G1902299006-P8629-A1033-L999:Customer - Balance to Date
+N22-P55242-G1902299006-P8631-A1033-L999:View a list with customers' payment history up until a certain date. You can use the report to extract your total sales income at the close of an accounting period or fiscal year.
+N22-P55242-G1902575205-P8629-A1033-L999:Blanket Sales Order
+N22-P55242-G1902575205-P8631-A1033-L999:Create a blanket sales order for the customer.
+N22-P55242-G1902583505-P8629-A1033-L999:Sales Credit Memo
+N22-P55242-G1902583505-P8631-A1033-L999:Create a new sales credit memo to revert a posted sales invoice.
+N22-P55242-G1903839805-P8629-A1033-L999:Reminder
+N22-P55242-G1903839805-P8631-A1033-L999:Create a new reminder for the customer.
+N22-P55242-G1903839806-P8629-A1033-L999:Reminder
+N22-P55242-G1903839806-P8631-A1033-L999:Create a new reminder for the customer.
+N22-P55242-G1904039606-P8629-A1033-L999:Customer - Payment Receipt
+N22-P55242-G1904039606-P8631-A1033-L999:View a document showing which customer ledger entries that a payment has been applied to. This report can be used as a payment receipt that you send to the customer.
+N22-P55242-G1904190506-P8629-A1033-L999:Sales Statistics
+N22-P55242-G1904190506-P8631-A1033-L999:View customers' total costs, sales, and profits over time, for example, to analyze earnings trends. The report shows amounts for original and adjusted costs, sales, profits, invoice discounts, payment discounts, and profit percentage in three adjustable periods.
+N22-P55242-G1904747105-P8629-A1033-L999:Sales Order
+N22-P55242-G1904747105-P8631-A1033-L999:Create a sales order for the customer.
+N22-P55242-G1905163705-P8629-A1033-L999:Sales Return Order
+N22-P55242-G1905163705-P8631-A1033-L999:Create a new sales return order for items or services.
+N22-P55242-G1905171704-P8629-A1033-L999:Sales Journal
+N22-P55242-G1905171704-P8631-A1033-L999:Post any sales transaction for the customer.
+N22-P55242-G1905185205-P8629-A1033-L999:Service Quote
+N22-P55242-G1905185205-P8631-A1033-L999:Create a new service quote for the customer.
+N22-P55242-G1905562606-P8629-A1033-L999:Customer List
+N22-P55242-G1905562606-P8631-A1033-L999:View various kinds of basic information for customers, such as customer posting group, discount group, finance charge and payment information, salesperson, the customer's default currency and credit limit (in LCY), and the customer's current balance (in LCY).
+N22-P55242-G1905727106-P8629-A1033-L999:Customer - Order Summary
+N22-P55242-G1905727106-P8631-A1033-L999:View the order detail (the quantity not yet shipped) for each customer in three periods of 30 days each, starting from a selected date. There are also columns with orders to be shipped before and after the three periods and a column with the total order detail for each customer. The report can be used to analyze a company's expected sales volume.
+N22-P55242-G1906073506-P8629-A1033-L999:Customer - Sales List
+N22-P55242-G1906073506-P8631-A1033-L999:View customer sales for a period, for example, to report sales activity to customs and tax authorities. You can choose to include only customers with total sales that exceed a minimum amount. You can also specify whether you want the report to show address details for each customer.
+N22-P55242-G1906359306-P8629-A1033-L999:Customer - Trial Balance
+N22-P55242-G1906359306-P8631-A1033-L999:View the beginning and ending balance for customers with entries within a specified period. The report can be used to verify that the balance for a customer posting group is equal to the balance on the corresponding general ledger account on a certain date.
+N22-P55242-G1906384905-P8629-A1033-L999:Sales Invoice
+N22-P55242-G1906384905-P8631-A1033-L999:Create a sales invoice for the customer.
+N22-P55242-G1906813206-P8629-A1033-L999:Customer Detailed Aging
+N22-P55242-G1906813206-P8631-A1033-L999:View a detailed list of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.
+N22-P55242-G1906871306-P8629-A1033-L999:Customer - Detail Trial Bal.
+N22-P55242-G1906871306-P8631-A1033-L999:View the balance for customers with balances on a specified date. The report can be used at the close of an accounting period, for example, or for an audit.
+N22-P55242-G1907102005-P8629-A1033-L999:Service Order
+N22-P55242-G1907102005-P8631-A1033-L999:Create a new service order for the customer.
+N22-P55242-G1907152806-P8629-A1033-L999:Customer - Top 10 List
+N22-P55242-G1907152806-P8631-A1033-L999:View which customers purchase the most or owe the most in a selected period. Only customers that have either purchases during the period or a balance at the end of the period will be included.
+N22-P55242-G1907944606-P8629-A1033-L999:Customer - Summary Aging
+N22-P55242-G1907944606-P8631-A1033-L999:View, print, or save a summary of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.
+N22-P55242-G19-P8629-A1033-L999:Entry Statistics
+N22-P55242-G19-P8631-A1033-L999:View entry statistics for the record.
+N22-P55242-G20-P8629-A1033-L999:Co&mments
+N22-P55242-G20-P8631-A1033-L999:View or add comments for the record.
+N22-P55242-G21-P8629-A1033-L999:S&ales
+N22-P55242-G21-P8631-A1033-L999:Shows a summary of customer ledger entries. You select the time interval in the View by field. The Period column on the left contains a series of dates that are determined by the time interval you have selected.
+N22-P55242-G22-P8629-A1033-L999:Ledger E&ntries
+N22-P55242-G22-P8631-A1033-L999:View the history of transactions that have been posted for the selected record.
+N22-P55242-G23-P8629-A1033-L999:Ship-&to Addresses
+N22-P55242-G23-P8631-A1033-L999:View or edit alternate shipping addresses where the customer wants items delivered if different from the regular address.
+N22-P55242-G24-P8629-A1033-L999:S&ales
+N22-P55242-G25-P8629-A1033-L999:Invoice &Discounts
+N22-P55242-G25-P8631-A1033-L999:Set up different discounts that are applied to invoices for the customer. An invoice discount is automatically granted to the customer when the total on a sales invoice exceeds a certain amount.
+N22-P55242-G26-P8629-A1033-L999:Prices
+N22-P55242-G26-P8631-A1033-L999:View or set up different prices for items that you sell to the customer. An item price is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.
+N22-P55242-G27-P8629-A1033-L999:Quotes
+N22-P55242-G27-P8631-A1033-L999:View a list of ongoing sales quotes.
+N22-P55242-G28-P8629-A1033-L999:Orders
+N22-P55242-G28-P8631-A1033-L999:View a list of ongoing sales orders for the customer.
+N22-P55242-G29-P8629-A1033-L999:Direct Debit Mandates
+N22-P55242-G29-P8631-A1033-L999:View the direct-debit mandates that reflect agreements with customers to collect invoice payments from their bank account.
+N22-P55242-G31-P8629-A1033-L999:Coupling
+N22-P55242-G31-P8631-A1033-L999:Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Dynamics 365 for Sales record.
+N22-P55242-G37-P8629-A1033-L999:Synchronize Now
+N22-P55242-G37-P8631-A1033-L999:Send or get updated data to or from Dynamics 365 for Sales.
+N22-P55242-G39-P8629-A1033-L999:Cancel Approval Re&quest
+N22-P55242-G39-P8631-A1033-L999:Cancel the approval request.
+N22-P55242-G3-P8629-A1033-L999:General
+N22-P55242-G41-P8629-A1033-L999:Account
+N22-P55242-G41-P8631-A1033-L999:Open the coupled Dynamics 365 for Sales account.
+N22-P55242-G42-P8629-A1033-L999:Dimensions-&Multiple
+N22-P55242-G42-P8631-A1033-L999:View or edit dimensions for a group of records. You can assign dimension codes to transactions to distribute costs and analyze historical information.
+N22-P55242-G44-P8629-A1033-L999:Dynamics 365 for Sales
+N22-P55242-G45-P8629-A1033-L999:Cross Re&ferences
+N22-P55242-G45-P8631-A1033-L999:Set up the customer's own identification of items that you sell to the customer. Cross-references to the customer's item number means that the item number is automatically shown on sales documents instead of the number that you use.
+N22-P55242-G47-P8629-A1033-L999:Delete Coupling
+N22-P55242-G47-P8631-A1033-L999:Delete the coupling to a Dynamics 365 for Sales account.
+N22-P55242-G49-P8629-A1033-L999:Set Up Coupling
+N22-P55242-G49-P8631-A1033-L999:Create or modify the coupling to a Dynamics 365 for Sales account.
+N22-P55242-G51-P8629-A1033-L999:Send A&pproval Request
+N22-P55242-G51-P8631-A1033-L999:Request approval to change the record.
+N22-P55242-G53-P8629-A1033-L999:Create
+N22-P55242-G55-P8629-A1033-L999:Request Approval
+N22-P55242-G57-P8629-A1033-L999:Create Account in Dynamics 365 for Sales
+N22-P55242-G57-P8631-A1033-L999:Generate the account in the coupled Dynamics 365 for Sales account.
+N22-P55242-G58-P8629-A1033-L999:Bank Accounts
+N22-P55242-G58-P8631-A1033-L999:View or set up the customer's bank accounts. You can set up any number of bank accounts for each customer.
+N22-P55242-G5-P8629-A1033-L999:Sales
+N22-P55242-G60-P8629-A1033-L999:C&ontact
+N22-P55242-G60-P8631-A1033-L999:View or edit detailed information about the contact person at the customer.
+N22-P55242-G63-P8629-A1033-L999:Statistics by C&urrencies
+N22-P55242-G63-P8631-A1033-L999:View statistics for customers that use multiple currencies.
+N22-P55242-G64-P8629-A1033-L999:Online Map
+N22-P55242-G64-P8631-A1033-L999:View the address on an online map.
+N22-P55242-G6500-P8629-A1033-L999:Item &Tracking Entries
+N22-P55242-G6500-P8631-A1033-L999:View serial or lot numbers that are assigned to items.
+N22-P55242-G65-P8629-A1033-L999:Blanket Orders
+N22-P55242-G65-P8631-A1033-L999:Open the list of ongoing blanket orders.
+N22-P55242-G66-P8629-A1033-L999:Dimensions
+N22-P55242-G67-P8629-A1033-L999:Approvals
+N22-P55242-G67-P8631-A1033-L999:View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.
+N22-P55242-G68-P8629-A1033-L999:Ser&vice Contracts
+N22-P55242-G68-P8631-A1033-L999:Open the list of ongoing service contracts.
+N22-P55242-G69-P8629-A1033-L999:Service &Items
+N22-P55242-G69-P8631-A1033-L999:View or edit the service items that are registered for the customer.
+N22-P55242-G70-P8629-A1033-L999:Return Orders
+N22-P55242-G70-P8631-A1033-L999:Open the list of ongoing return orders.
+N22-P55242-G71-P8629-A1033-L999:Line Discounts
+N22-P55242-G71-P8631-A1033-L999:View or set up different discounts for items that you sell to the customer. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.
+N22-P55242-G73-P8629-A1033-L999:Customer - Payment Receipt
+N22-P55242-G73-P8631-A1033-L999:View a document showing which customer ledger entries that a payment has been applied to. This report can be used as a payment receipt that you send to the customer.
+N22-P55242-G74-P8629-A1033-L999:Aged Accounts Receivable
+N22-P55242-G74-P8631-A1033-L999:View an overview of when customer payments are due or overdue, divided into four periods. You must specify the date you want aging calculated from and the length of the period that each column will contain data for.
+N22-P55242-G75-P8629-A1033-L999:S&td. Cust. Sales Codes
+N22-P55242-G75-P8631-A1033-L999:View or edit recurring sales lines for the customer.
+N22-P55242-G76-P8629-A1033-L999:Issued Documents
+N22-P55242-G77-P8629-A1033-L999:Issued &Reminders
+N22-P55242-G77-P8631-A1033-L999:View the reminders that you have sent to the customer.
+N22-P55242-G78-P8629-A1033-L999:Issued &Finance Charge Memos
+N22-P55242-G78-P8631-A1033-L999:View the finance charge memos that you have sent to the customer.
+N22-P55242-G7-P8629-A1033-L999:Finance
+N22-P55242-G80-P8629-A1033-L999:Customer - Detailed Aging
+N22-P55242-G80-P8631-A1033-L999:View, print, or save a detailed list of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.
+N22-P55242-G81-P8629-A1033-L999:Service Orders
+N22-P55242-G81-P8631-A1033-L999:Open the list of ongoing service orders.
+N22-P55242-G82-P8629-A1033-L999:Prepa&yment Percentages
+N22-P55242-G82-P8631-A1033-L999:View or edit the percentages of the price that can be paid as a prepayment.
+N22-P55242-G83-P8629-A1033-L999:Customer - Summary Aging
+N22-P55242-G83-P8631-A1033-L999:View, print, or save a summary of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.
+N22-P55242-G84-P8629-A1033-L999:Dimensions-Single
+N22-P55242-G84-P8631-A1033-L999:View or edit the single set of dimensions that are set up for the selected record.
+N22-P55242-G85-P8629-A1033-L999:Workflow
+N22-P55242-G86-P8629-A1033-L999:Synchronization Log
+N22-P55242-G86-P8631-A1033-L999:View integration synchronization jobs for the customer table.
+N22-P55242-G87-P8629-A1033-L999:Customer - Detail Trial Bal.
+N22-P55242-G87-P8631-A1033-L999:View the balance for customers with balances on a specified date. The report can be used at the close of an accounting period, for example, or for an audit.
+N22-P55242-G88-P8629-A1033-L999:Customer - Trial Balance
+N22-P55242-G88-P8631-A1033-L999:View the beginning and ending balance for customers with entries within a specified period. The report can be used to verify that the balance for a customer posting group is equal to the balance on the corresponding general ledger account on a certain date.
+N22-P55242-G89-P8629-A1033-L999:Customer - Balance to Date
+N22-P55242-G89-P8631-A1033-L999:View a list with customers' payment history up until a certain date. You can use the report to extract your total sales income at the close of an accounting period or fiscal year.
+N22-P55242-G90-P8629-A1033-L999:Statement
+N22-P55242-G90-P8631-A1033-L999:View a list of a customer's transactions for a selected period, for example, to send to the customer at the close of an accounting period. You can choose to have all overdue balances displayed regardless of the period specified, or you can choose to include an aging band.
+N22-P55242-G91-P8629-A1033-L999:Finance Reports
+N22-P55242-G92-P8629-A1033-L999:Sales Statistics
+N22-P55242-G92-P8631-A1033-L999:View customers' total costs, sales, and profits over time, for example, to analyze earnings trends. The report shows amounts for original and adjusted costs, sales, profits, invoice discounts, payment discounts, and profit percentage in three adjustable periods.
+N22-P55242-G93-P8629-A1033-L999:Customer - Sales List
+N22-P55242-G93-P8631-A1033-L999:View customer sales for a period, for example, to report sales activity to customs and tax authorities. You can choose to include only customers with total sales that exceed a minimum amount. You can also specify whether you want the report to show address details for each customer.
+N22-P55242-G94-P8629-A1033-L999:Customer - Top 10 List
+N22-P55242-G94-P8631-A1033-L999:View which customers purchase the most or owe the most in a selected period. Only customers that have either purchases during the period or a balance at the end of the period will be included.
+N22-P55242-G95-P8629-A1033-L999:Sales Reports
+N22-P55242-G96-P8629-A1033-L999:Reports
+N22-P55242-G97-P8629-A1033-L999:Update Account Statistics
+N22-P55242-G97-P8631-A1033-L999:Send customer statistics data to Dynamics 365 for Sales to update the Account Statistics FactBox.
+N22-P55242-G98-P8629-A1033-L999:Line Discounts
+N22-P55242-G98-P8631-A1033-L999:View or set up different discounts for items that you sell to the customer. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.
+N22-P55242-G9-P8629-A1033-L999:History
+N22-P8629-A1033-L999:Customers

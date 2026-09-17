@@ -48,6 +48,89 @@ function ping_sitemap() {
     $response_shop = curl_exec($ch);
 }
 
+/**
+ * Hat der Menuepunkt eine eigene Seite - und damit eine eigene Adresse?
+ *
+ * forward_type 1 heisst "Seite zuordnen". Alles andere sind Weiterleitungen
+ * (2 intern, 3 extern, 5 interner Pfad, 6 Shop-Kategorie) oder ein Platzhalter
+ * (4). Die Sitemap soll Zielseiten nennen, keine Zwischenstationen: Die
+ * Untermenuepunkte der Behandlungsmethoden etwa sind Typ 5 und antworten mit
+ * 302 auf die Kollektionsseiten, die weiter unten einzeln aufgefuehrt werden.
+ *
+ * Aktiv- und Gueltigkeitspruefung stehen hier mit drin, weil der Baum seit
+ * dieser Aenderung ueber main_navigation laeuft und nicht mehr ueber die
+ * gefilterte Ansicht - die Bedingungen entsprechen denen von
+ * main_view_active_navigation.
+ */
+function sitemap_navigation_has_own_page($navigation) {
+
+    if ((int)$navigation['active'] !== 1) {
+        return FALSE;
+    }
+
+    $today = date("Y-m-d");
+    if (!empty($navigation['validity_from']) && $navigation['validity_from'] > $today) {
+        return FALSE;
+    }
+    if (!empty($navigation['validity_to']) && $navigation['validity_to'] < $today) {
+        return FALSE;
+    }
+
+    return ((int)$navigation['forward_type'] === 1);
+}
+
+/**
+ * Detailseiten der Kollektionen einer Seite anhaengen.
+ *
+ * Eine Seite kann eine Kollektionsliste enthalten - die Behandlungsmethoden
+ * etwa. Jeder Eintrag darin hat im Frontend eine eigene Adresse aus der Adresse
+ * der Listenseite und get_collection_rewrite(). Der Generator hat diese Seiten
+ * bisher ueberhaupt nicht gekannt: In der Sitemap stand nur die Uebersicht.
+ *
+ * Nur Kollektionen aus einem verlinkten Aufbau (main_collection_setup.linked).
+ * Bei den uebrigen - Linkliste, Fortbildungen - zeigt die Uebersicht bereits
+ * alles, was es gibt; eine Detailseite wird dort nirgends verlinkt und waere in
+ * der Sitemap eine Seite ohne eigenen Inhalt.
+ */
+function sitemap_append_collections($navigation_id, $conurl, $site, $language) {
+
+    global $sitemap_co;
+
+    $query = "SELECT pl.main_collection_setup_id AS setup_id
+                FROM main_page_link pl
+                JOIN main_navigation n ON n.forward_page_id = pl.main_page_id
+                JOIN main_collection_setup cs ON cs.id = pl.main_collection_setup_id
+               WHERE n.id = '" . $navigation_id . "'
+                 AND n.forward_type = 1
+                 AND pl.main_collection_list = 1
+                 AND pl.active = 1
+                 AND cs.linked = 1";
+    $result = @mysqli_query($GLOBALS['mysql_con'],$query);
+
+    while ($setup = @mysqli_fetch_assoc($result)) {
+
+        // Dieselben Bedingungen, mit denen das Frontend die Liste fuellt
+        // (show_collection_setup_content()): Gueltigkeitszeitraum und eine
+        // gesetzte Bezeichnung. Dazu noindex - was die Seite selbst aus dem
+        // Index haelt, gehoert nicht in die Sitemap.
+        $query_col = "SELECT id, description FROM main_collection
+                       WHERE main_collection_setup_id = '" . $setup['setup_id'] . "'
+                         AND description != ''
+                         AND noindex = 0
+                         AND (validity_from IS NULL OR validity_from <= '" . date("Y-m-d") . "')
+                         AND (validity_to   IS NULL OR validity_to   >= '" . date("Y-m-d") . "')
+                       ORDER BY sorting ASC";
+        $result_col = @mysqli_query($GLOBALS['mysql_con'],$query_col);
+
+        while ($collection = @mysqli_fetch_assoc($result_col)) {
+            $colurl = $conurl . get_collection_rewrite($collection['description'], $collection['id']);
+            $sitemap_co .= "		<url>\n";
+            $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].customizeUrl(true, $site, $language)."/".$colurl)."</loc>\n";
+            $sitemap_co .= "		</url>\n";
+        }
+    }
+}
+
 $sitemap_co = "";
 function generate_content($language_code,$shop_code,$company) {
 
@@ -65,11 +148,25 @@ function generate_content($language_code,$shop_code,$company) {
     $result = @mysqli_query($GLOBALS['mysql_con'],$query);
     $site = mysqli_fetch_assoc($result);
 
-    $query = "SELECT * FROM main_view_active_navigation WHERE main_site_id = " . $site["id"] . " AND main_language_id = " . $language["id"] . " AND level = '1' AND active = '1' AND ISNULL(parent_id)";
+    // Bewusst main_navigation statt main_view_active_navigation: Menuebereiche
+    // wie "info" sind selbst nicht aktiv, sie sind nur der Behaelter fuer
+    // Impressum und Datenschutz. Die Ansicht filtert sie heraus - und mit ihnen
+    // die aktiven Seiten darunter, die dadurch nie in der Sitemap landeten.
+    // Ob ein Eintrag eine eigene Adresse bekommt, entscheidet jetzt
+    // sitemap_navigation_has_own_page(); durchlaufen wird der Baum vollstaendig.
+    $query = "SELECT * FROM main_navigation WHERE main_site_id = " . $site["id"] . " AND main_language_id = " . $language["id"] . " AND level = '1' AND ISNULL(parent_id) ORDER BY sorting ASC";
     $result = @mysqli_query($GLOBALS['mysql_con'],$query);
 
     $sitemap_co = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     $sitemap_co .= "	<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+
+    // Startseite. Ihr Navigationseintrag ist in der Regel nicht aktiv - ueber
+    // die Menuestruktur findet der Generator sie also nicht. Erreichbar ist sie
+    // unter der Wurzel, und genau dorthin zeigt auch ihr Canonical
+    // (siehe get_canonical() in common_functions.inc.php).
+    $sitemap_co .= "		<url>\n";
+    $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'])."</loc>\n";
+    $sitemap_co .= "		</url>\n";
 
     while ($content = mysqli_fetch_array($result)) {
         // Kein strtolower: Die Navigationscodes werden im Frontend
@@ -90,11 +187,13 @@ function generate_content($language_code,$shop_code,$company) {
             #echo $subquery2;
             if (mysqli_num_rows($subresult2) > 0) {
             */
-        $sitemap_co .= "		<url>\n";
-        $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].customizeUrl(true, $site, $language)."/".$conurl)."</loc>\n";
-        $sitemap_co .= "			<changefreq>daily</changefreq>\n";
-        $sitemap_co .= "			<priority>1</priority>\n";
-        $sitemap_co .= "		</url>\n";
+        if (sitemap_navigation_has_own_page($content)) {
+            $sitemap_co .= "		<url>\n";
+            $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].customizeUrl(true, $site, $language)."/".$conurl)."</loc>\n";
+            $sitemap_co .= "		</url>\n";
+
+            sitemap_append_collections($content['id'], $conurl, $site, $language);
+        }
         /*
         }
     }
@@ -110,7 +209,10 @@ function generate_content($language_code,$shop_code,$company) {
     fclose($handle);
     $filename_content = "sitemap-content-".strtolower($shop['code'])."-".strtolower($language['code']).".xml";
     $filenamecontent = "https://".$GLOBALS['base_url']['de'].$filename_content;
-    $date_now = date("Y-m-d H:i:s");
+    // lastmod verlangt das W3C-Datumsformat. "2026-09-17 21:30:58" ist keines -
+    // es fehlt das T zwischen Datum und Zeit und die Zeitzone. date("c") liefert
+    // die gueltige Schreibweise.
+    $date_now = date("c");
 
     $sitemap_index_cont = "<sitemap>\n";
     $sitemap_index_cont .="<loc>".$filenamecontent."</loc>\n";
@@ -127,7 +229,7 @@ function get_content_rek($pid,$company,$shop,$language_code,$conurl,$language,$s
 
     global $sitemap_co;
 
-    $query_rek = "SELECT * FROM main_view_active_navigation WHERE main_site_id = " . $site["id"] . " AND main_language_id = " . $language["id"] . " AND active = '1' AND parent_id = '".$pid."'";
+    $query_rek = "SELECT * FROM main_navigation WHERE main_site_id = " . $site["id"] . " AND main_language_id = " . $language["id"] . " AND parent_id = '".$pid."' ORDER BY sorting ASC";
     $con_result_rek = @mysqli_query($GLOBALS['mysql_con'],$query_rek);
     if (mysqli_num_rows($con_result_rek) > 0) {
         while ($content_rek = mysqli_fetch_array($con_result_rek)) {
@@ -147,11 +249,13 @@ function get_content_rek($pid,$company,$shop,$language_code,$conurl,$language,$s
 
                 if (mysqli_num_rows($subresult2) > 0) {
             */
-            $sitemap_co .= "		<url>\n";
-            $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].customizeUrl(true, $site, $language)."/".$conurl2)."</loc>\n";
-            $sitemap_co .= "			<changefreq>daily</changefreq>\n";
-            $sitemap_co .= "			<priority>1</priority>\n";
-            $sitemap_co .= "		</url>\n";
+            if (sitemap_navigation_has_own_page($content_rek)) {
+                $sitemap_co .= "		<url>\n";
+                $sitemap_co .= "			<loc>https://".str_replace("//","/",$GLOBALS['base_url']['de'].customizeUrl(true, $site, $language)."/".$conurl2)."</loc>\n";
+                $sitemap_co .= "		</url>\n";
+
+                sitemap_append_collections($content_rek['id'], $conurl2, $site, $language);
+            }
             /*)
                 }
             }
@@ -250,7 +354,10 @@ function generate_categories($language_code,$shop_code,$company) {
     fclose($handle);
     $filename_categories = "sitemap-categories-".strtolower($shop['code'])."-".strtolower($language['code']).".xml";
     $filenamecategories = "https://".$GLOBALS['base_url']['de'].$filename_categories;
-    $date_now = date("Y-m-d H:i:s");
+    // lastmod verlangt das W3C-Datumsformat. "2026-09-17 21:30:58" ist keines -
+    // es fehlt das T zwischen Datum und Zeit und die Zeitzone. date("c") liefert
+    // die gueltige Schreibweise.
+    $date_now = date("c");
 
     $sitemap_index_cat = "<sitemap>\n";
     $sitemap_index_cat .="<loc>".$filenamecategories."</loc>\n";
@@ -407,7 +514,10 @@ function generate_items($language_code,$shop_code,$company) {
     fclose($handle);
     $filename_items = "sitemap-items-".strtolower($shop['code'])."-".strtolower($language['code']).".xml";
     $filenameitems = "https://".$GLOBALS['base_url']['de'].$filename_items;
-    $date_now = date("Y-m-d H:i:s");
+    // lastmod verlangt das W3C-Datumsformat. "2026-09-17 21:30:58" ist keines -
+    // es fehlt das T zwischen Datum und Zeit und die Zeitzone. date("c") liefert
+    // die gueltige Schreibweise.
+    $date_now = date("c");
     $sitemap_index = "<sitemap>\n";
     $sitemap_index .="<loc>".$filenameitems."</loc>\n";
     $sitemap_index .="<lastmod>".$date_now."</lastmod>\n";
@@ -447,8 +557,13 @@ if ( isset($_REQUEST["generate_sitemap"])) {
     init_sitemap_file();
 
     while($language_array = mysqli_fetch_assoc($language_result)){
-        generate_categories($language_array['shop_language_code'],$language_array['shop_code'],$language_array['company']);
-        generate_items($language_array['shop_language_code'],$_REQUEST['shop_code'],$_REQUEST['company']);
+        // Kategorien und Artikel nur, wenn die Sprache ueberhaupt an einem Shop
+        // haengt. Ohne Shop entstanden hier zwei Sitemaps ohne eine einzige
+        // Adresse - und standen trotzdem im Index, den Suchmaschinen abholen.
+        if ($language_array['shop_code'] <> '') {
+            generate_categories($language_array['shop_language_code'],$language_array['shop_code'],$language_array['company']);
+            generate_items($language_array['shop_language_code'],$_REQUEST['shop_code'],$_REQUEST['company']);
+        }
         generate_content($language_array['shop_language_code'],$_REQUEST['shop_code'],$_REQUEST['company']);
     }
 

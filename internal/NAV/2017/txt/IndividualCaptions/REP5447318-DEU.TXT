@@ -1,0 +1,14 @@
+R5447318-N2-C1000000000-P8629-A1031-L999:Gemeinsam gekaufte Webshopartikel verknüpfen
+R5447318-N2-C1000000001-P8629-A1031-L999:Webshop Code Filter
+R5447318-N2-C1000000002-P8629-A1031-L999:Verknüpfungstyp
+R5447318-N2-C1000000002-P8632-A1031-L999:Zubehör,Ersatzteile,Alternative Artikel,Passende Artikel
+R5447318-N2-C1000000003-P8629-A1031-L999:Max. Anzahl Verknüpfungen pro Artikel
+R5447318-N2-C1000000004-P8629-A1031-L999:Datumsformel Startdatum Berechnung
+R5447318-N2-C1000000005-P8629-A1031-L999:Bestehende Artikelverknüpfungen löschen
+R5447318-N2-C1000000006-P8629-A1031-L999:Summenberechnung nach Shop gruppieren
+R5447318-N2-C1000000007-P8629-A1031-L999:Einstellungen
+R5447318-N2-P8629-A1031-L999:
+R5447318-P8629-A1031-L999:Webshop gemeinsam gekaufte Artikel verknüpfen
+R5447318-Q1000000005-P26171-A1031-L999:Die max. Anzahl Verknüpfungen pro Artikel muss größer oder gleich eins (1) sein.
+R5447318-Q1000000006-P26171-A1031-L999:Das Startdatum der Berechnung muss vor dem Arbeitsdatum [%1] liegen.
+R5447318-Q1000000016-P26171-A1031-L999:[%1] Verknüpfungen wurden gelöscht und [%2] Verknüpfungen angelegt.

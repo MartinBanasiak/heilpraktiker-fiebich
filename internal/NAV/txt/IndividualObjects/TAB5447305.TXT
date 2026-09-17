@@ -1,0 +1,173 @@
+OBJECT Table 5447305 Webshop Item Category
+{
+  OBJECT-PROPERTIES
+  {
+    Date=05.09.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=VAR
+               TempItemCategory@1000000000 : Record 5447305;
+             BEGIN
+               TempItemCategory.SETCURRENTKEY("Category Shop Code","Category Language Code","Category Line No.",Sorting);
+               TempItemCategory.SETRANGE("Category Shop Code","Category Shop Code");
+               TempItemCategory.SETRANGE("Category Language Code","Category Language Code");
+               TempItemCategory.SETRANGE("Category Line No.","Category Line No.");
+               IF TempItemCategory.FINDLAST THEN
+                 Sorting := TempItemCategory.Sorting + 1
+               ELSE
+                 Sorting := 1;
+
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnModify=BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnDelete=BEGIN
+               // Webdatensatz l�schen
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.DeleteWebshopItemCategory(Rec);
+
+               // Hauptkategoriecode in Webshop-Item �ndern
+               IF WebshopItem.GET("Item Shop Code","Item Language Code","Item No.") THEN BEGIN
+                 IF WebshopItem."Main Category Line No." = "Category Line No." THEN BEGIN
+                   CLEAR(WebshopItem."Main Category Line No.");
+                   IF NOT InWebshopItemDelete THEN
+                     WebshopItem.MODIFY(TRUE);
+                 END;
+               END;
+
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnRename=BEGIN
+               ERROR(Text50000);
+             END;
+
+    CaptionML=[DEU=Webshop Artikelkategorie;
+               ENU=Webshop Item Category];
+    LookupPageID=Page5447310;
+    DrillDownPageID=Page5447310;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Item No.            ;Code20        ;TableRelation="Webshop Item"."Item No." WHERE (Shop Code=FIELD(Item Shop Code),
+                                                                                                  Language Code=FIELD(Item Language Code));
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Item No.];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Item Language Code  ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Item Shop Code));
+                                                   CaptionML=[DEU=Artikel Sprachcode;
+                                                              ENU=Item Language Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Category Line No.   ;Integer       ;TableRelation="Webshop Category"."Line No." WHERE (Shop Code=FIELD(Category Shop Code),
+                                                                                                      Language Code=FIELD(Category Language Code));
+                                                   CaptionML=[DEU=Kategorie Zeilennummer;
+                                                              ENU=Category Line No.];
+                                                   NotBlank=Yes }
+    { 4   ;   ;Category Name       ;Text45        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Category".Name WHERE (Shop Code=FIELD(Category Shop Code),
+                                                                                                     Language Code=FIELD(Category Language Code),
+                                                                                                     Line No.=FIELD(Category Line No.)));
+                                                   CaptionML=[DEU=Kategoriename;
+                                                              ENU=Category Name];
+                                                   NotBlank=Yes }
+    { 5   ;   ;Item Description    ;Text50        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Item".Description WHERE (Shop Code=FIELD(Item Shop Code),
+                                                                                                        Language Code=FIELD(Item Language Code),
+                                                                                                        Item No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Artikelbeschreibung;
+                                                              ENU=Item Description];
+                                                   Editable=No }
+    { 6   ;   ;Item Shop Code      ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Artikel Shopcode;
+                                                              ENU=Item Shop Code] }
+    { 7   ;   ;Sorting             ;Integer       ;CaptionML=[DEU=Reihenfolge;
+                                                              ENU=Sorting];
+                                                   Editable=No }
+    { 8   ;   ;Category Shop Code  ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Kategorie Shopcode;
+                                                              ENU=Category Shop Code] }
+    { 9   ;   ;Category Language Code;Code10      ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Category Shop Code));
+                                                   CaptionML=[DEU=Kategorie Sprachcode;
+                                                              ENU=Category Language Code] }
+    { 10  ;   ;Date Last Modified  ;DateTime      ;CaptionML=[DEU=Datum letzte �nderung;
+                                                              ENU=Date last modified] }
+    { 11  ;   ;Date Last Updated   ;DateTime      ;CaptionML=[DEU=Datum letzte Aktualisierung;
+                                                              ENU=Date Last Updated] }
+  }
+  KEYS
+  {
+    {    ;Item Shop Code,Item Language Code,Item No.,Category Shop Code,Category Language Code,Category Line No.;
+                                                   Clustered=Yes }
+    {    ;Item Shop Code,Item Language Code,Category Shop Code,Category Language Code,Category Line No.,Sorting }
+    {    ;Category Shop Code,Category Language Code,Category Line No.,Sorting }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      Text50000@1000000000 : TextConst 'DEU=Datensatz darf nicht umbenannt werden;ENU=Row cannot be renamed';
+      WebshopItem@1000000001 : Record 5447304;
+      WebshopManagement@1000000002 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000003 : Codeunit 5447301;
+      InWebshopItemDelete@1000000004 : Boolean;
+
+    PROCEDURE GetCategoryPath@1000000000() CategoryPath : Text[1024];
+    VAR
+      Category@1000000000 : Record 5447303;
+    BEGIN
+      IF Category.GET("Category Shop Code","Category Language Code","Category Line No.") THEN
+        CategoryPath := Category.GetCategoryPath;
+    END;
+
+    PROCEDURE SetInWebshopItemDelete@1000000001(InDelete@1000000000 : Boolean);
+    BEGIN
+      InWebshopItemDelete := InDelete;
+    END;
+
+    PROCEDURE GetItemCategoryPath@1000000002() ItemCategoryURL : Text[1024];
+    VAR
+      Category@1000000000 : Record 5447303;
+      WebshopItem@1000000001 : Record 5447304;
+      CategoryURL@1000000003 : Text[512];
+      ItemURL@1000000002 : Text[512];
+    BEGIN
+      IF Category.GET("Category Shop Code","Category Language Code","Category Line No.") THEN
+        CategoryURL := Category.GetCategoryURL;
+      IF WebshopItem.GET("Item Shop Code","Item Language Code","Item No.") THEN
+        ItemURL := WebshopItem.GetItemCanonicalNameUrlEncoded + '/';
+      ItemCategoryURL := CategoryURL + ItemURL;
+    END;
+
+    PROCEDURE SetItemCategoriesWithAncestors@1000000003(CategoryShopCode@1000000000 : Code[20];LanguageCode@1000000001 : Code[10];ItemNo@1000000002 : Code[20];VAR ItemCategoriesWithAncestors@1000000003 : TEMPORARY Record 5447303);
+    VAR
+      WebshopCategory@1000000004 : Record 5447303;
+    BEGIN
+      SETRANGE("Category Shop Code",CategoryShopCode);
+      SETRANGE("Category Language Code",LanguageCode);
+      SETRANGE("Item No.",ItemNo);
+      IF FINDSET(FALSE,FALSE) THEN REPEAT
+        IF WebshopCategory.GET(CategoryShopCode,LanguageCode,"Category Line No.") AND NOT (ItemCategoriesWithAncestors.GET(CategoryShopCode,LanguageCode,"Category Line No.")) THEN BEGIN
+          ItemCategoriesWithAncestors.INIT;
+          ItemCategoriesWithAncestors := WebshopCategory;
+          ItemCategoriesWithAncestors.INSERT(FALSE);
+          WebshopCategory.SetAncestors(CategoryShopCode,LanguageCode,"Category Line No.",ItemCategoriesWithAncestors);
+        END;
+      UNTIL NEXT = 0;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

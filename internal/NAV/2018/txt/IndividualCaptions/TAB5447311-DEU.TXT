@@ -1,0 +1,9 @@
+T5447311-F10-P8629-A1031-L999:Webshop Gutschein Code
+T5447311-F1-P8629-A1031-L999:Shopcode
+T5447311-F2-P4962-Q1000000001-P26171-A1031-L999:Der Ländercode der Versandoption und der zugeordneten Zone passen nicht zusammen.
+T5447311-F2-P8629-A1031-L999:Versandgruppe Code
+T5447311-F3-P8629-A1031-L999:Zeilennr.
+T5447311-F5-P8629-A1031-L999:Webshop Kampagnen Code
+T5447311-F8-P8629-A1031-L999:E-Mail Versandbenachrichtigung
+T5447311-F9-P8629-A1031-L999:Anzahl Berechtigungen
+T5447311-P8629-A1031-L999:Webshop Versandart Verknüpfung

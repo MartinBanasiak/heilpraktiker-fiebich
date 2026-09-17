@@ -1,0 +1,293 @@
+OBJECT Page 5447310 Webshop Item Category
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelkategorien;
+               ENU=Webshop Item Categories];
+    SourceTable=Table5447305;
+    PageType=List;
+    OnOpenPage=BEGIN
+                 IF (GETFILTER("Item Shop Code") <> '') AND (GETFILTER("Item Language Code") <> '') AND (GETFILTER("Item No.") <> '') THEN BEGIN
+                   WebshopItem.SETFILTER("Shop Code",GETFILTER("Item Shop Code"));
+                   WebshopItem.SETFILTER("Language Code",GETFILTER("Item Language Code"));
+                   WebshopItem.SETFILTER("Item No.",GETFILTER("Item No."));
+                   IF WebshopItem.COUNT = 1 THEN BEGIN
+                     ItemNoVisible := FALSE;
+                     ItemDescriptionVisible := FALSE;
+                     CategoryLineNoVisible := TRUE;
+                     CategoryNameVisible := TRUE;
+                     MoveUpVisible := FALSE;
+                     MoveDownVisible := FALSE;
+                   END;
+                 END;
+
+                 IF (GETFILTER("Category Shop Code") <> '') AND (GETFILTER("Category Language Code") <> '') AND
+                   (GETFILTER("Category Line No.") <> '') THEN BEGIN
+                   WebshopCategory.SETFILTER("Shop Code",GETFILTER("Category Shop Code"));
+                   WebshopCategory.SETFILTER("Language Code",GETFILTER("Category Language Code"));
+                   WebshopCategory.SETFILTER("Line No.",GETFILTER("Category Line No."));
+                   IF WebshopCategory.COUNT = 1 THEN BEGIN
+                     SETCURRENTKEY("Category Shop Code","Category Language Code","Category Line No.",Sorting);
+                     CategoryLineNoVisible := FALSE;
+                     CategoryNameVisible := FALSE;
+                     ItemNoVisible := TRUE;
+                     ItemDescriptionVisible := TRUE;
+                     MoveUpVisible := TRUE;
+                     MoveDownVisible := TRUE;
+                   END;
+                 END;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       CategoryNameText := FORMAT("Category Name");
+                       CategoryNameTextOnFormat(CategoryNameText);
+                     END;
+
+    OnNewRecord=VAR
+                  ShopCode@1000000000 : Code[10];
+                  LanguageCode@1000000001 : Code[10];
+                  Shop@1000000002 : Record 5447301;
+                BEGIN
+                  IF ItemNoVisible THEN BEGIN
+                    ShopCode := GETFILTER("Category Shop Code");
+                    LanguageCode := GETFILTER("Category Language Code");
+                    IF (ShopCode <> '') AND (LanguageCode <> '') THEN BEGIN
+                      IF Shop.GET(ShopCode) THEN BEGIN
+                        IF Shop."Use Items from Shop Code" <> '' THEN
+                          ShopCode := Shop."Use Items from Shop Code"
+                      END;
+                      "Item Shop Code" := ShopCode;
+                      "Item Language Code" := LanguageCode;
+                    END;
+                  END;
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000013;  ;ActionContainer;
+                      Name=<Action1900000004>;
+                      ActionContainerType=ActionItems }
+      { 1000000007;1 ;Action    ;
+                      Name=MoveUp;
+                      CaptionML=[DEU=Nach oben verschieben;
+                                 ENU=Move up];
+                      Promoted=Yes;
+                      Visible=MoveUpVisible;
+                      PromotedIsBig=Yes;
+                      Image=MoveUp;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ToItemCategory@1000000003 : Record 5447305;
+                                 FromSorting@1000000002 : Integer;
+                                 ToSorting@1000000000 : Integer;
+                               BEGIN
+                                 ToItemCategory.SETCURRENTKEY("Item Shop Code","Item Language Code","Category Shop Code",
+                                                             "Category Language Code","Category Line No.",Sorting);
+                                 ToItemCategory.SETRANGE("Item Shop Code","Item Shop Code");
+                                 ToItemCategory.SETRANGE("Item Language Code","Item Language Code");
+                                 ToItemCategory.SETRANGE("Category Shop Code","Category Shop Code");
+                                 ToItemCategory.SETRANGE("Category Language Code","Category Language Code");
+                                 ToItemCategory.SETRANGE("Category Line No.","Category Line No.");
+                                 CurrPage.UPDATE(FALSE);
+                                 ToItemCategory.SETFILTER(Sorting,'<%1',Sorting);
+                                 IF ToItemCategory.FINDLAST THEN BEGIN
+                                   FromSorting := Sorting;
+                                   ToSorting := ToItemCategory.Sorting;
+                                   Sorting := ToSorting;
+                                   MODIFY(TRUE);
+                                   ToItemCategory.Sorting := FromSorting;
+                                   ToItemCategory.MODIFY(TRUE);
+                                 END;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+      { 1000000005;1 ;Action    ;
+                      Name=MoveDown;
+                      CaptionML=[DEU=Nach unten verschieben;
+                                 ENU=Move down];
+                      Promoted=Yes;
+                      Visible=MoveDownVisible;
+                      PromotedIsBig=Yes;
+                      Image=MoveDown;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ToItemCategory@1000000003 : Record 5447305;
+                                 FromSorting@1000000002 : Integer;
+                                 ToSorting@1000000000 : Integer;
+                               BEGIN
+                                 ToItemCategory.SETCURRENTKEY("Item Shop Code","Item Language Code","Category Shop Code",
+                                                             "Category Language Code","Category Line No.",Sorting);
+                                 ToItemCategory.SETRANGE("Item Shop Code","Item Shop Code");
+                                 ToItemCategory.SETRANGE("Item Language Code","Item Language Code");
+                                 ToItemCategory.SETRANGE("Category Shop Code","Category Shop Code");
+                                 ToItemCategory.SETRANGE("Category Language Code","Category Language Code");
+                                 ToItemCategory.SETRANGE("Category Line No.","Category Line No.");
+                                 CurrPage.UPDATE(FALSE);
+                                 ToItemCategory.SETFILTER(Sorting,'>%1',Sorting);
+                                 IF ToItemCategory.FINDFIRST THEN BEGIN
+                                   FromSorting := Sorting;
+                                   ToSorting := ToItemCategory.Sorting;
+                                   Sorting := ToSorting;
+                                   MODIFY(TRUE);
+                                   ToItemCategory.Sorting := FromSorting;
+                                   ToItemCategory.MODIFY(TRUE);
+                                 END;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000001;2;Field  ;
+                CaptionML=[DEU=Kategorie Zeilennummer;
+                           ENU=Category Line No.];
+                SourceExpr="Category Line No.";
+                Visible=CategoryLineNoVisible;
+                OnLookup=VAR
+                           WebshopCategoryList@1000000000 : Page 5447307;
+                           ShopFilter@1000000001 : Code[100];
+                           LanguageFilter@1000000002 : Code[100];
+                           Shop@1000000003 : Record 5447301;
+                           Language@1000000004 : Record 5447302;
+                           ShopCode@1000000005 : Code[10];
+                           LanguageCode@1000000006 : Code[10];
+                         BEGIN
+                           CLEAR(WebshopCategoryList);
+                           WebshopCategory.RESET;
+                           ShopCode := GETFILTER("Item Shop Code");
+                           LanguageCode := GETFILTER("Item Language Code");
+                           IF (ShopCode <> '') AND (LanguageCode <> '') THEN BEGIN
+                             ShopFilter := ShopCode;
+                             Shop.SETFILTER(Code,'<>%1',ShopCode);
+                             Shop.SETRANGE("Use Items from Shop Code",ShopCode);
+                             IF Shop.FINDSET THEN REPEAT
+                               ShopFilter := ShopFilter + '|' + Shop.Code;
+                             UNTIL Shop.NEXT = 0;
+                             WebshopCategory.SETFILTER("Shop Code",ShopFilter);
+                             WebshopCategory.SETRANGE("Language Code",LanguageCode);
+                             WebshopCategoryList.SETTABLEVIEW(WebshopCategory);
+                             WebshopCategoryList.SETRECORD(WebshopCategory);
+                             WebshopCategoryList.LOOKUPMODE(TRUE);
+                             IF WebshopCategoryList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                               WebshopCategoryList.GETRECORD(WebshopCategory);
+                               "Category Shop Code" := WebshopCategory."Shop Code";
+                               "Category Language Code" := WebshopCategory."Language Code";
+                               "Category Line No." := WebshopCategory."Line No.";
+                             END;
+                           END;
+                         END;
+                          }
+
+    { 1000000006;2;Field  ;
+                DrillDown=No;
+                AssistEdit=No;
+                CaptionML=[DEU=Kategoriename;
+                           ENU=CategoryNameText];
+                SourceExpr=CategoryNameText;
+                CaptionClass=FIELDCAPTION("Category Name");
+                Visible=CategoryNameVisible;
+                Editable=FALSE;
+                OnLookup=VAR
+                           WebshopCategory@1000000000 : Record 5447303;
+                         BEGIN
+                           WebshopCategory.SETRANGE("Language Code","Item Language Code");
+
+                           WebshopCategoryList.SETTABLEVIEW(WebshopCategory);
+                           WebshopCategoryList.LOOKUPMODE := TRUE;
+                           IF WebshopCategoryList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                             WebshopCategoryList.GETRECORD(WebshopCategory);
+                             "Category Line No." := WebshopCategory."Line No.";
+                           END;
+                           CurrPage.UPDATE;
+                         END;
+                          }
+
+    { 1000000008;2;Field  ;
+                CaptionML=[DEU=Artikelnr.;
+                           ENU=Item No.];
+                SourceExpr="Item No.";
+                Visible=ItemNoVisible;
+                OnLookup=VAR
+                           WebshopItemList@1000000000 : Page 5447309;
+                           ShopCode@1000000001 : Code[10];
+                           LanguageCode@1000000002 : Code[10];
+                           Shop@1000000003 : Record 5447301;
+                           Language@1000000004 : Record 5447302;
+                         BEGIN
+                           CLEAR(WebshopItemList);
+                           WebshopItem.RESET;
+                           ShopCode := GETFILTER("Category Shop Code");
+                           LanguageCode := GETFILTER("Category Language Code");
+                           IF (ShopCode <> '') AND (LanguageCode <> '') THEN BEGIN
+                             IF Shop.GET(ShopCode) THEN BEGIN
+                               IF Shop."Use Items from Shop Code" <> '' THEN
+                                 ShopCode := Shop."Use Items from Shop Code"
+                             END;
+                             WebshopItem.SETRANGE("Shop Code",ShopCode);
+                             WebshopItem.SETRANGE("Language Code",LanguageCode);
+                             WebshopItemList.SETTABLEVIEW(WebshopItem);
+                             WebshopItemList.SETRECORD(WebshopItem);
+                             WebshopItemList.LOOKUPMODE(TRUE);
+                             IF WebshopItemList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                               WebshopItemList.GETRECORD(WebshopItem);
+                               "Item Shop Code" := WebshopItem."Shop Code";
+                               "Item Language Code" := WebshopItem."Language Code";
+                               VALIDATE("Item No.",WebshopItem."Item No.");
+                             END;
+                           END;
+                         END;
+                          }
+
+    { 1000000010;2;Field  ;
+                CaptionML=[DEU=Artikelbeschreibung;
+                           ENU=Item Description];
+                SourceExpr="Item Description";
+                Visible=ItemDescriptionVisible }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Artikel-Kategorie-URL;
+                           ENU=Item-Category-URL];
+                SourceExpr=GetItemCategoryPath;
+                Editable=FALSE }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopItem@1000000000 : Record 5447304;
+      WebshopCategory@1000000001 : Record 5447303;
+      ItemNoVisible@19079144 : Boolean INDATASET;
+      ItemDescriptionVisible@19055463 : Boolean INDATASET;
+      CategoryLineNoVisible@19006999 : Boolean INDATASET;
+      CategoryNameVisible@19077840 : Boolean INDATASET;
+      CategoryNameText@19065597 : Text[1024] INDATASET;
+      MoveUpVisible@1000000002 : Boolean INDATASET;
+      MoveDownVisible@1000000003 : Boolean INDATASET;
+      WebshopCategoryList@1000000004 : Page 5447307;
+
+    LOCAL PROCEDURE CategoryNameTextOnFormat@19014350(VAR Text@19077474 : Text[1024]);
+    BEGIN
+      Text := GetCategoryPath;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

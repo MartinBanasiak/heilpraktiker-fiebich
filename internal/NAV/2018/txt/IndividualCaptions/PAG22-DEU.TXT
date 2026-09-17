@@ -1,0 +1,248 @@
+N22-C10-P8631-A1031-L999:Gibt die Standardwährung für den Debitor an.
+N22-C1102601000-P8631-A1031-L999:Gibt den Höchstbetrag an, um den der Debitor die Zahlungsbilanz überschreiten darf, bevor Warnungen ausgegeben werden.
+N22-C1102601002-P8631-A1031-L999:Gibt an, dass der dazugehörige Datensatz nicht in Transaktionen gebucht werden kann, weil er gesperrt ist, z. B. ein Debitor, der als zahlungsunfähig deklariert wurde, oder ein Artikel, der sich in Quarantäne befindet.
+N22-C1102601004-P8631-A1031-L999:Gibt an, wann die Debitorenkarte zuletzt geändert wurde.
+N22-C1102601006-P8631-A1031-L999:Gibt an, wie Zahlungen von Posten für diesen Debitor ausgeglichen werden.
+N22-C1102601008-P8631-A1031-L999:Gibt an, ob in einer Verkaufsrechnung mehrere Lieferungen an den Debitor zusammengefasst werden können.
+N22-C1102601010-P8631-A1031-L999:Gibt an, ob Artikel nie, automatisch (immer) oder optional für diesen Debitor reserviert werden. Optional bedeutet, dass Sie manuell Artikel für diesen Debitor reservieren müssen.
+N22-C1102601012-P8631-A1031-L999:Gibt an, ob der Debitor Teillieferungen von Aufträgen akzeptiert.
+N22-C1102601014-P8631-A1031-L999:Gibt den Code des Zustellers an, der diese Artikel befördert.
+N22-C1102601016-P8631-A1031-L999:Gibt einen anpassbaren Kalender zur Lieferungsplanung an, der die Arbeitstage und die Feiertage des Debitors enthält.
+N22-C12-P8631-A1031-L999:Gibt einen alternativen Namen an, den Sie zur Suche nach dem fraglichen Datensatz verwenden können, wenn Sie sich nicht an den Wert im Feld "Name" erinnern können.
+N22-C2-P8631-A1031-L999:Gibt die Nummer des beteiligten Postens oder Datensatz entsprechend der festgelegten Nummernserie an.
+N22-C30-P8631-A1031-L999:Gibt das Land/die Region der Adresse an.
+N22-C32-P8631-A1031-L999:Gibt den gesamten Nettobetrag der Verkäufe an den Debitor in MW an.
+N22-C34-P8631-A1031-L999:Gibt den Namen der Kontaktperson bei diesem Debitor an.
+N22-C36-P8631-A1031-L999:Gibt einen Code für den Verkäufer an, der normalerweise das Konto dieses Debitors bearbeitet.
+N22-C38-P8631-A1031-L999:Gibt den Markttyp des Debitors zum Verknüpfen von Geschäftstransaktionen an.
+N22-C40-P8631-A1031-L999:Gibt den Code der Zuständigkeitseinheit (z. B. ein Logistikhub) an, die dem beteiligten Benutzer, Mandanten, Kreditor oder Debitor zugeordnet ist.
+N22-C43-P8631-A1031-L999:Gibt an, von welchem Lagerort aus Verkäufe an diesen Debitor standardmäßig verarbeitet werden.
+N22-C46-P8631-A1031-L999:Gibt den Debitorenpreisgruppencode an, den Sie verwenden können, um spezielle Verkaufspreise im Fenster "VK-Preise" einzurichten.
+N22-C48-P8631-A1031-L999:Gibt den Code für die betreffenden Zinsen bei Zahlungsverzug an.
+N22-C4-P8631-A1031-L999:Gibt den Namen des Debitors an. Der Name wird auf allen Verkaufsbelegen für den Debitor angezeigt. Sie können bis zu 50 Zeichen, sowohl Ziffern als auch Buchstaben, eingeben.
+N22-C50-P8631-A1031-L999:Gibt die Sprache an, die verwendet wird, wenn der angegebene Text auf Belegen für ausländische Geschäftspartner übersetzt wird, z. B. eine Beschreibung des Artikels auf einer Auftragsbestätigung.
+N22-C52-P8631-A1031-L999:Gibt die MwSt.-Erklärung des beteiligten Debitors oder Kreditors an, um Transaktionen für diesen Datensatz mit dem entsprechenden Sachkonto entsprechend der MwSt.-Buchungsmatrix Einrichtung zu verknüpfen.
+N22-C54-P8631-A1031-L999:Gibt die Postleitzahl an.
+N22-C56-P8631-A1031-L999:Gibt den Handelstyp des Debitors an, um Transaktionen für diesen Debitor mit dem entsprechenden Sachkonto entsprechend der Buchungsmatrix Einrichtung zu verknüpfen.
+N22-C59-P8631-A1031-L999:Gibt Zahlungen des Debitors an, die nach dem heutigen Datum überfällig sind.
+N22-C61-P8631-A1031-L999:Gibt an, wie Mahnungen zu überfälligen Zahlungen für diesen Debitor behandelt werden.
+N22-C62-P8631-A1031-L999:Gibt den Zahlungsbetrag an, den der Debitor für abgeschlossene Verkäufe schuldet. Dieser Wert wird auch als der Saldo des Debitors bezeichnet.
+N22-C6-P8631-A1031-L999:Gibt die Telefonnummer des Debitors an.
+N22-C72-P8631-A1031-L999:Gibt den Debitorrabattgruppencode an, den Sie als Kriterium verwenden können, um spezielle Rabatte im Fenster "VK-Zeilenrabatte" einzurichten.
+N22-C79-P8631-A1031-L999:Legt den IC-Partnercode des Debitors fest.
+N22-C861-P8629-A1031-L999:Power BI-Berichte
+N22-C8-P8631-A1031-L999:Gibt eine Formel an, die das Fälligkeitsdatum, das Skontodatum und den Skontobetrag berechnet.
+N22-P55132-A1031-L999:Neu,Verarbeiten,Bericht,Genehmigen,Neuer Beleg,Genehmigung anfordern,Debitor
+N22-P55242-G1000000000-P8629-A1031-L999:Zahlungsberechtigungen
+N22-P55242-G1000000001-P8629-A1031-L999:Webshopberechtigungen
+N22-P55242-G1000000002-P8629-A1031-L999:Kategorieberechtigungen
+N22-P55242-G1000000003-P8629-A1031-L999:Versandberechtigungen
+N22-P55242-G1000000004-P8629-A1031-L999:Artikelberechtigungen
+N22-P55242-G1000000005-P8629-A1031-L999:Gruppenberechtigungen
+N22-P55242-G1000000006-P8629-A1031-L999:Berechtigungen
+N22-P55242-G1000000007-P8629-A1031-L999:Kundenzugang öffnen
+N22-P55242-G1000000008-P55160-Q1000000000-P26171-A1031-L999:Debitor wurde aktualisiert
+N22-P55242-G1000000008-P8629-A1031-L999:Online Aktualisieren
+N22-P55242-G100-P8629-A1031-L999:Preise
+N22-P55242-G100-P8631-A1031-L999:Zeigt oder richtet verschiedene Preise für Artikel ein, die Sie an den ausgewählten Debitor verkaufen. Ein Artikelpreis wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Debitor, Menge oder Enddatum.
+N22-P55242-G101-P8629-A1031-L999:&Rechnungsrabatte
+N22-P55242-G101-P8631-A1031-L999:Legen Sie verschiedene Rabatte an, die auf Rechnungen für den ausgewählten Debitor angewendet werden. Ein Rechnungsrabatt wird dem Debitor automatisch gewährt, wenn die Summe auf einer Verkaufsrechnung einen bestimmten Betrag überschreitet.
+N22-P55242-G102-P8629-A1031-L999:Preise und Rabatte
+N22-P55242-G103-P8629-A1031-L999:Posten
+N22-P55242-G103-P8631-A1031-L999:Zeigt die Historie der Transaktionen an, die für den ausgewählten Datensatz gebucht wurden.
+N22-P55242-G104-P8629-A1031-L999:Historie
+N22-P55242-G1055-P8629-A1031-L999:Kontoauszug
+N22-P55242-G1055-P8631-A1031-L999:Zeigt eine Liste der Transaktionen eines Debitors in einem ausgewählten Zeitraum an, um sie beispielsweise am Ende der Buchhaltungsperiode an den Debitor zu senden. Sie können ungeachtet der angegebenen Periode alle fälligen Salden anzeigen oder einen Saldenrückblick einfügen.
+N22-P55242-G105-P8629-A1031-L999:Bildschirm
+N22-P55242-G106-P8629-A1031-L999:Power BI-Berichte anzeigen/ausblenden
+N22-P55242-G106-P8631-A1031-L999:Wählt aus, ob die Power BI-Infobox angezeigt wird oder nicht.
+N22-P55242-G108-P8629-A1031-L999:Vorlage anwenden
+N22-P55242-G108-P8631-A1031-L999:Wenden Sie eine Vorlage zum Aktualisieren einer oder mehrerer Einheiten mit Ihren Standardeinstellungen für einen bestimmten Einheitentyp an.
+N22-P55242-G11-P8629-A1031-L999:Belege
+N22-P55242-G13-P8629-A1031-L999:Genehmigungsworkflows verwalten
+N22-P55242-G13-P8631-A1031-L999:Zeigen Sie vorhandene Genehmigungsworkflows für das Erstellen oder Ändern von Debitoren an, oder bearbeiten Sie sie.
+N22-P55242-G14-P8629-A1031-L999:Service
+N22-P55242-G15-P8629-A1031-L999:Genehmigungsworkflow erstellen
+N22-P55242-G15-P8631-A1031-L999:Richten Sie einen Genehmigungsworkflow für das Erstellen oder Ändern von Debitoren ein, in dem Sie einige Seiten zur Anleitung durchgehen.
+N22-P55242-G16-P8629-A1031-L999:D&ebitor
+N22-P55242-G17-P8629-A1031-L999:Debitor in Dynamics NAV erstellen
+N22-P55242-G17-P8631-A1031-L999:Generiert den Debitor im gekoppelten Dynamics 365 for Sales-Konto.
+N22-P55242-G18-P8629-A1031-L999:Statistik
+N22-P55242-G18-P8631-A1031-L999:Zeigt statistische Informationen für den Datensatz an, wie etwa den Wert der gebuchten Posten.
+N22-P55242-G1900172506-P8629-A1031-L999:Debitor - Aufträge
+N22-P55242-G1900172506-P8631-A1031-L999:Zeigt eine Liste von Aufträgen an, unterteilt nach Debitoren. Die Auftragsbeträge werden sowohl für jeden Debitor als auch für die gesamte Liste addiert. Der Bericht kann z. B. verwendet werden, um sich einen Überblick über die kurzfristig anstehenden Verkäufe zu verschaffen oder um potenzielle Lieferprobleme zu analysieren.
+N22-P55242-G1900246505-P8629-A1031-L999:Verkaufsangebot
+N22-P55242-G1900246505-P8631-A1031-L999:Bietet einem Debitor Artikel oder Dienste an.
+N22-P55242-G1900711606-P8629-A1031-L999:Debitor - Saldenrückblick
+N22-P55242-G1900711606-P8631-A1031-L999:Zeigt in vier Perioden aufgeteilt eine Übersicht darüber an, wann Debitorenzahlungen fällig oder überfällig sind. Sie müssen das Datum angeben, von dem aus der Saldorückblick erfolgen soll, und die Periodenlänge, für die jede Spalte Daten enthalten soll.
+N22-P55242-G1900760706-P8629-A1031-L999:Debitor/Artikel Statistik
+N22-P55242-G1900760706-P8631-A1031-L999:Zeigt eine Liste der Artikelverkäufe an jeden Debitoren für einen ausgewählten Zeitraum an. Der Bericht enthält Informationen über die Mengen, den Verkaufsbetrag, den Gewinn und mögliche Rabatte. Er kann z. B. verwendet werden, um die Debitorengruppen eines Unternehmens zu analysieren.
+N22-P55242-G1900839804-P8629-A1031-L999:Zahlungseingangs Buch.-Blatt
+N22-P55242-G1900839804-P8631-A1031-L999:Öffnet das Zahlungseingangs Buch.-Blatt, um eingehende Zahlungen zu buchen.
+N22-P55242-G1901007206-P8629-A1031-L999:Debitorenjournal
+N22-P55242-G1901007206-P8631-A1031-L999:Zeigt gebuchte Debitorenposten an, die in Journale aufgeteilt und nach Journalen geordnet sind. Indem Sie einen Filter verwenden, können Sie genau die Posten in den Journalen auswählen, die angezeigt werden sollen. Wenn Sie viele Posten erzeugt haben und keinen Filter festlegen, druckt der Bericht eine große Menge an Informationen.
+N22-P55242-G1901102005-P8629-A1031-L999:Zinsrechnung
+N22-P55242-G1901102005-P8631-A1031-L999:Erstellt eine neue Zinsrechnung.
+N22-P55242-G1901662105-P8629-A1031-L999:Servicegutschrift
+N22-P55242-G1901662105-P8631-A1031-L999:Erstellt eine neue Servicegutschrift für den Debitor.
+N22-P55242-G1902079405-P8629-A1031-L999:Servicerechnung
+N22-P55242-G1902079405-P8631-A1031-L999:Erstellt eine neue Servicerechnung für den Debitor.
+N22-P55242-G1902299006-P8629-A1031-L999:Debitorenposten per
+N22-P55242-G1902299006-P8631-A1031-L999:Zeigt eine Liste der Zahlungshistorie der Debitoren bis zu einem bestimmten Datum an. Sie können den Bericht verwenden, um Ihre gesamten Einnahmen am Ende einer Buchhaltungsperiode oder eines Geschäftsjahres zu extrahieren.
+N22-P55242-G1902575205-P8629-A1031-L999:Rahmenauftrag
+N22-P55242-G1902575205-P8631-A1031-L999:Erstellt einen Rahmenauftrag für den Debitor.
+N22-P55242-G1902583505-P8629-A1031-L999:Verkaufsgutschrift
+N22-P55242-G1902583505-P8631-A1031-L999:Erstellt eine neue Verkaufsgutschrift, um eine gebuchte Verkaufsrechnung zurückzusetzen.
+N22-P55242-G1903839805-P8629-A1031-L999:Mahnung
+N22-P55242-G1903839805-P8631-A1031-L999:Erstellt eine neue Mahnung für den Debitor.
+N22-P55242-G1903839806-P8629-A1031-L999:Mahnung
+N22-P55242-G1903839806-P8631-A1031-L999:Erstellt eine neue Mahnung für den Debitor.
+N22-P55242-G1904039606-P8629-A1031-L999:Debitor - Zahlungseingang
+N22-P55242-G1904039606-P8631-A1031-L999:Zeigt einen Beleg an, der angibt, auf welche Debitorenposten eine Zahlung angewendet wurde. Dieser Bericht kann als Zahlungseingang verwendet werden, den Sie an den Debitor senden.
+N22-P55242-G1904190506-P8629-A1031-L999:Verkaufsstatistik
+N22-P55242-G1904190506-P8631-A1031-L999:Zeigt die gesamten Kosten, Verkäufe und Gewinne zu den Debitoren im Lauf der Zeit an, um beispielsweise Einnahmentrends zu analysieren. Der Bericht zeigt Beträge für ursprüngliche und regulierte Kosten, Verkäufe, Gewinne, Rechnungsrabatte, Skonti und Gewinne in Prozent in drei regulierbaren Perioden an.
+N22-P55242-G1904747105-P8629-A1031-L999:Verkaufsauftrag
+N22-P55242-G1904747105-P8631-A1031-L999:Legen Sie einen Verkaufsauftrag für den Debitor an.
+N22-P55242-G1905163705-P8629-A1031-L999:Verkaufsreklamation
+N22-P55242-G1905163705-P8631-A1031-L999:Erstellt eine neue Verkaufsreklamation für Artikel oder Dienstleistungen.
+N22-P55242-G1905171704-P8629-A1031-L999:Verkaufs Buch.-Blatt
+N22-P55242-G1905171704-P8631-A1031-L999:Bucht eine beliebige Verkaufstransaktion für den Debitor.
+N22-P55242-G1905185205-P8629-A1031-L999:Serviceangebot
+N22-P55242-G1905185205-P8631-A1031-L999:Erstellt ein neues Serviceangebot für den Debitor.
+N22-P55242-G1905562606-P8629-A1031-L999:Debitorenübersicht
+N22-P55242-G1905562606-P8631-A1031-L999:Zeigt verschiedene Arten von Basisinformationen zu Debitoren an, wie z. B. die Debitorenbuchungsgruppe, die Rabattgruppe, Zins- und Zahlungsinformationen, den Verkäufer, die Standardwährung des Debitors und das Kreditlimit (in MW) sowie den aktuellen Saldo des Debitors (in MW).
+N22-P55242-G1905727106-P8629-A1031-L999:Debitor - Auftragsübersicht
+N22-P55242-G1905727106-P8631-A1031-L999:Zeigt Auftragsdetails (die noch nicht gelieferte Menge) für jeden Debitor in drei Perioden von jeweils 30 Tagen an, beginnend mit dem ausgewählten Datum. Es gibt auch Spalten mit Aufträgen, die vor und nach den drei Perioden geliefert werden sollen, und eine Spalte mit dem gesamten Auftragsbestand jedes Debitors. Dieser Bericht kann verwendet werden, um das erwartete Verkaufsvolumen eines Unternehmens zu analysieren.
+N22-P55242-G1906073506-P8629-A1031-L999:Debitor - Verkaufsübersicht
+N22-P55242-G1906073506-P8631-A1031-L999:Zeigt den Debitorenverkauf einer Periode an, um beispielsweise die Verkaufsaktivität den Zoll- und Steuerbehörden zu melden. Sie können nur Debitoren auswählen, deren Gesamtverkauf einen Minimalbetrag übersteigt. Sie können auch angeben, ob in dem Bericht die Adressdetails der einzelnen Debitoren angezeigt werden sollen.
+N22-P55242-G1906359306-P8629-A1031-L999:Debitor - Saldenliste
+N22-P55242-G1906359306-P8631-A1031-L999:Zeigt den Anfangs- und Schlusssaldo für Debitoren mit Posten innerhalb einer angegebenen Periode an. Der Bericht kann verwendet werden, um zu überprüfen, ob der Saldo der Debitorenbuchungsgruppe mit dem Saldo des entsprechenden Sachkontos an einem bestimmten Datum übereinstimmt.
+N22-P55242-G1906384905-P8629-A1031-L999:Verkaufsrechnung
+N22-P55242-G1906384905-P8631-A1031-L999:Legt eine Verkaufsrechnung für den Debitor an.
+N22-P55242-G1906813206-P8629-A1031-L999:Debitor - Fällige Posten
+N22-P55242-G1906813206-P8631-A1031-L999:Zeigt eine detaillierte Liste fälliger Zahlungen der einzelnen Debitoren an, aufgeteilt in drei Zeiträume. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, um die Kreditwürdigkeit eines Debitors einzuschätzen oder um Liquiditätsanalysen vorzubereiten.
+N22-P55242-G1906871306-P8629-A1031-L999:Debitor - Kontoblatt
+N22-P55242-G1906871306-P8631-A1031-L999:Zeigt den Saldo für Debitoren mit Salden an einem angegebenen Datum an. Der Bericht kann z. B. am Ende einer Buchhaltungsperiode oder für eine Buchprüfung verwendet werden.
+N22-P55242-G1907102005-P8629-A1031-L999:Serviceauftrag
+N22-P55242-G1907102005-P8631-A1031-L999:Erstellt einen neuen Serviceauftrag für den Debitor.
+N22-P55242-G1907152806-P8629-A1031-L999:Debitor - Top 10 Liste
+N22-P55242-G1907152806-P8631-A1031-L999:Zeigt an, welche Debitoren in einer ausgewählten Periode am meisten kaufen oder Ihnen am meisten schulden. Es werden nur jene Debitoren berücksichtigt, die während der ausgewählten Periode entweder Einkäufe getätigt haben oder am Ende der Periode einen Saldo aufweisen.
+N22-P55242-G1907944606-P8629-A1031-L999:Debitor - Saldo nach Perioden
+N22-P55242-G1907944606-P8631-A1031-L999:Zeigt eine Zusammenfassung fälliger Zahlungen der einzelnen Debitoren aufgeteilt in drei Zeiträume an, druckt oder speichert diese. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, die Kreditwürdigkeit eines Debitors einzuschätzen oder Liquiditätsanalysen vorzubereiten.
+N22-P55242-G19-P8629-A1031-L999:Buchungsstatistik
+N22-P55242-G19-P8631-A1031-L999:Zeigt Postenstatistiken für den Datensatz an.
+N22-P55242-G20-P8629-A1031-L999:Be&merkungen
+N22-P55242-G20-P8631-A1031-L999:Zeigen Sie Bemerkungen an, oder fügen Sie sie dem Datensatz hinzu.
+N22-P55242-G21-P8629-A1031-L999:&Verkauf
+N22-P55242-G21-P8631-A1031-L999:Zeigt eine Zusammenfassung der Debitorenposten an. Das Zeitintervall wird im Feld "Anzeigen nach" ausgewählt. Die Spalte "Periode" links beinhaltet eine Reihe von Datumsangaben, die durch das ausgewählte Zeitintervall bestimmt werden.
+N22-P55242-G22-P8629-A1031-L999:&Posten
+N22-P55242-G22-P8631-A1031-L999:Zeigt die Historie der Transaktionen an, die für den ausgewählten Datensatz gebucht wurden.
+N22-P55242-G23-P8629-A1031-L999:L&ief. an Adressen
+N22-P55242-G23-P8631-A1031-L999:Zeigt die alternative Versandadresse an oder bearbeitet sie, an die der Debitor die Artikel liefern lassen möchte, falls diese von der regulären Adresse abweicht.
+N22-P55242-G24-P8629-A1031-L999:&Verkauf
+N22-P55242-G25-P8629-A1031-L999:&Rechnungsrabatte
+N22-P55242-G25-P8631-A1031-L999:Richten Sie verschiedene Rabatte ein, die auf Rechnungen für den Debitor angewendet werden. Ein Rechnungsrabatt wird dem Debitor automatisch gewährt, wenn die Summe auf einer Verkaufsrechnung einen bestimmten Betrag überschreitet.
+N22-P55242-G26-P8629-A1031-L999:Preise
+N22-P55242-G26-P8631-A1031-L999:Zeigt oder richtet verschiedene Preise für Artikel ein, die Sie an den Debitor verkaufen. Ein Artikelpreis wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Debitor, Menge oder Enddatum.
+N22-P55242-G27-P8629-A1031-L999:Angebote
+N22-P55242-G27-P8631-A1031-L999:Zeigt eine Liste laufender Verkaufsangebote an.
+N22-P55242-G28-P8629-A1031-L999:Aufträge
+N22-P55242-G28-P8631-A1031-L999:Zeigt eine Liste laufender Verkaufsaufträge für den Debitor an.
+N22-P55242-G29-P8629-A1031-L999:Lastschrift-Mandate
+N22-P55242-G29-P8631-A1031-L999:Zeigen Sie die Lastschrift-Mandaten an, die Vereinbarungen mit Debitoren zum direkten Einzug der Zahlungen von ihrem Bankkonto widerspiegeln.
+N22-P55242-G31-P8629-A1031-L999:Kopplung
+N22-P55242-G31-P8631-A1031-L999:Erstellt, ändert oder löscht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Dynamics 365 for Sales-Datensatz.
+N22-P55242-G37-P8629-A1031-L999:Jetzt synchronisieren
+N22-P55242-G37-P8631-A1031-L999:Sendet aktualisierte Daten an Dynamics 365 for Sales, oder ruft diese ab.
+N22-P55242-G39-P8629-A1031-L999:&Genehmigungsanforderung stornieren
+N22-P55242-G39-P8631-A1031-L999:Storniert die Genehmigungsanforderung.
+N22-P55242-G3-P8629-A1031-L999:Allgemein
+N22-P55242-G41-P8629-A1031-L999:Konto
+N22-P55242-G41-P8631-A1031-L999:Öffnet das gekoppelte Dynamics 365 for Sales-Konto.
+N22-P55242-G42-P8629-A1031-L999:Zuordnung für &markierte Datensätze
+N22-P55242-G42-P8631-A1031-L999:Zeigt oder bearbeitet Standarddimensionen für eine Gruppe von Datensätzen. Sie können Transaktionen Dimensionscodes zuweisen, um die Kosten zu verteilen und historische Informationen zu analysieren.
+N22-P55242-G44-P8629-A1031-L999:Dynamics 365 for Sales
+N22-P55242-G45-P8629-A1031-L999:Re&ferenzen
+N22-P55242-G45-P8631-A1031-L999:Richtet eine eigene Benutzereinrichtung des Debitors für die Artikel ein, die Sie an den Debitor verkaufen. Querverweise auf die Artikelnummer des Debitors bedeuten, dass die Artikelnummer automatisch anstelle der von Ihnen verwendeten Nummer auf den Verkaufsbelegen angezeigt wird.
+N22-P55242-G47-P8629-A1031-L999:Kopplung löschen
+N22-P55242-G47-P8631-A1031-L999:Löscht die Kopplung mit einem Dynamics 365 for Sales-Konto.
+N22-P55242-G49-P8629-A1031-L999:Kopplung einrichten
+N22-P55242-G49-P8631-A1031-L999:Erstellt oder ändert die Kopplung mit einem Dynamics 365 for Sales-Konto.
+N22-P55242-G51-P8629-A1031-L999:&Genehmigungsanforderung senden
+N22-P55242-G51-P8631-A1031-L999:Fordert die Genehmigung zum Ändern des Datensatzes an.
+N22-P55242-G53-P8629-A1031-L999:Erstellen
+N22-P55242-G55-P8629-A1031-L999:Genehmigungsanforderung
+N22-P55242-G57-P8629-A1031-L999:Konto in Dynamics 365 for Sales erstellen
+N22-P55242-G57-P8631-A1031-L999:Generiert das Konto im gekoppelten Dynamics 365 for Sales-Konto.
+N22-P55242-G58-P8629-A1031-L999:Bankkonten
+N22-P55242-G58-P8631-A1031-L999:Zeigt Bankkonten des Debitors an oder richtet sie ein. Sie können für jeden Kreditor eine beliebige Anzahl von Bankkonten einrichten.
+N22-P55242-G5-P8629-A1031-L999:Verkauf
+N22-P55242-G60-P8629-A1031-L999:Ko&ntakt
+N22-P55242-G60-P8631-A1031-L999:Zeigt detaillierte Informationen über die Kontaktperson beim Debitor an oder bearbeitet diese.
+N22-P55242-G63-P8629-A1031-L999:Statistik nach &Währungen
+N22-P55242-G63-P8631-A1031-L999:Zeigt Statistiken für Debitoren an, die mehrere Währungen verwenden.
+N22-P55242-G64-P8629-A1031-L999:Online Map
+N22-P55242-G64-P8631-A1031-L999:Zeigt die Adresse auf einer Onlinekarte an.
+N22-P55242-G6500-P8629-A1031-L999:Artikel&verfolgungsposten
+N22-P55242-G6500-P8631-A1031-L999:Zeigt Seriennummern oder Chargennummern an, die Artikel zugeordnet sind.
+N22-P55242-G65-P8629-A1031-L999:Rahmenaufträge
+N22-P55242-G65-P8631-A1031-L999:Öffnet die Liste laufender Rahmenaufträge.
+N22-P55242-G66-P8629-A1031-L999:Dimensionen
+N22-P55242-G67-P8629-A1031-L999:Genehmigungen
+N22-P55242-G67-P8631-A1031-L999:Zeigt eine Liste der Datensätze an, die noch genehmigt werden müssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.
+N22-P55242-G68-P8629-A1031-L999:S&erviceverträge
+N22-P55242-G68-P8631-A1031-L999:Öffnet die Liste laufender Serviceverträge.
+N22-P55242-G69-P8629-A1031-L999:Service&artikel
+N22-P55242-G69-P8631-A1031-L999:Zeigt die Serviceartikel an, oder ermöglicht deren Bearbeitung, die für den Debitor registriert werden.
+N22-P55242-G70-P8629-A1031-L999:Reklamationen
+N22-P55242-G70-P8631-A1031-L999:Öffnet eine Liste laufender Reklamationen.
+N22-P55242-G71-P8629-A1031-L999:Zeilenrabatte
+N22-P55242-G71-P8631-A1031-L999:Zeigt verschiedene Rabatte für Artikel an oder richtet diese ein, die Sie an den ausgewählten Debitor verkaufen. Ein Artikelrabatt wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Debitor, Menge oder Enddatum.
+N22-P55242-G73-P8629-A1031-L999:Debitor - Zahlungseingang
+N22-P55242-G73-P8631-A1031-L999:Zeigt einen Beleg an, der angibt, auf welche Debitorenposten eine Zahlung angewendet wurde. Dieser Bericht kann als Zahlungseingang verwendet werden, den Sie an den Debitor senden.
+N22-P55242-G74-P8629-A1031-L999:Saldenrückblick
+N22-P55242-G74-P8631-A1031-L999:Zeigt in vier Perioden aufgeteilt eine Übersicht darüber an, wann Debitorenzahlungen fällig oder überfällig sind. Sie müssen das Datum angeben, von dem aus der Saldorückblick erfolgen soll, und die Periodenlänge, für die jede Spalte Daten enthalten soll.
+N22-P55242-G75-P8629-A1031-L999:S&td.-Debitorverkaufscodes
+N22-P55242-G75-P8631-A1031-L999:Zeigt wiederkehrende Verkaufszeilen für den Debitor an, oder ermöglicht deren Bearbeitung.
+N22-P55242-G76-P8629-A1031-L999:Registrierte Belege
+N22-P55242-G77-P8629-A1031-L999:Registrierte &Mahnungen
+N22-P55242-G77-P8631-A1031-L999:Zeigt die Mahnungen an, die Sie an den Debitor gesendet haben.
+N22-P55242-G78-P8629-A1031-L999:Registrierte &Zinsrechnungen
+N22-P55242-G78-P8631-A1031-L999:Zeigt die Zinsrechnungen an, die Sie an den Debitor gesendet haben.
+N22-P55242-G7-P8629-A1031-L999:Finanzen
+N22-P55242-G80-P8629-A1031-L999:Debitor - Fällige Posten
+N22-P55242-G80-P8631-A1031-L999:Zeigen Sie eine detaillierte Liste fälliger Zahlungen der einzelnen Debitoren an, aufgeteilt in drei Zeiträume, drucken oder speichern Sie sie. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, um die Kreditwürdigkeit eines Debitors einzuschätzen oder um Liquiditätsanalysen vorzubereiten.
+N22-P55242-G81-P8629-A1031-L999:Serviceaufträge
+N22-P55242-G81-P8631-A1031-L999:Öffnet die Liste laufender Serviceaufträge.
+N22-P55242-G82-P8629-A1031-L999:&Vorauszahlungsprozentsätze
+N22-P55242-G82-P8631-A1031-L999:Zeigt die Prozentsätze des Preises an, oder ermöglicht deren Bearbeitung, die als Vorauszahlung beglichen werden können.
+N22-P55242-G83-P8629-A1031-L999:Debitor - Saldo nach Perioden
+N22-P55242-G83-P8631-A1031-L999:Zeigt, druckt oder speichert eine Zusammenfassung fälliger Zahlungen der einzelnen Debitoren, aufgeteilt in drei Zeiträume. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, die Kreditwürdigkeit eines Debitors einzuschätzen oder Liquiditätsanalysen vorzubereiten.
+N22-P55242-G84-P8629-A1031-L999:Zuordnung für aktuellen Datensatz
+N22-P55242-G84-P8631-A1031-L999:Zeigen Sie den für den ausgewählten Datensatz eingerichteten einzelnen Dimensionssatz an, oder bearbeiten Sie ihn.
+N22-P55242-G85-P8629-A1031-L999:Workflow
+N22-P55242-G86-P8629-A1031-L999:Synchronisierungsprotokoll
+N22-P55242-G86-P8631-A1031-L999:Zeigt die Integrationssynchronisierungsaufträge für die Debitorentabelle an.
+N22-P55242-G87-P8629-A1031-L999:Debitor - Kontoblatt
+N22-P55242-G87-P8631-A1031-L999:Zeigt den Saldo für Debitoren mit Salden an einem angegebenen Datum an. Der Bericht kann z. B. am Ende einer Buchhaltungsperiode oder für eine Buchprüfung verwendet werden.
+N22-P55242-G88-P8629-A1031-L999:Debitor - Saldenliste
+N22-P55242-G88-P8631-A1031-L999:Zeigt den Anfangs- und Schluss-Saldo für Debitoren mit Posten innerhalb einer angegebenen Periode an. Der Bericht kann verwendet werden, um zu überprüfen, ob der Saldo der Debitorenbuchungsgruppe mit dem Saldo des entsprechenden Sachkontos an einem bestimmten Datum übereinstimmt.
+N22-P55242-G89-P8629-A1031-L999:Debitorenposten per
+N22-P55242-G89-P8631-A1031-L999:Zeigt eine Liste der Zahlungshistorie der Debitoren bis zu einem bestimmten Datum an. Sie können den Bericht verwenden, um Ihre gesamten Einnahmen am Ende einer Buchhaltungsperiode oder eines Geschäftsjahres zu extrahieren.
+N22-P55242-G90-P8629-A1031-L999:Kontoauszug
+N22-P55242-G90-P8631-A1031-L999:Zeigt eine Liste der Transaktionen eines Debitors in einem ausgewählten Zeitraum an, um sie beispielsweise am Ende der Buchhaltungsperiode an den Debitor zu senden. Sie können ungeachtet der angegebenen Periode alle fälligen Salden anzeigen oder einen Saldenrückblick einfügen.
+N22-P55242-G91-P8629-A1031-L999:Finanzberichte
+N22-P55242-G92-P8629-A1031-L999:Verkaufsstatistik
+N22-P55242-G92-P8631-A1031-L999:Zeigt die gesamten Kosten, Einnahmen und Deckungsbeiträge der Debitoren im Lauf der Zeit an, um beispielsweise Einnahmentrends zu analysieren. Der Bericht zeigt Beträge für ursprüngliche und regulierte Kosten, Einnahmen, Deckungsbeiträge, Rechnungsrabatte, Skonti und Deckungsbeiträge in Prozent in drei regulierbaren Perioden an.
+N22-P55242-G93-P8629-A1031-L999:Debitor - Verkaufsübersicht
+N22-P55242-G93-P8631-A1031-L999:Zeigt den Debitorenverkauf einer Periode an, um beispielsweise die Verkaufsaktivität den Zoll- und Steuerbehörden zu melden. Sie können nur Debitoren auswählen, deren Gesamtverkauf einen Minimalbetrag übersteigt. Sie können auch angeben, ob in dem Bericht die Adressdetails der einzelnen Debitoren angezeigt werden sollen.
+N22-P55242-G94-P8629-A1031-L999:Debitor - Top-10-Liste
+N22-P55242-G94-P8631-A1031-L999:Zeigt an, welche Debitoren in einer ausgewählten Periode am meisten kaufen oder Ihnen am meisten schulden. Es werden nur jene Debitoren berücksichtigt, die während der ausgewählten Periode entweder Einkäufe getätigt haben oder am Ende der Periode einen Saldo aufweisen.
+N22-P55242-G95-P8629-A1031-L999:Verkaufsberichte
+N22-P55242-G96-P8629-A1031-L999:Berichte
+N22-P55242-G97-P8629-A1031-L999:Kontostatistik aktualisieren
+N22-P55242-G97-P8631-A1031-L999:Sendet Debitorenstatistikdaten zum Aktualisieren der Infobox "Kontostatistik" an Dynamics 365 for Sales.
+N22-P55242-G98-P8629-A1031-L999:Zeilenrabatte
+N22-P55242-G98-P8631-A1031-L999:Zeigt verschiedene Rabatte für Artikel an oder richtet diese ein, die Sie an den ausgewählten Debitor verkaufen. Ein Artikelrabatt wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Debitor, Menge oder Enddatum.
+N22-P55242-G9-P8629-A1031-L999:Historie
+N22-P8629-A1031-L999:Debitoren

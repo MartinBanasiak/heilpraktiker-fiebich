@@ -1,0 +1,84 @@
+OBJECT Table 5447341 Webshop Subscription Seq. Step
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=VAR
+               Error001@1000000000 : TextConst 'DEU=Es kann kein Fixdatum in einem Sequenz-Schritt f�r ein Abonnement mit Start-Typ "Neue Sequenz beginnen" angegeben werden.;ENU=It is not possible to set a fix date in a sequence-step for a subscription with start type "Start new sequence"';
+             BEGIN
+               WebshopSubscriptionHeader.GET("Subscription Code");
+               IF ("Fix Date" <> 0D) AND
+                  (WebshopSubscriptionHeader.Type = WebshopSubscriptionHeader.Type::SubscriptionSequenceItem) AND
+                  (WebshopSubscriptionHeader."Start Type" = WebshopSubscriptionHeader."Start Type"::Anew) THEN
+                  ERROR(Error001);
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnModify=BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnDelete=BEGIN
+               WebshopUpdateManagement.DeleteSubscSeqStep(Rec);
+             END;
+
+    CaptionML=[DEU=Webshop Abonnement Sequenz-Schritt;
+               ENU=Webshop Subscription Sequence Step];
+    LookupPageID=Page5447342;
+    DrillDownPageID=Page5447342;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Subscription Code   ;Code30        ;TableRelation="Webshop Subscription Header".Code;
+                                                   OnValidate=VAR
+                                                                StepCount@1000000000 : Integer;
+                                                                DistributedPrice@1000000001 : Decimal;
+                                                              BEGIN
+                                                              END;
+
+                                                   CaptionML=[DEU=Abo Code;
+                                                              ENU=Subscription Code] }
+    { 2   ;   ;Line No.            ;Integer       ;AutoIncrement=Yes;
+                                                   CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.] }
+    { 3   ;   ;Fix Date            ;Date          ;CaptionML=[DEU=Startdatum fest;
+                                                              ENU=Start date fix] }
+    { 4   ;   ;Interval            ;DateFormula   ;CaptionML=[DEU=Datumsintervall;
+                                                              ENU=Date Interval] }
+    { 5   ;   ;No. of Items        ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Subscription Item Link" WHERE (Subscription Code=FIELD(Subscription Code),
+                                                                                                             Subscr. Seq. Step Line No.=FIELD(Line No.)));
+                                                   CaptionML=[DEU=Anzahl Artikel;
+                                                              ENU=No.of Items] }
+    { 6   ;   ;Date Last Modified  ;DateTime      ;CaptionML=[DEU=Datum letzte �nderung;
+                                                              ENU=Date Last Modified] }
+    { 7   ;   ;Date Last Updated   ;DateTime      ;CaptionML=[DEU=Datum letzte Aktualisierung;
+                                                              ENU=Date Last Updated] }
+  }
+  KEYS
+  {
+    {    ;Subscription Code,Line No.              ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopSubscriptionHeader@1000000000 : Record 5447340;
+      WebshopSubscriptionSeqStep@1000000001 : Record 5447341;
+      WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

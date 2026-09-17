@@ -1,0 +1,57 @@
+T5447303-F100-P8629-A1031-L999:Google Produktkategorie
+T5447303-F10-P8629-A1031-L999:Alle Artikel anzeigen
+T5447303-F10-P8632-A1031-L999:Nicht anzeigen,Listenansicht,Kachelansicht
+T5447303-F11-P8629-A1031-L999:Unterkategorien anzeigen
+T5447303-F11-P8632-A1031-L999:Nein,Ja,Artikelvorschau
+T5447303-F12-P8629-A1031-L999:Kategoriebild
+T5447303-F13-P8629-A1031-L999:Kategoriesymbol
+T5447303-F14-P8629-A1031-L999:Kategoriebeschreibung
+T5447303-F15-P8629-A1031-L999:Anzahl Artikel
+T5447303-F16-P8629-A1031-L999:Artikelsortierung
+T5447303-F16-P8632-A1031-L999:Beliebtheit,Artikelnummer,Artikelbezeichnung,Neueste Artikel,Manuelle Empfehlung,Preis aufsteigend,Preis absteigend
+T5447303-F17-P8629-A1031-L999:Benutzer darf Sortierung ändern
+T5447303-F1-P8629-A1031-L999:Sprachcode
+T5447303-F20-P8629-A1031-L999:Shopcode
+T5447303-F21-P8629-A1031-L999:Aktiv
+T5447303-F22-P8629-A1031-L999:Gültig von
+T5447303-F23-P8629-A1031-L999:Gültig bis
+T5447303-F2-P8629-A1031-L999:Zeilennr.
+T5447303-F30-P8629-A1031-L999:Aktionskennzeichen Aktiv
+T5447303-F31-P8629-A1031-L999:Aktion Gültig von
+T5447303-F32-P8629-A1031-L999:Aktion Gültig bis
+T5447303-F33-P8629-A1031-L999:Aktionskennzeichnung
+T5447303-F33-P8632-A1031-L999: ,Aktion,Reduziert,Neuheit,SSV,WSV,Frei 1,Frei 2,Frei 3
+T5447303-F34-P8629-A1031-L999:Aktionsbeschreibung
+T5447303-F3-P8629-A1031-L999:Name
+T5447303-F40-P8629-A1031-L999:Meta Schlüsselwörter
+T5447303-F41-P8629-A1031-L999:Meta Beschreibung
+T5447303-F42-P8629-A1031-L999:Webseitentitel
+T5447303-F4-P8629-A1031-L999:Ebene
+T5447303-F5-P8629-A1031-L999:Suchcode
+T5447303-F6-P8629-A1031-L999:Zufällige Artikel anzeigen
+T5447303-F6-P8632-A1031-L999:Nicht anzeigen,Listenansicht,Kachelansicht
+T5447303-F70-P8629-A1031-L999:Gruppenberechtigungen
+T5447303-F71-P8629-A1031-L999:Debitorberechtigungen
+T5447303-F7-P8629-A1031-L999:Max. Anz. zufällige Artikel
+T5447303-F80-P8629-A1031-L999:Anzahl Artikelmerkmalfilter
+T5447303-F81-P8629-A1031-L999:Suchbegriffe
+T5447303-F82-P8629-A1031-L999:Geändert am
+T5447303-F83-P8629-A1031-L999:Aktualisiert am
+T5447303-F84-P8629-A1031-L999:Kategoriebeschreibung 2
+T5447303-F85-P8629-A1031-L999:Kategorieauszug
+T5447303-F8-P8629-A1031-L999:Aktionsartikel anzeigen
+T5447303-F8-P8632-A1031-L999:Nicht anzeigen,Listenansicht,Kachelansicht
+T5447303-F90-P8629-A1031-L999:Marketplace Kategorie-ID
+T5447303-F91-P8629-A1031-L999:Marketplace in Benutzung
+T5447303-F9-P8629-A1031-L999:Max. Anz. Aktionsartikel
+T5447303-P8629-A1031-L999:Webshop Kategorie
+T5447303-Q1000000000-P26171-A1031-L999:Datensatz darf nich umbenannt werden
+T5447303-Q1000000002-P26171-A1031-L999:Der Suchcode darf nicht leer sein, keine Umlaute und keine Sonderzeichen enthalten
+T5447303-Q1000000003-P26171-A1031-L999:Der Suchcode muss eindeutig sein
+T5447303-U1000000004-Q1000000002-P26171-A1031-L999:Es konnte keine Kategorie zu den angegebenen Daten gefunden werden.
+T5447303-U1000000007-Q1000000002-P26171-A1031-L999:Es konnte keine Kategorie zu den angegebenen Daten gefunden werden.
+T5447303-U1000000007-Q1000000003-P26171-A1031-L999:Die angegebene Kategorie hat kein nächstes Geschwisterelement.
+T5447303-U1000000008-Q1000000002-P26171-A1031-L999:Es konnte keine Kategorie zu den angegebenen Daten gefunden werden.
+T5447303-U1000000008-Q1000000003-P26171-A1031-L999:Die angegebene Kategorie hat kein nächstes Geschwisterelement.
+T5447303-U1000000009-Q1000000006-P26171-A1031-L999:Es konnte keine Kategorie zu den angegebenen Daten gefunden werden.
+T5447303-U1000000009-Q1000000008-P26171-A1031-L999:Die letzte der angegebenen Kategorie untergeordnete Kategorie konnte nicht ausgelesen werden.

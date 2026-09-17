@@ -1,0 +1,969 @@
+OBJECT Table 112 Sales Invoice Header
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    DataCaptionFields=No.,Sell-to Customer Name;
+    OnInsert=BEGIN
+               //dynamic commerce ---
+               "Date Last Updated (Webshop)" := 0DT;
+               "Date Last Modified (Webshop)" := 0DT;
+               WebshopUpdateMgmt.SetOrderInvMailSendTime(Rec);
+               //dynamic commerce +++
+             END;
+
+    OnModify=BEGIN
+               //dynamic commerce ---
+               IF "Date Last Updated (Webshop)" <> 0DT THEN
+                 "Date Last Modified (Webshop)" := CURRENTDATETIME;
+               //dynamic commerce +++
+             END;
+
+    OnDelete=VAR
+               PostedDeferralHeader@1002 : Record 1704;
+               PostSalesDelete@1003 : Codeunit 363;
+               DeferralUtilities@1001 : Codeunit 1720;
+             BEGIN
+               PostSalesDelete.IsDocumentDeletionAllowed("Posting Date");
+               TESTFIELD("No. Printed");
+               LOCKTABLE;
+               PostSalesDelete.DeleteSalesInvLines(Rec);
+
+               SalesCommentLine.SETRANGE("Document Type",SalesCommentLine."Document Type"::"Posted Invoice");
+               SalesCommentLine.SETRANGE("No.","No.");
+               SalesCommentLine.DELETEALL;
+
+               ApprovalsMgmt.DeletePostedApprovalEntries(RECORDID);
+               PostedDeferralHeader.DeleteForDoc(DeferralUtilities.GetSalesDeferralDocType,'','',
+                 SalesCommentLine."Document Type"::"Posted Invoice","No.");
+
+               //dynamic commerce ---
+               IF "Date Last Updated (Webshop)" <> 0DT THEN
+                 WebshopUpdateMgmt.DeleteSalesInvoice(Rec);
+               //dynamic commerce +++
+             END;
+
+    CaptionML=[DEU=Verkaufsrechnungskopf;
+               ENU=Sales Invoice Header];
+    LookupPageID=Page143;
+    DrillDownPageID=Page143;
+  }
+  FIELDS
+  {
+    { 2   ;   ;Sell-to Customer No.;Code20        ;TableRelation=Customer;
+                                                   CaptionML=[DEU=Verk. an Deb.-Nr.;
+                                                              ENU=Sell-to Customer No.];
+                                                   NotBlank=Yes }
+    { 3   ;   ;No.                 ;Code20        ;CaptionML=[DEU=Nr.;
+                                                              ENU=No.] }
+    { 4   ;   ;Bill-to Customer No.;Code20        ;TableRelation=Customer;
+                                                   CaptionML=[DEU=Rech. an Deb.-Nr.;
+                                                              ENU=Bill-to Customer No.];
+                                                   NotBlank=Yes }
+    { 5   ;   ;Bill-to Name        ;Text50        ;CaptionML=[DEU=Rech. an Name;
+                                                              ENU=Bill-to Name] }
+    { 6   ;   ;Bill-to Name 2      ;Text50        ;CaptionML=[DEU=Rech. an Name 2;
+                                                              ENU=Bill-to Name 2] }
+    { 7   ;   ;Bill-to Address     ;Text50        ;CaptionML=[DEU=Rech. an Adresse;
+                                                              ENU=Bill-to Address] }
+    { 8   ;   ;Bill-to Address 2   ;Text50        ;CaptionML=[DEU=Rech. an Adresse 2;
+                                                              ENU=Bill-to Address 2] }
+    { 9   ;   ;Bill-to City        ;Text30        ;TableRelation="Post Code".City;
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Rech. an Ort;
+                                                              ENU=Bill-to City] }
+    { 10  ;   ;Bill-to Contact     ;Text50        ;CaptionML=[DEU=Rech. an Kontakt;
+                                                              ENU=Bill-to Contact] }
+    { 11  ;   ;Your Reference      ;Text35        ;CaptionML=[DEU=Ihre Referenz;
+                                                              ENU=Your Reference] }
+    { 12  ;   ;Ship-to Code        ;Code10        ;TableRelation="Ship-to Address".Code WHERE (Customer No.=FIELD(Sell-to Customer No.));
+                                                   CaptionML=[DEU=Lief. an Code;
+                                                              ENU=Ship-to Code] }
+    { 13  ;   ;Ship-to Name        ;Text50        ;CaptionML=[DEU=Lief. an Name;
+                                                              ENU=Ship-to Name] }
+    { 14  ;   ;Ship-to Name 2      ;Text50        ;CaptionML=[DEU=Lief. an Name 2;
+                                                              ENU=Ship-to Name 2] }
+    { 15  ;   ;Ship-to Address     ;Text50        ;CaptionML=[DEU=Lief. an Adresse;
+                                                              ENU=Ship-to Address] }
+    { 16  ;   ;Ship-to Address 2   ;Text50        ;CaptionML=[DEU=Lief. an Adresse 2;
+                                                              ENU=Ship-to Address 2] }
+    { 17  ;   ;Ship-to City        ;Text30        ;TableRelation="Post Code".City;
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Lief. an Ort;
+                                                              ENU=Ship-to City] }
+    { 18  ;   ;Ship-to Contact     ;Text50        ;CaptionML=[DEU=Lief. an Kontakt;
+                                                              ENU=Ship-to Contact] }
+    { 19  ;   ;Order Date          ;Date          ;CaptionML=[DEU=Auftragsdatum;
+                                                              ENU=Order Date] }
+    { 20  ;   ;Posting Date        ;Date          ;CaptionML=[DEU=Buchungsdatum;
+                                                              ENU=Posting Date] }
+    { 21  ;   ;Shipment Date       ;Date          ;CaptionML=[DEU=Warenausg.-Datum;
+                                                              ENU=Shipment Date] }
+    { 22  ;   ;Posting Description ;Text50        ;CaptionML=[DEU=Buchungsbeschreibung;
+                                                              ENU=Posting Description] }
+    { 23  ;   ;Payment Terms Code  ;Code10        ;TableRelation="Payment Terms";
+                                                   CaptionML=[DEU=Zlg.-Bedingungscode;
+                                                              ENU=Payment Terms Code] }
+    { 24  ;   ;Due Date            ;Date          ;CaptionML=[DEU=F�lligkeitsdatum;
+                                                              ENU=Due Date] }
+    { 25  ;   ;Payment Discount %  ;Decimal       ;CaptionML=[DEU=Skonto %;
+                                                              ENU=Payment Discount %];
+                                                   DecimalPlaces=0:5;
+                                                   MinValue=0;
+                                                   MaxValue=100 }
+    { 26  ;   ;Pmt. Discount Date  ;Date          ;CaptionML=[DEU=Skontodatum;
+                                                              ENU=Pmt. Discount Date] }
+    { 27  ;   ;Shipment Method Code;Code10        ;TableRelation="Shipment Method";
+                                                   CaptionML=[DEU=Lieferbedingungscode;
+                                                              ENU=Shipment Method Code] }
+    { 28  ;   ;Location Code       ;Code10        ;TableRelation=Location WHERE (Use As In-Transit=CONST(No));
+                                                   CaptionML=[DEU=Lagerortcode;
+                                                              ENU=Location Code] }
+    { 29  ;   ;Shortcut Dimension 1 Code;Code20   ;TableRelation="Dimension Value".Code WHERE (Global Dimension No.=CONST(1));
+                                                   CaptionML=[DEU=Shortcutdimensionscode 1;
+                                                              ENU=Shortcut Dimension 1 Code];
+                                                   CaptionClass='1,2,1' }
+    { 30  ;   ;Shortcut Dimension 2 Code;Code20   ;TableRelation="Dimension Value".Code WHERE (Global Dimension No.=CONST(2));
+                                                   CaptionML=[DEU=Shortcutdimensionscode 2;
+                                                              ENU=Shortcut Dimension 2 Code];
+                                                   CaptionClass='1,2,2' }
+    { 31  ;   ;Customer Posting Group;Code10      ;TableRelation="Customer Posting Group";
+                                                   CaptionML=[DEU=Debitorenbuchungsgruppe;
+                                                              ENU=Customer Posting Group];
+                                                   Editable=No }
+    { 32  ;   ;Currency Code       ;Code10        ;TableRelation=Currency;
+                                                   CaptionML=[DEU=W�hrungscode;
+                                                              ENU=Currency Code];
+                                                   Editable=No }
+    { 33  ;   ;Currency Factor     ;Decimal       ;CaptionML=[DEU=W�hrungsfaktor;
+                                                              ENU=Currency Factor];
+                                                   DecimalPlaces=0:15;
+                                                   MinValue=0 }
+    { 34  ;   ;Customer Price Group;Code10        ;TableRelation="Customer Price Group";
+                                                   CaptionML=[DEU=Debitorenpreisgruppe;
+                                                              ENU=Customer Price Group] }
+    { 35  ;   ;Prices Including VAT;Boolean       ;CaptionML=[DEU=Preise inkl. MwSt.;
+                                                              ENU=Prices Including VAT] }
+    { 37  ;   ;Invoice Disc. Code  ;Code20        ;CaptionML=[DEU=Rechnungsrabattcode;
+                                                              ENU=Invoice Disc. Code] }
+    { 40  ;   ;Customer Disc. Group;Code20        ;TableRelation="Customer Discount Group";
+                                                   CaptionML=[DEU=Debitorenrabattgruppe;
+                                                              ENU=Customer Disc. Group] }
+    { 41  ;   ;Language Code       ;Code10        ;TableRelation=Language;
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code] }
+    { 43  ;   ;Salesperson Code    ;Code10        ;TableRelation=Salesperson/Purchaser;
+                                                   CaptionML=[DEU=Verk�ufercode;
+                                                              ENU=Salesperson Code] }
+    { 44  ;   ;Order No.           ;Code20        ;AccessByPermission=TableData 110=R;
+                                                   CaptionML=[DEU=Auftragsnummer;
+                                                              ENU=Order No.] }
+    { 46  ;   ;Comment             ;Boolean       ;FieldClass=FlowField;
+                                                   CalcFormula=Exist("Sales Comment Line" WHERE (Document Type=CONST(Posted Invoice),
+                                                                                                 No.=FIELD(No.),
+                                                                                                 Document Line No.=CONST(0)));
+                                                   CaptionML=[DEU=Bemerkung;
+                                                              ENU=Comment];
+                                                   Editable=No }
+    { 47  ;   ;No. Printed         ;Integer       ;CaptionML=[DEU=Anzahl gedruckt;
+                                                              ENU=No. Printed];
+                                                   Editable=No }
+    { 51  ;   ;On Hold             ;Code3         ;CaptionML=[DEU=Abwarten;
+                                                              ENU=On Hold] }
+    { 52  ;   ;Applies-to Doc. Type;Option        ;CaptionML=[DEU=Ausgleich mit Belegart;
+                                                              ENU=Applies-to Doc. Type];
+                                                   OptionCaptionML=[DEU=" ,Zahlung,Rechnung,Gutschrift,Zinsrechnung,Mahnung,Erstattung";
+                                                                    ENU=" ,Payment,Invoice,Credit Memo,Finance Charge Memo,Reminder,Refund"];
+                                                   OptionString=[ ,Payment,Invoice,Credit Memo,Finance Charge Memo,Reminder,Refund] }
+    { 53  ;   ;Applies-to Doc. No. ;Code20        ;OnLookup=BEGIN
+                                                              CustLedgEntry.SETCURRENTKEY("Document No.");
+                                                              CustLedgEntry.SETRANGE("Document Type","Applies-to Doc. Type");
+                                                              CustLedgEntry.SETRANGE("Document No.","Applies-to Doc. No.");
+                                                              PAGE.RUN(0,CustLedgEntry);
+                                                            END;
+
+                                                   CaptionML=[DEU=Ausgleich mit Belegnr.;
+                                                              ENU=Applies-to Doc. No.] }
+    { 55  ;   ;Bal. Account No.    ;Code20        ;TableRelation=IF (Bal. Account Type=CONST(G/L Account)) "G/L Account"
+                                                                 ELSE IF (Bal. Account Type=CONST(Bank Account)) "Bank Account";
+                                                   CaptionML=[DEU=Gegenkontonr.;
+                                                              ENU=Bal. Account No.] }
+    { 60  ;   ;Amount              ;Decimal       ;FieldClass=FlowField;
+                                                   CalcFormula=Sum("Sales Invoice Line".Amount WHERE (Document No.=FIELD(No.)));
+                                                   CaptionML=[DEU=Betrag;
+                                                              ENU=Amount];
+                                                   Editable=No;
+                                                   AutoFormatType=1;
+                                                   AutoFormatExpr="Currency Code" }
+    { 61  ;   ;Amount Including VAT;Decimal       ;FieldClass=FlowField;
+                                                   CalcFormula=Sum("Sales Invoice Line"."Amount Including VAT" WHERE (Document No.=FIELD(No.)));
+                                                   CaptionML=[DEU=Betrag inkl. MwSt.;
+                                                              ENU=Amount Including VAT];
+                                                   Editable=No;
+                                                   AutoFormatType=1;
+                                                   AutoFormatExpr="Currency Code" }
+    { 70  ;   ;VAT Registration No.;Text20        ;CaptionML=[DEU=USt-IdNr.;
+                                                              ENU=VAT Registration No.] }
+    { 73  ;   ;Reason Code         ;Code10        ;TableRelation="Reason Code";
+                                                   CaptionML=[DEU=Ursachencode;
+                                                              ENU=Reason Code] }
+    { 74  ;   ;Gen. Bus. Posting Group;Code10     ;TableRelation="Gen. Business Posting Group";
+                                                   CaptionML=[DEU=Gesch�ftsbuchungsgruppe;
+                                                              ENU=Gen. Bus. Posting Group] }
+    { 75  ;   ;EU 3-Party Trade    ;Boolean       ;CaptionML=[DEU=EU-Dreiecksgesch�ft;
+                                                              ENU=EU 3-Party Trade] }
+    { 76  ;   ;Transaction Type    ;Code10        ;TableRelation="Transaction Type";
+                                                   CaptionML=[DEU=Art des Gesch�ftes;
+                                                              ENU=Transaction Type] }
+    { 77  ;   ;Transport Method    ;Code10        ;TableRelation="Transport Method";
+                                                   CaptionML=[DEU=Verkehrszweig;
+                                                              ENU=Transport Method] }
+    { 78  ;   ;VAT Country/Region Code;Code10     ;TableRelation=Country/Region;
+                                                   CaptionML=[DEU=MwSt.-L�nder-/Regionscode;
+                                                              ENU=VAT Country/Region Code] }
+    { 79  ;   ;Sell-to Customer Name;Text50       ;CaptionML=[DEU=Verk. an Name;
+                                                              ENU=Sell-to Customer Name] }
+    { 80  ;   ;Sell-to Customer Name 2;Text50     ;CaptionML=[DEU=Verk. an Name 2;
+                                                              ENU=Sell-to Customer Name 2] }
+    { 81  ;   ;Sell-to Address     ;Text50        ;CaptionML=[DEU=Verk. an Adresse;
+                                                              ENU=Sell-to Address] }
+    { 82  ;   ;Sell-to Address 2   ;Text50        ;CaptionML=[DEU=Verk. an Adresse 2;
+                                                              ENU=Sell-to Address 2] }
+    { 83  ;   ;Sell-to City        ;Text30        ;TableRelation="Post Code".City;
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Verk. an Ort;
+                                                              ENU=Sell-to City] }
+    { 84  ;   ;Sell-to Contact     ;Text50        ;CaptionML=[DEU=Verk. an Kontakt;
+                                                              ENU=Sell-to Contact] }
+    { 85  ;   ;Bill-to Post Code   ;Code20        ;TableRelation="Post Code";
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Rech. an PLZ-Code;
+                                                              ENU=Bill-to Post Code] }
+    { 86  ;   ;Bill-to County      ;Text30        ;CaptionML=[DEU=Rech. an Bundesregion;
+                                                              ENU=Bill-to County] }
+    { 87  ;   ;Bill-to Country/Region Code;Code10 ;TableRelation=Country/Region;
+                                                   CaptionML=[DEU=Rech. an L�nder-/Regionscode;
+                                                              ENU=Bill-to Country/Region Code] }
+    { 88  ;   ;Sell-to Post Code   ;Code20        ;TableRelation="Post Code";
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Verk. an PLZ-Code;
+                                                              ENU=Sell-to Post Code] }
+    { 89  ;   ;Sell-to County      ;Text30        ;CaptionML=[DEU=Verk. an Bundesregion;
+                                                              ENU=Sell-to County] }
+    { 90  ;   ;Sell-to Country/Region Code;Code10 ;TableRelation=Country/Region;
+                                                   CaptionML=[DEU=Verk. an L�nder-/Regionscode;
+                                                              ENU=Sell-to Country/Region Code] }
+    { 91  ;   ;Ship-to Post Code   ;Code20        ;TableRelation="Post Code";
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Lief. an PLZ-Code;
+                                                              ENU=Ship-to Post Code] }
+    { 92  ;   ;Ship-to County      ;Text30        ;CaptionML=[DEU=Lief. an Bundesregion;
+                                                              ENU=Ship-to County] }
+    { 93  ;   ;Ship-to Country/Region Code;Code10 ;TableRelation=Country/Region;
+                                                   CaptionML=[DEU=Lief. an L�nder-/Regionscode;
+                                                              ENU=Ship-to Country/Region Code] }
+    { 94  ;   ;Bal. Account Type   ;Option        ;CaptionML=[DEU=Gegenkontoart;
+                                                              ENU=Bal. Account Type];
+                                                   OptionCaptionML=[DEU=Sachkonto,Bankkonto;
+                                                                    ENU=G/L Account,Bank Account];
+                                                   OptionString=G/L Account,Bank Account }
+    { 97  ;   ;Exit Point          ;Code10        ;TableRelation="Entry/Exit Point";
+                                                   CaptionML=[DEU=Einladehafen;
+                                                              ENU=Exit Point] }
+    { 98  ;   ;Correction          ;Boolean       ;CaptionML=[DEU=Storno;
+                                                              ENU=Correction] }
+    { 99  ;   ;Document Date       ;Date          ;CaptionML=[DEU=Belegdatum;
+                                                              ENU=Document Date] }
+    { 100 ;   ;External Document No.;Code35       ;CaptionML=[DEU=Externe Belegnummer;
+                                                              ENU=External Document No.] }
+    { 101 ;   ;Area                ;Code10        ;TableRelation=Area;
+                                                   CaptionML=[DEU=Ursprungsregion;
+                                                              ENU=Area] }
+    { 102 ;   ;Transaction Specification;Code10   ;TableRelation="Transaction Specification";
+                                                   CaptionML=[DEU=Verfahren;
+                                                              ENU=Transaction Specification] }
+    { 104 ;   ;Payment Method Code ;Code10        ;TableRelation="Payment Method";
+                                                   CaptionML=[DEU=Zahlungsformcode;
+                                                              ENU=Payment Method Code] }
+    { 105 ;   ;Shipping Agent Code ;Code10        ;TableRelation="Shipping Agent";
+                                                   AccessByPermission=TableData 5790=R;
+                                                   CaptionML=[DEU=Zustellercode;
+                                                              ENU=Shipping Agent Code] }
+    { 106 ;   ;Package Tracking No.;Text30        ;CaptionML=[DEU=Paketverfolgungsnr.;
+                                                              ENU=Package Tracking No.] }
+    { 107 ;   ;Pre-Assigned No. Series;Code10     ;TableRelation="No. Series";
+                                                   CaptionML=[DEU=Zugeordnete Nr.-Serie;
+                                                              ENU=Pre-Assigned No. Series] }
+    { 108 ;   ;No. Series          ;Code10        ;TableRelation="No. Series";
+                                                   CaptionML=[DEU=Nummernserie;
+                                                              ENU=No. Series];
+                                                   Editable=No }
+    { 110 ;   ;Order No. Series    ;Code10        ;TableRelation="No. Series";
+                                                   CaptionML=[DEU=Auftragsnr.-Serie;
+                                                              ENU=Order No. Series] }
+    { 111 ;   ;Pre-Assigned No.    ;Code20        ;CaptionML=[DEU=Zugeordnete Nr.;
+                                                              ENU=Pre-Assigned No.] }
+    { 112 ;   ;User ID             ;Code50        ;TableRelation=User."User Name";
+                                                   OnLookup=VAR
+                                                              UserMgt@1000 : Codeunit 418;
+                                                            BEGIN
+                                                              UserMgt.LookupUserID("User ID");
+                                                            END;
+
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Benutzer-ID;
+                                                              ENU=User ID] }
+    { 113 ;   ;Source Code         ;Code10        ;TableRelation="Source Code";
+                                                   CaptionML=[DEU=Herkunftscode;
+                                                              ENU=Source Code] }
+    { 114 ;   ;Tax Area Code       ;Code20        ;TableRelation="Tax Area";
+                                                   CaptionML=[DEU=Steuergebietscode;
+                                                              ENU=Tax Area Code] }
+    { 115 ;   ;Tax Liable          ;Boolean       ;CaptionML=[DEU=Steuerpflichtig;
+                                                              ENU=Tax Liable] }
+    { 116 ;   ;VAT Bus. Posting Group;Code10      ;TableRelation="VAT Business Posting Group";
+                                                   CaptionML=[DEU=MwSt.-Gesch�ftsbuchungsgruppe;
+                                                              ENU=VAT Bus. Posting Group] }
+    { 119 ;   ;VAT Base Discount % ;Decimal       ;CaptionML=[DEU=MwSt.-Bemessungsgr. Skonto %;
+                                                              ENU=VAT Base Discount %];
+                                                   DecimalPlaces=0:5;
+                                                   MinValue=0;
+                                                   MaxValue=100 }
+    { 131 ;   ;Prepayment No. Series;Code10       ;TableRelation="No. Series";
+                                                   CaptionML=[DEU=Vorauszahlung Nummernserie;
+                                                              ENU=Prepayment No. Series] }
+    { 136 ;   ;Prepayment Invoice  ;Boolean       ;CaptionML=[DEU=Vorauszahlungsrechnung;
+                                                              ENU=Prepayment Invoice] }
+    { 137 ;   ;Prepayment Order No.;Code20        ;CaptionML=[DEU=Vorauszahlungsauftragsnr.;
+                                                              ENU=Prepayment Order No.] }
+    { 151 ;   ;Quote No.           ;Code20        ;CaptionML=[DEU=Angebotsnr.;
+                                                              ENU=Quote No.];
+                                                   Editable=No }
+    { 200 ;   ;Work Description    ;BLOB          ;CaptionML=[DEU=Arbeitsbeschreibung;
+                                                              ENU=Work Description] }
+    { 480 ;   ;Dimension Set ID    ;Integer       ;TableRelation="Dimension Set Entry";
+                                                   OnLookup=BEGIN
+                                                              ShowDimensions;
+                                                            END;
+
+                                                   CaptionML=[DEU=Dimensionssatz-ID;
+                                                              ENU=Dimension Set ID];
+                                                   Editable=No }
+    { 600 ;   ;Payment Service Set ID;Integer     ;CaptionML=[DEU=Zahlungsverkehr-Satz-ID;
+                                                              ENU=Payment Service Set ID] }
+    { 710 ;   ;Document Exchange Identifier;Text50;CaptionML=[DEU=Belegaustauschsbezeichner;
+                                                              ENU=Document Exchange Identifier] }
+    { 711 ;   ;Document Exchange Status;Option    ;CaptionML=[DEU=Belegaustauschsstatus;
+                                                              ENU=Document Exchange Status];
+                                                   OptionCaptionML=[DEU=Nicht gesendet,An Belegaustauschdienst gesendet,An Empf�nger geliefert,Fehler bei der �bermittlung,Verbindung zu Empf�nger steht aus;
+                                                                    ENU=Not Sent,Sent to Document Exchange Service,Delivered to Recipient,Delivery Failed,Pending Connection to Recipient];
+                                                   OptionString=Not Sent,Sent to Document Exchange Service,Delivered to Recipient,Delivery Failed,Pending Connection to Recipient }
+    { 712 ;   ;Doc. Exch. Original Identifier;Text50;
+                                                   CaptionML=[DEU=Originalbezeichner Belegaustausch;
+                                                              ENU=Doc. Exch. Original Identifier] }
+    { 720 ;   ;Coupled to CRM      ;Boolean       ;CaptionML=[DEU=Gekoppelt mit Dynamics CRM;
+                                                              ENU=Coupled to Dynamics CRM] }
+    { 1200;   ;Direct Debit Mandate ID;Code35     ;TableRelation="SEPA Direct Debit Mandate" WHERE (Customer No.=FIELD(Bill-to Customer No.));
+                                                   CaptionML=[DEU=Lastschrift-Mandat-ID;
+                                                              ENU=Direct Debit Mandate ID] }
+    { 1302;   ;Closed              ;Boolean       ;FieldClass=FlowField;
+                                                   CalcFormula=-Exist("Cust. Ledger Entry" WHERE (Entry No.=FIELD(Cust. Ledger Entry No.),
+                                                                                                  Open=FILTER(Yes)));
+                                                   CaptionML=[DEU=Geschlossen;
+                                                              ENU=Closed];
+                                                   Editable=No }
+    { 1303;   ;Remaining Amount    ;Decimal       ;FieldClass=FlowField;
+                                                   CalcFormula=Sum("Detailed Cust. Ledg. Entry".Amount WHERE (Cust. Ledger Entry No.=FIELD(Cust. Ledger Entry No.)));
+                                                   CaptionML=[DEU=Restbetrag;
+                                                              ENU=Remaining Amount];
+                                                   Editable=No;
+                                                   AutoFormatType=1;
+                                                   AutoFormatExpr="Currency Code" }
+    { 1304;   ;Cust. Ledger Entry No.;Integer     ;TableRelation="Cust. Ledger Entry"."Entry No.";
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Debitorenposten Lfd. Nr.;
+                                                              ENU=Cust. Ledger Entry No.];
+                                                   Editable=No }
+    { 1305;   ;Invoice Discount Amount;Decimal    ;FieldClass=FlowField;
+                                                   CalcFormula=Sum("Sales Invoice Line"."Inv. Discount Amount" WHERE (Document No.=FIELD(No.)));
+                                                   CaptionML=[DEU=Rechnungsrab.-Betrag;
+                                                              ENU=Invoice Discount Amount];
+                                                   Editable=No;
+                                                   AutoFormatType=1 }
+    { 1310;   ;Cancelled           ;Boolean       ;FieldClass=FlowField;
+                                                   CalcFormula=Exist("Cancelled Document" WHERE (Source ID=CONST(112),
+                                                                                                 Cancelled Doc. No.=FIELD(No.)));
+                                                   CaptionML=[DEU=Storniert;
+                                                              ENU=Cancelled];
+                                                   Editable=No }
+    { 1311;   ;Corrective          ;Boolean       ;FieldClass=FlowField;
+                                                   CalcFormula=Exist("Cancelled Document" WHERE (Source ID=CONST(114),
+                                                                                                 Cancelled By Doc. No.=FIELD(No.)));
+                                                   CaptionML=[DEU=Korrektur;
+                                                              ENU=Corrective];
+                                                   Editable=No }
+    { 5050;   ;Campaign No.        ;Code20        ;TableRelation=Campaign;
+                                                   CaptionML=[DEU=Kampagnennr.;
+                                                              ENU=Campaign No.] }
+    { 5052;   ;Sell-to Contact No. ;Code20        ;TableRelation=Contact;
+                                                   CaptionML=[DEU=Verk. an Kontaktnr.;
+                                                              ENU=Sell-to Contact No.] }
+    { 5053;   ;Bill-to Contact No. ;Code20        ;TableRelation=Contact;
+                                                   CaptionML=[DEU=Rech. an Kontaktnr.;
+                                                              ENU=Bill-to Contact No.] }
+    { 5055;   ;Opportunity No.     ;Code20        ;TableRelation=Opportunity;
+                                                   CaptionML=[DEU=Verkaufschancennr.;
+                                                              ENU=Opportunity No.] }
+    { 5700;   ;Responsibility Center;Code10       ;TableRelation="Responsibility Center";
+                                                   CaptionML=[DEU=Zust�ndigkeitseinheitencode;
+                                                              ENU=Responsibility Center] }
+    { 7001;   ;Allow Line Disc.    ;Boolean       ;CaptionML=[DEU=Zeilenrabatt zulassen;
+                                                              ENU=Allow Line Disc.] }
+    { 7200;   ;Get Shipment Used   ;Boolean       ;CaptionML=[DEU=Verwendete Lieferung abrufen;
+                                                              ENU=Get Shipment Used] }
+    { 5447300;;Webshop Order No.   ;Code30        ;CaptionML=[DEU=Online-Bestellnr.;
+                                                              ENU=Webshop Order No.];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447301;;Webshop Payment Transaction ID;Text30;
+                                                   CaptionML=[DEU=Webshop Zahlungstransaktionsnr.;
+                                                              ENU=Webshop Payment Transaction ID];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447302;;Date Webshop Synchronization;DateTime;
+                                                   CaptionML=[DEU=Datum Webshop Synchronisation;
+                                                              ENU=Date Webshop Synchronization];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447303;;Webshop Shop Code   ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Webshop Code;
+                                                              ENU=Webshop Shop Code];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447304;;Webshop Language Code;Code10       ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Webshop Shop Code));
+                                                   CaptionML=[DEU=Webshop Sprachcode;
+                                                              ENU=Webshop Language Code];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447305;;Send Webshop Order Confirm.;Boolean;CaptionML=[DEU=Webshop Auftragsbest�tigung senden;
+                                                              ENU=Send Webshop Order Confirm.];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447306;;Date Web. Order Confirm. Sent;DateTime;
+                                                   CaptionML=[DEU=Datum Webshop Auftragsbest. versandt;
+                                                              ENU=Date Web. Order Confirm. Sent];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447307;;Send Webshop Shipping Notice;Boolean;
+                                                   CaptionML=[DEU=Webshop Lieferbenachr. senden;
+                                                              ENU=Send Webshop Shipping Notice];
+                                                   Description=dynamic commerce }
+    { 5447308;;Date Web. Ship. Notice Sent;DateTime;
+                                                   CaptionML=[DEU=Datum Webshop Lieferbenachr. versandt;
+                                                              ENU=Date Web. Ship. Notice Sent];
+                                                   Description=dynamic commerce }
+    { 5447309;;Webshop Original Amount;Decimal    ;CaptionML=[DEU=Ursprungsbetrag Online-Bestellung;
+                                                              ENU=Webshop Original Amount];
+                                                   BlankZero=Yes;
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447310;;Webshop Payment ID  ;Text32        ;CaptionML=[DEU=Online Zahlungs-ID;
+                                                              ENU=Webshop Payment ID];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447311;;Process Webshop Payment;Boolean    ;CaptionML=[DEU=Online Zahlung durchf�hren;
+                                                              ENU=Process Webshop Payment];
+                                                   Description=dynamic commerce;
+                                                   Editable=Yes }
+    { 5447312;;Date Webshop Payment Processed;DateTime;
+                                                   CaptionML=[DEU=Datum Online Zahlung durchgef�hrt;
+                                                              ENU=Date Webshop Payment Processed];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447313;;Webshop Payment Error;Text100      ;CaptionML=[DEU=Fehler Online Zahlung;
+                                                              ENU=Webshop Payment Error];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447314;;Clear Webshop Payment;Boolean      ;CaptionML=[DEU=Online Zahlung ausgleichen;
+                                                              ENU=Clear Webshop Payment];
+                                                   Description=dynamic commerce;
+                                                   Editable=Yes }
+    { 5447315;;Date Webshop Payment Cleared;DateTime;
+                                                   CaptionML=[DEU=Datum Online Zahlung ausgeglichen;
+                                                              ENU=Date Webshop Payment Cleared];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447316;;Webshop Payment Opt. Line No.;Integer;
+                                                   TableRelation="Webshop Payment Option"."Line No." WHERE (Shop Code=FIELD(Webshop Shop Code),
+                                                                                                            Language Code=FIELD(Webshop Language Code));
+                                                   CaptionML=[DEU=Webshop Zahlungsart Zeilennr.;
+                                                              ENU=Webshop Payment Opt. Line No.];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447317;;Webshop Payment Opt. Descr.;Text50 ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Payment Option".Description WHERE (Shop Code=FIELD(Webshop Shop Code),
+                                                                                                                  Language Code=FIELD(Webshop Language Code),
+                                                                                                                  Line No.=FIELD(Webshop Payment Opt. Line No.)));
+                                                   CaptionML=[DEU=Webshop Zahlungsart Beschreibung;
+                                                              ENU=Webshop Payment Opt. Descr.];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447318;;Webshop Shipping Opt. Line No.;Integer;
+                                                   TableRelation="Webshop Shipping Option"."Line No." WHERE (Shop Code=FIELD(Webshop Shop Code),
+                                                                                                             Language Code=FIELD(Webshop Language Code));
+                                                   CaptionML=[DEU=Webshop Versandart Zeilennr.;
+                                                              ENU=Webshop Shipping Opt. Line No.];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447319;;Webshop Shipping Opt. Descr.;Text50;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Shipping Option".Description WHERE (Shop Code=FIELD(Webshop Shop Code),
+                                                                                                                   Language Code=FIELD(Webshop Language Code),
+                                                                                                                   Line No.=FIELD(Webshop Shipping Opt. Line No.)));
+                                                   CaptionML=[DEU=Webshop Versandart Beschreibung;
+                                                              ENU=Webshop Shipping Opt. Descr.];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447320;;Date Last Modified (Webshop);DateTime;
+                                                   CaptionML=[DEU=Datum letzte �nderung (Webshop);
+                                                              ENU=Date Last Modified (Webshop)];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447321;;Date Last Updated (Webshop);DateTime;
+                                                   CaptionML=[DEU=Datum letzte Aktualisierung (Webshop);
+                                                              ENU=Date Last Updated (Webshop)];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447323;;Status Webshop Credit Check;Option ;CaptionML=[DEU=Status Webshop Bonit�tspr�fung;
+                                                              ENU=Status Webshop Credit Check];
+                                                   OptionString=Keine Angabe,Bestanden,Nicht Bestanden;
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447324;;Send Webshop Invoice Mail;Boolean  ;CaptionML=[DEU=Webshop Rechnungsmail senden;
+                                                              ENU=Send Webshop Invoice Mail];
+                                                   Description=dynamic commerce }
+    { 5447325;;Date Webshop Invoice Mail Sent;DateTime;
+                                                   CaptionML=[DEU=Datum Webshop Rechnungsmail versandt;
+                                                              ENU=Date Webshop Invoice Mail Sent];
+                                                   Description=dynamic commerce }
+    { 5447326;;Send Webshop Cr. Memo Mail;Boolean ;CaptionML=[DEU=Webshop Gutschriftmail senden;
+                                                              ENU=Send Webshop Cr. Memo Mail];
+                                                   Description=dynamic commerce }
+    { 5447327;;Date Web. Cr. Memo Mail Sent;DateTime;
+                                                   CaptionML=[DEU=Datum Webshop Gutschriftmail versandt;
+                                                              ENU=Date Web. Cr. Memo Mail Sent];
+                                                   Description=dynamic commerce }
+    { 5447340;;Webshop Return Order No.;Code30    ;CaptionML=[DEU=Webshop Reklamationsnr.;
+                                                              ENU=Webshop Return Order No.];
+                                                   Description=dynamic commerce }
+    { 5447341;;Webshop Return Order Shop Code;Code10;
+                                                   CaptionML=[DEU=Webshop Reklamation Shop Code;
+                                                              ENU=Webshop Return Order Shop Code];
+                                                   Description=dynamic commerce }
+    { 5447342;;Webshop Ret. Order Lang. Code;Code10;
+                                                   CaptionML=[DEU=Webshop Reklamation Sprachcode;
+                                                              ENU=Webshop Ret. Order Lang. Code];
+                                                   Description=dynamic commerce }
+    { 5447343;;Date Webshop Ret. Order Sync.;DateTime;
+                                                   CaptionML=[DEU=Datum Webshop Synch. Reklamation;
+                                                              ENU=Date Webshop Ret. Order Sync.];
+                                                   Description=dynamic commerce }
+    { 5447344;;Webshop Subscription Code;Code30   ;TableRelation="Webshop Subscription Header".Code;
+                                                   CaptionML=[DEU=Webshop Abonnement Code;
+                                                              ENU=Webshop Subscription Code];
+                                                   Description=dynamic commerce }
+    { 5447345;;Webshop Subscr. Cust. Line No.;Integer;
+                                                   CaptionML=[DEU=Webshop Abo. Kunde Zeilennr.;
+                                                              ENU=Webshop Subscr. Cust. Line No.];
+                                                   Description=dynamic commerce }
+    { 5447346;;Web. Cust. Ps.-Pay. Line No.;Integer;
+                                                   CaptionML=[DEU=Web. Kunde Pseud. Zahlungsdaten Zeilennr.;
+                                                              ENU=Web. Cust. Ps.-Pay. Line No.];
+                                                   Description=dynamic commerce }
+    { 5447347;;Webshop Sub. Seq. St. Line No.;Integer;
+                                                   TableRelation="Webshop Subscription Seq. Step"."Line No." WHERE (Subscription Code=FIELD(Webshop Subscription Code));
+                                                   CaptionML=[DEU=Webshop Abo. Sequenzschritt Zeilennr.;
+                                                              ENU=Webshop Sub. Seq. St. Line No.];
+                                                   Description=dynamic commerce }
+    { 5447348;;Is Webshop Subscr. Ship. Order;Boolean;
+                                                   CaptionML=[DEU=Ist Webshop Abo. Lieferauftrag;
+                                                              ENU=Is Webshop Subscr. Ship. Order];
+                                                   Description=dynamic commerce }
+    { 5447349;;Is Webshop Subscr. Inv. Order;Boolean;
+                                                   CaptionML=[DEU=Ist Webshop Abo. Rechnungsauftrag;
+                                                              ENU=Is Webshop Subscr. Inv. Order];
+                                                   Description=dynamic commerce }
+    { 5447350;;Email Addr. Webshop Customer;Text80;CaptionML=[DEU=E-Mail Adr. Webshop Kunde;
+                                                              ENU=Email Addr. Webshop Customer];
+                                                   Description=dynamic commerce }
+    { 5447352;;Web. Inv. Mail Send Time;DateTime  ;CaptionML=[DEU=Wartedauer Web. Rechnungsmail Versand;
+                                                              ENU=Web. Inv. Mail Send Wait Dur.];
+                                                   Description=dynamic commerce }
+  }
+  KEYS
+  {
+    {    ;No.                                     ;Clustered=Yes }
+    {    ;Order No.                                }
+    {    ;Pre-Assigned No.                         }
+    {    ;Sell-to Customer No.,External Document No.;
+                                                   MaintainSQLIndex=No }
+    {    ;Sell-to Customer No.,Order Date         ;MaintainSQLIndex=No }
+    {    ;Sell-to Customer No.                     }
+    {    ;Prepayment Order No.,Prepayment Invoice  }
+    {    ;Bill-to Customer No.                     }
+    {    ;Posting Date                             }
+    {    ;Document Exchange Status                 }
+    {    ;Webshop Order No.                        }
+    {    ;Posting Date,Date Last Updated (Webshop) }
+    {    ;Webshop Order No.,Process Webshop Payment,Date Webshop Payment Processed,Webshop Payment Transaction ID,Webshop Payment ID }
+    {    ;Webshop Order No.,Clear Webshop Payment,Date Webshop Payment Cleared,Webshop Payment Transaction ID,Webshop Payment ID }
+    {    ;Webshop Order No.,Send Webshop Invoice Mail,Date Webshop Invoice Mail Sent }
+    {    ;Webshop Return Order No.                 }
+  }
+  FIELDGROUPS
+  {
+    { 1   ;DropDown            ;No.,Sell-to Customer No.,Bill-to Customer No.,Posting Date,Posting Description }
+    { 2   ;Brick               ;No.,Sell-to Customer Name,Amount,Due Date,Amount Including VAT }
+  }
+  CODE
+  {
+    VAR
+      SalesCommentLine@1001 : Record 44;
+      SalesSetup@1007 : Record 311;
+      CustLedgEntry@1003 : Record 21;
+      DimMgt@1005 : Codeunit 408;
+      ApprovalsMgmt@1008 : Codeunit 1535;
+      UserSetupMgt@1002 : Codeunit 5700;
+      CheckLatestQst@1006 : TextConst '@@@=%1 is Document Exchange Status;DEU=M�chten Sie den neuesten Status des elektronischen Belegs pr�fen?;ENU=Do you want to check the latest status of the electronic document?';
+      DocTxt@1000 : TextConst 'DEU=Rechnung;ENU=Invoice';
+      "--- dynamic commerce ---"@1000000001 : Integer;
+      WebshopUpdateMgmt@1000000000 : Codeunit 5447301;
+
+    PROCEDURE SendRecords@12();
+    VAR
+      DocumentSendingProfile@1001 : Record 60;
+    BEGIN
+      IF DocumentSendingProfile.LookupProfile("Bill-to Customer No.",IsSingleCustomerSelected) THEN
+        SendProfile(DocumentSendingProfile);
+    END;
+
+    PROCEDURE SendProfile@72(VAR DocumentSendingProfile@1000 : Record 60);
+    VAR
+      DummyReportSelections@1003 : Record 77;
+    BEGIN
+      DocumentSendingProfile.Send(
+        DummyReportSelections.Usage::"S.Invoice",Rec,"No.","Bill-to Customer No.",
+        DocTxt,FIELDNO("Bill-to Customer No."),FIELDNO("No."));
+    END;
+
+    PROCEDURE PrintRecords@1(ShowRequestForm@1000 : Boolean);
+    VAR
+      DocumentSendingProfile@1002 : Record 60;
+      DummyReportSelections@1001 : Record 77;
+    BEGIN
+      DocumentSendingProfile.TrySendToPrinter(
+        DummyReportSelections.Usage::"S.Invoice",Rec,"Bill-to Customer No.",ShowRequestForm);
+    END;
+
+    PROCEDURE EmailRecords@17(ShowDialog@1000 : Boolean);
+    VAR
+      DocumentSendingProfile@1003 : Record 60;
+      DummyReportSelections@1001 : Record 77;
+    BEGIN
+      DocumentSendingProfile.TrySendToEMail(
+        DummyReportSelections.Usage::"S.Invoice",Rec,FIELDNO("No."),DocTxt,FIELDNO("Bill-to Customer No."),ShowDialog);
+    END;
+
+    PROCEDURE Navigate@2();
+    VAR
+      NavigateForm@1000 : Page 344;
+    BEGIN
+      NavigateForm.SetDoc("Posting Date","No.");
+      NavigateForm.RUN;
+    END;
+
+    PROCEDURE LookupAdjmtValueEntries@3();
+    VAR
+      ValueEntry@1000 : Record 5802;
+    BEGIN
+      ValueEntry.SETCURRENTKEY("Document No.");
+      ValueEntry.SETRANGE("Document No.","No.");
+      ValueEntry.SETRANGE("Document Type",ValueEntry."Document Type"::"Sales Invoice");
+      ValueEntry.SETRANGE(Adjustment,TRUE);
+      PAGE.RUNMODAL(0,ValueEntry);
+    END;
+
+    PROCEDURE GetCustomerVATRegistrationNumber@14() : Text;
+    BEGIN
+      EXIT("VAT Registration No.");
+    END;
+
+    PROCEDURE GetCustomerVATRegistrationNumberLbl@15() : Text;
+    BEGIN
+      EXIT(FIELDCAPTION("VAT Registration No."));
+    END;
+
+    PROCEDURE GetCustomerGlobalLocationNumber@8() : Text;
+    BEGIN
+      EXIT('');
+    END;
+
+    PROCEDURE GetCustomerGlobalLocationNumberLbl@10() : Text;
+    BEGIN
+      EXIT('');
+    END;
+
+    PROCEDURE GetPaymentReference@9() : Text;
+    BEGIN
+      EXIT('');
+    END;
+
+    PROCEDURE GetPaymentReferenceLbl@11() : Text;
+    BEGIN
+      EXIT('');
+    END;
+
+    PROCEDURE GetLegalStatement@60() : Text;
+    BEGIN
+      SalesSetup.GET;
+      EXIT(SalesSetup.GetLegalStatement);
+    END;
+
+    PROCEDURE ShowDimensions@4();
+    BEGIN
+      DimMgt.ShowDimensionSet("Dimension Set ID",STRSUBSTNO('%1 %2',TABLECAPTION,"No."));
+    END;
+
+    PROCEDURE SetSecurityFilterOnRespCenter@5();
+    BEGIN
+      IF UserSetupMgt.GetSalesFilter <> '' THEN BEGIN
+        FILTERGROUP(2);
+        SETRANGE("Responsibility Center",UserSetupMgt.GetSalesFilter);
+        FILTERGROUP(0);
+      END;
+    END;
+
+    LOCAL PROCEDURE IsSingleCustomerSelected@7() : Boolean;
+    VAR
+      SelectedCount@1001 : Integer;
+      CustomerCount@1000 : Integer;
+      BillToCustomerNoFilter@1002 : Text;
+    BEGIN
+      SelectedCount := COUNT;
+
+      IF SelectedCount < 1 THEN
+        EXIT(FALSE);
+
+      IF SelectedCount = 1 THEN
+        EXIT(TRUE);
+
+      BillToCustomerNoFilter := GETFILTER("Bill-to Customer No.");
+      SETRANGE("Bill-to Customer No.","Bill-to Customer No.");
+      CustomerCount := COUNT;
+      SETFILTER("Bill-to Customer No.",BillToCustomerNoFilter);
+
+      EXIT(SelectedCount = CustomerCount);
+    END;
+
+    PROCEDURE GetDocExchStatusStyle@13() : Text;
+    BEGIN
+      CASE "Document Exchange Status" OF
+        "Document Exchange Status"::"Not Sent":
+          EXIT('Standard');
+        "Document Exchange Status"::"Sent to Document Exchange Service":
+          EXIT('Ambiguous');
+        "Document Exchange Status"::"Delivered to Recipient":
+          EXIT('Favorable');
+        ELSE
+          EXIT('Unfavorable');
+      END;
+    END;
+
+    PROCEDURE DocExchStatusDrillDown@16();
+    VAR
+      DocExchLinks@1001 : Codeunit 1411;
+      DocExchServiceMgt@1000 : Codeunit 1410;
+    BEGIN
+      CASE "Document Exchange Status" OF
+        "Document Exchange Status"::"Not Sent":
+          EXIT;
+        "Document Exchange Status"::"Sent to Document Exchange Service",
+        "Document Exchange Status"::"Pending Connection to Recipient":
+          IF CONFIRM(CheckLatestQst,TRUE) THEN
+            DocExchLinks.CheckAndUpdateDocExchInvoiceStatus(Rec);
+        "Document Exchange Status"::"Delivered to Recipient":
+          BEGIN
+            HYPERLINK(DocExchServiceMgt.GetExternalDocURL("Document Exchange Identifier"));
+            EXIT;
+          END;
+      END;
+
+      ShowActivityLog;
+    END;
+
+    PROCEDURE ShowActivityLog@116();
+    VAR
+      ActivityLog@1000 : Record 710;
+    BEGIN
+      ActivityLog.ShowEntries(RECORDID);
+    END;
+
+    PROCEDURE GetSelectedPaymentsText@84() : Text;
+    VAR
+      PaymentServiceSetup@1000 : Record 1060;
+    BEGIN
+      EXIT(PaymentServiceSetup.GetSelectedPaymentsText("Payment Service Set ID"));
+    END;
+
+    PROCEDURE GetWorkDescription@113() : Text;
+    VAR
+      TempBlob@1000 : TEMPORARY Record 99008535;
+      CR@1004 : Text[1];
+    BEGIN
+      CALCFIELDS("Work Description");
+      IF NOT "Work Description".HASVALUE THEN
+        EXIT('');
+      CR[1] := 10;
+      TempBlob.Blob := "Work Description";
+      EXIT(TempBlob.ReadAsText(CR,TEXTENCODING::Windows));
+    END;
+
+    PROCEDURE DocExchangeStatusIsSent@18() : Boolean;
+    BEGIN
+      EXIT("Document Exchange Status" <> "Document Exchange Status"::"Not Sent");
+    END;
+
+    PROCEDURE ShowCanceledOrCorrCrMemo@22();
+    BEGIN
+      CALCFIELDS(Cancelled,Corrective);
+      CASE TRUE OF
+        Cancelled:
+          ShowCorrectiveCreditMemo;
+        Corrective:
+          ShowCancelledCreditMemo;
+      END;
+    END;
+
+    PROCEDURE ShowCorrectiveCreditMemo@19();
+    VAR
+      CancelledDocument@1000 : Record 1900;
+      SalesCrMemoHeader@1001 : Record 114;
+    BEGIN
+      CALCFIELDS(Cancelled);
+      IF NOT Cancelled THEN
+        EXIT;
+
+      IF CancelledDocument.FindSalesCancelledInvoice("No.") THEN BEGIN
+        SalesCrMemoHeader.GET(CancelledDocument."Cancelled By Doc. No.");
+        PAGE.RUN(PAGE::"Posted Sales Credit Memo",SalesCrMemoHeader);
+      END;
+    END;
+
+    PROCEDURE ShowCancelledCreditMemo@20();
+    VAR
+      CancelledDocument@1000 : Record 1900;
+      SalesCrMemoHeader@1001 : Record 114;
+    BEGIN
+      CALCFIELDS(Corrective);
+      IF NOT Corrective THEN
+        EXIT;
+
+      IF CancelledDocument.FindSalesCorrectiveInvoice("No.") THEN BEGIN
+        SalesCrMemoHeader.GET(CancelledDocument."Cancelled Doc. No.");
+        PAGE.RUN(PAGE::"Posted Sales Credit Memo",SalesCrMemoHeader);
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        FIELDS (39):
+
+          NO.       NAME                                DATATYPE        LENGTH
+
+          5447300"Webshop Order No."      Code        30
+          5447301"Webshop Payment Transaction ID"Text        30
+          5447302"Date Webshop Synchronization"DateTime
+          5447303"Webshop Shop Code"      Code        10
+          5447304"Webshop Language Code"    Code        10
+          5447305"Send Webshop Order Confirm."  Boolean
+          5447306"Date Web. Order Confirm. Sent"DateTime
+          5447307"Send Webshop Shipping Notice"Boolean
+          5447308"Date Web. Ship. Notice Sent"  DateTime
+          5447309"Webshop Original Amount"    Decimal
+          5447310"Webshop Payment ID"      Text        32
+          5447311"Process Webshop Payment"    Boolean
+          5447312"Date Webshop Payment Processed"DateTime
+          5447313"Webshop Payment Error"    Text        100
+          5447314"Clear Webshop Payment"    Boolean
+          5447315"Date Webshop Payment Cleared"DateTime
+          5447316"Webshop Payment Opt. Line No."Integer
+          5447317"Webshop Payment Opt. Descr."  Text(FLOW)    50
+          5447318"Webshop Shipping Opt. Line No."Integer
+          5447319"Webshop Shipping Opt. Descr."Text(FLOW)    50
+          5447320"Date Last Modified (Webshop)"DateTime
+          5447321"Date Last Updated (Webshop)"  DateTime
+          5447323"Status Webshop Credit Check"  Option
+          5447324"Send Webshop Invoice Mail"  Boolean
+          5447325"Date Webshop Invoice Mail Sent"DateTime
+          5447326"Send Webshop Cr. Memo Mail"  Boolean
+          5447327"Date Web. Cr. Memo Mail Sent"DateTime
+          5447340"Webshop Return Order No."  Code        30
+          5447341"Webshop Return Order Shop Code"Code        10
+          5447342"Webshop Ret. Order Lang. Code"Code        10
+          5447343"Date Webshop Ret. Order Sync."DateTime
+          5447344"Webshop Subscription Code"  Code        30
+          5447345"Webshop Subscr. Cust. Line No."Integer
+          5447346"Web. Cust. Ps.-Pay. Line No."Integer
+          5447347"Webshop Sub. Seq. St. Line No."Integer
+          5447348"Is Webshop Subscr. Ship. Order"Boolean
+          5447349"Is Webshop Subscr. Inv. Order"Boolean
+          5447350"Email Addr. Webshop Customer"Text        80
+          5447352"Web. Inv. Mail Send Time"    Duration
+
+
+
+
+        TRIGGERS (3):
+
+          OnInsert
+          OnModify
+          OnDelete
+
+
+        KEYS (6):
+
+          Webshop Order No.
+          Posting Date,Webshop Last Date Updated
+          Webshop Order No.,Process Webshop Payment,Date Webshop Payment Processed,Webshop Payment Transaction ID,Webshop Payment ID
+          Webshop Order No.,Clear Webshop Payment,Date Webshop Payment Cleared,Webshop Payment Transaction ID,Webshop Payment ID
+          Webshop Order No.,Send Webshop Invoice Mail,Date Webshop Invoice Mail Sent
+          Webshop Return Order No.
+
+        GLOBAL VARIABLES (1):
+
+          WebshopUpdateMgmt
+
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+       +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

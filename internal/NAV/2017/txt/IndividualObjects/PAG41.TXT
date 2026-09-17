@@ -1,0 +1,1566 @@
+OBJECT Page 41 Sales Quote
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.07.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Verkaufsangebot;
+               ENU=Sales Quote];
+    SourceTable=Table36;
+    SourceTableView=WHERE(Document Type=FILTER(Quote));
+    PageType=Document;
+    RefreshOnActivate=Yes;
+    PromotedActionCategoriesML=[DEU=Neu,Verarbeiten,Melden,Angebot,Anzeigen,Genehmigen,Genehmigung anfordern;
+                                ENU=New,Process,Report,Quote,View,Approve,Request Approval];
+    OnInit=BEGIN
+             EnableBillToCustomerNo := TRUE;
+           END;
+
+    OnOpenPage=VAR
+                 OfficeMgt@1000 : Codeunit 1630;
+               BEGIN
+                 IF UserMgt.GetSalesFilter <> '' THEN BEGIN
+                   FILTERGROUP(2);
+                   SETRANGE("Responsibility Center",UserMgt.GetSalesFilter);
+                   FILTERGROUP(0);
+                 END;
+
+                 ActivateFields;
+
+                 SetDocNoVisible;
+                 IsOfficeAddin := OfficeMgt.IsAvailable;
+                 SetControlAppearance;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       ActivateFields;
+                       SetControlAppearance;
+                       WorkDescription := GetWorkDescription;
+                       UpdateShipToBillToGroupVisibility
+                     END;
+
+    OnNewRecord=BEGIN
+                  "Responsibility Center" := UserMgt.GetSalesFilter;
+                  IF (NOT DocNoVisible) AND ("No." = '') THEN
+                    SetSellToCustomerFromFilter;
+
+                  SetDefaultPaymentServices;
+                  SetControlAppearance;
+                END;
+
+    OnInsertRecord=BEGIN
+                     IF DocNoVisible THEN
+                       CheckCreditMaxBeforeInsert;
+                   END;
+
+    OnDeleteRecord=BEGIN
+                     CurrPage.SAVERECORD;
+                     EXIT(ConfirmDeletion);
+                   END;
+
+    OnAfterGetCurrRecord=BEGIN
+                           ActivateFields;
+                           CurrPage.IncomingDocAttachFactBox.PAGE.LoadDataFromRecord(Rec);
+                           ShowWorkflowStatus := CurrPage.WorkflowStatus.PAGE.SetFilterOnWorkflowRecord(RECORDID);
+                           UpdatePaymentService;
+                           SetControlAppearance;
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000003;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 82      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Quote;
+                                 ENU=&Quote];
+                      Image=Quote }
+      { 44      ;2   ;Action    ;
+                      Name=Approvals;
+                      AccessByPermission=TableData 454=R;
+                      CaptionML=[DEU=Genehmigungen;
+                                 ENU=Approvals];
+                      ToolTipML=[DEU=Zeigt eine Liste der Datens�tze an, die noch genehmigt werden m�ssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.;
+                                 ENU=View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Approvals;
+                      PromotedCategory=Category7;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 ApprovalEntries@1001 : Page 658;
+                               BEGIN
+                                 ApprovalEntries.Setfilters(DATABASE::"Sales Header","Document Type","No.");
+                                 ApprovalEntries.RUN;
+                               END;
+                                }
+      { 104     ;2   ;Action    ;
+                      Name=Dimensions;
+                      AccessByPermission=TableData 348=R;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DEU=Dimensionen;
+                                 ENU=Dimensions];
+                      ToolTipML=[DEU=Zeigt Dimensionen an oder bearbeitet sie, wie etwa einen Bereich, ein Projekt oder eine Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen k�nnen, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.;
+                                 ENU=View or edits dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Enabled="No." <> '';
+                      PromotedIsBig=Yes;
+                      Image=Dimensions;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 ShowDocDim;
+                                 CurrPage.SAVERECORD;
+                               END;
+                                }
+      { 4       ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Ansicht;
+                                 ENU=&View] }
+      { 62      ;2   ;Action    ;
+                      ShortCutKey=Shift+F7;
+                      CaptionML=[DEU=Debitor;
+                                 ENU=Customer];
+                      ToolTipML=[DEU=Zeigen Sie Details f�r den ausgew�hlten Debitor an.;
+                                 ENU=View details on the selected customer.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 21;
+                      RunPageLink=No.=FIELD(Sell-to Customer No.);
+                      Promoted=Yes;
+                      Enabled=CustomerSelected;
+                      PromotedIsBig=Yes;
+                      Image=Customer;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes }
+      { 146     ;2   ;Action    ;
+                      CaptionML=[DEU=Ko&ntakt;
+                                 ENU=C&ontact];
+                      ToolTipML=[DEU=Zeigen Sie Details f�r den ausgew�hlten Kontakt an.;
+                                 ENU=View details on the selected contact.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5050;
+                      RunPageLink=No.=FIELD(Sell-to Contact No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Card;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes }
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 59      ;1   ;ActionGroup;
+                      CaptionML=[DEU=A&ngebot;
+                                 ENU=&Quote];
+                      Image=Quote }
+      { 61      ;2   ;Action    ;
+                      Name=Statistics;
+                      ShortCutKey=F7;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      Promoted=Yes;
+                      Image=Statistics;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Handled@1000 : Boolean;
+                               BEGIN
+                                 OnBeforeStatisticsAction(Rec,Handled);
+                                 IF NOT Handled THEN BEGIN
+                                   CalcInvDiscForHeader;
+                                   COMMIT;
+                                   PAGE.RUNMODAL(PAGE::"Sales Statistics",Rec);
+                                   SalesCalcDiscByType.ResetRecalculateInvoiceDisc(Rec);
+                                 END
+                               END;
+                                }
+      { 63      ;2   ;Action    ;
+                      CaptionML=[DEU=Be&merkungen;
+                                 ENU=Co&mments];
+                      RunObject=Page 67;
+                      RunPageLink=Document Type=FIELD(Document Type),
+                                  No.=FIELD(No.),
+                                  Document Line No.=CONST(0);
+                      Image=ViewComments }
+      { 69      ;2   ;Action    ;
+                      Name=Print;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=D&rucken;
+                                 ENU=&Print];
+                      ToolTipML=[DEU=Bereitet das Drucken des Belegs vor. Ein Berichtanforderungsfenster f�r den Beleg wird ge�ffnet, in dem Sie angeben k�nnen, was auf dem Ausdruck enthalten sein soll.;
+                                 ENU=Prepare to print the document. A report request window for the document opens where you can specify what to include on the print-out.];
+                      ApplicationArea=#Basic,#Suite;
+                      Visible=NOT IsOfficeAddin;
+                      Image=Print;
+                      OnAction=BEGIN
+                                 CheckSalesCheckAllLinesHaveQuantityAssigned;
+                                 DocPrint.PrintSalesHeader(Rec);
+                               END;
+                                }
+      { 9       ;2   ;Action    ;
+                      Name=Email;
+                      CaptionML=[DEU=Per &E-Mail senden;
+                                 ENU=Send by &Email];
+                      ToolTipML=[DEU=Bereiten Sie das Senden des Belegs per E-Mail vor. Das Fenster "E-Mail senden" wird mit bereits eingetragener E-Mail-Adresse des Debitors ge�ffnet. Sie k�nnen Informationen hinzuf�gen oder bearbeiten.;
+                                 ENU=Prepare to mail the document. The Send Email window opens prefilled with the customer's email address so you can add or edit information.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Email;
+                      PromotedCategory=Process;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 CheckSalesCheckAllLinesHaveQuantityAssigned;
+                                 IF NOT FIND THEN
+                                   INSERT(TRUE);
+                                 DocPrint.EmailSalesHeader(Rec);
+                               END;
+                                }
+      { 124     ;2   ;Action    ;
+                      Name=GetRecurringSalesLines;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Wiederkehrende Verkaufszeilen abrufen;
+                                 ENU=Get Recurring Sales Lines];
+                      ToolTipML=[DEU=Rufen Sie Standardverkaufszeilen ab, die zum Zuweisen an Debitoren verf�gbar sind.;
+                                 ENU=Get standard sales lines that are available to assign to customers.];
+                      ApplicationArea=#Suite;
+                      Image=CustomerCode;
+                      OnAction=VAR
+                                 StdCustSalesCode@1000 : Record 172;
+                               BEGIN
+                                 StdCustSalesCode.InsertSalesLines(Rec);
+                               END;
+                                }
+      { 66      ;2   ;Action    ;
+                      Name=CopyDocument;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Beleg kopieren;
+                                 ENU=Copy Document];
+                      ToolTipML=[DEU=Kopiert Belegzeilen und Kopfinformationen aus einem anderen Verkaufsbeleg in diesen Beleg. Sie k�nnen eine gebuchte Verkaufsrechnung in eine neue Verkaufsrechnung kopieren, um schnell einen �hnlichen Beleg zu erstellen.;
+                                 ENU=Copy document lines and header information from another sales document to this document. You can copy a posted sales invoice into a new sales invoice to quickly create a similar document.];
+                      ApplicationArea=#Suite;
+                      Image=CopyDocument;
+                      OnAction=BEGIN
+                                 IF NOT FIND THEN BEGIN
+                                   INSERT(TRUE);
+                                   COMMIT;
+                                 END;
+                                 CopySalesDoc.SetSalesHeader(Rec);
+                                 CopySalesDoc.RUNMODAL;
+                                 CLEAR(CopySalesDoc);
+                                 IF GET("Document Type","No.") THEN;
+                               END;
+                                }
+      { 21      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Genehmigung;
+                                 ENU=Approval] }
+      { 19      ;2   ;Action    ;
+                      Name=Approve;
+                      CaptionML=[DEU=Genehmigen;
+                                 ENU=Approve];
+                      ToolTipML=[DEU=Genehmigen Sie die angeforderten �nderungen.;
+                                 ENU=Approve the requested changes.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=OpenApprovalEntriesExistForCurrUser;
+                      PromotedIsBig=Yes;
+                      Image=Approve;
+                      PromotedCategory=Category6;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.ApproveRecordApprovalRequest(RECORDID);
+                               END;
+                                }
+      { 17      ;2   ;Action    ;
+                      Name=Reject;
+                      CaptionML=[DEU=Ablehnen;
+                                 ENU=Reject];
+                      ToolTipML=[DEU=Verweigert die Genehmigungsanforderung.;
+                                 ENU=Reject the approval request.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=OpenApprovalEntriesExistForCurrUser;
+                      PromotedIsBig=Yes;
+                      Image=Reject;
+                      PromotedCategory=Category6;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.RejectRecordApprovalRequest(RECORDID);
+                               END;
+                                }
+      { 14      ;2   ;Action    ;
+                      Name=Delegate;
+                      CaptionML=[DEU=Delegieren;
+                                 ENU=Delegate];
+                      ToolTipML=[DEU=Delegiert die Genehmigung an einen Ersatzgenehmiger.;
+                                 ENU=Delegate the approval to a substitute approver.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=OpenApprovalEntriesExistForCurrUser;
+                      Image=Delegate;
+                      PromotedCategory=Category6;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.DelegateRecordApprovalRequest(RECORDID);
+                               END;
+                                }
+      { 13      ;2   ;Action    ;
+                      Name=Comment;
+                      CaptionML=[DEU=Bemerkungen;
+                                 ENU=Comments];
+                      ToolTipML=[DEU=Zeigt Bemerkungen an oder f�gt diese hinzu.;
+                                 ENU=View or add comments.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=OpenApprovalEntriesExistForCurrUser;
+                      Image=ViewComments;
+                      PromotedCategory=Category6;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.GetApprovalComment(Rec);
+                               END;
+                                }
+      { 5       ;1   ;ActionGroup;
+                      CaptionML=[DEU=Erstellen;
+                                 ENU=Create];
+                      Image=NewCustomer }
+      { 68      ;2   ;Action    ;
+                      Name=Make Order;
+                      CaptionML=[DEU=Auftrag &erst.;
+                                 ENU=Make &Order];
+                      ToolTipML=[DEU=Wandeln Sie das Verkaufsangebot in einen Auftrag um.;
+                                 ENU=Convert the sales quote to a sales order.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=MakeOrder;
+                      PromotedCategory=Process;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 IF ApprovalsMgmt.PrePostApprovalCheckSales(Rec) THEN
+                                   CODEUNIT.RUN(CODEUNIT::"Sales-Quote to Order (Yes/No)",Rec);
+                               END;
+                                }
+      { 37      ;2   ;Action    ;
+                      Name=MakeInvoice;
+                      CaptionML=[DEU=Rechnung erstellen;
+                                 ENU=Make Invoice];
+                      ToolTipML=[DEU=Wandeln Sie das Verkaufsangebot in eine Verkaufsrechnung um.;
+                                 ENU=Convert the sales quote to a sales invoice.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=MakeOrder;
+                      PromotedCategory=Process;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 IF ApprovalsMgmt.PrePostApprovalCheckSales(Rec) THEN BEGIN
+                                   CheckSalesCheckAllLinesHaveQuantityAssigned;
+                                   CODEUNIT.RUN(CODEUNIT::"Sales-Quote to Invoice Yes/No",Rec);
+                                 END;
+                               END;
+                                }
+      { 126     ;2   ;Action    ;
+                      CaptionML=[DEU=Debi&tor erstellen;
+                                 ENU=C&reate Customer];
+                      Image=NewCustomer;
+                      OnAction=BEGIN
+                                 IF CheckCustomerCreated(FALSE) THEN
+                                   CurrPage.UPDATE(TRUE);
+                               END;
+                                }
+      { 169     ;2   ;Action    ;
+                      AccessByPermission=TableData 5050=R;
+                      CaptionML=[DEU=&Aufgabe erstellen;
+                                 ENU=Create &To-do];
+                      Image=NewToDo;
+                      OnAction=BEGIN
+                                 CreateTodo;
+                               END;
+                                }
+      { 3       ;1   ;ActionGroup;
+                      CaptionML=[DEU=Freigeben;
+                                 ENU=Release];
+                      Image=ReleaseDoc }
+      { 115     ;2   ;Action    ;
+                      Name=Release;
+                      ShortCutKey=Ctrl+F9;
+                      CaptionML=[DEU=&Freigeben;
+                                 ENU=Re&lease];
+                      Image=ReleaseDoc;
+                      OnAction=VAR
+                                 ReleaseSalesDoc@1000 : Codeunit 414;
+                               BEGIN
+                                 ReleaseSalesDoc.PerformManualRelease(Rec);
+                               END;
+                                }
+      { 116     ;2   ;Action    ;
+                      Name=Reopen;
+                      CaptionML=[DEU=Stat&us zur�cksetzen;
+                                 ENU=Re&open];
+                      ToolTipML=[DEU=�ffnet den Beleg erneut, um ihn nach der Genehmigung zu �ndern. Genehmigte Belege haben den Status "Freigegeben" und m�ssen ge�ffnet werden, bevor sie ge�ndert werden k�nnen.;
+                                 ENU=Reopen the document to change it after it has been approved. Approved documents have the Released status and must be opened before they can be changed.];
+                      ApplicationArea=#Suite;
+                      Enabled=Status <> Status::Open;
+                      Image=ReOpen;
+                      OnAction=VAR
+                                 ReleaseSalesDoc@1001 : Codeunit 414;
+                               BEGIN
+                                 ReleaseSalesDoc.PerformManualReopen(Rec);
+                               END;
+                                }
+      { 7       ;1   ;ActionGroup;
+                      CaptionML=[DEU=Genehmigungsanforderung;
+                                 ENU=Request Approval];
+                      Image=Approval }
+      { 190     ;2   ;Action    ;
+                      Name=SendApprovalRequest;
+                      CaptionML=[DEU=&Genehmigungsanforderung senden;
+                                 ENU=Send A&pproval Request];
+                      ToolTipML=[DEU=Sendet eine Genehmigungsanforderung.;
+                                 ENU=Send an approval request.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Enabled=NOT OpenApprovalEntriesExist;
+                      Image=SendApprovalRequest;
+                      PromotedCategory=Category7;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                               BEGIN
+                                 IF ApprovalsMgmt.CheckSalesApprovalPossible(Rec) THEN
+                                   ApprovalsMgmt.OnSendSalesDocForApproval(Rec);
+                               END;
+                                }
+      { 191     ;2   ;Action    ;
+                      Name=CancelApprovalRequest;
+                      CaptionML=[DEU=&Genehmigungsanforderung stornieren;
+                                 ENU=Cancel Approval Re&quest];
+                      ToolTipML=[DEU=Storniert die Genehmigungsanforderung.;
+                                 ENU=Cancel the approval request.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Enabled=CanCancelApprovalForRecord;
+                      Image=CancelApprovalRequest;
+                      PromotedCategory=Category7;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.OnCancelSalesApprovalRequest(Rec);
+                               END;
+                                }
+      { 64      ;1   ;ActionGroup;
+                      CaptionML=[DEU=F&unktion;
+                                 ENU=F&unctions];
+                      Image=Action }
+      { 65      ;2   ;Action    ;
+                      Name=CalculateInvoiceDiscount;
+                      AccessByPermission=TableData 19=R;
+                      CaptionML=[DEU=&Rechnungsrab. berechnen;
+                                 ENU=Calculate &Invoice Discount];
+                      ToolTipML=[DEU=Berechnen Sie den f�r das Verkaufsangebot geltenden Rechnungsrabatt.;
+                                 ENU=Calculate the invoice discount that applies to the sales quote.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=CalculateInvoiceDiscount;
+                      OnAction=BEGIN
+                                 ApproveCalcInvDisc;
+                                 SalesCalcDiscByType.ResetRecalculateInvoiceDisc(Rec);
+                               END;
+                                }
+      { 139     ;2   ;Separator  }
+      { 165     ;2   ;Action    ;
+                      Name=Archive Document;
+                      CaptionML=[DEU=Beleg ar&chivieren;
+                                 ENU=Archi&ve Document];
+                      Image=Archive;
+                      OnAction=BEGIN
+                                 ArchiveManagement.ArchiveSalesDocument(Rec);
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+      { 35      ;2   ;ActionGroup;
+                      Name=IncomingDocument;
+                      CaptionML=[DEU=Eingehender Beleg;
+                                 ENU=Incoming Document];
+                      ActionContainerType=NewDocumentItems;
+                      Image=Documents }
+      { 29      ;3   ;Action    ;
+                      Name=IncomingDocCard;
+                      CaptionML=[DEU=Eingehenden Beleg anzeigen;
+                                 ENU=View Incoming Document];
+                      ToolTipML=;
+                      Enabled=HasIncomingDocument;
+                      Image=ViewOrder;
+                      OnAction=VAR
+                                 IncomingDocument@1000 : Record 130;
+                               BEGIN
+                                 IncomingDocument.ShowCardFromEntryNo("Incoming Document Entry No.");
+                               END;
+                                }
+      { 23      ;3   ;Action    ;
+                      Name=SelectIncomingDoc;
+                      AccessByPermission=TableData 130=R;
+                      CaptionML=[DEU=Eingehenden Beleg ausw�hlen;
+                                 ENU=Select Incoming Document];
+                      ToolTipML=;
+                      Image=SelectLineToApply;
+                      OnAction=VAR
+                                 IncomingDocument@1000 : Record 130;
+                               BEGIN
+                                 VALIDATE("Incoming Document Entry No.",IncomingDocument.SelectIncomingDocument("Incoming Document Entry No.",RECORDID));
+                               END;
+                                }
+      { 33      ;3   ;Action    ;
+                      Name=IncomingDocAttachFile;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Eingehenden Beleg aus Datei erstellen;
+                                 ENU=Create Incoming Document from File];
+                      ToolTipML=;
+                      Enabled=NOT HasIncomingDocument;
+                      Image=Attach;
+                      OnAction=VAR
+                                 IncomingDocumentAttachment@1000 : Record 133;
+                               BEGIN
+                                 IncomingDocumentAttachment.NewAttachmentFromSalesDocument(Rec);
+                               END;
+                                }
+      { 31      ;3   ;Action    ;
+                      Name=RemoveIncomingDoc;
+                      CaptionML=[DEU=Eingehenden Beleg entfernen;
+                                 ENU=Remove Incoming Document];
+                      ToolTipML=;
+                      Enabled=HasIncomingDocument;
+                      Image=RemoveLine;
+                      OnAction=VAR
+                                 IncomingDocument@1000 : Record 130;
+                               BEGIN
+                                 IF IncomingDocument.GET("Incoming Document Entry No.") THEN
+                                   IncomingDocument.RemoveLinkToRelatedRecord;
+                                 "Incoming Document Entry No." := 0;
+                                 MODIFY(TRUE);
+                               END;
+                                }
+      { 1000000020;1 ;ActionGroup;
+                      Name=E-Commerce }
+      { 1000000019;2 ;Action    ;
+                      Name=Process Online Payment;
+                      CaptionML=[DEU=Online-Zahlung durchf?hren;
+                                 ENU=Process online payment];
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=AuthorizeCreditCard;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+                                 Text5447300@1000000003 : TextConst 'DEU=Online-Zahlung durchgef?hrt;ENU=Login data has been send successfully';
+                                 Text5447301@1000000002 : TextConst 'DEU=Fehler bei der Online-Zahlung: %1;ENU=Fehler bei der Online-Zahlung: %1';
+                                 Text5447302@1000000001 : TextConst 'DEU=Online Zahlung ist bereits durchgef?hrt;ENU=Online payment already processed';
+                               BEGIN
+                                 IF "Date Webshop Payment Processed" = 0DT THEN BEGIN
+                                   WebshopUpdateManagement.ProcessOrderOnlinePayment(Rec);
+                                   CurrPage.UPDATE(FALSE);
+                                   IF "Webshop Payment Error" = '' THEN
+                                     MESSAGE(Text5447300)
+                                   ELSE
+                                     MESSAGE(Text5447301,"Webshop Payment Error");
+                                 END ELSE BEGIN
+                                   ERROR(Text5447302);
+                                 END;
+                               END;
+                                }
+      { 1000000018;2 ;Action    ;
+                      Name=Clear Online Payment;
+                      CaptionML=[DEU=Online-Zahlung ausgleichen;
+                                 ENU=Clear online payment];
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=CashReceiptJournal;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+                                 Text5447300@1000000002 : TextConst 'DEU=Zahlung ausgebucht;ENU=Login data has been send successfully';
+                                 Text5447301@1000000001 : TextConst 'DEU=Online Zahlung wurde bereits ausgebucht;ENU=Online payment already posted.';
+                               BEGIN
+                                 IF "Date Webshop Payment Cleared" = 0DT THEN BEGIN
+                                   WebshopUpdateManagement.ClearOrderOnlinePayment(Rec);
+                                   MESSAGE(Text5447300,"Webshop Payment Error");
+                                 END ELSE BEGIN
+                                   ERROR(Text5447301);
+                                 END;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General] }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Verkaufsbelegs an. Das Feld kann automatisch oder manuell ausgef�llt werden und auf nicht sichtbar eingerichtet werden.;
+                           ENU=Specifies the number of the sales document. The field can be filled automatically or manually and can be set up to be invisible.];
+                ApplicationArea=#All;
+                SourceExpr="No.";
+                Importance=Additional;
+                Visible=DocNoVisible;
+                OnAssistEdit=BEGIN
+                               IF AssistEdit(xRec) THEN
+                                 CurrPage.UPDATE;
+                             END;
+                              }
+
+    { 6   ;2   ;Field     ;
+                CaptionML=[DEU=Debitor;
+                           ENU=Customer];
+                ToolTipML=[DEU=Gibt den Namen des Debitors an, der standardm��ig die Produkte erh�lt und dem diese in Rechnung gestellt werden. Der Wert wird automatisch aus der Debitorenkarte eingef�gt, wenn Sie das Feld "Verk. an Deb.-Nr." ausf�llen. Der Wert wird auf dem gebuchten Verkaufsbeleg angezeigt.;
+                           ENU=Specifies the name of the customer who will receive the products and be billed by default. The value is automatically inserted from the customer card when you fill the Sell-to Customer No. field. The value will appear on the printed sales document.];
+                ApplicationArea=#All;
+                NotBlank=Yes;
+                SourceExpr="Sell-to Customer Name";
+                Importance=Promoted;
+                OnValidate=VAR
+                             ApplicationAreaSetup@1001 : Record 9178;
+                           BEGIN
+                             IF GETFILTER("Sell-to Customer No.") = xRec."Sell-to Customer No." THEN
+                               IF "Sell-to Customer No." <> xRec."Sell-to Customer No." THEN
+                                 SETRANGE("Sell-to Customer No.");
+
+                             CurrPage.UPDATE;
+
+                             IF ApplicationAreaSetup.IsFoundationEnabled THEN
+                               SalesCalcDiscByType.ApplyDefaultInvoiceDiscount(0,Rec);
+                           END;
+
+                ShowMandatory=TRUE }
+
+    { 39  ;2   ;Group     ;
+                CaptionML=[DEU=Verk. an;
+                           ENU=Sell-to];
+                GroupType=Group }
+
+    { 71  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Adresse an, an der sich der Debitor befindet.;
+                           ENU=Specifies the address where the customer is located.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Address";
+                Importance=Additional }
+
+    { 73  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt zus�tzliche Adressinformationen an.;
+                           ENU=Specifies additional address information.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Address 2";
+                Importance=Additional }
+
+    { 77  ;3   ;Field     ;
+                CaptionML=[DEU=PLZ Code;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die Postleitzahl an.;
+                           ENU=Specifies the postal code.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Post Code";
+                Importance=Additional }
+
+    { 74  ;3   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort an, an dem sich der Debitor befindet.;
+                           ENU=Specifies the city where the customer is located.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to City";
+                Importance=Additional }
+
+    { 120 ;3   ;Field     ;
+                CaptionML=[DEU=Kontaktnr.;
+                           ENU=Contact No.];
+                ToolTipML=[DEU=Gibt die Nummer des Kontakts an, an den der Verkaufsbeleg gesendet wird.;
+                           ENU=Specifies the number of the contact that the sales document will be sent to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Contact No.";
+                Importance=Additional;
+                OnValidate=BEGIN
+                             ClearSellToFilter;
+                             ActivateFields;
+                             CurrPage.UPDATE
+                           END;
+                            }
+
+    { 8   ;2   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson beim Debitor an.;
+                           ENU=Specifies the name of the person to contact at the customer.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Contact" }
+
+    { 163 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Anzahl archivierter Versionen f�r diesen Verkaufsbeleg an.;
+                           ENU=Specifies the number of archived versions for this sales document.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="No. of Archived Versions";
+                Importance=Additional;
+                OnDrillDown=BEGIN
+                              CurrPage.SAVERECORD;
+                              COMMIT;
+                              SalesHeaderArchive.SETRANGE("Document Type","Document Type"::Quote);
+                              SalesHeaderArchive.SETRANGE("No.","No.");
+                              SalesHeaderArchive.SETRANGE("Doc. No. Occurrence","Doc. No. Occurrence");
+                              IF SalesHeaderArchive.GET("Document Type"::Quote,"No.","Doc. No. Occurrence","No. of Archived Versions") THEN ;
+                              PAGE.RUNMODAL(PAGE::"Sales List Archive",SalesHeaderArchive);
+                              CurrPage.UPDATE(FALSE);
+                            END;
+                             }
+
+    { 12  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem der Wechselkurs f�r die Preise gelten soll, die in einer Fremdw�hrung auf dem Verkaufsauftrag aufgef�hrt sind.;
+                           ENU=Specifies the date on which the exchange rate applies to prices listed in a foreign currency on the sales order.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Order Date";
+                Importance=Additional;
+                QuickEntry=FALSE }
+
+    { 15  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem Sie den Verkaufsbeleg erstellt haben.;
+                           ENU=Specifies the date on which you created the sales document.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Document Date";
+                Importance=Additional }
+
+    { 30  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wann die Verkaufsrechnung bezahlt werden muss.;
+                           ENU=Specifies when the sales invoice must be paid.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Due Date";
+                Importance=Promoted }
+
+    { 118 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem der Debitor die Lieferung des Auftrags w�nscht.;
+                           ENU=Specifies the date that the customer has asked for the order to be delivered.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Requested Delivery Date" }
+
+    { 10  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Namen des Verk�ufers an, der dem Debitor zugewiesen wird.;
+                           ENU=Specifies the name of the salesperson who is assigned to the customer.];
+                ApplicationArea=#Suite;
+                SourceExpr="Salesperson Code";
+                Importance=Additional;
+                OnValidate=BEGIN
+                             CurrPage.SalesLines.PAGE.UpdateForm(TRUE)
+                           END;
+                            }
+
+    { 103 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Kampagnennummer an, mit der der Beleg verkn�pft ist.;
+                           ENU=Specifies the campaign number the document is linked to.];
+                SourceExpr="Campaign No.";
+                Importance=Additional;
+                QuickEntry=FALSE }
+
+    { 170 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer der Verkaufschance an, der das Verkaufsangebot zugeordnet ist.;
+                           ENU=Specifies the number of the opportunity that the sales quote is assigned to.];
+                ApplicationArea=#RelationshipMgmt;
+                SourceExpr="Opportunity No.";
+                Importance=Additional;
+                QuickEntry=FALSE }
+
+    { 108 ;2   ;Field     ;
+                AccessByPermission=TableData 5714=R;
+                ToolTipML=[DEU=Gibt den Code der Zust�ndigkeitseinheit an, die dem Benutzer, Mandanten oder Kreditor zugeordnet ist.;
+                           ENU=Specifies the code of the responsibility center that is associated with the user, company, or vendor.];
+                SourceExpr="Responsibility Center";
+                Importance=Additional }
+
+    { 192 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die ID des Benutzers an, der f�r den Beleg verantwortlich ist.;
+                           ENU=Specifies the ID of the user who is responsible for the document.];
+                SourceExpr="Assigned User ID";
+                Importance=Additional }
+
+    { 106 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob der Beleg offen ist, noch genehmigt werden muss, f�r die Vorauszahlung fakturiert oder zur Weiterbearbeitung freigegeben wurde.;
+                           ENU=Specifies whether the document is open, waiting to be approved, has been invoiced for prepayment, or has been released to the next stage of processing.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Status;
+                Importance=Promoted }
+
+    { 55  ;2   ;Group     ;
+                CaptionML=[DEU=Arbeitsbeschreibung;
+                           ENU=Work Description];
+                GroupType=Group }
+
+    { 57  ;3   ;Field     ;
+                ToolTipML=[DEU=Legt die angebotenen Produkte oder den Dienst fest.;
+                           ENU=Specifies the products or service being offered];
+                SourceExpr=WorkDescription;
+                Importance=Additional;
+                MultiLine=Yes;
+                OnValidate=BEGIN
+                             SetWorkDescription(WorkDescription);
+                           END;
+
+                ShowCaption=No }
+
+    { 58  ;1   ;Part      ;
+                Name=SalesLines;
+                ApplicationArea=#Basic,#Suite;
+                SubPageLink=Document No.=FIELD(No.);
+                PagePartID=Page95;
+                Enabled="Sell-to Customer No." <> '';
+                Editable="Sell-to Customer No." <> '';
+                UpdatePropagation=Both }
+
+    { 1905885101;1;Group  ;
+                CaptionML=[DEU=Rechnungsdetails;
+                           ENU=Invoice Details];
+                GroupType=Group }
+
+    { 97  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die W�hrung von Betr�gen im Verkaufsbeleg an.;
+                           ENU=Specifies the currency of amounts on the sales document.];
+                ApplicationArea=#Suite;
+                SourceExpr="Currency Code";
+                Importance=Promoted;
+                OnValidate=BEGIN
+                             CurrPage.UPDATE;
+                             SalesCalcDiscByType.ApplyDefaultInvoiceDiscount(0,Rec);
+                           END;
+
+                OnAssistEdit=BEGIN
+                               CLEAR(ChangeExchangeRate);
+                               ChangeExchangeRate.SetParameter("Currency Code","Currency Factor",WORKDATE);
+                               IF ChangeExchangeRate.RUNMODAL = ACTION::OK THEN BEGIN
+                                 VALIDATE("Currency Factor",ChangeExchangeRate.GetParameter);
+                                 CurrPage.UPDATE;
+                               END;
+                               CLEAR(ChangeExchangeRate);
+                             END;
+                              }
+
+    { 50  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem Artikel auf dem Verkaufsbeleg voraussichtlich geliefert werden.;
+                           ENU=Specifies the date you expect to ship items on the sales document.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Shipment Date";
+                Importance=Promoted }
+
+    { 113 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob der VK-Preis in der Zeile mit oder ohne MwSt. angezeigt werden soll.;
+                           ENU=Specifies whether the unit price on the line should be displayed including or excluding VAT.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Prices Including VAT";
+                OnValidate=BEGIN
+                             CurrPage.UPDATE
+                           END;
+                            }
+
+    { 187 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die MwSt.-Erkl�rung des Debitors zum Verkn�pfen von Transaktionen f�r diesen Debitor an.;
+                           ENU=Specifies the customer's VAT specification to link transactions made for this customer to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="VAT Bus. Posting Group";
+                OnValidate=VAR
+                             TempApplicationAreaSetup@1000 : TEMPORARY Record 9178;
+                           BEGIN
+                             IF TempApplicationAreaSetup.IsFoundationEnabled THEN
+                               SalesCalcDiscByType.ApplyDefaultInvoiceDiscount(0,Rec);
+                           END;
+                            }
+
+    { 28  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Formel an, die das F�lligkeitsdatum, das Skontodatum und den Skontobetrag auf dem Verkaufsbeleg berechnet.;
+                           ENU=Specifies a formula that calculates the payment due date, payment discount date, and payment discount amount on the sales document.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Payment Terms Code";
+                Importance=Promoted }
+
+    { 90  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wie der Debitor f�r Produkte auf dem Verkaufsbeleg bezahlen muss.;
+                           ENU=Specifies how the customer must pay for products on the sales document.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Payment Method Code";
+                Importance=Additional }
+
+    { 47  ;2   ;Group     ;
+                Visible=PaymentServiceVisible;
+                GroupType=Group }
+
+    { 18  ;3   ;Field     ;
+                Name=SelectedPayments;
+                CaptionML=[DEU=Zahlungsverkehr;
+                           ENU=Payment Service];
+                ToolTipML=[DEU=Gibt den Online-Zahlungsservice an, wie etwa PayPal, den Debitoren verwenden k�nnen, um den Verkaufsbeleg zu zahlen.;
+                           ENU=Specifies the online payment service, such as PayPal, that customers can use to pay the sales document.];
+                ApplicationArea=#All;
+                SourceExpr=GetSelectedPaymentServicesText;
+                Enabled=PaymentServiceEnabled;
+                Editable=FALSE;
+                MultiLine=Yes;
+                OnAssistEdit=BEGIN
+                               ChangePaymentServiceSetting;
+                             END;
+                              }
+
+    { 54  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Transaktionstyp, den der Verkaufsbeleg darstellt, f�r Intrastat-Berichte an.;
+                           ENU=Specifies the type of transaction that the sales document represents, for the purpose of reporting to Intrastat.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Transaction Type" }
+
+    { 80  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code f�r die Shortcutdimension 1 an.;
+                           ENU=Specifies the code for Shortcut Dimension 1.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shortcut Dimension 1 Code";
+                OnValidate=BEGIN
+                             CurrPage.UPDATE
+                           END;
+                            }
+
+    { 84  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code f�r die Shortcutdimension 2 an.;
+                           ENU=Specifies the code for Shortcut Dimension 2.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shortcut Dimension 2 Code";
+                OnValidate=BEGIN
+                             CurrPage.UPDATE
+                           END;
+                            }
+
+    { 32  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Skontosatz an, der gew�hrt wird, wenn der Debitor am oder bis zum im Feld "Skontodatum" eingegebenen Datum bezahlt. Der Skontosatz wird im Feld "Zlg.-Bedingungscode" angegeben.;
+                           ENU=Specifies the payment discount percentage that is granted if the customer pays on or before the date entered in the Pmt. Discount Date field. The discount percentage is specified in the Payment Terms Code field.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Payment Discount %" }
+
+    { 34  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem der Debitor die Rechnung sp�testens zahlen kann, um noch Skonto zu erhalten.;
+                           ENU=Specifies the last date the customer can pay the invoice and still receive a payment discount.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Pmt. Discount Date";
+                Importance=Additional }
+
+    { 86  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Lagerort an, von dem Lagerartikel an den Debitor im Verkaufsbeleg standardm��ig geliefert werden sollen.;
+                           ENU=Specifies the location from where inventory items to the customer on the sales document are to be shipped by default.];
+                SourceExpr="Location Code";
+                Importance=Additional }
+
+    { 67  ;1   ;Group     ;
+                CaptionML=[DEU=Lieferung und Abrechnung;
+                           ENU=Shipping and Billing];
+                Enabled="Sell-to Customer No." <> '';
+                GroupType=Group }
+
+    { 60  ;2   ;Group     ;
+                GroupType=Group }
+
+    { 53  ;3   ;Group     ;
+                GroupType=Group }
+
+    { 70  ;4   ;Field     ;
+                Name=ShippingOptions;
+                CaptionML=[DEU=Lief. an;
+                           ENU=Ship-to];
+                ToolTipML=[DEU=Gibt die Adresse an, an die die Produkte im Verkaufsbeleg geliefert werden. Standard (Verk. an Adresse): Identisch mit der Verkaufsadresse des Debitors. Alternative Lieferadresse: Eine alternative Lieferadresse des Debitors. Benutzerdefinierte Adresse: In den Feldern unten festgelegte Lieferadresse.;
+                           ENU=Specifies the address that the products on the sales document are shipped to. Default (Sell-to Address): The same as the customer's sell-to address. Alternate Ship-to Address: One of the customer's alternate ship-to addresses. Custom Address: Any ship-to address that you specify in the fields below.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=ShipToOptions;
+                OnValidate=VAR
+                             ShipToAddress@1001 : Record 222;
+                             ShipToAddressList@1000 : Page 301;
+                           BEGIN
+                             CASE ShipToOptions OF
+                               ShipToOptions::"Default (Sell-to Address)":
+                                 BEGIN
+                                   VALIDATE("Ship-to Code",'');
+                                   CopySellToAddressToShipToAddress;
+                                 END;
+                               ShipToOptions::"Alternate Shipping Address":
+                                 BEGIN
+                                   ShipToAddress.SETRANGE("Customer No.","Sell-to Customer No.");
+                                   ShipToAddressList.LOOKUPMODE := TRUE;
+                                   ShipToAddressList.SETTABLEVIEW(ShipToAddress);
+
+                                   IF ShipToAddressList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                                     ShipToAddressList.GETRECORD(ShipToAddress);
+                                     VALIDATE("Ship-to Code",ShipToAddress.Code);
+                                   END ELSE
+                                     ShipToOptions := ShipToOptions::"Custom Address";
+                                 END;
+                               ShipToOptions::"Custom Address":
+                                 VALIDATE("Ship-to Code",'');
+                             END;
+                           END;
+                            }
+
+    { 72  ;4   ;Group     ;
+                Visible=NOT (ShipToOptions = ShipToOptions::"Default (Sell-to Address)");
+                GroupType=Group }
+
+    { 36  ;5   ;Field     ;
+                CaptionML=[DEU=Code;
+                           ENU=Code];
+                ToolTipML=[DEU=Gibt den Code f�r eine andere Lieferadresse als die eigene Adresse des Debitors an, die standardm��ig eingegeben wird.;
+                           ENU=Specifies the code for another shipment address than the customer's own address, which is entered by default.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Code";
+                Importance=Promoted;
+                Editable=ShipToOptions = ShipToOptions::"Alternate Shipping Address";
+                OnValidate=BEGIN
+                             IF (xRec."Ship-to Code" <> '') AND ("Ship-to Code" = '') THEN
+                               ERROR(EmptyShipToCodeErr);
+                           END;
+                            }
+
+    { 38  ;5   ;Field     ;
+                CaptionML=[DEU=Name;
+                           ENU=Name];
+                ToolTipML=[DEU=Gibt den Namen an, an den die Produkte im Verkaufsbeleg geliefert werden.;
+                           ENU=Specifies the name that products on the sales document will be shipped to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Name";
+                Editable=ShipToOptions = ShipToOptions::"Custom Address" }
+
+    { 40  ;5   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Adresse an, an die die Produkte im Verkaufsbeleg geliefert werden. Standardm��ig wird das Feld mit dem Wert im Feld "Adresse" auf der Debitorenkarte oder mit dem Wert im Feld "Adresse" im Fenster "Lief. an Adresse" gef�llt.;
+                           ENU=Specifies the address that products on the sales document will be shipped to. By default, the field is filled with the value in the Address field on the customer card or with the value in the Address field in the Ship-to Address window.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Address";
+                Editable=ShipToOptions = ShipToOptions::"Custom Address" }
+
+    { 42  ;5   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt zus�tzliche Adressinformationen an.;
+                           ENU=Specifies additional address information.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Address 2";
+                Editable=ShipToOptions = ShipToOptions::"Custom Address" }
+
+    { 95  ;5   ;Field     ;
+                CaptionML=[DEU=PLZ-Code;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die Postleitzahl an.;
+                           ENU=Specifies the postal code.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Post Code";
+                Editable=ShipToOptions = ShipToOptions::"Custom Address" }
+
+    { 93  ;5   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort an, an den die Produkte im Verkaufsbeleg geliefert werden.;
+                           ENU=Specifies the city that products on the sales document will be shipped to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to City";
+                Editable=ShipToOptions = ShipToOptions::"Custom Address" }
+
+    { 43  ;5   ;Field     ;
+                CaptionML=[DEU=Land/Region;
+                           ENU=Country/Region];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Country/Region Code";
+                Importance=Additional;
+                Editable=ShipToOptions = ShipToOptions::"Custom Address" }
+
+    { 46  ;5   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson f�r die Adresse an, an die die Produkte im Verkaufsbeleg geliefert werden.;
+                           ENU=Specifies the name of the contact person at the address that products on the sales document will be shipped to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Contact";
+                Editable=ShipToOptions = ShipToOptions::"Custom Address" }
+
+    { 79  ;3   ;Group     ;
+                CaptionML=[DEU=Lieferbedingung;
+                           ENU=Shipment Method];
+                GroupType=Group }
+
+    { 78  ;4   ;Field     ;
+                CaptionML=[DEU=Code;
+                           ENU=Code];
+                ToolTipML=[DEU=Gibt an, wie Artikel im Verkaufsbeleg an den Debitor ausgeliefert werden.;
+                           ENU=Specifies how items on the sales document are shipped to the customer.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Shipment Method Code";
+                Importance=Additional }
+
+    { 76  ;4   ;Field     ;
+                CaptionML=[DEU=Zusteller;
+                           ENU=Agent];
+                ToolTipML=[DEU=Gibt an, welcher Zusteller verwendet wird, um die Artikel im Verkaufsbeleg zum Debitor zu transportieren.;
+                           ENU=Specifies which shipping agent is used to transport the items on the sales document to the customer.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shipping Agent Code";
+                Importance=Additional }
+
+    { 75  ;4   ;Field     ;
+                CaptionML=[DEU=Zustellertransportart;
+                           ENU=Agent service];
+                ToolTipML=[DEU=Gibt an, welche Zustellertransportart verwendet wird, um die Artikel im Verkaufsbeleg zum Debitor zu transportieren.;
+                           ENU=Specifies which shipping agent service is used to transport the items on the sales document to the customer.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shipping Agent Service Code";
+                Importance=Additional }
+
+    { 51  ;4   ;Field     ;
+                ToolTipML=[DEU=Gibt die Paketnummer des Zustellers an.;
+                           ENU=Specifies the shipping agent's package number.];
+                ApplicationArea=#Suite;
+                SourceExpr="Package Tracking No.";
+                Importance=Additional }
+
+    { 49  ;2   ;Group     ;
+                GroupType=Group }
+
+    { 48  ;3   ;Field     ;
+                Name=BillToOptions;
+                CaptionML=[DEU=Rech. an;
+                           ENU=Bill-to];
+                ToolTipML=[DEU=Gibt den Debitor an, an den Sie die Verkaufsrechnung senden. Standard (Debitor). Identisch mit dem Debitor auf der Verkaufsrechnung. Anderer Debitor: In den Feldern unten festgelegter Debitor.;
+                           ENU=Specifies the customer that the sales invoice will be sent to. Default (Customer): The same as the customer on the sales invoice. Another Customer: Any customer that you specify in the fields below.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=BillToOptions;
+                OnValidate=BEGIN
+                             IF BillToOptions = BillToOptions::"Default (Customer)" THEN
+                               VALIDATE("Bill-to Customer No.","Sell-to Customer No.");
+                           END;
+                            }
+
+    { 41  ;3   ;Group     ;
+                Visible=BillToOptions = BillToOptions::"Another Customer";
+                GroupType=Group }
+
+    { 16  ;3   ;Field     ;
+                CaptionML=[DEU=Name;
+                           ENU=Name];
+                ToolTipML=[DEU=Gibt den Debitor an, an den Sie die Verkaufsrechnung senden, wenn dies nicht der Debitor ist, an den Sie verkaufen.;
+                           ENU=Specifies the customer to whom you will send the sales invoice, when different from the customer that you are selling to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Name";
+                Importance=Promoted;
+                Enabled=EnableBillToCustomerNo;
+                OnValidate=VAR
+                             ApplicationAreaSetup@1000 : Record 9178;
+                           BEGIN
+                             IF GETFILTER("Bill-to Customer No.") = xRec."Bill-to Customer No." THEN
+                               IF "Bill-to Customer No." <> xRec."Bill-to Customer No." THEN
+                                 SETRANGE("Bill-to Customer No.");
+
+                             IF ApplicationAreaSetup.IsFoundationEnabled THEN
+                               SalesCalcDiscByType.ApplyDefaultInvoiceDiscount(0,Rec);
+
+                             CurrPage.UPDATE;
+                           END;
+                            }
+
+    { 20  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Adresse des Debitors an, an die Sie die Rechnung senden.;
+                           ENU=Specifies the address of the customer that you will send the invoice to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Address";
+                Importance=Additional }
+
+    { 22  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt zus�tzliche Adressinformationen an.;
+                           ENU=Specifies additional address information.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Address 2";
+                Importance=Additional }
+
+    { 91  ;3   ;Field     ;
+                CaptionML=[DEU=PLZ Code;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die Postleitzahl an.;
+                           ENU=Specifies the postal code.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Post Code";
+                Importance=Additional }
+
+    { 89  ;3   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort an, an den Sie die Rechnung senden.;
+                           ENU=Specifies the city you will send the invoice to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to City";
+                Importance=Additional }
+
+    { 122 ;3   ;Field     ;
+                CaptionML=[DEU=Kontaktnr.;
+                           ENU=Contact No.];
+                ToolTipML=[DEU=Gibt die Nummer des Kontakts an, an den die Rechnung gesendet wird.;
+                           ENU=Specifies the number of the contact the invoice will be sent to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Contact No.";
+                Importance=Additional }
+
+    { 26  ;3   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson beim Debitor an, an die Sie die Rechnung senden.;
+                           ENU=Specifies the name of the person you should contact at the customer who you are sending the invoice to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Contact" }
+
+    { 1907468901;1;Group  ;
+                CaptionML=[DEU=Au�enhandel;
+                           ENU=Foreign Trade] }
+
+    { 52  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob der Verkaufsbeleg Teil eines Dreiecksgesch�fts ist.;
+                           ENU=Specifies whether the sales document is part of a three-party trade.];
+                SourceExpr="EU 3-Party Trade" }
+
+    { 81  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Code f�r das Verfahren des Verkaufsbelegs f�r INTRASTAT-Berichte an.;
+                           ENU=Specifies a code for the sales document's transaction specification, for the purpose of reporting to INTRASTAT.];
+                SourceExpr="Transaction Specification" }
+
+    { 56  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Verkehrszweig f�r INTRASTAT-Berichte an.;
+                           ENU=Specifies the transport method, for the purpose of reporting to INTRASTAT.];
+                SourceExpr="Transport Method" }
+
+    { 25  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Einladehafen, �ber den Sie die Artikel aus Ihrem Land/Ihrer Region ausliefern. f�r Intrastat-Berichte an.;
+                           ENU=Specifies the point of exit through which you ship the items out of your country/region, for reporting to Intrastat.];
+                SourceExpr="Exit Point" }
+
+    { 45  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Gebiet der Debitorenadresse f�r INTRASTAT-Berichte an.;
+                           ENU=Specifies the area of the customer's address, for the purpose of reporting to INTRASTAT.];
+                SourceExpr=Area }
+
+    { 1000000017;1;Group  ;
+                Name=E-Commerce;
+                GroupType=Group }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Webshop Order No." }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Webshop Shop Code" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Webshop Language Code" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Webshop Payment Opt. Descr." }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Webshop Shipping Opt. Descr." }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Webshop Payment Transaction ID" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Webshop Payment ID" }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Process Webshop Payment" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Date Webshop Payment Processed" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Webshop Payment Error" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Clear Webshop Payment" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Date Webshop Payment Cleared" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Date Webshop Synchronization" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Date Last Modified (Webshop)" }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Date Last Updated (Webshop)" }
+
+    { 1000000001;2;Field  ;
+                SourceExpr="Date Web. Order Confirm. Sent" }
+
+    { 1000000000;2;Field  ;
+                SourceExpr="Webshop Original Order Amount" }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 24  ;1   ;Part      ;
+                Name=IncomingDocAttachFactBox;
+                PagePartID=Page193;
+                Visible=FALSE;
+                PartType=Page;
+                ShowFilter=No }
+
+    { 11  ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Table ID=CONST(36),
+                            Document Type=FIELD(Document Type),
+                            Document No.=FIELD(No.);
+                PagePartID=Page9103;
+                Visible=OpenApprovalEntriesExistForCurrUser;
+                PartType=Page }
+
+    { 1903720907;1;Part   ;
+                SubPageLink=No.=FIELD(Sell-to Customer No.);
+                PagePartID=Page9080;
+                PartType=Page }
+
+    { 1907234507;1;Part   ;
+                SubPageLink=No.=FIELD(Bill-to Customer No.);
+                PagePartID=Page9081;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1902018507;1;Part   ;
+                SubPageLink=No.=FIELD(Bill-to Customer No.);
+                PagePartID=Page9082;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1900316107;1;Part   ;
+                SubPageLink=No.=FIELD(Sell-to Customer No.);
+                PagePartID=Page9084;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1906127307;1;Part   ;
+                ApplicationArea=#Suite;
+                SubPageLink=Document Type=FIELD(Document Type),
+                            Document No.=FIELD(Document No.),
+                            Line No.=FIELD(Line No.);
+                PagePartID=Page9087;
+                ProviderID=58;
+                PartType=Page }
+
+    { 1901314507;1;Part   ;
+                SubPageLink=No.=FIELD(No.);
+                PagePartID=Page9089;
+                ProviderID=58;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1906354007;1;Part   ;
+                SubPageLink=Table ID=CONST(36),
+                            Document Type=FIELD(Document Type),
+                            Document No.=FIELD(No.);
+                PagePartID=Page9092;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1907012907;1;Part   ;
+                SubPageLink=No.=FIELD(No.);
+                PagePartID=Page9108;
+                ProviderID=58;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 27  ;1   ;Part      ;
+                Name=WorkflowStatus;
+                ApplicationArea=#All;
+                PagePartID=Page1528;
+                Visible=ShowWorkflowStatus;
+                Enabled=FALSE;
+                Editable=FALSE;
+                PartType=Page;
+                ShowFilter=No }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      SalesHeaderArchive@1006 : Record 5107;
+      CopySalesDoc@1003 : Report 292;
+      DocPrint@1004 : Codeunit 229;
+      UserMgt@1005 : Codeunit 5700;
+      ArchiveManagement@1007 : Codeunit 5063;
+      SalesCalcDiscByType@1008 : Codeunit 56;
+      ChangeExchangeRate@1002 : Page 511;
+      EnableBillToCustomerNo@19072970 : Boolean INDATASET;
+      HasIncomingDocument@1010 : Boolean;
+      DocNoVisible@1001 : Boolean;
+      OpenApprovalEntriesExistForCurrUser@1014 : Boolean;
+      OpenApprovalEntriesExist@1013 : Boolean;
+      ShowWorkflowStatus@1009 : Boolean;
+      IsOfficeAddin@1000 : Boolean;
+      CanCancelApprovalForRecord@1011 : Boolean;
+      PaymentServiceVisible@1016 : Boolean;
+      PaymentServiceEnabled@1015 : Boolean;
+      CustomerSelected@1012 : Boolean;
+      WorkDescription@1017 : Text;
+      ShipToOptions@1019 : 'Default (Sell-to Address),Alternate Shipping Address,Custom Address';
+      BillToOptions@1018 : 'Default (Customer),Another Customer';
+      EmptyShipToCodeErr@1020 : TextConst 'DEU=Das Feld "Code" darf nur leer sein, wenn Sie im Feld "Lief. an" die Option "Benutzerdefinierte Adresse" ausw�hlen.;ENU=The Code field can only be empty if you select Custom Address in the Ship-to field.';
+
+    LOCAL PROCEDURE ActivateFields@2();
+    BEGIN
+      EnableBillToCustomerNo := "Bill-to Customer Template Code" = '';
+    END;
+
+    LOCAL PROCEDURE ApproveCalcInvDisc@3();
+    BEGIN
+      CurrPage.SalesLines.PAGE.ApproveCalcInvDisc;
+    END;
+
+    LOCAL PROCEDURE ClearSellToFilter@1100();
+    BEGIN
+      IF GETFILTER("Sell-to Customer No.") = xRec."Sell-to Customer No." THEN
+        IF "Sell-to Customer No." <> xRec."Sell-to Customer No." THEN
+          SETRANGE("Sell-to Customer No.");
+      IF GETFILTER("Sell-to Contact No.") = xRec."Sell-to Contact No." THEN
+        IF "Sell-to Contact No." <> xRec."Sell-to Contact No." THEN
+          SETRANGE("Sell-to Contact No.");
+    END;
+
+    LOCAL PROCEDURE SetDocNoVisible@4();
+    VAR
+      DocumentNoVisibility@1000 : Codeunit 1400;
+      DocType@1003 : 'Quote,Order,Invoice,Credit Memo,Blanket Order,Return Order,Reminder,FinChMemo';
+    BEGIN
+      DocNoVisible := DocumentNoVisibility.SalesDocumentNoIsVisible(DocType::Quote,"No.");
+    END;
+
+    LOCAL PROCEDURE SetControlAppearance@5();
+    VAR
+      ApprovalsMgmt@1002 : Codeunit 1535;
+    BEGIN
+      HasIncomingDocument := "Incoming Document Entry No." <> 0;
+
+      OpenApprovalEntriesExistForCurrUser := ApprovalsMgmt.HasOpenApprovalEntriesForCurrentUser(RECORDID);
+      OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(RECORDID);
+      CanCancelApprovalForRecord := ApprovalsMgmt.CanCancelApprovalForRecord(RECORDID);
+      CustomerSelected := "Sell-to Customer No." <> '';
+    END;
+
+    LOCAL PROCEDURE CheckSalesCheckAllLinesHaveQuantityAssigned@6();
+    VAR
+      ApplicationAreaSetup@1000 : Record 9178;
+      LinesInstructionMgt@1001 : Codeunit 1320;
+    BEGIN
+      IF ApplicationAreaSetup.IsFoundationEnabled THEN
+        LinesInstructionMgt.SalesCheckAllLinesHaveQuantityAssigned(Rec);
+    END;
+
+    LOCAL PROCEDURE UpdatePaymentService@1();
+    VAR
+      PaymentServiceSetup@1000 : Record 1060;
+    BEGIN
+      PaymentServiceVisible := PaymentServiceSetup.IsPaymentServiceVisible;
+      PaymentServiceEnabled := PaymentServiceSetup.CanChangePaymentService(Rec);
+    END;
+
+    LOCAL PROCEDURE UpdateShipToBillToGroupVisibility@9();
+    BEGIN
+      CASE TRUE OF
+        ("Ship-to Code" = '') AND ShipToAddressEqualsSellToAddress:
+          ShipToOptions := ShipToOptions::"Default (Sell-to Address)";
+        ("Ship-to Code" = '') AND (NOT ShipToAddressEqualsSellToAddress):
+          ShipToOptions := ShipToOptions::"Custom Address";
+        "Ship-to Code" <> '':
+          ShipToOptions := ShipToOptions::"Alternate Shipping Address";
+      END;
+
+      IF "Bill-to Customer No." = "Sell-to Customer No." THEN
+        BillToOptions := BillToOptions::"Default (Customer)"
+      ELSE
+        BillToOptions := BillToOptions::"Another Customer";
+    END;
+
+    [Integration]
+    LOCAL PROCEDURE OnBeforeStatisticsAction@7(VAR SalesHeader@1000 : Record 36;VAR Handled@1001 : Boolean);
+    BEGIN
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (18):
+
+          TYPE            SUBTYPE         SOURCEEXPR                        NAME                              CAPTION
+
+          Group           Group                                             E-Commerce                        <E-Commerce>
+          Field                           "Webshop Order No."               <Webshop Order No.>               <Online Bestellnummer>
+          Field                           "Webshop Shop Code"               <Webshop Shop Code>               <Webshop Code>
+          Field                           "Webshop Language Code"           <Webshop Language Code>           <Webshop Sprachcode>
+          Field                           "Webshop Pay. Opt. Description"   <Webshop Pay. Opt. Description>   <Zahlungsart Beschreibung>
+          Field                           "Webshop Ship. Opt. Description"  <Webshop Ship. Opt. Description>  <Versandart Beschreibung>
+          Field                           "Webshop Payment Transaction ID"  <Webshop Payment Transaction ID>  <Zahlungstransaktionsnr.>
+          Field                           "Webshop Payment ID"              <Webshop Payment ID>              <Online Zahlungs-ID>
+          Field                           "Webshop Process Payment"         <Webshop Process Payment>         <Online Zahlung durchf?hren>
+          Field                           "Webshop Payment Processed"       <Webshop Payment Processed>       <Online Zahlung durchgef?hrt>
+          Field                           "Webshop Payment Error"           <Webshop Payment Error>           <Fehler Online Zahlung>
+          Field                           "Webshop Clear Payment"           <Webshop Clear Payment>           <Online Zahlung ausgleichen>
+          Field                           "Webshop Payment Cleared"         <Webshop Payment Cleared>         <Online Zahlung ausgeglichen>
+          Field                           "Webshop Sync Date"               <Webshop Sync Date>               <Empfangen am>
+          Field                           "Webshop Last Date Modified"      <Webshop Last Date Modified>      <Korrigiert am>
+          Field                           "Webshop Last Date Updated"       <Webshop Last Date Updated>       <Online Aktualisiert am>
+          Field                           "Webshop Order Mail 2 Sent"       <Webshop Order Mail 2 Sent>       <Auftragsbest�tigung versendet>
+          Field                           "Webshop Original Amount"         <Webshop Original Amount>         <Ursprungsbetrag Online-Bestellung>
+
+
+        PAGE ACTIONS (3):
+
+          NAME                            CAPTION                         TYPE                 SUBTYPE
+
+          E-Commerce                      <E-Commerce>                    ActionGroup
+          Process Online Payment          Online-Zahlung durchf?hren      Action
+          Clear Online Payment            Online-Zahlung ausgleichen      Action
+
+
+
+        TRIGGERS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,51 @@
+OBJECT Query 5447319 Webshop Item Top Joint Purch.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Gemeinsam Gekaufte Artikel;
+               ENU=Webshop gemeinsam gekaufte Artikel];
+    OrderBy=SumCounter=Descending;
+  }
+  ELEMENTS
+  {
+    { 1000000000;;DataItem;                  ;
+               DataItemTable=Table5447319 }
+
+    { 1000000005;1;Filter;ShopCode           ;
+               DataSource=Shop Code }
+
+    { 1000000002;1;Filter;ItemNoFilter       ;
+               CaptionML=[DEU=Artikelnr.;
+                          ENU=Item No.];
+               DataSource=Item No. }
+
+    { 1000000003;1;Filter;JointPurchDateFilter;
+               CaptionML=[DEU=Datum gemeinsamer Kauf;
+                          ENU=Joint purch. date];
+               DataSource=Date }
+
+    { 1000000004;1;Column;LinkedItemNo       ;
+               DataSource=Linked Item No. }
+
+    { 1000000001;1;Column;SumCounter         ;
+               CaptionML=[DEU=Anzahl gemeinsam gekauft;
+                          ENU=No. common purchase];
+               DataSource=Counter;
+               MethodType=Totals;
+               Method=Sum }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

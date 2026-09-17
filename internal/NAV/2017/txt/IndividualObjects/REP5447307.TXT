@@ -1,0 +1,154 @@
+OBJECT Report 5447307 Webshop Create Cross-Links
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Crosslinkverkn�pfungen erstellen;
+               ENU=Webshop Create Cross-Links];
+    ProcessingOnly=Yes;
+  }
+  DATASET
+  {
+    { 1000000000;;DataItem;                  ;
+               DataItemTable=Table5447304;
+               DataItemTableView=SORTING(Shop Code,Language Code,Item No.)
+                                 ORDER(Ascending)
+                                 WHERE(Is Active=CONST(Yes));
+               OnAfterGetRecord=BEGIN
+                                  // Passende Artikel verkn�pfen (Zufall)
+                                  IF NoOfFitItems > 0 THEN BEGIN
+                                    WebshopItem.SETRANGE("Shop Code","Shop Code");
+                                    WebshopItem.SETRANGE("Language Code","Language Code");
+                                    WebshopItem.SETRANGE("Is Active",TRUE);
+                                    WebshopItem.SETFILTER("Item No.",'<>%1',"Item No.");
+                                    NoOfItem := WebshopItem.COUNT;
+                                    FOR i := 1 TO NoOfFitItems DO BEGIN
+                                      IF WebshopItem.FINDFIRST THEN BEGIN
+                                        IF WebshopItem.NEXT(RANDOM(NoOfItem)) > 0 THEN BEGIN
+                                          IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Fit. Item","Shop Code","Item No.",WebshopItem."Item No.") THEN BEGIN
+                                            WebshopItemLink.INIT;
+                                            WebshopItemLink.VALIDATE(Type,WebshopItemLink.Type::"Fit. Item");
+                                            WebshopItemLink.VALIDATE("Shop Code","Shop Code");
+                                            WebshopItemLink.VALIDATE("Item No.","Item No.");
+                                            WebshopItemLink.VALIDATE("Linked Item No.",WebshopItem."Item No.");
+                                            WebshopItemLink.INSERT(TRUE);
+                                            FitCounter += 1;
+                                          END;
+                                        END;
+                                      END;
+                                    END;
+                                  END;
+
+                                  // Alternative Artikel verkn�pfen (Zufall aus gleicher Kategorie)
+                                  IF NoOfALtItems > 0 THEN BEGIN
+                                    CategoryLineNo := 0;
+                                    IF "Webshop Item"."Main Category Line No." <> 0 THEN
+                                      IF WebshopItemCategory.GET("Shop Code","Language Code","Item No.","Shop Code","Language Code","Main Category Line No.") THEN
+                                        CategoryLineNo := WebshopItemCategory."Category Line No.";
+                                    IF CategoryLineNo = 0 THEN BEGIN
+                                      WebshopItemCategory.SETRANGE("Item Shop Code","Shop Code");
+                                      WebshopItemCategory.SETRANGE("Item Language Code","Language Code");
+                                      WebshopItemCategory.SETRANGE("Item No.","Item No.");
+                                      WebshopItemCategory.SETRANGE("Category Shop Code","Shop Code");
+                                      WebshopItemCategory.SETRANGE("Category Language Code","Language Code");
+                                      IF WebshopItemCategory.FINDFIRST THEN
+                                        CategoryLineNo := WebshopItemCategory."Category Line No.";
+                                    END;
+                                    IF CategoryLineNo <> 0 THEN BEGIN
+                                      WebshopItemCategory.SETRANGE("Item Shop Code","Shop Code");
+                                      WebshopItemCategory.SETRANGE("Item Language Code","Language Code");
+                                      WebshopItemCategory.SETFILTER("Item No.",'<>%1',"Item No.");
+                                      WebshopItemCategory.SETRANGE("Category Shop Code","Shop Code");
+                                      WebshopItemCategory.SETRANGE("Category Language Code","Language Code");
+                                      WebshopItemCategory.SETRANGE("Category Line No.",CategoryLineNo);
+                                      NoOfItem := WebshopItemCategory.COUNT;
+                                      FOR i := 1 TO NoOfALtItems DO BEGIN
+                                        IF WebshopItemCategory.FINDFIRST THEN BEGIN
+                                          IF WebshopItemCategory.NEXT(RANDOM(NoOfItem)) > 0 THEN BEGIN
+                                            IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Alt. Item","Shop Code","Item No.",WebshopItemCategory."Item No.") THEN BEGIN
+                                              WebshopItemLink.INIT;
+                                              WebshopItemLink.VALIDATE(Type,WebshopItemLink.Type::"Alt. Item");
+                                              WebshopItemLink.VALIDATE("Shop Code","Shop Code");
+                                              WebshopItemLink.VALIDATE("Item No.","Item No.");
+                                              WebshopItemLink.VALIDATE("Linked Item No.",WebshopItemCategory."Item No.");
+                                              WebshopItemLink.INSERT(TRUE);
+                                              AltCounter +=1;
+                                            END;
+                                          END;
+                                        END;
+                                      END;
+                                    END;
+                                  END;
+                                END;
+
+               OnPostDataItem=BEGIN
+                                MESSAGE(Text001,FitCounter,AltCounter);
+                              END;
+
+               ReqFilterFields=Shop Code,Language Code,Item No.,Is Active }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+      { 1000000000;;Container;
+                  CaptionML=[DEU=Allgemein;
+                             ENU=General];
+                  ContainerType=ContentArea }
+
+      { 1000000003;1;Group  ;
+                  CaptionML=[DEU=Allgemein;
+                             ENU=General];
+                  GroupType=Group }
+
+      { 1000000001;2;Field  ;
+                  CaptionML=[DEU=Anzahl Passende Artikel;
+                             ENU=No. of fitting items];
+                  SourceExpr=NoOfFitItems }
+
+      { 1000000002;2;Field  ;
+                  CaptionML=[DEU=Anzahl Alternative Artikel;
+                             ENU=No. of alternative items];
+                  SourceExpr=NoOfALtItems }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopItemLink@1000000000 : Record 5447308;
+      WebshopItem@1000000003 : Record 5447304;
+      WebshopItemCategory@1000000006 : Record 5447305;
+      LinkedWebshopItemCategory@1000000007 : Record 5447305;
+      NoOfFitItems@1000000001 : Integer;
+      NoOfALtItems@1000000002 : Integer;
+      i@1000000004 : Integer;
+      NoOfItem@1000000005 : Integer;
+      CategoryLineNo@1000000008 : Integer;
+      AltCounter@1000000009 : Integer;
+      FitCounter@1000000010 : Integer;
+      Text001@1000000011 : TextConst 'DEU=Es wurden %1 passende und %2 alternative Artikel verkn�pft;ENU=%1 fitting and %2 alternative items have been linked';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

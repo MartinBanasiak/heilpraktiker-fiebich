@@ -1,0 +1,314 @@
+OBJECT Report 5447331 Webshop Text Module RapidStart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Text Module RapidStart;
+               ENU=Webshop Text Module RapidStart];
+    ProcessingOnly=Yes;
+  }
+  DATASET
+  {
+    { 1000000001;;DataItem;Shop              ;
+               DataItemTable=Table5447301;
+               DataItemTableView=SORTING(Code)
+                                 WHERE(Shop Type=FILTER(<marketplace)) }
+
+    { 1000000000;1;DataItem;ShopLanguage     ;
+               DataItemTable=Table5447302;
+               OnAfterGetRecord=VAR
+                                  ModuleCodePrefix@1000000000 : Code[10];
+                                  ModuleCodeSuffix@1000000001 : Code[10];
+                                  ModuleCode@1000000002 : Code[30];
+                                BEGIN
+                                  IF (Shop."Shop Type" <> Shop."Shop Type"::catalog) THEN BEGIN
+                                    InsertTextModules(Shop."Shop Type",Shop.Code,Shop.Description,Code);
+                                    COMMIT;
+                                    ModuleCodePrefix := Shop.Code;
+                                    IF Code = Text004 THEN
+                                      ModuleCodeSuffix := Text004
+                                    ELSE
+                                      ModuleCodeSuffix := Text005;
+                                      //Mail1
+                                      IF "E-Mail Order 1" = '' THEN BEGIN
+                                        ModuleCode :=  ModuleCodePrefix + Text006 + ModuleCodeSuffix;
+                                        VALIDATE("E-Mail Order 1",ModuleCode);
+                                      END;
+                                      //LoginMail
+                                      IF "E-Mail Login" = '' THEN BEGIN
+                                        ModuleCode :=  ModuleCodePrefix + Text007 + ModuleCodeSuffix;
+                                        VALIDATE("E-Mail Login",ModuleCode);
+                                        VALIDATE("E-Mail Password",ModuleCode);
+                                      END;
+                                      //Basket Empty Text
+                                      IF "Text Shopping Basket" = '' THEN BEGIN
+                                        ModuleCode :=  ModuleCodePrefix + Text008 + ModuleCodeSuffix;
+                                        VALIDATE("Text Shopping Basket",ModuleCode);
+                                      END;
+                                      //Order Complete Text
+                                      IF "Text Order Complete" = '' THEN BEGIN
+                                        ModuleCode :=  ModuleCodePrefix + Text009 + ModuleCodeSuffix;
+                                        VALIDATE("Text Order Complete",ModuleCode);
+                                      END;
+                                      //No Search Results Text
+                                      IF "Text Search Results" = '' THEN BEGIN
+                                        ModuleCode :=  ModuleCodePrefix + Text011 + ModuleCodeSuffix;
+                                        VALIDATE("Text Search Results",ModuleCode);
+                                      END;
+                                  END;
+
+                                  IF (Shop."Shop Type" = Shop."Shop Type"::b2c) THEN BEGIN
+                                    //Payment Error Text
+                                    ModuleCode := ModuleCodePrefix  + Text010 + ModuleCodeSuffix;
+                                    VALIDATE("Text Payment Error",ModuleCode);
+                                  END;
+
+                                  IF (Shop."Shop Type" <> Shop."Shop Type"::catalog) THEN BEGIN
+                                    MODIFY(FALSE);
+                                  END;
+                                END;
+
+               ReqFilterFields=Code,Description;
+               DataItemLink=Shop Code=FIELD(Code) }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      ShopVar@1000000000 : Record 5447301;
+      ShopTextModule@1000000001 : Record 5447309;
+      WebshopManagement@1000000002 : Codeunit 5447300;
+      ShopName@1000000003 : Text;
+      Text001@1000000004 : TextConst 'DEU=B2C;ENU=B2C';
+      Text002@1000000005 : TextConst 'DEU=B2B;ENU=B2B';
+      Text003@1000000006 : TextConst 'DEU=SP;ENU=SP';
+      Text004@1000000007 : TextConst 'DEU=DEU;ENU=DEU';
+      Text005@1000000008 : TextConst 'DEU=ENU;ENU=ENU';
+      Text006@1000000009 : TextConst 'DEU=-MAIL1-;ENU=-MAIL1-';
+      Text007@1000000010 : TextConst 'DEU=-LOGIN-;ENU=-LOGIN-';
+      Text008@1000000011 : TextConst 'DEU=-NOBASKET-;ENU=-NOBASKET-';
+      Text009@1000000012 : TextConst 'DEU=-ORDERCOMPL-;ENU=-ORDERCOMPL-';
+      Text010@1000000013 : TextConst 'DEU=-PAYERR-;ENU=-PAYERR-';
+      Text011@1000000014 : TextConst 'DEU=-NOSEARCHRES-;ENU=-NOSEARCHRES-';
+      Text012@1000000015 : TextConst 'DEU=Vielen Dank f�r Ihre Bestellung | %1;ENU=Thank you for shopping with us | %1';
+      Text013@1000000022 : TextConst 'DEU=Thank you for your order | %1;ENU=Thank you for your order | %1';
+      Text014@1000000016 : TextConst 'DEU=Versandbenachrichtigung | %1;ENU=Shipping notice | %1';
+      Text015@1000000023 : TextConst 'DEU=Shipping Notice | %1;ENU=Shipping Notice | %1';
+      Text016@1000000017 : TextConst 'DEU=Ihre Zugangsdaten | %1;ENU=Your Login | %1';
+      Text017@1000000024 : TextConst 'DEU=Your Login | %1;ENU=Your Login | %1';
+      Text018@1000000018 : TextConst 'DEU=Warenkorb leer;ENU=Basket empty';
+      Text019@1000000025 : TextConst 'DEU=Empty basket;ENU=Empty basket';
+      Text020@1000000019 : TextConst 'DEU=Bestellung abgeschlossen;ENU=Order complete';
+      Text021@1000000026 : TextConst 'DEU=Order complete;ENU=Order complete';
+      Text022@1000000020 : TextConst 'DEU=Online-Zahlung fehlgeschlagen;ENU=Online payment error';
+      Text023@1000000027 : TextConst 'DEU=Online-payment failed;ENU=Online-payment failed';
+      Text024@1000000021 : TextConst 'DEU=Keine Suchergebnisse;ENU=No search results';
+      Text025@1000000028 : TextConst 'DEU=No search results;ENU=No search results';
+      TextModuleInsertCounter@1000000029 : Integer;
+      LanguageTextSetCounter@1000000030 : Integer;
+      GermanModulesCreated@1000000031 : Boolean;
+      GermanB2CModuleCreated@1000000035 : Boolean;
+      EnglishModulesCreated@1000000032 : Boolean;
+      EnglishB2CModuleCreated@1000000036 : Boolean;
+      GermanModuleContentsCopied@1000000033 : Boolean;
+      EnglishModuleContentsCopied@1000000034 : Boolean;
+      Text026@1000000037 : TextConst 'DEU=email_order_1_text_module;ENU=email_order_1_text_module';
+      Text027@1000000038 : TextConst 'DEU=email_login_password_text_module;ENU=email_login_password_text_module';
+      Text028@1000000039 : TextConst 'DEU=login_welcome_text_module;ENU=login_welcome_text_module';
+      Text029@1000000040 : TextConst 'DEU=empty_basket_text_module;ENU=empty_basket_text_module';
+      Text030@1000000041 : TextConst 'DEU=order_complete_text_module;ENU=order_complete_text_module';
+      Text031@1000000042 : TextConst 'DEU=payment_error_text_module;ENU=payment_error_text_module';
+      Text032@1000000043 : TextConst 'DEU=text_search_results;ENU=text_search_results';
+
+    LOCAL PROCEDURE InsertTextModules@1000000004(ShopTyp@1000000000 : 'b2c,b2b,salesperson';ShopCode@1000000007 : Code[20];ShopName@1000000001 : Text[80];ShopLanguageCode@1000000002 : Code[10]);
+    VAR
+      ModuleCodeSuffix@1000000003 : Code[10];
+      ModuleCodePrefix@1000000004 : Code[10];
+      ModuleCode@1000000005 : Code[30];
+      ModuleDescription@1000000006 : Text[80];
+    BEGIN
+      ModuleCodePrefix := ShopCode;
+      ModuleCodeSuffix := ShopLanguageCode;
+
+      IF ShopLanguageCode = Text004 THEN BEGIN
+
+        //Mail1
+        ModuleCode :=  ModuleCodePrefix + Text006 + ShopLanguageCode;
+        IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+          ModuleDescription := STRSUBSTNO(Text012,ShopName);
+          InsertTextModule(ModuleCode,ModuleDescription);
+          CopyTextModuleContentInMySQL(ShopName,ShopLanguageCode,ModuleCode);
+        END;
+        //LoginMail
+        ModuleCode := ModuleCodePrefix + Text007 + ShopLanguageCode;
+        IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+          ModuleDescription := STRSUBSTNO(Text016,ShopName);
+          InsertTextModule(ModuleCode,ModuleDescription);
+          CopyTextModuleContentInMySQL(ShopName,ShopLanguageCode,ModuleCode);
+        END;
+        //Basket Empty Text
+        ModuleCode := ModuleCodePrefix + Text008 + ShopLanguageCode;
+        IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+          ModuleDescription := STRSUBSTNO(Text018,ShopName);
+          InsertTextModule(ModuleCode,ModuleDescription);
+          CopyTextModuleContentInMySQL(ShopName,ShopLanguageCode,ModuleCode);
+        END;
+        //Order Complete Text
+        ModuleCode := ModuleCodePrefix + Text009 + ShopLanguageCode;
+        IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+          ModuleDescription := STRSUBSTNO(Text020,ShopName);
+          InsertTextModule(ModuleCode,ModuleDescription);
+          CopyTextModuleContentInMySQL(ShopName,ShopLanguageCode,ModuleCode);
+        END;
+        //No Search Results Text
+        ModuleCode := ModuleCodePrefix + Text011 + ShopLanguageCode;
+        IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+          ModuleDescription := STRSUBSTNO(Text024,ShopName);
+          InsertTextModule(ModuleCode,ModuleDescription);
+          CopyTextModuleContentInMySQL(ShopName,ShopLanguageCode,ModuleCode);
+        END;
+
+        IF (ShopTyp = Shop."Shop Type"::b2c) THEN BEGIN
+          ModuleCodePrefix := ShopCode;
+          //Payment Error Text
+          ModuleCode := ModuleCodePrefix + Text010 + ShopLanguageCode;
+          IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+            ModuleDescription := STRSUBSTNO(Text022,ShopName);
+            InsertTextModule(ModuleCode,ModuleDescription);
+            CopyTextModuleContentInMySQL(ShopName,ShopLanguageCode,ModuleCode);
+          END;
+        END;
+
+      END ELSE BEGIN
+
+          //Mail1
+          ModuleCode :=  ModuleCodePrefix + Text006 + Text005;
+          IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+            ModuleDescription := STRSUBSTNO(Text013,ShopName);
+            InsertTextModule(ModuleCode,ModuleDescription);
+            CopyTextModuleContentInMySQL(ShopName,Text005,ModuleCode);
+          END;
+          //LoginMail
+          ModuleCode := ModuleCodePrefix + Text007 +Text005;
+          IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+            ModuleDescription := STRSUBSTNO(Text017,ShopName);
+            InsertTextModule(ModuleCode,ModuleDescription);
+            CopyTextModuleContentInMySQL(ShopName,Text005,ModuleCode);
+          END;
+         //Basket Empty Text
+          ModuleCode := ModuleCodePrefix + Text008 + Text005;
+          IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+            ModuleDescription := STRSUBSTNO(Text019,ShopName);
+            InsertTextModule(ModuleCode,ModuleDescription);
+            CopyTextModuleContentInMySQL(ShopName,Text005,ModuleCode);
+          END;
+          //Order Complete Text
+          ModuleCode := ModuleCodePrefix + Text009 + Text005;
+          IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+            ModuleDescription := STRSUBSTNO(Text021,ShopName);
+            InsertTextModule(ModuleCode,ModuleDescription);
+            CopyTextModuleContentInMySQL(ShopName,Text005,ModuleCode);
+          END;
+          //No Search Results Text
+          ModuleCode := ModuleCodePrefix + Text011 + Text005;
+          IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+            ModuleDescription := STRSUBSTNO(Text025,ShopName);
+            InsertTextModule(ModuleCode,ModuleDescription);
+            CopyTextModuleContentInMySQL(ShopName,Text005,ModuleCode);
+          END;
+
+
+        IF (Shop."Shop Type" = Shop."Shop Type"::b2c) THEN BEGIN
+          ModuleCodePrefix := Text001;
+          //Payment Error Text
+          ModuleCode := ModuleCodePrefix + Text010 + Text005;
+          IF NOT ShopTextModule.GET(ModuleCode) THEN BEGIN
+            ModuleDescription := STRSUBSTNO(Text023,ShopName);
+            InsertTextModule(ModuleCode,ModuleDescription);
+            CopyTextModuleContentInMySQL(ShopName,Text005,ModuleCode);
+          END;
+        END;
+
+
+      END;
+    END;
+
+    LOCAL PROCEDURE InsertTextModule@1000000009(ModuleCode@1000000000 : Code[30];ModuleDescription@1000000001 : Text[80]);
+    VAR
+      WebshopUpdateMgmt@1000000002 : Codeunit 5447301;
+    BEGIN
+      ShopTextModule.INIT;
+      ShopTextModule.VALIDATE(Code,ModuleCode);
+      ShopTextModule.VALIDATE(Description,ModuleDescription);
+      IF ShopTextModule.INSERT(TRUE) THEN BEGIN
+        WebshopUpdateMgmt.UpdateTextModule(ShopTextModule);
+        TextModuleInsertCounter += 1;
+      END;
+    END;
+
+    LOCAL PROCEDURE CopyTextModuleContentInMySQL@1000000016(ShopName@1000000006 : Text[50];ShopLanguageCode@1000000000 : Code[10];ModuleCode@1000000001 : Code[30]);
+    VAR
+      FieldName@1000000003 : Text[40];
+      SendRec@1000000004 : Text[1024];
+      LocTextModule@1000000002 : Record 5447309;
+      WebshopUpdateMgmt@1000000005 : Codeunit 5447301;
+    BEGIN
+      IF (STRPOS(ModuleCode,Text006) <> 0) THEN BEGIN
+        FieldName := Text026;
+      END ELSE IF (STRPOS(ModuleCode,Text007) <> 0) THEN BEGIN
+        FieldName := Text027;
+      END ELSE IF (STRPOS(ModuleCode,Text008) <> 0) THEN BEGIN
+        FieldName := Text028;
+      END ELSE IF (STRPOS(ModuleCode,Text009) <> 0) THEN BEGIN
+        FieldName := Text029;
+      END ELSE IF (STRPOS(ModuleCode,Text010) <> 0) THEN BEGIN
+        FieldName := Text030;
+      END ELSE IF (STRPOS(ModuleCode,Text011) <> 0) THEN BEGIN
+        FieldName := Text031;
+      END;
+
+      AddVar(SendRec,'company',COMPANYNAME);
+      AddVar(SendRec,'shop_language_code',ShopLanguageCode);
+      AddVar(SendRec,'text_module_code',ModuleCode);
+      AddVar(SendRec,'field_name',FieldName);
+      AddVar(SendRec,'shop_name',ShopName);
+      IF WebshopManagement.SendRequest('copy_text_module_content',SendRec) AND LocTextModule.GET(ModuleCode)
+        AND WebshopUpdateMgmt.CheckTextModule(LocTextModule) THEN
+          TextModuleInsertCounter += 1;
+    END;
+
+    PROCEDURE AddVar@1000000041(VAR Data@1000000002 : Text[1024];VarName@1000000001 : Text[100];VarValue@1000000000 : Variant);
+    VAR
+      WebshopManagement@1000000003 : Codeunit 5447300;
+    BEGIN
+      WebshopManagement.AddVar(Data,VarName,VarValue);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

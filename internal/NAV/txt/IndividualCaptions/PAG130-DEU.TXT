@@ -1,0 +1,96 @@
+N130-C1000000007-P8629-A1031-L999:Abonnement
+N130-C1000000010-P8629-A1031-L999:Reklamation
+N130-C111-P8631-A1031-L999:Gibt die Nummer des Verkaufsangebots an, wenn der Verkaufsprozess mit einem Angebot begann.
+N130-C112-P8629-A1031-L999:Kontaktnr.
+N130-C112-P8631-A1031-L999:Gibt die Kontaktnummer an.
+N130-C114-P8629-A1031-L999:Kontaktnr.
+N130-C114-P8631-A1031-L999:Gibt die Nummer des Kontakts des Debitors an der Rech. an Adresse an.
+N130-C12-P8631-A1031-L999:Gibt einen Code für den Verkäufer an, der normalerweise das Konto dieses Debitors bearbeitet.
+N130-C14-P8631-A1031-L999:Gibt das Buchungsdatum des Postens an.
+N130-C16-P8631-A1031-L999:Gibt an, wie häufig der Beleg gedruckt wurde.
+N130-C18-P8629-A1031-L999:Debitorennummer
+N130-C18-P8631-A1031-L999:Gibt die Nummer des Debitors an der Rechnungsadresse an.
+N130-C1905885101-P8629-A1031-L999:Abrechnung
+N130-C1906801201-P8629-A1031-L999:Lieferung
+N130-C1-P8629-A1031-L999:Allgemein
+N130-C20-P8629-A1031-L999:Name
+N130-C20-P8631-A1031-L999:Gibt den Namen des Debitors an, an den Sie die Rechnung gesendet haben.
+N130-C22-P8629-A1031-L999:Adresse
+N130-C22-P8631-A1031-L999:Gibt die Adresse an, an die Sie die Rechnung gesendet haben.
+N130-C24-P8629-A1031-L999:Adresse 2
+N130-C24-P8631-A1031-L999:Gibt die erweiterte Adresse an, an die Sie die Rechnung gesendet haben.
+N130-C26-P8629-A1031-L999:Ort
+N130-C26-P8631-A1031-L999:Gibt den Ort des Debitors auf dem Verkaufsbeleg an.
+N130-C27-P8631-A1031-L999:Gibt das Buchungsdatum des Belegs an.
+N130-C28-P8629-A1031-L999:Kontakt
+N130-C28-P8631-A1031-L999:Gibt den Namen der Kontaktperson beim Debitor an der Adresse an, an die Sie die Rechnung gesendet haben.
+N130-C2-P8631-A1031-L999:Gibt die Nummer des Datensatzes an.
+N130-C30-P8629-A1031-L999:Adresscode
+N130-C30-P8631-A1031-L999:Gibt den Code für die zusätzliche Lieferadresse des Debitors an.
+N130-C32-P8629-A1031-L999:Name
+N130-C32-P8631-A1031-L999:Gibt den Namen des Debitors an, an den Sie die Artikel geliefert haben.
+N130-C34-P8629-A1031-L999:Adresse
+N130-C34-P8631-A1031-L999:Gibt die Adresse an, an die Sie die Artikel geliefert haben.
+N130-C36-P8629-A1031-L999:Adresse 2
+N130-C36-P8631-A1031-L999:Gibt die erweiterte Adresse an, an die Sie die Artikel geliefert haben.
+N130-C38-P8629-A1031-L999:Ort
+N130-C38-P8631-A1031-L999:Gibt den Ort des Debitors auf dem Verkaufsbeleg an.
+N130-C40-P8629-A1031-L999:Kontakt
+N130-C40-P8631-A1031-L999:Gibt den Namen der Kontaktperson an der Adresse an, an die die Artikel geliefert wurden.
+N130-C42-P8629-A1031-L999:Code
+N130-C42-P8631-A1031-L999:Gibt die Lieferbedingung für die Lieferung an.
+N130-C44-P8631-A1031-L999:Gibt an, wann die Artikel auf dem Beleg geliefert werden oder geliefert wurden. Ein Lieferdatum wird normalerweise über das gewünschte Datum plus der Beschaffungszeit berechnet.
+N130-C4-P8631-A1031-L999:Gibt die Nummer des Verkaufsauftrags an, aus dem die Rechnung gebucht wurde.
+N130-C52-P8629-A1031-L999:Debitor
+N130-C52-P8631-A1031-L999:Gibt den Namen des Debitors an der Verk. an Adresse an.
+N130-C54-P8629-A1031-L999:Adresse
+N130-C54-P8631-A1031-L999:Gibt die Verk. an Adresse des Debitors an.
+N130-C56-P8629-A1031-L999:Adresse 2
+N130-C56-P8631-A1031-L999:Gibt die erweiterte Verk. an Adresse des Debitors an.
+N130-C58-P8629-A1031-L999:Ort
+N130-C58-P8631-A1031-L999:Gibt den Ort des Debitors auf dem Verkaufsbeleg an.
+N130-C60-P8629-A1031-L999:Kontakt
+N130-C60-P8631-A1031-L999:Gibt den Namen des Kontakts des Debitors an der Verk. an Adresse an.
+N130-C62-P8629-A1031-L999:Zusteller
+N130-C62-P8631-A1031-L999:Gibt an, welcher Zusteller verwendet wird, um die Artikel im Verkaufsbeleg zum Debitor zu transportieren.
+N130-C63-P8631-A1031-L999:Gibt den Code für Shortcutdimension 2 an (einer der zwei globalen Dimensionscodes, die Sie im Fenster "Finanzbuchhaltung Einrichtung" eingerichtet haben).
+N130-C65-P8631-A1031-L999:Gibt den Lagerort an, von dem Lagerartikel an den Debitor im Verkaufsbeleg standardmäßig geliefert werden sollen.
+N130-C67-P8629-A1031-L999:PLZ
+N130-C67-P8631-A1031-L999:Gibt die PLZ des Debitors an der Rech. an Adresse an.
+N130-C69-P8629-A1031-L999:PLZ-Code
+N130-C69-P8631-A1031-L999:Gibt die PLZ des Debitors an der Lief. an Adresse an.
+N130-C6-P8629-A1031-L999:Verk. an
+N130-C72-P8631-A1031-L999:Gibt die Paketnummer des Zustellers an.
+N130-C7-P8629-A1031-L999:Lieferbedingung
+N130-C82-P8631-A1031-L999:Gibt den Code für die Zuständigkeitseinheit an, die für den Debitor auf diesem Verkaufsbeleg verantwortlich ist.
+N130-C84-P8631-A1031-L999:Gibt das Datum an, an dem der Debitor die Lieferung des Auftrags wünscht.
+N130-C87-P8631-A1031-L999:Gibt das Datum an, an dem Sie die Lieferung der Bestellung aufgrund des Ergebnisses der Funktion "Lieferterminzusagen" zugesagt haben.
+N130-C89-P8631-A1031-L999:Gibt die Nummer an, die der Debitor im eigenen System verwendet, um auf diesen Verkaufsbeleg zu verweisen.
+N130-C8-P8629-A1031-L999:PLZ
+N130-C8-P8631-A1031-L999:Gibt die PLZ des Debitors an der Verk. an Adresse an.
+N130-C91-P8631-A1031-L999:Gibt eine Datumsformel für die Zeit an, die benötigt wird, um Artikel von diesem Lagerort lieferbereit zu machen. Das Zeitelement wird bei der Berechnung des Lieferdatums folgendermaßen verwendet: Warenausgangsdatum + Ausgehende Lagerdurchlaufzeit = Geplantes Warenausgangsdatum + Transportzeit = Geplantes Lieferdatum.
+N130-C93-P8629-A1031-L999:Zustellertransportart
+N130-C93-P8631-A1031-L999:Gibt an, welche Zustellertransportart verwendet wird, um die Artikel im Verkaufsbeleg zum Debitor zu transportieren.
+N130-C95-P8631-A1031-L999:Gibt die Zeit zwischen der Warenlieferung aus dem Lager bis zur Auslieferung an.
+N130-C9-P8631-A1031-L999:Gibt den Code für Shortcutdimension 1 an (einer der zwei globalen Dimensionscodes, die Sie im Fenster "Finanzbuchhaltung Einrichtung" eingerichtet haben).
+N130-P55242-G107-P8629-A1031-L999:Genehmigungen
+N130-P55242-G107-P8631-A1031-L999:Zeigt eine Liste der Datensätze an, die noch genehmigt werden müssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.
+N130-P55242-G10-P8629-A1031-L999:Statistik
+N130-P55242-G10-P8631-A1031-L999:Zeigt statistische Informationen für den Datensatz an, wie etwa den Wert der gebuchten Posten.
+N130-P55242-G3-P8629-A1031-L999:Details der Gelangensbestätigung
+N130-P55242-G3-P8631-A1031-L999:Zeigt die Gelangensbestätigung an, die Sie an den Debitor zur Unterschrift als Eingangsbestätigung senden müssen. Sie müssen eine Gelangensbestätigung ausdrucken, wenn bei der Lieferung eine Kombination aus MwSt.-Geschäftsbuchungsgruppe und MwSt.-Produktbuchungsgruppe verwendet wird, bei denen markiert wurde, dass sie eine Gelangensbestätigung im Fenster "MwSt.-Buchungsmatrix Einr." benötigen.
+N130-P55242-G47-P8629-A1031-L999:&Lieferung
+N130-P55242-G49-P8629-A1031-L999:D&rucken
+N130-P55242-G49-P8631-A1031-L999:Druckt die Lieferungsbenachrichtigung aus.
+N130-P55242-G50-P8629-A1031-L999:&Navigate
+N130-P55242-G50-P8631-A1031-L999:Sucht alle Posten und Belege, die für die Belegnummer und das Buchungsdatum im ausgewählten Posten oder Beleg vorhanden sind.
+N130-P55242-G5-P8629-A1031-L999:Gelangensbestätigung drucken
+N130-P55242-G5-P8631-A1031-L999:Druckt die Gelangensbestätigung aus, die Sie an den Debitor zur Unterschrift als Eingangsbestätigung senden müssen.
+N130-P55242-G74-P8629-A1031-L999:F&unktion
+N130-P55242-G78-P8629-A1031-L999:Be&merkungen
+N130-P55242-G78-P8631-A1031-L999:Zeigen Sie Bemerkungen an, oder fügen Sie sie dem Datensatz hinzu.
+N130-P55242-G79-P8629-A1031-L999:&Paketverfolgung
+N130-P55242-G79-P8631-A1031-L999:Öffnet die Nachverfolgungsseite des Zustellers, um das Paket nachzuverfolgen.
+N130-P55242-G80-P8629-A1031-L999:Dimensionen
+N130-P55242-G80-P8631-A1031-L999:Anzeigen oder Bearbeiten von Dimensionen, wie etwa eines Bereichs, eines Projekts oder einer Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen können, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.
+N130-P8629-A1031-L999:Geb. Verkaufslieferung

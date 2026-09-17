@@ -1,0 +1,18 @@
+N5447385-P55132-A1031-L999:Neu,Vorgang,Bericht,Steuerelement-Add-in-Ressource
+N5447385-P55242-G1000000000-P8629-A1031-L999:Steuerelement
+N5447385-P55242-G1000000001-P8629-A1031-L999:Add-In-Ressource für Steuerelement
+N5447385-P55242-G1000000002-P8629-A1031-L999:Löschen
+N5447385-P55242-G1000000003-P8629-A1031-L999:Exportieren
+N5447385-P55242-G1000000004-P8629-A1031-L999:Importieren
+N5447385-P55242-G8-P8629-A1031-L999:Steuerelement importieren
+N5447385-P8629-A1031-L999:Webshop Steuerelement Add-Ins
+N5447385-Q1000000001-P26171-A1031-L999:Die Add-in-Ressource für Steuerelemente wurde entfernt.
+N5447385-Q1000000002-P26171-A1031-L999:Für das Add-in des Steuerelements gibt es keine Ressource.
+N5447385-Q1000000003-P26171-A1031-L999:Add-In-Ressource für Steuerelement importieren
+N5447385-Q1000000004-P26171-A1031-L999:Die Add-In-Ressource für Steuerelement ist bereits festgelegt.\Möchten Sie sie überschreiben?
+N5447385-Q1000000005-P26171-A1031-L999:Die Add-in-Ressource für Steuerelemente wurde importiert.
+N5447385-Q1000000006-P26171-A1031-L999:Add-In-Ressource für Steuerelement
+N5447385-Q1000000007-P26171-A1031-L999:Alle Dateien
+N5447385-U2-Q1005-P26171-A1031-L999:Import .NET Assembly
+N5447385-U2-Q1008-P26171-A1031-L999:.NET Assembly
+N5447385-U2-Q1009-P26171-A1031-L999:Alle Dateien

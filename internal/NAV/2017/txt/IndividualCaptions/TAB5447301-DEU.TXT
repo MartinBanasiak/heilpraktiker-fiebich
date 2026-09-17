@@ -1,0 +1,145 @@
+T5447301-F100-P8629-A1031-L999:Erweiterte Artikelsuche nutzen
+T5447301-F101-P8629-A1031-L999:Vorlauf Abo-Auftragsanlage
+T5447301-F102-P8629-A1031-L999:Vorlauf Zahlungsreservierung
+T5447301-F103-P8629-A1031-L999:Vk.-Nr. Abo-Rabatte
+T5447301-F104-P8629-A1031-L999:Nr.-Serie Abo-Bestellungen
+T5447301-F105-P8629-A1031-L999:Sachkonto Abonnements
+T5447301-F10-P8629-A1031-L999:Webshop URL
+T5447301-F110-P8629-A1031-L999:Marktplatz
+T5447301-F110-P8632-A1031-L999:Kein Marktplatz,Amazon,eBay
+T5447301-F11-P8629-A1031-L999:Std. Kundennr. Anmeldung
+T5447301-F12-P8629-A1031-L999:Absender Adr. E-Mail
+T5447301-F13-P8629-A1031-L999:E-Mail Adr. BCC Bestellbestätigung
+T5447301-F14-P8629-A1031-L999:Zahlungsanbieter Zugangs-ID
+T5447301-F150-P8629-A1031-L999:Individualisierungspreistyp
+T5447301-F150-P8632-A1031-L999:Alle Debitoren,Debitorengruppe,VK-Preis
+T5447301-F151-P8629-A1031-L999:Debitorenpreisgruppe Individualisierungspreis
+T5447301-F152-P8629-A1031-L999:Debitorenrabattgruppe Individualisierungspreis
+T5447301-F153-P8629-A1031-L999:Darstellung Zahlungs- u. Versandoptionen
+T5447301-F153-P8632-A1031-L999:Dropdown,Kachel
+T5447301-F154-P8629-A1031-L999:Sortierung Zahlungs- u. Versandoptionen
+T5447301-F154-P8632-A1031-L999:Preis,manuelle Sortierung
+T5447301-F155-P8629-A1031-L999:Verfügbarkeitsanzeige
+T5447301-F155-P8632-A1031-L999:Checkbox,Ampel,Anzahl
+T5447301-F156-P8629-A1031-L999:Zuständigkeitseinheitencode
+T5447301-F157-P8629-A1031-L999:Onlinebestellnummer als Auftragsnummer verwenden
+T5447301-F158-P8629-A1031-L999:Nr. Seriencode Rechnung
+T5447301-F159-P8629-A1031-L999:Nr. Seriencode Lieferschein
+T5447301-F15-P8629-A1031-L999:Zahlungsanbieter Passwort
+T5447301-F160-P8629-A1031-L999:Paydirekt API Schlüssel
+T5447301-F161-P8629-A1031-L999:Berechnung Artikelverfügbarkeit
+T5447301-F161-P8632-A1031-L999:Nach Verfügbarkeit,Nie verfügbar,Immer verfübar
+T5447301-F162-P8629-A1031-L999:E-Mail Payolution Rechnungskopie
+T5447301-F16-P8629-A1031-L999:Zahlungsanbieter HMAC Schlüssel
+T5447301-F17-P8629-A1031-L999:Rechnungsrabatte bei Bestellung anzeigen
+T5447301-F1-P8629-A1031-L999:Code
+T5447301-F202-P8629-A1031-L999:Google FTP Passwort
+T5447301-F203-P8629-A1031-L999:Google Channel Titel
+T5447301-F205-P8629-A1031-L999:Google Channel Beschreibung
+T5447301-F206-P8629-A1031-L999:Google Produktkategorie
+T5447301-F20-P8629-A1031-L999:Bestellungen erstellen als
+T5447301-F20-P8632-A1031-L999:Angebote,Aufträge
+T5447301-F210-P8629-A1031-L999:Amazon AWS Access Key ID
+T5447301-F211-P8629-A1031-L999:Amazon AWS Secret Access Key
+T5447301-F212-P8629-A1031-L999:Amazon Merchant ID
+T5447301-F213-P8629-A1031-L999:Amazon Marketplace ID
+T5447301-F214-P8629-A1031-L999:Amazon Auth. Token
+T5447301-F21-P8629-A1031-L999:Gebühr Mindestbestellwert
+T5447301-F220-P8629-A1031-L999:Ebay Umgebung
+T5447301-F220-P8632-A1031-L999:Testumgebung,Produktion
+T5447301-F221-P8629-A1031-L999:Ebay Entwickler Name
+T5447301-F222-P8629-A1031-L999:Ebay App Name
+T5447301-F223-P8629-A1031-L999:Ebay Zertifikatsname
+T5447301-F224-P8629-A1031-L999:Ebay PayPal Adresse
+T5447301-F225-P8629-A1031-L999:Ebay PLZ Artikelstandort
+T5447301-F226-P8629-A1031-L999:Ebay Retourkosten zu zahlen von
+T5447301-F226-P8632-A1031-L999:Händler,Kunde
+T5447301-F227-P8629-A1031-L999:Auth. Token
+T5447301-F22-P8629-A1031-L999:Schwellwert Mindermengenzuschlag
+T5447301-F23-P8629-A1031-L999:VK-Nr. Mindestbestellwert
+T5447301-F24-P8629-A1031-L999:Online-Rabatt %
+T5447301-F250-P8629-A1031-L999:E-Mail Versandbenachrichtigung Verzögerung
+T5447301-F251-P8629-A1031-L999:E-Mail Rechnungsversand Verzögerung
+T5447301-F252-P8629-A1031-L999:US Sales Tax aktiv
+T5447301-F253-P8629-A1031-L999:VK-Nr. US Sales Tax
+T5447301-F254-P8629-A1031-L999:VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 1
+T5447301-F255-P8629-A1031-L999:VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 2
+T5447301-F256-P8629-A1031-L999:VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 3
+T5447301-F25-P8629-A1031-L999:VK-Nr. Online-Rabatt
+T5447301-F26-P8629-A1031-L999:VK-Nr. Versandkosten
+T5447301-F27-P8629-A1031-L999:Sammeldebitor verwenden
+T5447301-F28-P8629-A1031-L999:Code Nr.-Serie Angebote
+T5447301-F29-P8629-A1031-L999:Code Nr.-Serie Aufträge
+T5447301-F2-P8629-A1031-L999:Beschreibung
+T5447301-F300-P8629-A1031-L999:Artikelverknüpfungstyp Gemeinsam Gekauft
+T5447301-F300-P8632-A1031-L999:Zuberhör,Ersatzteil,Alternative,Passende
+T5447301-F302-P8629-A1031-L999:Anzahl Verknüpfungen Gemeinsam Gekauft
+T5447301-F30-P8629-A1031-L999:Listenpreistyp
+T5447301-F30-P8632-A1031-L999:Alle Debitoren,Debitorengruppe,VK-Preis
+T5447301-F31-P8629-A1031-L999:Debitorenpreisgruppe Listenpreis
+T5447301-F32-P8629-A1031-L999:Debitorenrabattgruppe Listenpreis
+T5447301-F33-P8629-A1031-L999:Basispreistyp
+T5447301-F33-P8632-A1031-L999:Alle Debitoren,Debitorengruppe,VK-Preis
+T5447301-F34-P8629-A1031-L999:Debitorenpreisgruppe Basispreis
+T5447301-F35-P8629-A1031-L999:Debitorenrabattgruppe Basispreis
+T5447301-F36-P8629-A1031-L999:Lagerortfilter
+T5447301-F37-P8629-A1031-L999:Kampagnennr.
+T5447301-F38-P8629-A1031-L999:Preise inkl. MwSt. anzeigen
+T5447301-F39-P8629-A1031-L999:MwSt.-Geschäftsbuchungsgruppe
+T5447301-F3-P8629-A1031-L999:Webshopart
+T5447301-F3-P8632-A1031-L999:B2B-Webshop,B2C-Webshop,Außendienstanbindung,Artikelkatalog,Marketplace-Anbindung
+T5447301-F400-P8629-A1031-L999:Newsletter Account
+T5447301-F401-P8629-A1031-L999:Newsletter Login
+T5447301-F402-P8629-A1031-L999:Newsletter Passwort
+T5447301-F403-P8629-A1031-L999:Newsletter Gruppe
+T5447301-F404-P8629-A1031-L999:Newsletter Segment
+T5447301-F40-P8629-A1031-L999:Lagerbest. ziehe Bestellungen ab (Tage)
+T5447301-F41-P8629-A1031-L999:Lagerbest. addiere Einkauf (Tage)
+T5447301-F42-P8629-A1031-L999:Gewünschtes Lieferdatum wählbar
+T5447301-F43-P8629-A1031-L999:Tage Aufschlag gewünschtes Lieferdatum
+T5447301-F44-P8629-A1031-L999:Streichpreisanzeige
+T5447301-F44-P8632-A1031-L999: ,Listenpreis -> Basispreis,Listenpreis -> Kundenpreis,Listenpreis -> Kampagenenpreis,Basispreis -> Kundenpreis,Basispreis -> Kampagnenpreis,Kundenpreis -> Kampagnenpreis
+T5447301-F45-P8629-A1031-L999:Std. Verkäufercode
+T5447301-F46-P8629-A1031-L999:VK-Nr. Gebühren Zahlungsart
+T5447301-F47-P8629-A1031-L999:Anredecode Unternehmen
+T5447301-F48-P8629-A1031-L999:Anredecode männlich
+T5447301-F49-P8629-A1031-L999:Anredecode weiblich
+T5447301-F4-P8629-A1031-L999:Std. Sprachencode
+T5447301-F50-P8629-A1031-L999:Sachkonto Wertgutscheine
+T5447301-F51-P8629-A1031-L999:VK-Nr. Rabattgutscheine
+T5447301-F52-P8629-A1031-L999:Gutschein Buchblattvorlage
+T5447301-F53-P8629-A1031-L999:Gutschein Buchblattname
+T5447301-F54-P8629-A1031-L999:Max. Vertreterrabatt %
+T5447301-F5-P8629-A1031-L999:Artikel von Shop verwenden
+T5447301-F60-P8629-A1031-L999:Debitorberechtigungen aktiv
+T5447301-F6-P8629-A1031-L999:Kategorien von Shop verwenden
+T5447301-F77-P8629-A1031-L999:Anredecode-Filter "Herr"
+T5447301-F78-P8629-A1031-L999:Anredecode-Filter "Frau"
+T5447301-F7-P8629-A1031-L999:Variantenart
+T5447301-F7-P8632-A1031-L999:Shopvarianten mit Mutterartikel,Shopvarianten ohne Mutterartikel,Dynamics NAV Varianten
+T5447301-F80-P8629-A1031-L999:Anzahl Globaler Merkmalfilter
+T5447301-F81-P8629-A1031-L999:Merkmalfilter aktiv
+T5447301-F82-P8629-A1031-L999:Artikelvergleich aktiv
+T5447301-F83-P8629-A1031-L999:Merkmale auf Artikelkarte anzeigen
+T5447301-F84-P8629-A1031-L999:Merkmal Marke/Hersteller
+T5447301-F85-P8629-A1031-L999:MwSt.-Kennzeichen 1
+T5447301-F86-P8629-A1031-L999:MwSt.-Kennzeichen 2
+T5447301-F87-P8629-A1031-L999:MwSt.-Kennzeichen 3
+T5447301-F88-P8629-A1031-L999:VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 1
+T5447301-F89-P8629-A1031-L999:VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 2
+T5447301-F8-P8629-A1031-L999:Debitoren von Shop Code verwenden
+T5447301-F90-P8629-A1031-L999:VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 3
+T5447301-F91-P8629-A1031-L999:Login-Typ
+T5447301-F91-P8632-A1031-L999:E-Mail & Passwort,Login & Passwort,Kunden-Nr. & Login & Passwort,Kunden-Nr. & E-mail & Passwort,Kunden-Nr. & Passwort
+T5447301-F92-P8629-A1031-L999:Nr. Seriencode Debitor
+T5447301-F93-P8629-A1031-L999:Std. Newsletter Segmentbezeichnung
+T5447301-F94-P8629-A1031-L999:Reklamationstyp
+T5447301-F94-P8632-A1031-L999:Rücksendungsauftrag,Verkaufsgutschrift
+T5447301-F95-P8629-A1031-L999:Nummernserie Reklamation
+T5447301-F96-P8629-A1031-L999:Maximale Anzahl Tage reklamierbar
+T5447301-F97-P8629-A1031-L999:VK-Nr. Onlinerabatt MwSt-Satz 1
+T5447301-F98-P8629-A1031-L999:VK-Nr. Onlinerabatt MwSt-Satz 2
+T5447301-F99-P8629-A1031-L999:VK-Nr. Onlinerabatt MwSt-Satz 3
+T5447301-F9-P8629-A1031-L999:Buchungstyp Rabatte / Aufschläge
+T5447301-F9-P8632-A1031-L999:Sachkonto,Ressource,Artikel,Zu-/Abschlag
+T5447301-P8629-A1031-L999:Webshop

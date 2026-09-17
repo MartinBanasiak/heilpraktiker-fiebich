@@ -1,0 +1,9 @@
+N5447370-P55242-G1000000006-P55160-Q1000000003-P26171-A1031-L999:Die Abonnement-Artikelverknüpfung wurde erfolgreich angelegt.\Abonnement-Festpreis oder -Rabatt muss manuell vergeben werden.
+N5447370-P55242-G1000000006-P55160-Q1000000004-P26171-A1031-L999:Es besteht bereits ein Abonnement von Typ "Sequenz-Artikel" für diesen Artikel. Nur Artikel die nicht als Abo-Sequenz-Artikel verwendet werden, können mit Abonnements verknüpft werden.
+N5447370-P55242-G1000000006-P8629-A1031-L999:Zu Abo hinzufügen
+N5447370-P55242-G1000000007-P55160-Q1000000003-P26171-A1031-L999:Sind Sie sicher, dass Sie den Artikel aus dem Abonnement entfernen möchten?
+N5447370-P55242-G1000000007-P8629-A1031-L999:Aus Abo entfernen
+N5447370-P55242-G1000000008-P55160-Q1000000001-P26171-A1031-L999:Es kann nur dann ein Sequenz-Abonnement für den Artikel angelegt werden, wenn es keine anderen mit dem Artikel verknüpfte Abonnements gibt.
+N5447370-P55242-G1000000008-P8629-A1031-L999:Sequenz-Abo für Artikel anlegen
+N5447370-P55242-G1000000009-P8629-A1031-L999:Abonemment öffnen
+N5447370-P8629-A1031-L999:Webshop Artikel Abonnements

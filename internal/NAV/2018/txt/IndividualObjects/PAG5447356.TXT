@@ -1,0 +1,238 @@
+OBJECT Page 5447356 Webshop Ship. Opt. Translation
+{
+  OBJECT-PROPERTIES
+  {
+    Date=28.02.18;
+    Time=16:00:00;
+    Version List=MYSW14.00,DCSW11.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Versandoptionen �bersetzungen;
+               ENU=Shipping Options Translation];
+    SourceTable=Table5447456;
+    DelayedInsert=Yes;
+    PageType=List;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion;
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       IF "Has Description" THEN
+                         ContentText := YesText
+                       ELSE
+                         ContentText := NoText;
+
+                       IF "Has Icon" THEN
+                         LogoText := YesText
+                       ELSE
+                         LogoText := NoText;
+                     END;
+
+    OnInsertRecord=BEGIN
+                     TESTFIELD(Description);
+                   END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000014;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000012;1 ;ActionGroup;
+                      CaptionML=[DEU=Zus�tzliche Daten;
+                                 ENU=Additional Data] }
+      { 1000000009;2 ;ActionGroup;
+                      CaptionML=[DEU=Logo;
+                                 ENU=Logo];
+                      Image=Picture }
+      { 1000000008;3 ;Action    ;
+                      Name=EditLogo;
+                      CaptionML=[DEU=Symbol bearbeiten;
+                                 ENU=Edit icon];
+                      Image=Picture;
+                      OnAction=BEGIN
+                                 EditIcon();
+                               END;
+                                }
+      { 1000000007;3 ;Action    ;
+                      Name=DeleteLogo;
+                      CaptionML=[DEU=Symbol l�schen;
+                                 ENU=Delete icon];
+                      Image=VoidElectronicDocument;
+                      OnAction=BEGIN
+                                 TESTFIELD("Language Code");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 //WebshopUpdateManagement.DeleteShippingOptionTranslationImage(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000006;2 ;ActionGroup;
+                      CaptionML=[DEU=Beschreibung;
+                                 ENU=Description];
+                      Image=Description }
+      { 1000000005;3 ;Action    ;
+                      Name=EditDescription;
+                      CaptionML=[DEU=Beschreibung bearbeiten;
+                                 ENU=Edit Description];
+                      Image=Description;
+                      OnAction=BEGIN
+                                 EditContent();
+                               END;
+                                }
+      { 1000000004;3 ;Action    ;
+                      Name=DeleteDescription;
+                      CaptionML=[DEU=Beschreibung l�schen;
+                                 ENU=Delete Description];
+                      Image=DeleteQtyToHandle;
+                      OnAction=VAR
+                                 WebshopLanguage@1000000006 : Record 5447302;
+                                 WebshopShop@1000000005 : Record 5447301;
+                                 DefaultNumber@1000000004 : Integer;
+                                 i@1000000003 : Integer;
+                                 OptionString@1000000002 : Text;
+                                 SelectedOption@1000000001 : Integer;
+                                 DataError@1000000000 : Boolean;
+                                 Text5447300@1000000007 : TextConst 'DEU=Webshop Sprache ausw�hlen;ENU=Select Webshop Language';
+                               BEGIN
+                                 TESTFIELD("Language Code");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 //WebshopUpdateManagement.DeleteShippingOptionTranslationDescription(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text002);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Language Code" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000011;2;Field  ;
+                CaptionML=[DEU=Logo;
+                           ENU=Logo];
+                SourceExpr=LogoText;
+                Editable=false;
+                OnAssistEdit=BEGIN
+                               EditIcon();
+                             END;
+                              }
+
+    { 1000000010;2;Field  ;
+                CaptionML=[DEU=Langbeschreibung;
+                           ENU=Long Description];
+                SourceExpr=ContentText;
+                Editable=false;
+                OnAssistEdit=BEGIN
+                               EditContent();
+                             END;
+                              }
+
+  }
+  CODE
+  {
+    VAR
+      ContentText@1000000008 : Text[30];
+      LogoText@1000000007 : Text[30];
+      WebshopUpdateManagement@1000000006 : Codeunit 5447301;
+      ClientAddInType@1000000005 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000004 : Codeunit 5447320;
+      WebshopWebform@1000000003 : Page 5447366;
+      Type@1000000002 : 'Description1,Promotion,Description2';
+      WebformType@1000000001 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection,ShippingOption,PaymentOption,ShippingOptionIcon,PaymentOptionIcon,Marketplace,SalesPerson,ShippingOptionTranslationDescription,ShippingOptionTranslationIcon';
+      Text001@1000000012 : TextConst 'DEU=Logo gel�scht;ENU=Logo deleted';
+      Text002@1000000011 : TextConst 'DEU=Beschreibung gel�scht;ENU=Description deleted';
+      Text007@1000000010 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+      YesText@1000000009 : TextConst 'DEU=Ja;ENU=Yes';
+      NoText@1000000000 : TextConst 'DEU=Nein;ENU=No';
+
+    PROCEDURE EditContent@1000000000();
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD("Language Code");
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateShippingOptionTranslation(Rec);
+      GET("Shipping Croup Code","Shipping Option Line No.","Language Code");
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        CLEAR(WebshopWebform);
+        //DynamicCommerceAddIn
+        WebshopWebform.SetWebformType(WebformType::ShippingOptionTranslationDescription);
+        WebshopWebform.SetLanguageCode("Language Code");
+        WebshopWebform.SetLineNo("Shipping Option Line No.");
+        WebshopWebform.SetRecordCode("Shipping Croup Code");
+
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+
+      END;
+
+      GET("Shipping Croup Code","Shipping Option Line No.","Language Code");
+      WebshopUpdateManagement.CheckShippingOptionTranslation(Rec);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      GET("Shipping Croup Code","Shipping Option Line No.","Language Code");
+
+      IF "Has Description" THEN
+        ContentText := YesText
+      ELSE
+        ContentText := NoText;
+    END;
+
+    PROCEDURE EditIcon@1000000001();
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD("Language Code");
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateShippingOptionTranslation(Rec);
+      GET("Shipping Croup Code","Shipping Option Line No.","Language Code");
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        //DynamicCommerceAddIn
+        CLEAR(WebshopWebform);
+
+        WebshopWebform.SetWebformType(WebformType::ShippingOptionTranslationIcon);
+        WebshopWebform.SetLanguageCode("Language Code");
+        WebshopWebform.SetLineNo("Shipping Option Line No.");
+        WebshopWebform.SetRecordCode("Shipping Croup Code");
+
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+
+      END;
+
+      GET("Shipping Croup Code","Shipping Option Line No.","Language Code");
+      WebshopUpdateManagement.CheckShippingOptionTranslationIcon(Rec);
+      GET("Shipping Croup Code","Shipping Option Line No.","Language Code");
+      WebshopUpdateManagement.SetSendNow(FALSE);
+
+      IF "Has Icon"  THEN
+        LogoText := YesText
+      ELSE
+        LogoText := NoText;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

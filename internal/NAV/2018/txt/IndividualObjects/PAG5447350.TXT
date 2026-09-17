@@ -1,0 +1,419 @@
+OBJECT Page 5447350 Webshop Manager RC-1
+{
+  OBJECT-PROPERTIES
+  {
+    Date=18.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.11;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Rollencenter Webshop;
+               ENU=Role Center Webshop];
+    PageType=RoleCenter;
+    PromotedActionCategoriesML=[DEU=Neu,Vorg�nge,Berichte,Webshop,Aktualisierung,Stammdaten,Verkauf;
+                                ENU=New,Process,Report,Webshop,Update,Master Data,Sales];
+    ActionList=ACTIONS
+    {
+      { 1900000011;0 ;ActionContainer;
+                      ActionContainerType=HomeItems }
+      { 1000000000;1 ;Action    ;
+                      Name=HomeViewContacts;
+                      CaptionML=[DEU=Kontakte;
+                                 ENU=Contacts];
+                      RunObject=Page 5052 }
+      { 112     ;1   ;Action    ;
+                      Name=HomeViewCustomers;
+                      CaptionML=[DEU=Debitoren;
+                                 ENU=Customers];
+                      RunObject=Page 22;
+                      Image=Customer }
+      { 102     ;1   ;Action    ;
+                      Name=HomeViewVendors;
+                      CaptionML=[DEU=Kreditoren;
+                                 ENU=Vendors];
+                      RunObject=Page 27;
+                      Image=Vendor }
+      { 110     ;1   ;Action    ;
+                      Name=HomeViewItems;
+                      CaptionML=[DEU=Artikel;
+                                 ENU=Items];
+                      RunObject=Page 31;
+                      Image=Item }
+      { 1900000012;0 ;ActionContainer;
+                      ActionContainerType=ActivityButtons }
+      { 1000000004;1 ;ActionGroup;
+                      CaptionML=[DEU=E-Commerce;
+                                 ENU=E-Commerce];
+                      Image=Intrastat }
+      { 1000000005;2 ;Action    ;
+                      Name=ECommViewItems;
+                      CaptionML=[DEU=Artikel;
+                                 ENU=Items];
+                      RunObject=Page 31 }
+      { 1000000028;2 ;Action    ;
+                      Name=ECommViewCustomers;
+                      CaptionML=[DEU=Debitoren;
+                                 ENU=Customers];
+                      RunObject=Page 22 }
+      { 1000000022;2 ;Action    ;
+                      Name=ECommViewWebshops;
+                      CaptionML=[DEU=Webshops;
+                                 ENU=Webshops];
+                      RunObject=Page 5447302 }
+      { 1000000021;2 ;Action    ;
+                      Name=ECommViewWebshopLanguages;
+                      CaptionML=[DEU=Webshop Sprachen;
+                                 ENU=Webshop Languages];
+                      RunObject=Page 5447304;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes }
+      { 1000000055;2 ;Action    ;
+                      Name=ECommViewRatings;
+                      CaptionML=[DEU=Artikelbewertungen;
+                                 ENU=Ratings];
+                      RunObject=Page 5447335 }
+      { 1000000023;2 ;Action    ;
+                      Name=ECommViewItemAttributes;
+                      CaptionML=[DEU=Artikelmerkmale;
+                                 ENU=Item Attributes];
+                      RunObject=Page 5447320 }
+      { 1000000025;2 ;Action    ;
+                      Name=ECommViewCoupons;
+                      CaptionML=[DEU=Gutscheine;
+                                 ENU=Coupons];
+                      RunObject=Page 5447331 }
+      { 1000000030;2 ;Action    ;
+                      Name=ECommViewSubscriptions;
+                      CaptionML=[DEU=Abonnements;
+                                 ENU=Subscriptions];
+                      RunObject=Page 5447340 }
+      { 1000000051;2 ;Action    ;
+                      Name=ECommViewCampaigns;
+                      CaptionML=[DEU=Webshop Kampagnen;
+                                 ENU=Webshop Campaigns];
+                      RunObject=Page 5447380 }
+      { 1000000054;2 ;Action    ;
+                      Name=ECommViewPermissionGroups;
+                      CaptionML=[DEU=Berechtigungsgruppen;
+                                 ENU=Permission Groups];
+                      RunObject=Page 5447336 }
+      { 1000000024;2 ;Action    ;
+                      Name=ECommViewOrders;
+                      CaptionML=[DEU=Webshop Verk�ufe;
+                                 ENU=Webshop Sales];
+                      RunObject=Page 5447319 }
+      { 158     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Verkauf;
+                                 ENU=Sales];
+                      Image=Sales }
+      { 1000000001;2 ;Action    ;
+                      Name=SalesViewCustomers;
+                      CaptionML=[DEU=Debitoren;
+                                 ENU=Customers];
+                      RunObject=Page 22 }
+      { 1000000006;2 ;Action    ;
+                      Name=SalesViewQuotes;
+                      CaptionML=[DEU=Angebote;
+                                 ENU=Sales Quotes];
+                      RunObject=Page 9300 }
+      { 1000000002;2 ;Action    ;
+                      Name=SalesViewOrders;
+                      CaptionML=[DEU=Auftr�ge;
+                                 ENU=Sales Orders];
+                      RunObject=Page 9305 }
+      { 1000000007;2 ;Action    ;
+                      Name=SalesViewCreditMemos;
+                      CaptionML=[DEU=Gutschriften;
+                                 ENU=Credit Memos];
+                      RunObject=Page 9302 }
+      { 1000000008;2 ;Action    ;
+                      Name=SalesViewPostedInvoices;
+                      CaptionML=[DEU=Gebuchte Rechnungen;
+                                 ENU=Posted Sales Invioces];
+                      RunObject=Page 143 }
+      { 1000000010;2 ;Action    ;
+                      Name=SalesViewPostedShipments;
+                      CaptionML=[DEU=Gebuchte Lieferungen;
+                                 ENU=Posted Shipments];
+                      RunObject=Page 142 }
+      { 1000000009;2 ;Action    ;
+                      Name=SalesViewPostedCrMemos;
+                      CaptionML=[DEU=Gebuchte Gutschriften;
+                                 ENU=Posted Sales Cr. Memos];
+                      RunObject=Page 144 }
+      { 92      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Einkauf;
+                                 ENU=Purchase];
+                      Image=purchasing }
+      { 1000000003;2 ;Action    ;
+                      Name=PurchViewVendors;
+                      CaptionML=[DEU=Kreditoren;
+                                 ENU=Vendors];
+                      RunObject=Page 27 }
+      { 1000000011;2 ;Action    ;
+                      Name=PurchViewQuotes;
+                      CaptionML=[DEU=Anfragen;
+                                 ENU=Purchase Quotes];
+                      RunObject=Page 9306 }
+      { 1000000012;2 ;Action    ;
+                      Name=PurchViewOrders;
+                      CaptionML=[DEU=Einkaufs-Bestellungen;
+                                 ENU=Purchase Orders];
+                      RunObject=Page 9307 }
+      { 1000000014;2 ;Action    ;
+                      Name=PurchViewShipments;
+                      CaptionML=[DEU=Gebuchte Einkaufs-Rechnungen;
+                                 ENU=Posted Purchase Invoices];
+                      RunObject=Page 146 }
+      { 1000000015;2 ;Action    ;
+                      Name=PurchViewReceipts;
+                      CaptionML=[DEU=Gebuchte Lieferungen;
+                                 ENU=Posted Sales Shipments];
+                      RunObject=Page 145 }
+      { 1000000016;2 ;Action    ;
+                      Name=PurchViewCrMemos;
+                      CaptionML=[DEU=Gebuchte Einkaufs-Gutschriften;
+                                 ENU=Posted Purchase Credit Memos];
+                      RunObject=Page 147 }
+      { 1000000017;1 ;ActionGroup;
+                      CaptionML=[DEU=Lager;
+                                 ENU=Warehouse];
+                      Image=ResourcePlanning }
+      { 1000000018;2 ;Action    ;
+                      Name=WHViewItem;
+                      CaptionML=[DEU=Artikel;
+                                 ENU=Item];
+                      RunObject=Page 31 }
+      { 1000000020;2 ;Action    ;
+                      Name=WHViewItemJournals;
+                      CaptionML=[DEU=Artikel-Buchl�tter;
+                                 ENU=Item Journals];
+                      RunObject=Page 262 }
+      { 1000000033;0 ;ActionContainer;
+                      CaptionML=[DEU=Webshop;
+                                 ENU=Webshop];
+                      ActionContainerType=Reports }
+      { 1000000032;1 ;Action    ;
+                      Name=WebshopActiveItem;
+                      CaptionML=[DEU=Artikel aktivieren;
+                                 ENU=Activate Item];
+                      RunObject=Report 5447306;
+                      Promoted=No;
+                      Image=Approvals }
+      { 1000000031;1 ;Action    ;
+                      Name=WebshopPlaceItemsInCategory;
+                      CaptionML=[DEU=Artikel in Kategorie legen;
+                                 ENU=Place Items in Category];
+                      RunObject=Report 5447305;
+                      Image=Allocate }
+      { 1000000026;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000050;1 ;Separator ;
+                      CaptionML=[DEU=Webshop;
+                                 ENU=Webshop];
+                      IsHeader=Yes }
+      { 1000000027;1 ;Action    ;
+                      Name=OpenWebshop;
+                      CaptionML=[DEU=Webshop �ffnen;
+                                 ENU=Open Webshop];
+                      RunObject=Codeunit 5447308;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=LinkWeb;
+                      PromotedCategory=Category4 }
+      { 1000000041;1 ;Action    ;
+                      Name=OpenCMS;
+                      CaptionML=[DEU=CMS �ffnen;
+                                 ENU=Open CMS];
+                      RunObject=Codeunit 5447309;
+                      Promoted=Yes;
+                      Image=LinkWeb;
+                      PromotedCategory=Category4 }
+      { 1000000013;1 ;Action    ;
+                      Name=OpenPaygateAnalytics;
+                      CaptionML=[DEU=Computop Paygate �ffnen;
+                                 ENU=Open Computop Paygate];
+                      RunObject=Codeunit 5447315;
+                      Promoted=Yes;
+                      Image=VendorPaymentJournal;
+                      PromotedCategory=Category4 }
+      { 1000000046;1 ;Action    ;
+                      Name=OpenEmailMarketing;
+                      CaptionML=[DEU=E-Mail Marketing �ffnen;
+                                 ENU=E-Mail Marketing];
+                      RunObject=Codeunit 5447305;
+                      Promoted=Yes;
+                      Image=MailSetup;
+                      PromotedCategory=Category4 }
+      { 1000000047;1 ;Action    ;
+                      Name=OpenSupport;
+                      CaptionML=[DEU=dc Portal �ffnen;
+                                 ENU=Open dc portal];
+                      RunObject=Codeunit 5447307;
+                      Promoted=Yes;
+                      Image=OnlineHelp;
+                      PromotedCategory=Category4 }
+      { 1000000034;1 ;Separator ;
+                      CaptionML=[DEU=Aktualisierung;
+                                 ENU=Update];
+                      IsHeader=Yes }
+      { 1000000042;1 ;Action    ;
+                      Name=UpdateSetup;
+                      CaptionML=[DEU=Einrichtung;
+                                 ENU=Setup];
+                      RunObject=Page 5447300;
+                      Promoted=Yes;
+                      Visible=False;
+                      Image=XMLSetup;
+                      PromotedCategory=Category5 }
+      { 1000000043;1 ;Action    ;
+                      Name=UpdateDynamicData;
+                      CaptionML=[DEU=Bewegungsdaten aktualisieren;
+                                 ENU=Update Dynamic Data];
+                      RunObject=Codeunit 5447304;
+                      Promoted=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Category5 }
+      { 1000000044;1 ;Action    ;
+                      Name=UpdateAllData;
+                      CaptionML=[DEU=Gesamtdaten aktualisieren;
+                                 ENU=Update All Data];
+                      RunObject=Codeunit 5447303;
+                      Promoted=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Category5 }
+      { 1000000045;1 ;Action    ;
+                      Name=[ViewLogEntries ];
+                      CaptionML=[DEU=Aufgabenwarteschlangen-Protokollposten;
+                                 ENU=Log entries];
+                      RunObject=Page 674;
+                      RunPageView=WHERE(Object Type to Run=CONST(Codeunit),
+                                        Object ID to Run=FILTER(50703|50704));
+                      Promoted=Yes;
+                      Image=InteractionLog;
+                      PromotedCategory=Category5 }
+      { 1000000048;1 ;Separator ;
+                      IsHeader=Yes }
+      { 1000000035;1 ;Action    ;
+                      Name=ViewItems;
+                      CaptionML=[DEU=Artikel;
+                                 ENU=Items];
+                      RunObject=Page 31;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Item;
+                      PromotedCategory=Category6 }
+      { 1000000036;1 ;Action    ;
+                      Name=ViewWebshops;
+                      CaptionML=[DEU=Webshops;
+                                 ENU=Webshops];
+                      RunObject=Page 5447302;
+                      Promoted=Yes;
+                      Image=Web;
+                      PromotedCategory=Category6 }
+      { 1000000037;1 ;Action    ;
+                      Name=ViewWebshopLanguages;
+                      CaptionML=[DEU=Webshop Sprachen;
+                                 ENU=Webshop Languages];
+                      RunObject=Page 5447304;
+                      Promoted=Yes;
+                      Image=Language;
+                      PromotedCategory=Category6 }
+      { 1000000038;1 ;Action    ;
+                      Name=ViewAttributes;
+                      CaptionML=[DEU=Merkmale;
+                                 ENU=Attribute List];
+                      RunObject=Page 5447320;
+                      Promoted=Yes;
+                      Image=Dimensions;
+                      PromotedCategory=Category6 }
+      { 1000000049;1 ;Separator ;
+                      IsHeader=Yes }
+      { 1000000039;1 ;Action    ;
+                      Name=ViewWebshopOrders;
+                      CaptionML=[DEU=Bestellungen;
+                                 ENU=Online Orders];
+                      RunObject=Page 5447319;
+                      Promoted=Yes;
+                      Image=ViewOrder;
+                      PromotedCategory=Category7 }
+      { 1000000040;1 ;Action    ;
+                      Name=ViewCoupons;
+                      CaptionML=[DEU=Gutscheine;
+                                 ENU=Coupons];
+                      RunObject=Page 5447331;
+                      Promoted=Yes;
+                      Image=Voucher;
+                      PromotedCategory=Category7 }
+      { 1000000052;1 ;Action    ;
+                      Name=ViewSubscriptions;
+                      CaptionML=[DEU=Abonnements;
+                                 ENU=Subscriptions];
+                      RunObject=Page 5447340;
+                      Promoted=Yes;
+                      Image=BlanketOrder;
+                      PromotedCategory=Category7 }
+      { 1000000053;1 ;Action    ;
+                      Name=ViewCampaigns;
+                      CaptionML=[DEU=Kampagnen;
+                                 ENU=Campaigns];
+                      RunObject=Page 5447380;
+                      Promoted=Yes;
+                      Image=GeneralPostingSetup;
+                      PromotedCategory=Category7 }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000008;0;Container;
+                ContainerType=RoleCenterArea }
+
+    { 1900724808;1;Group   }
+
+    { 1000000019;2;Part   ;
+                PagePartID=Page5447351;
+                PartType=Page }
+
+    { 1900724708;1;Group   }
+
+    { 1000000029;2;Part   ;
+                CaptionML=[DEU=Diagramm;
+                           ENU=Chart];
+                PagePartID=Page5447352;
+                PartType=Page }
+
+    { 1905989608;2;Part   ;
+                PagePartID=Page9152;
+                PartType=Page }
+
+    { 1907692008;2;Part   ;
+                PagePartID=Page9150;
+                Visible=false;
+                PartType=Page }
+
+    { 1902476008;2;Part   ;
+                PagePartID=Page9151;
+                Visible=false;
+                PartType=Page }
+
+    { 67  ;2   ;Part      ;
+                PartType=System;
+                SystemPartID=MyNotes }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000 : Codeunit 5447300;
+      Text001@1001 : TextConst 'DEU=Verbindungstest erfolgreich!;ENU=Connection Test successful!';
+      URL001@1000000000 : TextConst 'ENU=https://paygate.computop.de/analytics/login.aspx';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

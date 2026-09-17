@@ -1,0 +1,28 @@
+R5447329-N2-C1000000000-P8629-A1033-L999:Configuration
+R5447329-N2-C1000000001-P8629-A1033-L999:Ending Date
+R5447329-N2-C1000000002-P8629-A1033-L999:Starting Date
+R5447329-N2-C1000000003-P8629-A1033-L999:Max No of Uses
+R5447329-N2-C1000000004-P8629-A1033-L999:Category Name
+R5447329-N2-C1000000005-P8629-A1033-L999:Category Line No.
+R5447329-N2-C1000000006-P8629-A1033-L999:Is Category Coupon
+R5447329-N2-C1000000007-P8629-A1033-L999:Item No.
+R5447329-N2-C1000000008-P8629-A1033-L999:Percentage
+R5447329-N2-C1000000009-P8629-A1033-L999:Amount From
+R5447329-N2-C1000000010-P8629-A1033-L999:Amount
+R5447329-N2-C1000000013-P8629-A1033-L999:Coupontype
+R5447329-N2-C1000000014-P8629-A1033-L999:Conditions
+R5447329-N2-C1000000015-P8629-A1033-L999:Validity
+R5447329-N2-C1000000016-P8629-A1033-L999:Set created coupons active
+R5447329-N2-C1000000017-P8629-A1033-L999:Update Coupons to Web
+R5447329-N2-C1-P8629-A1033-L999:Prefix
+R5447329-N2-C2-P8629-A1033-L999:No. of Coupon Lines
+R5447329-N2-C3-P8629-A1033-L999:Configuration
+R5447329-N2-C4-P8629-A1033-L999:Suffix
+R5447329-N2-C5-P8629-A1033-L999:No. of random characters
+R5447329-P8629-A1033-L999:Webshop Create Coupon Codes
+R5447329-Q1000000026-P26171-A1033-L999:Coupon Code already assigned for Shop Code %1 and Language Code %2 (Coupon Group %3).
+R5447329-Q1000000027-P26171-A1033-L999:Only one value type per coupon group allowed.
+R5447329-Q1000000033-P26171-A1033-L999:The prefix can not start with '%1'. '%1' is reserved for digital coupons.
+R5447329-Q1000000034-P26171-A1033-L999:The prefix can not start with '%1'. '%1' is reserved for newsletter coupons.
+R5447329-Q1007-P26171-A1033-L999:The total character length is larger than allowed. Prefix + random characters + suffix must not exceed a length of 20 characters.
+R5447329-Q1009-P26171-A1033-L999:The currently given number of random characters is insufficient to generate enough sufficiently random codes. Please increase the number of random characters or decrease the number of coupon lines to be generated.

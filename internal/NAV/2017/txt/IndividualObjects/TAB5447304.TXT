@@ -1,0 +1,831 @@
+OBJECT Table 5447304 Webshop Item
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               "Creation Date" := TODAY;
+               CreateItemSlug(Description);
+             END;
+
+    OnModify=VAR
+               WebshopItem@1000000000 : Record 5447304;
+             BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+               "User Last Modification" := USERID;
+
+               IF "Item Slug"  = '' THEN
+                 CreateItemSlug(Description);
+
+               // Werte f�r andere Sprachen synchronisieren
+               WebshopItem.SETRANGE("Shop Code","Shop Code");
+               WebshopItem.SETRANGE("Item No.","Item No.");
+               WebshopItem.SETFILTER("Language Code",'<>%1',"Language Code");
+               IF WebshopItem.FINDSET THEN REPEAT
+                  WebshopItem."Insufficient Inventory Limit" := "Insufficient Inventory Limit";
+                  WebshopItem."Item Slug" := "Item Slug";
+                  WebshopItem.MODIFY(FALSE);
+               UNTIL WebshopItem.NEXT = 0;
+             END;
+
+    OnDelete=BEGIN
+               // Web-Datensatz l�schen
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.DeleteWebshopItem(Rec);
+             END;
+
+    OnRename=BEGIN
+               ERROR(Text001);
+             END;
+
+    CaptionML=[DEU=Webshop Artikel;
+               ENU=Webshop Item];
+    LookupPageID=Page5447309;
+    DrillDownPageID=Page5447309;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Item No.            ;Code20        ;TableRelation=Item.No.;
+                                                   OnValidate=BEGIN
+                                                                Item.GET("Item No.");
+
+                                                                // Einheitencode von Artikel �bernehmen
+                                                                "Unit of Measure Code" := Item."Sales Unit of Measure";
+
+                                                                // Beschreibung von Artikel �bernehmen
+                                                                IF Description = '' THEN BEGIN
+                                                                  IF ItemTranslation.GET("Item No.",'',"Language Code") THEN
+                                                                    VALIDATE(Description,ItemTranslation.Description)
+                                                                  ELSE
+                                                                    VALIDATE(Description,Item.Description);
+                                                                END;
+
+                                                                // Beschreibung 2 von Artikel �bernehmen
+                                                                IF Summary = '' THEN BEGIN
+                                                                  IF ItemTranslation.GET("Item No.",'',"Language Code") THEN
+                                                                    Summary := ItemTranslation."Description 2"
+                                                                  ELSE
+                                                                    Summary := Item."Description 2";
+                                                                END;
+
+                                                                // Variantenbeschreibung �bernehmen
+                                                                VALIDATE("Variant Description",Item.Description);
+                                                              END;
+
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Item No.];
+                                                   NotBlank=Yes }
+    { 4   ;   ;Description         ;Text50        ;OnValidate=BEGIN
+                                                                // Variantenbeschreibung �bernehmen wenn synchron
+                                                                IF xRec.Description = "Variant Description" THEN
+                                                                  "Variant Description" := Description;
+                                                              END;
+
+                                                   CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 5   ;   ;Variant Description ;Text50        ;CaptionML=[DEU=Variantenbeschreibung;
+                                                              ENU=Variant Description] }
+    { 6   ;   ;Is Active           ;Boolean       ;CaptionML=[DEU=Ist Aktiv;
+                                                              ENU=Is Active] }
+    { 7   ;   ;Starting Date       ;Date          ;CaptionML=[DEU=Startdatum;
+                                                              ENU=Starting Date] }
+    { 8   ;   ;Ending Date         ;Date          ;CaptionML=[DEU=Enddatum;
+                                                              ENU=Ending Date] }
+    { 9   ;   ;Main Picture Line No.;Integer      ;TableRelation="Webshop Item File"."Line No." WHERE (Item No.=FIELD(Item No.),
+                                                                                                       Language Code=FIELD(Language Code),
+                                                                                                       Type=CONST(Picture),
+                                                                                                       Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Hauptbild Zeilennr.;
+                                                              ENU=Main Picture Line No.] }
+    { 10  ;   ;Main Category Line No.;Integer     ;TableRelation="Webshop Item Category"."Category Line No." WHERE (Item No.=FIELD(Item No.),
+                                                                                                                    Item Language Code=FIELD(Language Code),
+                                                                                                                    Category Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Hauptkategorie Zeilennr.;
+                                                              ENU=Main Category Line No.];
+                                                   BlankZero=Yes }
+    { 11  ;   ;Summary             ;Text250       ;CaptionML=[DEU=Kurztext;
+                                                              ENU=Summary];
+                                                   Editable=Yes }
+    { 12  ;   ;Date Last Updated   ;DateTime      ;CaptionML=[DEU=Letztes Aktualisierungsdatum;
+                                                              ENU=Date Last Updated];
+                                                   Editable=No }
+    { 13  ;   ;Date Last Modified  ;DateTime      ;CaptionML=[DEU=Letztes Bearbeitungsdatum;
+                                                              ENU=Date Last Modified];
+                                                   Editable=No }
+    { 14  ;   ;User Last Modification;Code30      ;TableRelation=Table2000000002.Field1;
+                                                   CaptionML=[DEU=Benutzer letzte �nderung;
+                                                              ENU=User Last Modification];
+                                                   Editable=No }
+    { 15  ;   ;Main Picture Description;Text50    ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Item File".Description WHERE (Item No.=FIELD(Item No.),
+                                                                                                             Language Code=FIELD(Language Code),
+                                                                                                             Line No.=FIELD(Main Picture Line No.),
+                                                                                                             Type=CONST(Picture),
+                                                                                                             Shop Code=FIELD(Shop Code)));
+                                                   CaptionML=[DEU=Hauptbildname;
+                                                              ENU=Main Picture Description];
+                                                   Editable=No }
+    { 16  ;   ;Main Category Name  ;Text50        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Category".Name WHERE (Language Code=FIELD(Language Code),
+                                                                                                     Line No.=FIELD(Main Category Line No.),
+                                                                                                     Shop Code=FIELD(Shop Code)));
+                                                   CaptionML=[DEU=Hauptkategoriename;
+                                                              ENU=Main Category Name];
+                                                   Editable=No }
+    { 17  ;   ;Insufficient Inventory Limit;Decimal;
+                                                   InitValue=10;
+                                                   CaptionML=[DEU=Schwellenwert geringer Lagerbestand;
+                                                              ENU=Insufficient Inventory Limit];
+                                                   DecimalPlaces=0:2 }
+    { 18  ;   ;Search Query        ;Text250       ;CaptionML=[DEU=Suchw�rter;
+                                                              ENU=Search Query] }
+    { 19  ;   ;Last Updated Inventory;Decimal     ;CaptionML=[DEU=Lagerbestand letztes Update;
+                                                              ENU=Last Updated Inventory];
+                                                   Editable=No }
+    { 20  ;   ;Is Variant          ;Boolean       ;FieldClass=FlowField;
+                                                   CalcFormula=Exist("Webshop Item Link" WHERE (Linked Item No.=FIELD(Item No.),
+                                                                                                Type=CONST(Variant)));
+                                                   CaptionML=[DEU=Ist Variante;
+                                                              ENU=Is Variant];
+                                                   Editable=No }
+    { 21  ;   ;Unit of Measure Code;Code20        ;TableRelation="Item Unit of Measure".Code WHERE (Item No.=FIELD(Item No.));
+                                                   CaptionML=[DEU=Einheinheitencode;
+                                                              ENU=Unit of Measure Code] }
+    { 22  ;   ;Minimum Order Quantity;Decimal     ;CaptionML=[DEU=Mindestbestellmenge;
+                                                              ENU=Minimum Order Quantity] }
+    { 23  ;   ;Quantity Packing Unit;Decimal      ;CaptionML=[DEU=Menge Verpackungseinheit;
+                                                              ENU=Quantity Packing Unit] }
+    { 24  ;   ;Order per Packing Unit only;Boolean;CaptionML=[DEU=Bestellen nur pro Verpackungseinheit;
+                                                              ENU=Order per Packing Unit only] }
+    { 30  ;   ;Allows Gift Packaging;Boolean      ;InitValue=Yes;
+                                                   CaptionML=[DEU=Geschenkverpackung m�glich;
+                                                              ENU=Allows Gift Packaging] }
+    { 31  ;   ;Is Gift Package     ;Boolean       ;CaptionML=[DEU=Ist Geschenkverpackung;
+                                                              ENU=Is Gift Package] }
+    { 32  ;   ;Meta Keywords       ;Text250       ;CaptionML=[DEU=Meta Schl�sselw�rter;
+                                                              ENU=Meta Keywords] }
+    { 33  ;   ;Meta Description    ;Text250       ;CaptionML=[DEU=Meta Beschreibung;
+                                                              ENU=Meta Description] }
+    { 34  ;   ;Site Title          ;Text100       ;CaptionML=[DEU=Webseitentitel;
+                                                              ENU=Site Title] }
+    { 35  ;   ;Creation Date       ;Date          ;CaptionML=[DEU=Erstellungsdatum;
+                                                              ENU=Creation Date] }
+    { 50  ;   ;No. of Fit. Items   ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Link" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                Item No.=FIELD(Item No.),
+                                                                                                Type=CONST(Fit. Item)));
+                                                   CaptionML=[DEU=Anzahl Passende Artikel;
+                                                              ENU=No. of Fit. Items];
+                                                   Editable=No }
+    { 51  ;   ;No. of Categories   ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Category" WHERE (Item Shop Code=FIELD(Shop Code),
+                                                                                                    Item Language Code=FIELD(Language Code),
+                                                                                                    Item No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Anzahl Kategorien;
+                                                              ENU=No. of Categories];
+                                                   Editable=No }
+    { 52  ;   ;No. of Descriptions ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Description" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                       Language Code=FIELD(Language Code),
+                                                                                                       Item No.=FIELD(Item No.),
+                                                                                                       Language Code=FIELD(Language Code)));
+                                                   CaptionML=[DEU=Anzahl Beschreibungen;
+                                                              ENU=No. of Descriptions];
+                                                   Editable=No }
+    { 53  ;   ;No. of Variants     ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Link" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                Item No.=FIELD(Item No.),
+                                                                                                Type=CONST(Variant)));
+                                                   CaptionML=[DEU=Anzahl Varianten;
+                                                              ENU=No. of Variants];
+                                                   Editable=No }
+    { 54  ;   ;No. of Acc. Items   ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Link" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                Item No.=FIELD(Item No.),
+                                                                                                Type=CONST(Acc. Item)));
+                                                   CaptionML=[DEU=Anzahl Zubeh�rartikel;
+                                                              ENU=No. of Acc. Items];
+                                                   Editable=No }
+    { 55  ;   ;No. of Spare Parts  ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Link" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                Item No.=FIELD(Item No.),
+                                                                                                Type=CONST(Spare Part)));
+                                                   CaptionML=[DEU=Anzahl Ersatzteile;
+                                                              ENU=No. of Spare Parts];
+                                                   Editable=No }
+    { 56  ;   ;No. of Alt. Item    ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Link" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                Item No.=FIELD(Item No.),
+                                                                                                Type=CONST(Alt. Item)));
+                                                   CaptionML=[DEU=Anzahl Alternative Artikel;
+                                                              ENU=No. of Alt. Item];
+                                                   Editable=No }
+    { 58  ;   ;No. of Pictures     ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item File" WHERE (Item No.=FIELD(Item No.),
+                                                                                                Language Code=FIELD(Language Code),
+                                                                                                Type=CONST(Picture),
+                                                                                                Shop Code=FIELD(Shop Code)));
+                                                   CaptionML=[DEU=Anzahl Bilder;
+                                                              ENU=No. of Pictures];
+                                                   Editable=No }
+    { 59  ;   ;No. of Videoclips   ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item File" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                Item No.=FIELD(Item No.),
+                                                                                                Language Code=FIELD(Language Code),
+                                                                                                Type=CONST(Videoclip)));
+                                                   CaptionML=[DEU=Anzahl Videos;
+                                                              ENU=No. of Videoclips];
+                                                   Editable=No }
+    { 60  ;   ;No. of Documents    ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item File" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                Item No.=FIELD(Item No.),
+                                                                                                Language Code=FIELD(Language Code),
+                                                                                                Type=CONST(Document)));
+                                                   CaptionML=[DEU=Anzahl Dokumente;
+                                                              ENU=No. of Documents];
+                                                   Editable=No }
+    { 61  ;   ;Parent Item No.     ;Code20        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Item Link"."Item No." WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                            Type=CONST(Variant),
+                                                                                                            Linked Item No.=FIELD(Item No.)));
+                                                   OnLookup=VAR
+                                                              WebshopItemRec@1000000000 : Record 5447304;
+                                                            BEGIN
+                                                              // Webshop-Artikelkarte des Mutterartikels �ffnen
+                                                              IF WebshopItemRec.GET("Shop Code","Language Code","Parent Item No.") THEN
+                                                                PAGE.RUN(PAGE::"Webshop Item Card",WebshopItemRec);
+                                                            END;
+
+                                                   CaptionML=[DEU=Mutterartikelnr.;
+                                                              ENU=Parent Item No.];
+                                                   Editable=No }
+    { 63  ;   ;Has Variants        ;Boolean       ;FieldClass=FlowField;
+                                                   CalcFormula=Exist("Webshop Item Link" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                Type=CONST(Variant),
+                                                                                                Item No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Hat Varianten;
+                                                              ENU=Has Variants];
+                                                   Editable=No }
+    { 70  ;   ;No. of Group Permissions;Integer   ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(ItemGroup),
+                                                                                                      Item No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Gruppenberechtigungen;
+                                                              ENU=No. of Group Permissions];
+                                                   Editable=No }
+    { 71  ;   ;No. of Customer Permissions;Integer;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(CustomerItem),
+                                                                                                      Item No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Debitorberechtigungen;
+                                                              ENU=No. of Customer Permissions];
+                                                   Editable=No }
+    { 80  ;   ;No. of Attributes   ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Attribute Link" WHERE (Type=CONST(Item),
+                                                                                                     Shop Code=FIELD(Shop Code),
+                                                                                                     No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Anzahl Artikelmerkmale;
+                                                              ENU=No. of Attributes];
+                                                   Editable=No }
+    { 81  ;   ;Last Updated Retail Price;Decimal  ;CaptionML=[DEU=Letzter �bertragener Retail Price;
+                                                              ENU=Last updated retail price] }
+    { 82  ;   ;Last Updated Base Price;Decimal    ;CaptionML=[DEU=Letzter �bertragener Base Price;
+                                                              ENU=Last updated Base Price] }
+    { 90  ;   ;No. of Customizations;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Customizations" WHERE (Item No.=FIELD(Item No.),
+                                                                                                          Item Shop Code=FIELD(Shop Code),
+                                                                                                          Item Language Code=FIELD(Language Code)));
+                                                   CaptionML=[DEU=Anzahl Individualisierungen;
+                                                              ENU=No. of Customizations];
+                                                   Editable=No }
+    { 91  ;   ;Customizability     ;Option        ;CaptionML=[DEU=Individualisierbarkeit;
+                                                              ENU=Customizable];
+                                                   OptionCaptionML=[DEU=keine,optional,ausschlie�lich;
+                                                                    ENU=none,optional,exclusively];
+                                                   OptionString=none,optional,exclusive }
+    { 92  ;   ;Shipping Category   ;Option        ;OnValidate=VAR
+                                                                WebshopShippingOption@1000000000 : Record 5447311;
+                                                                ErrorMessage@1000000001 : Text;
+                                                              BEGIN
+
+                                                                IF "Shipping Category" > 0 THEN BEGIN
+                                                                  Shop.GET("Shop Code");
+                                                                  ErrorMessage := '';
+                                                                  WebshopShippingOption.SETRANGE(WebshopShippingOption."Shop Code","Shop Code");
+                                                                  WebshopShippingOption.SETRANGE(WebshopShippingOption."Language Code","Language Code");
+                                                                  WebshopShippingOption.SETRANGE(WebshopShippingOption."Max. Shipping Category","Shipping Category");
+                                                                  IF NOT WebshopShippingOption.FINDSET THEN
+                                                                    ErrorMessage := STRSUBSTNO('%1 - %2',"Shop Code","Language Code");
+                                                                  Shop.RESET;
+                                                                  Shop.SETRANGE(Shop."Use Items from Shop Code","Shop Code");
+                                                                  IF Shop.FINDSET THEN REPEAT
+                                                                    WebshopShippingOption.RESET;
+                                                                    WebshopShippingOption.SETRANGE(WebshopShippingOption."Shop Code",Shop.Code);
+                                                                    WebshopShippingOption.SETRANGE(WebshopShippingOption."Language Code","Language Code");
+                                                                    WebshopShippingOption.SETRANGE(WebshopShippingOption."Max. Shipping Category","Shipping Category");
+                                                                    IF NOT WebshopShippingOption.FINDSET THEN BEGIN
+                                                                      IF ErrorMessage <> '' THEN
+                                                                        ErrorMessage := ErrorMessage + ', ';
+                                                                      ErrorMessage := ErrorMessage + STRSUBSTNO('%1 - %2',Shop.Code,"Language Code");
+                                                                    END;
+                                                                  UNTIL Shop.NEXT = 0;
+                                                                  IF ErrorMessage <> '' THEN
+                                                                    ERROR(Text002,"Shipping Category",ErrorMessage);
+                                                                END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Versandkategorie;
+                                                              ENU=Shipping Category];
+                                                   OptionCaptionML=[DEU=Keine Kategorie,Kategorie 1,Kategorie 2,Kategorie 3,Kategorie 4,Kategorie 5,Kategorie 6;
+                                                                    ENU=No Category,Category 1,Category 2,Category 3,Category 4,Category 5,Category 6];
+                                                   OptionString=0,1,2,3,4,5,6 }
+    { 93  ;   ;Item Availability Calculation;Option;
+                                                   CaptionML=[DEU=Berechnung Artikelverf�gbarkeit;
+                                                              ENU=Item Availability Calculation];
+                                                   OptionCaptionML=[DEU=Shop-Einstellung,Nach Verf�gbarkeit,Nie verf�gbar,Immer verf�gbar;
+                                                                    ENU=Shop-Setting,By Inventory,Never available,Always available];
+                                                   OptionString=ByShopSetting,ByInventory,No,Yes }
+    { 94  ;   ;Item Slug           ;Text250       ;OnValidate=BEGIN
+                                                                IF "Item Slug" = '' THEN
+                                                                  CreateItemSlug(Description)
+                                                                ELSE
+                                                                  CreateItemSlug("Item Slug");
+                                                              END;
+
+                                                   CaptionML=[DEU=Artikel-URL;
+                                                              ENU=Item-Slug] }
+    { 100 ;   ;Ebay Item Condition ;Option        ;CaptionML=[DEU=Ebay Artikelzustand;
+                                                              ENU=Ebay Item Condition];
+                                                   OptionCaptionML=[DEU="Neu,Neu (Sonstige),Neu mit Defekt,Vom Hersteller General�berholt,Vom Verk�ufer general�berholt,Gebraucht,Sehr Gut,Gut,Akzeptabel,Als Ersatzteil / Defekt;ENU=New,New (other),New with defects,Manufacturer refurbished,Seller refurbished,Used,Very Good,Good,Acceptable,For parts or not working"];
+                                                   OptionString=1000,1500,1750,2000,2500,3000,4000,5000,6000,7000 }
+    { 101 ;   ;Marketplace Ebay Item Template;Code20;
+                                                   TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Marketplace Ebay Artikeltemplate;
+                                                              ENU=Marketplace Ebay Item Template] }
+    { 105 ;   ;Google Product Category;Text250    ;CaptionML=[DEU=Google Produktkategorie;
+                                                              ENU=Google Product Category] }
+    { 110 ;   ;Is Greeting Card    ;Boolean       ;CaptionML=[DEU=Gru�karte;
+                                                              ENU=Greeting Card] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Item No.        ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      Shop@1000000008 : Record 5447301;
+      Item@1000000000 : Record 27;
+      WebshopItemFile@1000000001 : Record 5447307;
+      WebshopItemLink@1000000002 : Record 5447308;
+      WebshopSetup@1000000003 : Record 5447300;
+      WebshopManagement@1000000004 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000006 : Codeunit 5447301;
+      ItemTranslation@1000000005 : Record 30;
+      Text001@1000000007 : TextConst 'DEU=Sie d�rfen den Datensatz nicht umbenennen;ENU=Row cannot be renamed';
+      Text002@1000000009 : TextConst 'DEU=F�r die Versandkategorie %1 ist in folgenden Shop(s) / Sprache(n) mindestens eine Versandoption mit der gleichen Kategorie n�tig: %2;ENU=For the shipping category %1 are at minimum one Shipping Option with the same category necessary. Please check the following Shops / Languages: %2';
+
+    PROCEDURE WebshopInventory@1000000000(VariantCode@1000000001 : Code[10]) WebshopInventory : Decimal;
+    VAR
+      Item@1000000000 : Record 27;
+    BEGIN
+      // Lagerbestand des Artikels berechnen
+      Shop.GET("Shop Code");
+      Item.GET("Item No.");
+
+      // Abh�ngig von Parameter auf Variante filtern
+      IF VariantCode <> '' THEN
+        Item.SETRANGE("Variant Filter",VariantCode);
+
+      // Abh�ngig von Shop-Einrichtung Lagerortfilter ber�cksichtigen
+      IF Shop."Location Code Filter" <> '' THEN
+        Item.SETFILTER("Location Filter",Shop."Location Code Filter");
+
+      // Lagerbestand aus Artikel berechnen
+      Item.CALCFIELDS(Inventory);
+      WebshopInventory := Item.Inventory;
+
+      // Abh�ngig von Shop-Einrichtung Menge in Verkaufsauftrag abziehen
+      IF Shop."Inv. subtr. Sales Ord. (Days)" <> 0 THEN BEGIN
+        Item.SETFILTER("Date Filter",'..' + FORMAT(CALCDATE('<CD+' + FORMAT(Shop."Inv. subtr. Sales Ord. (Days)") + 'D>')));
+        Item.CALCFIELDS("Qty. on Sales Order");
+        WebshopInventory -= Item."Qty. on Sales Order";
+      END;
+
+      // Abh�ngig von Shop-Einrichtung  Menge in Einkaufsbestellung addieren
+      IF Shop."Inv. add Purch Ord. (Days)" <> 0 THEN BEGIN
+        Item.SETFILTER("Date Filter",'..' + FORMAT(CALCDATE('<CD+' + FORMAT(Shop."Inv. add Purch Ord. (Days)") + 'D>')));
+        Item.CALCFIELDS("Qty. on Purch. Order");
+        WebshopInventory += Item."Qty. on Purch. Order";
+      END;
+
+      IF WebshopInventory < 0 THEN
+        WebshopInventory := 0;
+    END;
+
+    PROCEDURE WebshopRetailPrice@1000000001() RetailPrice : Decimal;
+    VAR
+      Item@1000000006 : Record 27;
+      WebshopItem@1000000005 : Record 5447304;
+      "Webshop Item Link"@1000000004 : Record 5447308;
+      SalesPrice@1000000003 : Record 7002;
+      VATPostingSetup@1000000007 : Record 325;
+      AllowLineDisc@1000000002 : Boolean;
+      AllCustPrice@1000000001 : Decimal;
+      GroupPrice@1000000000 : Decimal;
+    BEGIN
+      // Ermittelt Webshop-Listenpreis anhand Shop-Einrichtung
+
+      WITH Item DO BEGIN
+        Shop.GET("Shop Code");
+        IF GET("Item No.") THEN BEGIN
+          WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::Variant);
+          WebshopItemLink.SETRANGE("Shop Code",Shop.Code);
+          WebshopItemLink.SETRANGE("Item No.","No.");
+          IF (Shop."Variant Type" = Shop."Variant Type"::ShopVariantsParentItem)
+          AND (WebshopItemLink.FINDSET) THEN BEGIN
+            REPEAT
+              WebshopItem.SETRANGE("Shop Code",Shop.Code);
+              WebshopItem.SETRANGE("Language Code","Language Code");
+              WebshopItem.SETRANGE("Item No.",WebshopItemLink."Linked Item No.");
+              WebshopItem.SETRANGE("Is Active",TRUE);
+              WebshopItem.SETFILTER(WebshopItem."Starting Date",'%1 | ..%2', 0D, TODAY);
+              WebshopItem.SETFILTER(WebshopItem."Ending Date",'%1 | %2..', 0D, TODAY);
+              IF WebshopItem.FINDFIRST THEN
+                IF (RetailPrice > WebshopItem.WebshopBasePrice) OR (RetailPrice = 0) THEN
+                  RetailPrice := WebshopItem.WebshopRetailPrice;
+            UNTIL WebshopItemLink.NEXT = 0;
+          END ELSE BEGIN
+            CASE Shop."Retail Price Type" OF
+              Shop."Base Price Type"::"Sales Price": BEGIN
+                RetailPrice := Item."Unit Price";
+                IF Shop."Display Prices Incl. VAT" AND NOT "Price Includes VAT" THEN
+                  IF VATPostingSetup.GET(Shop."VAT Bus. Posting Group","VAT Prod. Posting Group") THEN
+                    RetailPrice := RetailPrice / 100 * (100 + VATPostingSetup."VAT %");
+                IF NOT Shop."Display Prices Incl. VAT" AND "Price Includes VAT" THEN
+                  IF VATPostingSetup.GET(Shop."VAT Bus. Posting Group","VAT Prod. Posting Group") THEN
+                    RetailPrice := RetailPrice / (100 + VATPostingSetup."VAT %") * 100;
+              END;
+              Shop."Base Price Type"::"Customer Price Group": BEGIN
+                AllCustPrice := WebshopGetPrice(TRUE,'','',Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+                RetailPrice := WebshopGetPrice(FALSE,Shop."Cust. Price Group Retail Price",Shop."Cust. Disc. Group Retail Price",
+                  Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+                IF ((RetailPrice > AllCustPrice) AND (AllCustPrice <> 0)) OR (RetailPrice = 0) THEN
+                  RetailPrice := AllCustPrice;
+              END;
+              Shop."Base Price Type"::"All Customer Price": RetailPrice := WebshopGetPrice(TRUE,'','',
+                Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE WebshopBasePrice@1000000003() BasePrice : Decimal;
+    VAR
+      Item@1000000000 : Record 27;
+      WebshopItem@1000000002 : Record 5447304;
+      "Webshop Item Link"@1000000003 : Record 5447308;
+      SalesPrice@1000000001 : Record 7002;
+      AllowLineDisc@1000000004 : Boolean;
+      AllCustPrice@1000000005 : Decimal;
+      GroupPrice@1000000006 : Decimal;
+      VATPostingSetup@1000000007 : Record 325;
+    BEGIN
+      // Ermittelt Webshop-Basispreis anhand Shop-Einrichtung
+
+      WITH Item DO BEGIN
+        Shop.GET("Shop Code");
+        IF GET("Item No.") THEN BEGIN
+          WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::Variant);
+          WebshopItemLink.SETRANGE("Shop Code",Shop.Code);
+          WebshopItemLink.SETRANGE("Item No.","No.");
+          IF (Shop."Variant Type" = Shop."Variant Type"::ShopVariantsParentItem)
+          AND (WebshopItemLink.FINDSET) THEN BEGIN
+            REPEAT
+              WebshopItem.SETRANGE("Shop Code",Shop.Code);
+              WebshopItem.SETRANGE("Language Code","Language Code");
+              WebshopItem.SETRANGE("Item No.",WebshopItemLink."Linked Item No.");
+              WebshopItem.SETRANGE("Is Active",TRUE);
+              IF WebshopItem.FINDFIRST THEN
+                IF (BasePrice > WebshopItem.WebshopBasePrice) OR (BasePrice = 0) THEN
+                  BasePrice := WebshopItem.WebshopBasePrice;
+            UNTIL WebshopItemLink.NEXT = 0;
+          END ELSE BEGIN
+            CASE Shop."Base Price Type" OF
+              Shop."Base Price Type"::"Sales Price": BEGIN
+                BasePrice := Item."Unit Price";
+                IF Shop."Display Prices Incl. VAT" AND NOT "Price Includes VAT" THEN
+                  IF VATPostingSetup.GET(Shop."VAT Bus. Posting Group","VAT Prod. Posting Group") THEN
+                    BasePrice := BasePrice / 100 * (100 + VATPostingSetup."VAT %");
+                IF NOT Shop."Display Prices Incl. VAT" AND "Price Includes VAT" THEN
+                  IF VATPostingSetup.GET(Shop."VAT Bus. Posting Group","VAT Prod. Posting Group") THEN
+                    BasePrice := BasePrice / (100 + VATPostingSetup."VAT %") * 100;
+              END;
+              Shop."Base Price Type"::"Customer Price Group": BEGIN
+                AllCustPrice := WebshopGetPrice(TRUE,'','',Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+                BasePrice := WebshopGetPrice(FALSE,Shop."Cust. Price Group Base Price",Shop."Cust. Disc. Group Base Price",
+                  Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+                IF ((BasePrice > AllCustPrice) AND (AllCustPrice <> 0)) OR (BasePrice = 0) THEN
+                  BasePrice := AllCustPrice;
+              END;
+              Shop."Base Price Type"::"All Customer Price": BasePrice := WebshopGetPrice(TRUE,'','',
+                Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE WebshopGetPrice@1000000004(AllCustomers@1000000000 : Boolean;CustPriceGroup@1000000001 : Code[10];CustDiscGroup@1000000002 : Code[10];IncVAT@1000000012 : Boolean;VATBusPostingGroup@1000000014 : Code[10]) BestPrice : Decimal;
+    VAR
+      SalesPrice@1000000003 : Record 7002;
+      SalesLineDiscount@1000000004 : Record 7004;
+      VATPostingSetup@1000000013 : Record 325;
+      AllowLineDisc@1000000005 : Boolean;
+      BestPriceIncVAT@1000000011 : Boolean;
+      Item@1000000006 : Record 27;
+      BestItemLineDiscount@1000000007 : Decimal;
+      BestItemDiscGroupLineDiscount@1000000009 : Decimal;
+      BestLineDiscount@1000000008 : Decimal;
+      TempLineDiscount@1000000010 : Decimal;
+    BEGIN
+      // Ermittelt besten Preis abz�glich Zeilenrabatt f�r einen Artikel f�r "Alle Debitoren" oder eine bestimmte Debitorengruppe
+
+      Item.GET("Item No.");
+      BestPrice := 0;
+
+      SalesPrice.SETRANGE("Item No.",Item."No.");
+      IF AllCustomers THEN BEGIN
+        SalesPrice.SETRANGE("Sales Type",SalesPrice."Sales Type"::"All Customers");
+      END ELSE BEGIN
+        SalesPrice.SETRANGE("Sales Type",SalesPrice."Sales Type"::"Customer Price Group");
+        SalesPrice.SETRANGE("Sales Code",CustPriceGroup);
+      END;
+      SalesPrice.SETFILTER("Unit of Measure Code",'%1|%2',"Unit of Measure Code",'');
+      SalesPrice.SETFILTER("Starting Date",'<=%1|%2',TODAY,0D);
+      SalesPrice.SETFILTER("Ending Date",'>=%1|%2',TODAY,0D);
+      SalesPrice.SETFILTER("Currency Code",'%1','');
+      SalesPrice.SETRANGE("Minimum Quantity",0,1);
+      IF SalesPrice.FINDSET THEN BEGIN
+        BestPrice := 0;
+        REPEAT
+          IF (BestPrice > SalesPrice."Unit Price") OR (BestPrice = 0) THEN BEGIN
+            BestPrice := SalesPrice."Unit Price";
+            AllowLineDisc := SalesPrice."Allow Line Disc.";
+            BestPriceIncVAT := SalesPrice."Price Includes VAT";
+          END;
+        UNTIL SalesPrice.NEXT = 0;
+      END ELSE BEGIN
+        IF AllCustomers THEN BEGIN
+          BestPrice := Item."Unit Price";
+          AllowLineDisc := TRUE;
+          BestPriceIncVAT := Item."Price Includes VAT";
+        END;
+      END;
+
+      IF (BestPrice <> 0) AND (AllowLineDisc) THEN BEGIN
+        BestLineDiscount := WebshopLineDiscount(TRUE,FALSE,'');
+        TempLineDiscount := WebshopLineDiscount(TRUE,TRUE,'');
+        IF TempLineDiscount > BestLineDiscount THEN
+          BestLineDiscount := TempLineDiscount;
+        IF CustDiscGroup <> '' THEN BEGIN
+          TempLineDiscount := WebshopLineDiscount(FALSE,FALSE,CustDiscGroup);
+          IF TempLineDiscount > BestLineDiscount THEN
+            BestLineDiscount := TempLineDiscount;
+          TempLineDiscount := WebshopLineDiscount(FALSE,TRUE,CustDiscGroup);
+          IF TempLineDiscount > BestLineDiscount THEN
+            BestLineDiscount := TempLineDiscount;
+        END;
+        IF BestLineDiscount <> 0 THEN BEGIN
+          BestPrice := BestPrice / 100 * (100-BestLineDiscount);
+        END;
+      END;
+
+      IF IncVAT AND NOT BestPriceIncVAT THEN
+        IF VATPostingSetup.GET(VATBusPostingGroup,Item."VAT Prod. Posting Group") THEN
+          BestPrice := BestPrice / 100 * (100 + VATPostingSetup."VAT %");
+      IF NOT IncVAT AND BestPriceIncVAT THEN
+        IF VATPostingSetup.GET(VATBusPostingGroup,Item."VAT Prod. Posting Group") THEN
+          BestPrice := BestPrice / (100 + VATPostingSetup."VAT %") * 100;
+    END;
+
+    PROCEDURE WebshopLineDiscount@1000000008(AllCustomers@1000000000 : Boolean;ItemDiscGroup@1000000001 : Boolean;CustDiscGroup@1000000002 : Code[10]) BestLineDiscount : Decimal;
+    VAR
+      SalesLineDiscount@1000000004 : Record 7004;
+      AllowLineDisc@1000000005 : Boolean;
+      Item@1000000006 : Record 27;
+    BEGIN
+      // Ermittelt besten Zeilenrabatt f�r einen Artikel oder eine Artikelrabattgruppe f�r "Alle Debitoren" oder Debitorenrabattgruppe
+
+      Item.GET("Item No.");
+      BestLineDiscount := 0;
+      IF ItemDiscGroup THEN BEGIN
+        SalesLineDiscount.SETRANGE(Type,SalesLineDiscount.Type::"Item Disc. Group");
+        SalesLineDiscount.SETRANGE(Code,Item."Item Disc. Group");
+      END ELSE BEGIN
+        SalesLineDiscount.SETRANGE(Type,SalesLineDiscount.Type::Item);
+        SalesLineDiscount.SETRANGE(Code,Item."No.");
+      END;
+      IF AllCustomers THEN BEGIN
+        SalesLineDiscount.SETRANGE("Sales Type",SalesLineDiscount."Sales Type"::"All Customers");
+      END ELSE BEGIN
+        SalesLineDiscount.SETRANGE("Sales Type",SalesLineDiscount."Sales Type"::"Customer Disc. Group");
+        SalesLineDiscount.SETRANGE("Sales Code",CustDiscGroup);
+      END;
+      SalesLineDiscount.SETFILTER("Unit of Measure Code",'%1|%2',"Unit of Measure Code",'');
+      SalesLineDiscount.SETFILTER("Starting Date",'<=%1|%2',TODAY,0D);
+      SalesLineDiscount.SETFILTER("Ending Date",'>=%1|%2',TODAY,0D);
+      SalesLineDiscount.SETFILTER("Currency Code",'%1','');
+      SalesLineDiscount.SETRANGE("Minimum Quantity",0,1);
+      IF SalesLineDiscount.FINDSET THEN REPEAT
+        IF BestLineDiscount < SalesLineDiscount."Line Discount %" THEN
+          BestLineDiscount := SalesLineDiscount."Line Discount %";
+      UNTIL SalesLineDiscount.NEXT = 0;
+    END;
+
+    PROCEDURE WebshopOrderRanking@1000000005() OrderRanking : Decimal;
+    VAR
+      Item@1000000000 : Record 27;
+      Item2@1000000001 : Record 27;
+      WebshopItemLink@1000000002 : Record 5447308;
+    BEGIN
+      WITH Item DO BEGIN
+        IF GET("Item No.") THEN BEGIN
+          OrderRanking := 0;
+          WebshopItemLink.SETRANGE("Item No.","No.");
+          WebshopItemLink.SETRANGE("Shop Code",Rec."Shop Code");
+          WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::Variant);
+          IF WebshopItemLink.FINDSET THEN BEGIN
+            REPEAT
+              IF Item2.GET(WebshopItemLink."Linked Item No.") THEN BEGIN
+                Item2.SETRANGE("Date Filter",CALCDATE('<CD-1Y>'),TODAY);
+                Item2.CALCFIELDS("Sales (Qty.)");
+                OrderRanking += Item2."Sales (Qty.)";
+              END;
+            UNTIL WebshopItemLink.NEXT = 0;
+          END;
+          SETRANGE("Date Filter",CALCDATE('<CD-1Y>'),TODAY);
+          CALCFIELDS("Sales (Qty.)");
+          OrderRanking += "Sales (Qty.)";
+        END;
+      END;
+    END;
+
+    PROCEDURE NoOfActiveVariants@1000000006() NoOfVariant : Integer;
+    VAR
+      WebshopItemLink@1000000000 : Record 5447308;
+      WebshopItem@1000000001 : Record 5447304;
+    BEGIN
+      NoOfVariant := 0;
+      WebshopItemLink.SETRANGE("Item No.","Item No.");
+      WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::Variant);
+      IF WebshopItemLink.FINDSET THEN REPEAT
+        WebshopItem.SETRANGE("Item No.",WebshopItemLink."Item No.");
+        WebshopItem.SETRANGE("Language Code","Language Code");
+        WebshopItem.SETRANGE("Is Active",TRUE);
+        WebshopItem.SETFILTER("Starting Date",'<=%1|%2',TODAY,0D);
+        WebshopItem.SETFILTER("Ending Date",'>=%1|%2',TODAY,0D);
+        IF WebshopItem.FINDFIRST THEN
+          NoOfVariant += 1;
+      UNTIL WebshopItemLink.NEXT = 0;
+    END;
+
+    PROCEDURE GetItemCanonicalNameUrlEncoded@1000000002() CanonicalNameURL : Text[1024];
+    VAR
+      CanonicalName@1000000002 : Text[255];
+      WebshopManagement@1000000001 : Codeunit 5447300;
+    BEGIN
+      CanonicalName := Description;
+      IF "Variant Description" <> '' THEN
+        CanonicalName += ' ' + WebshopManagement.StrReplace("Variant Description",Description,'');
+      CanonicalNameURL := WebshopManagement.URLEncodeReadable(CanonicalName);
+    END;
+
+    PROCEDURE GetCanonicalItemCategoryURL@1000000007() CanonicalCategoryURL : Text[1024];
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopItemCategory@1000000001 : Record 5447305;
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000003 : Record 5447302;
+      CategoryShopCode@1000000004 : Code[30];
+      CategoryLanguageCode@1000000005 : Code[10];
+      WebshopItem@1000000006 : Record 5447304;
+    BEGIN
+      WITH WebshopItem DO BEGIN
+        GET(Rec."Shop Code",Rec."Language Code",Rec."Item No.");
+        CALCFIELDS("Is Variant");
+        CALCFIELDS("Parent Item No.");
+
+        WebshopShop.GET("Shop Code");
+        WebshopLanguage.GET("Shop Code","Language Code");
+
+        CategoryLanguageCode := WebshopLanguage.Code;
+
+        IF WebshopShop."Use Categories from Shop Code" <> '' THEN
+          CategoryShopCode := WebshopShop."Use Categories from Shop Code"
+        ELSE
+          CategoryShopCode := "Shop Code";
+
+        IF "Is Variant" AND ("Parent Item No." <> '') THEN BEGIN
+          GET("Shop Code","Language Code","Parent Item No.");
+        END;
+
+        IF "Main Category Line No." <> 0 THEN BEGIN
+          IF WebshopItemCategory.GET("Shop Code","Language Code","Item No.",CategoryShopCode,CategoryLanguageCode,"Main Category Line No.") THEN
+            CanonicalCategoryURL := WebshopItemCategory.GetItemCategoryPath;
+        END ELSE BEGIN
+          WebshopItemCategory.SETRANGE("Item Shop Code","Shop Code");
+          WebshopItemCategory.SETRANGE("Item Language Code","Language Code");
+          WebshopItemCategory.SETRANGE("Item No.","Item No.");
+          WebshopItemCategory.SETRANGE("Category Shop Code",CategoryShopCode);
+          WebshopItemCategory.SETRANGE("Category Language Code",CategoryLanguageCode);
+          IF WebshopItemCategory.FINDFIRST THEN
+            CanonicalCategoryURL := WebshopItemCategory.GetItemCategoryPath
+          ELSE
+            CanonicalCategoryURL := '/' + GetItemCanonicalNameUrlEncoded + '/';
+        END;
+      END;
+    END;
+
+    PROCEDURE WebshopCustomizePrice@1000000009() CustomizePrice : Decimal;
+    VAR
+      Item@1000000000 : Record 27;
+      WebshopItem@1000000002 : Record 5447304;
+      "Webshop Item Link"@1000000003 : Record 5447308;
+      SalesPrice@1000000001 : Record 7002;
+      AllowLineDisc@1000000004 : Boolean;
+      AllCustPrice@1000000005 : Decimal;
+      GroupPrice@1000000006 : Decimal;
+      VATPostingSetup@1000000007 : Record 325;
+    BEGIN
+      // Ermittelt Webshop-Individualisierungspreis anhand Shop-Einrichtung
+
+      WITH Item DO BEGIN
+        Shop.GET("Shop Code");
+        IF GET("Item No.") THEN BEGIN
+          WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::Variant);
+          WebshopItemLink.SETRANGE("Shop Code",Shop.Code);
+          WebshopItemLink.SETRANGE("Item No.","No.");
+          IF (Shop."Variant Type" = Shop."Variant Type"::ShopVariantsParentItem)
+          AND (WebshopItemLink.FINDSET) THEN BEGIN
+            REPEAT
+              WebshopItem.SETRANGE("Shop Code",Shop.Code);
+              WebshopItem.SETRANGE("Language Code","Language Code");
+              WebshopItem.SETRANGE("Item No.",WebshopItemLink."Linked Item No.");
+              WebshopItem.SETRANGE("Is Active",TRUE);
+              IF WebshopItem.FINDFIRST THEN
+                IF (CustomizePrice > WebshopItem.WebshopCustomizePrice) OR (CustomizePrice = 0) THEN
+                  CustomizePrice := WebshopItem.WebshopCustomizePrice;
+            UNTIL WebshopItemLink.NEXT = 0;
+          END ELSE BEGIN
+            CASE Shop."Customization Price Typ" OF
+              Shop."Customization Price Typ"::"Sales Price": BEGIN
+                CustomizePrice := Item."Unit Price";
+                IF Shop."Display Prices Incl. VAT" AND NOT "Price Includes VAT" THEN
+                  IF VATPostingSetup.GET(Shop."VAT Bus. Posting Group","VAT Prod. Posting Group") THEN
+                    CustomizePrice := CustomizePrice / 100 * (100 + VATPostingSetup."VAT %");
+                IF NOT Shop."Display Prices Incl. VAT" AND "Price Includes VAT" THEN
+                  IF VATPostingSetup.GET(Shop."VAT Bus. Posting Group","VAT Prod. Posting Group") THEN
+                    CustomizePrice := CustomizePrice / (100 + VATPostingSetup."VAT %") * 100;
+              END;
+              Shop."Customization Price Typ"::"Customer Price Group": BEGIN
+                AllCustPrice := WebshopGetPrice(TRUE,'','',Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+                CustomizePrice := WebshopGetPrice(FALSE,Shop."Cust. Price Group Cust. Price",Shop."Cust. Disc. Group Cust. Price",
+                  Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+              END;
+              Shop."Customization Price Typ"::"All Customer Price": CustomizePrice := WebshopGetPrice(TRUE,'','',
+                Shop."Display Prices Incl. VAT",Shop."VAT Bus. Posting Group");
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    LOCAL PROCEDURE CreateItemSlug@5447301(Text@5447300 : Text[250]);
+    BEGIN
+      "Item Slug" := WebshopManagement.GenerateItemSlug(Text);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

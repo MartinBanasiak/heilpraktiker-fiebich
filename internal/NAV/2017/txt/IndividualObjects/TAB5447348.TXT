@@ -1,0 +1,57 @@
+OBJECT Table 5447348 Webshop Item Customizations
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikel Individualisierungen;
+               ENU=Webshop Item Customizations];
+    LookupPageID=Page5447375;
+    DrillDownPageID=Page5447375;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Item No.            ;Code20        ;CaptionML=[DEU=Artikelnummer;
+                                                              ENU=Item No.] }
+    { 2   ;   ;Item Shop Code      ;Code10        ;CaptionML=[DEU=Artikel Shopcode;
+                                                              ENU=Item Shop Code] }
+    { 3   ;   ;Item Language Code  ;Code10        ;CaptionML=[DEU=Artikel Spraccode;
+                                                              ENU=Item Language Code] }
+    { 4   ;   ;Field Length        ;Integer       ;CaptionML=[DEU=Feldl�nge;
+                                                              ENU=Field Length] }
+    { 5   ;   ;Field Name          ;Text50        ;CaptionML=[DEU=Feldname;
+                                                              ENU=Field Lenght] }
+    { 6   ;   ;Description         ;Text200       ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 7   ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Text,Bild,Flie�text;
+                                                                    ENU=Text,Image,Long Text];
+                                                   OptionString=text,image,long text }
+    { 8   ;   ;Line No.            ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.];
+                                                   NotBlank=Yes }
+  }
+  KEYS
+  {
+    {    ;Item No.,Item Shop Code,Item Language Code,Field Name,Line No.;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

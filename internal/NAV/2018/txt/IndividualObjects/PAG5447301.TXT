@@ -1,0 +1,927 @@
+OBJECT Page 5447301 Webshop Shop Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.05.18;
+    Time=16:00:00;
+    Version List=MYSW14.11,DCSW11.00,DCCW11.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshopkarte;
+               ENU=Webshop card];
+    SourceTable=Table5447301;
+    PageType=Card;
+    PromotedActionCategoriesML=[DEU=Neu,Vorgang,Bericht,Aktualisierung,Navigate;
+                                ENU=New,Process,Report,Update,Navigate];
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnAfterGetRecord=VAR
+                       CouponGroups@1000000000 : Record 5447474;
+                       CouponHeader@1000000001 : Record 5447471;
+                     BEGIN
+                       CustomerLinkVisible := NOT ("Shop Type"="Shop Type"::b2c);
+                       SalespersonLinkVisible := ("Shop Type"="Shop Type"::salesperson);
+
+                       AmazonFieldsVisible := ("Marketplace Type" = "Marketplace Type"::Amazon);
+                       EbayFieldsVisible := ("Marketplace Type" = "Marketplace Type"::eBay);
+
+                       MarketplaceVisible := ("Shop Type" = "Shop Type"::marketplace);
+
+                       CALCFIELDS("Ebay Auth Token");
+                       "Ebay Auth Token".CREATEINSTREAM(IStream);
+                       EbayAuthTokenBigText.READ(IStream);
+                       EbayAuthTokenBigText.GETSUBTEXT(EbayAuthToken,1);
+
+                       NoOfCoupons := 0;
+                       IF "Coupon Group Filter" <> '' THEN
+                         CouponGroups.SETFILTER(Code,"Coupon Group Filter");
+                       IF CouponGroups.FINDSET THEN REPEAT
+                         CouponHeader.SETRANGE("Coupon Group",CouponGroups.Code);
+                         IF CouponHeader.FINDSET THEN REPEAT
+                           CouponHeader.CALCFIELDS("No. of Coupon Codes Active");
+                           NoOfCoupons += CouponHeader."No. of Coupon Codes Active";
+                         UNTIL CouponHeader.NEXT = 0;
+                       UNTIL CouponGroups.NEXT = 0;
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000057;  ;ActionContainer;
+                      Name=<Action1000000057>;
+                      ActionContainerType=ActionItems }
+      { 1000000060;1 ;Action    ;
+                      Name=OpenWebshop;
+                      CaptionML=[DEU=Webshop �ffnen;
+                                 ENU=Open Webshop];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=DocInBrowser;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 FrontendLink@1000000000 : Codeunit 5447308;
+                               BEGIN
+                                 FrontendLink.SetShopCode(Code);
+                                 FrontendLink.RUN;
+                               END;
+                                }
+      { 1000000058;1 ;Action    ;
+                      Name=UpdateSetup;
+                      CaptionML=[DEU=Grundeinrichtung Aktualisieren;
+                                 ENU=Update Setup];
+                      Promoted=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text002@1000000000 : TextConst 'DEU=Webshop Einrichtung aktualisieren;ENU=Update Webshop Setup';
+                                 CountRecords@1000000002 : Boolean;
+                                 i@1000000001 : Integer;
+                               BEGIN
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   WebshopUpdateManagement.StateIndicatorOpen(Text002);
+                                   CountRecords := TRUE;
+                                   WebshopUpdateManagement.SetSendNow(TRUE);
+                                   FOR i := 1 TO 2 DO BEGIN
+                                     WebshopUpdateManagement.UpdateAllWebshopSetup(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShop(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllLanguage(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllCountry(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllPaymentOptions(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShippingClasses(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShippingOptions(CountRecords);
+                                     CountRecords := FALSE;
+                                   END;
+                                   WebshopUpdateManagement.SetSendNow(FALSE);
+                                   WebshopUpdateManagement.StateIndicatorClose();
+                                 END;
+                               END;
+                                }
+      { 1000000062;1 ;Action    ;
+                      Name=UpdateDynamicData;
+                      CaptionML=[DEU=Update Bewegungsdaten;
+                                 ENU=Update Dynamic Data];
+                      Promoted=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateDynamicData@1000000000 : Codeunit 5447304;
+                               BEGIN
+                                 WebshopUpdateDynamicData.UpdateDynamicData('');
+                               END;
+                                }
+      { 1000000061;1 ;Action    ;
+                      Name=UpdateAllData;
+                      CaptionML=[DEU=Update Gesamtdaten;
+                                 ENU=Update All Data];
+                      Promoted=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateAllData@1000000000 : Codeunit 5447303;
+                               BEGIN
+                                 WebshopUpdateAllData.UpdateAllData;
+                               END;
+                                }
+      { 1000000134;1 ;Action    ;
+                      Name=FetchMarketplaceRootCategories;
+                      CaptionML=[DEU=Marktplatz Stammkategorien abholen;
+                                 ENU=Fetch Marketplace Root Categories];
+                      Visible=MarketplaceVisible;
+                      Image=GetLines;
+                      OnAction=VAR
+                                 WebshopLanguage@1000000000 : Record 5447302;
+                                 ParentCodeLineNo@1000000003 : Integer;
+                                 Category@1000000002 : Record 5447303;
+                                 WebshopMarketplaceManagement@1000000001 : Codeunit 5447312;
+                                 Window@1000000007 : Dialog;
+                                 Factor@1000000006 : Decimal;
+                                 Counter@1000000005 : Decimal;
+                                 ExitLoop@1000000004 : Boolean;
+                               BEGIN
+                                 Factor := 9999 / 100;
+                                 ExitLoop := FALSE;
+                                 Counter := 0;
+                                 WebshopMarketplaceManagement.QueueMktplSubCategoriesFetch(Code,"Default Language Code","Marketplace Type",'0');
+                                 Window.OPEN(
+                                   '#1#################################\\' +
+                                   '@2@@@@@@@@');
+                                 Window.UPDATE(1, Text008);
+
+                                 REPEAT
+                                   Counter += 100;
+                                   Window.UPDATE(2, Counter);
+                                   IF Counter = 10000 THEN BEGIN
+                                     Counter := 0;
+                                     Window.UPDATE(2, Counter);
+                                   END;
+                                   ExitLoop := WebshopMarketplaceManagement.CheckMktplSubCategoriesFetch(Code,"Default Language Code","Marketplace Type",'0');
+                                 UNTIL ExitLoop = TRUE;
+                                 Window.CLOSE;
+
+                                 ParentCodeLineNo := Category.GetLineNoForSearchCode(Code,WebshopLanguage.Code,'0');
+                                 WebshopMarketplaceManagement.StateIndicatorOpen(Text009);
+                                 WebshopMarketplaceManagement.GetAllFetchedMktplCategories(Code,"Default Language Code",TRUE,0);
+                                 WebshopMarketplaceManagement.GetAllFetchedMktplCategories(Code,"Default Language Code",FALSE,ParentCodeLineNo);
+                                 WebshopMarketplaceManagement.StateIndicatorClose();
+                               END;
+                                }
+      { 7       ;    ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000151;1 ;Action    ;
+                      Name=ShippingOptions;
+                      CaptionML=[DEU=Versandoptionen;
+                                 ENU=Shipping Options];
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=CalculateInventory;
+                      PromotedCategory=Category5;
+                      OnAction=VAR
+                                 ShippingOptions@1000000000 : Record 5447453;
+                                 WebshopShippingOptionsList@1000000001 : Page 5447355;
+                               BEGIN
+                                 ShippingOptions.SETRANGE("Shipping Group Code",Rec."Shipping Group Code");
+                                 WebshopShippingOptionsList.SETTABLEVIEW(ShippingOptions);
+                                 WebshopShippingOptionsList.SetShopCode(Code);
+                                 WebshopShippingOptionsList.RUN;
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000050;1 ;Action    ;
+                      Name=Coupons;
+                      CaptionML=[DEU=Gutscheine;
+                                 ENU=Coupons];
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=VoucherGroup;
+                      PromotedCategory=Category5;
+                      OnAction=VAR
+                                 CouponHeader@1000000000 : Record 5447471;
+                               BEGIN
+                                 IF "Coupon Group Filter" <> '' THEN
+                                   CouponHeader.SETFILTER("Coupon Group","Coupon Group Filter");
+                                 PAGE.RUN(5447329,CouponHeader);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 6       ;1   ;Action    ;
+                      Name=WebshopLanguages;
+                      CaptionML=[DEU=Webshop Sprachen;
+                                 ENU=Webshop Languages];
+                      RunObject=Page 5447304;
+                      RunPageLink=Shop Code=FIELD(Code);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Language;
+                      PromotedCategory=Category5 }
+      { 4       ;1   ;Action    ;
+                      Name=WebshopItems;
+                      CaptionML=[DEU=Webshop Artikel;
+                                 ENU=Webshop Items];
+                      RunObject=Page 5447309;
+                      RunPageLink=Shop Code=FIELD(Code);
+                      Image=Web }
+      { 1000000103;1 ;Action    ;
+                      Name=WebshopCoupons;
+                      CaptionML=[DEU=Webshop Gutscheine;
+                                 ENU=Webshop Coupons];
+                      RunObject=Page 5447331;
+                      RunPageLink=Field12=FIELD(Code);
+                      Image=Discount }
+      { 2       ;1   ;Action    ;
+                      Name=WebshopCustomers;
+                      CaptionML=[DEU=Webshop Kunden;
+                                 ENU=Webshop Customers];
+                      RunObject=Page 22;
+                      RunPageLink=Field50703=FIELD(Code);
+                      Visible=CustomerLinkVisible;
+                      Image=Customer }
+      { 1       ;1   ;Action    ;
+                      Name=WebshopSalespeople;
+                      CaptionML=[DEU=Webshop Vertreter;
+                                 ENU=Webshop Salespeople];
+                      RunObject=Page 14;
+                      Visible=SalespersonLinkVisible;
+                      Image=SalesPerson }
+      { 1000000073;1 ;Action    ;
+                      Name=WebshopGlobalAttributes;
+                      CaptionML=[DEU=Webshop Globale Merkmalfilter;
+                                 ENU=Webshop Global Attribute Filter];
+                      RunObject=Page 5447325;
+                      RunPageLink=Type=CONST(Shop),
+                                  Shop Code=FIELD(Code),
+                                  Language Code=CONST(),
+                                  Category Line No.=CONST(0);
+                      Image=Dimensions }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Allgemein;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General];
+                GroupType=Group }
+
+    { 1000000002;2;Field  ;
+                CaptionML=DEU=Code;
+                SourceExpr=Code }
+
+    { 1000000133;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Shop Type";
+                OnValidate=BEGIN
+                             AmazonFieldsVisible := ("Marketplace Type" = "Marketplace Type"::Amazon);
+                             EbayFieldsVisible := ("Marketplace Type" = "Marketplace Type"::eBay);
+
+                             MarketplaceVisible := ("Shop Type" = "Shop Type"::marketplace);
+
+                             CALCFIELDS("Ebay Auth Token");
+                             "Ebay Auth Token".CREATEINSTREAM(IStream);
+                             EbayAuthTokenBigText.READ(IStream);
+                             EbayAuthTokenBigText.GETSUBTEXT(EbayAuthToken,1);
+                           END;
+                            }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Default Language Code" }
+
+    { 1000000006;2;Field  ;
+                CaptionML=DEU=Artikel von Shop verwenden;
+                SourceExpr="Use Items from Shop Code" }
+
+    { 1000000007;2;Field  ;
+                CaptionML=DEU=Kategorien von Shop verwenden;
+                SourceExpr="Use Categories from Shop Code" }
+
+    { 1000000008;2;Field  ;
+                CaptionML=DEU=Debitoren von Shop verwenden;
+                SourceExpr="Use Customers from Shop Code" }
+
+    { 1000000040;2;Field  ;
+                SourceExpr="No. of Items per Page" }
+
+    { 1000000076;2;Field  ;
+                SourceExpr="Login-Type" }
+
+    { 1000000009;2;Field  ;
+                ExtendedDatatype=None;
+                CaptionML=DEU=Webshop Link;
+                SourceExpr="Webshop URL" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Default Customer No. Login" }
+
+    { 1000000011;2;Field  ;
+                CaptionML=DEU=Std. Verk�ufercode;
+                SourceExpr="Default Salesperson Code" }
+
+    { 1000000063;2;Field  ;
+                SourceExpr="E-Mail Sender Addr." }
+
+    { 1000000135;2;Field  ;
+                SourceExpr="Ship. Notice Mail Send Delay" }
+
+    { 1000000136;2;Field  ;
+                SourceExpr="Invoice Mail Send Delay" }
+
+    { 1000000091;2;Field  ;
+                SourceExpr="Use Extended Search" }
+
+    { 1000000110;2;Field  ;
+                SourceExpr="Responsibility Center" }
+
+    { 1000000098;1;Group  ;
+                Name=Marktplatz;
+                CaptionML=[DEU=Marktplatz;
+                           ENU=Marketplace];
+                Visible=MarketplaceVisible;
+                GroupType=Group }
+
+    { 1000000099;2;Field  ;
+                SourceExpr="Marketplace Type";
+                OnValidate=BEGIN
+                             IF "Marketplace Type" <> xRec."Marketplace Type" THEN
+                               CurrPage.UPDATE;
+                           END;
+                            }
+
+    { 1000000100;2;Group  ;
+                Name=Amazon;
+                Visible=AmazonFieldsVisible;
+                GroupType=Group }
+
+    { 1000000102;3;Field  ;
+                SourceExpr="AWS Access Key ID" }
+
+    { 1000000122;3;Field  ;
+                SourceExpr="AWS Secret Access Key" }
+
+    { 1000000123;3;Field  ;
+                SourceExpr="Amazon Merchant ID" }
+
+    { 1000000124;3;Field  ;
+                SourceExpr="Amazon Marketplace ID" }
+
+    { 1000000125;3;Field  ;
+                SourceExpr="Amazon Auth Token" }
+
+    { 1000000101;2;Group  ;
+                Name=Ebay;
+                Visible=EbayFieldsVisible;
+                GroupType=Group }
+
+    { 1000000126;3;Field  ;
+                SourceExpr="Ebay Environment" }
+
+    { 1000000127;3;Field  ;
+                SourceExpr="Ebay Dev Name" }
+
+    { 1000000128;3;Field  ;
+                SourceExpr="Ebay App Name" }
+
+    { 1000000129;3;Field  ;
+                SourceExpr="Ebay Cert Name" }
+
+    { 1000000130;3;Field  ;
+                SourceExpr="PayPal Address" }
+
+    { 1000000131;3;Field  ;
+                SourceExpr="Item Loc. Post Code" }
+
+    { 1000000132;3;Field  ;
+                SourceExpr="Return Charges Payable By" }
+
+    { 1000000142;3;Field  ;
+                CaptionML=[DEU=Auth. Token;
+                           ENU=Ebay Auth. Token];
+                SourceExpr=EbayAuthToken;
+                MultiLine=Yes;
+                OnValidate=BEGIN
+                             CLEAR(EbayAuthTokenBigText);
+                             CALCFIELDS("Ebay Auth Token");
+                             CLEAR("Ebay Auth Token");
+                             "Ebay Auth Token".CREATEOUTSTREAM(OStream);
+                             EbayAuthTokenBigText.ADDTEXT(EbayAuthToken);
+                             EbayAuthTokenBigText.WRITE(OStream);
+                             MODIFY(FALSE);
+                           END;
+                            }
+
+    { 1000000015;1;Group  ;
+                Name=Artikeldaten;
+                CaptionML=[DEU=Artikeldaten;
+                           ENU=Item Data];
+                GroupType=Group }
+
+    { 1000000016;2;Field  ;
+                CaptionML=DEU=Variantenart;
+                SourceExpr="Variant Type" }
+
+    { 1000000017;2;Field  ;
+                CaptionML=DEU=Listenpreistyp;
+                SourceExpr="Retail Price Type" }
+
+    { 1000000018;2;Field  ;
+                CaptionML=DEU=Debitorenpreisgruppe Listenpreis;
+                SourceExpr="Cust. Price Group Retail Price" }
+
+    { 1000000019;2;Field  ;
+                CaptionML=DEU=Debitorenrabattgruppe Listenpreis;
+                SourceExpr="Cust. Disc. Group Retail Price" }
+
+    { 1000000020;2;Field  ;
+                CaptionML=DEU=Basispreistyp;
+                SourceExpr="Base Price Type" }
+
+    { 1000000021;2;Field  ;
+                CaptionML=DEU=Debitorenpreisgruppe Basispreis;
+                SourceExpr="Cust. Price Group Base Price" }
+
+    { 1000000022;2;Field  ;
+                CaptionML=DEU=Debitorenrabattgruppe Basispreis;
+                SourceExpr="Cust. Disc. Group Base Price" }
+
+    { 1000000106;2;Field  ;
+                SourceExpr="Customization Price Typ" }
+
+    { 1000000105;2;Field  ;
+                SourceExpr="Cust. Price Group Cust. Price" }
+
+    { 1000000104;2;Field  ;
+                SourceExpr="Cust. Disc. Group Cust. Price" }
+
+    { 1000000023;2;Field  ;
+                CaptionML=DEU=Kampagnennr.;
+                SourceExpr="Campain No." }
+
+    { 1000000024;2;Field  ;
+                CaptionML=DEU=Streichpreisanzeige;
+                SourceExpr="Cross Price Type" }
+
+    { 1000000025;2;Field  ;
+                CaptionML=DEU=Preise inkl. MwSt.;
+                SourceExpr="Display Prices Incl. VAT" }
+
+    { 1000000026;2;Field  ;
+                CaptionML=DEU=MwSt.-Produktbuchungsgruppe;
+                SourceExpr="VAT Bus. Posting Group" }
+
+    { 1000000141;2;Field  ;
+                SourceExpr="US Sales Tax enabled" }
+
+    { 1000000027;2;Field  ;
+                CaptionML=DEU=Lagerortfilter;
+                SourceExpr="Location Code Filter" }
+
+    { 1000000109;2;Field  ;
+                SourceExpr="Inventory Display" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Inv. subtr. Sales Ord. (Days)" }
+
+    { 1000000028;2;Field  ;
+                SourceExpr="Inv. add Purch Ord. (Days)" }
+
+    { 1000000115;2;Field  ;
+                SourceExpr="Item Availability Calculation" }
+
+    { 1000000118;1;Group  ;
+                Name=Shipping Options;
+                CaptionML=[DEU=Versandoptionen;
+                           ENU=Shipping Options];
+                GroupType=Group }
+
+    { 1000000119;2;Field  ;
+                SourceExpr="Shipping Group Code";
+                OnValidate=BEGIN
+                             CurrPage.UPDATE;
+                           END;
+                            }
+
+    { 1000000120;2;Field  ;
+                SourceExpr="Ship. Group Code Description" }
+
+    { 1000000121;2;Field  ;
+                SourceExpr="No. of Shipping Options";
+                OnLookup=VAR
+                           ShippingOptions@1000000000 : Record 5447453;
+                           WebshopShippingOptionsList@1000000002 : Page 5447355;
+                         BEGIN
+                           ShippingOptions.SETRANGE("Shipping Group Code",Rec."Shipping Group Code");
+                           WebshopShippingOptionsList.SETTABLEVIEW(ShippingOptions);
+                           WebshopShippingOptionsList.SetShopCode(Code);
+                           WebshopShippingOptionsList.RUN;
+                           CurrPage.UPDATE;
+                         END;
+                          }
+
+    { 1000000152;2;Field  ;
+                SourceExpr="Shipping Options Sorting" }
+
+    { 1000000030;1;Group  ;
+                Name=Bestellprozess;
+                CaptionML=[DEU=Bestellprozess;
+                           ENU=Order Process];
+                GroupType=Group }
+
+    { 1000000031;2;Field  ;
+                CaptionML=DEU=Bestellung erstellen als;
+                SourceExpr="Create Webshop Orders As" }
+
+    { 1000000111;2;Field  ;
+                SourceExpr="Use Online Order No.";
+                OnValidate=BEGIN
+                             CheckUseOnlineOrderNo;
+                           END;
+                            }
+
+    { 1000000032;2;Field  ;
+                CaptionML=DEU=Nr. Seriencode Angebot;
+                SourceExpr="Code No. Series Quotes";
+                OnValidate=BEGIN
+                             CheckUseOnlineOrderNo;
+                           END;
+                            }
+
+    { 1000000033;2;Field  ;
+                CaptionML=DEU=Nr. Seriencode Auftrag;
+                SourceExpr="Code No. Series Orders";
+                OnValidate=BEGIN
+                             CheckUseOnlineOrderNo;
+                           END;
+                            }
+
+    { 1000000112;2;Field  ;
+                SourceExpr="Invoice No. Series Code" }
+
+    { 1000000113;2;Field  ;
+                SourceExpr="Shipment No. Series Code" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Customer No. Series Code" }
+
+    { 1000000034;2;Field  ;
+                CaptionML=DEU=Sammeldebitor verwenden;
+                SourceExpr="Use Pool Customer" }
+
+    { 1000000085;2;Field  ;
+                SourceExpr="Salutation Code Company" }
+
+    { 1000000086;2;Field  ;
+                SourceExpr="Salutation Code Male" }
+
+    { 1000000090;2;Field  ;
+                SourceExpr="Salutation Code Female" }
+
+    { 1000000036;2;Field  ;
+                CaptionML=DEU=Kopie Bestellbest�tigung;
+                SourceExpr="Order Conf. E-Mail BCC Addr." }
+
+    { 1000000035;2;Field  ;
+                CaptionML=DEU=Typ Rabatt/Geb�hren;
+                SourceExpr="Posting Type Disc. / Markups" }
+
+    { 1000000038;2;Field  ;
+                CaptionML=DEU=Online-Rabatt %;
+                SourceExpr="Online Discount %" }
+
+    { 1000000138;2;Field  ;
+                CaptionML=DEU=Mindestbestellwert;
+                SourceExpr="Small Qty. Charge Threshold" }
+
+    { 1000000037;2;Field  ;
+                CaptionML=DEU=Geb�hr Mindestbestellwert;
+                SourceExpr="Small Quantity Charge Amnt." }
+
+    { 1000000039;2;Field  ;
+                CaptionML=DEU=VK-Nr. Mindestbestellwert;
+                SourceExpr="Sales No. Small Qty. Charge" }
+
+    { 1000000044;2;Field  ;
+                CaptionML=DEU=VK-Nr. Versandkosten;
+                SourceExpr="Sales No. Shipping Cost" }
+
+    { 1000000137;2;Field  ;
+                CaptionML=DEU=VK-Nr. Geb�hren Zahlungsart;
+                SourceExpr="Sales No. Payment Cost" }
+
+    { 1000000043;2;Field  ;
+                SourceExpr="Sales No US Sales Tax" }
+
+    { 1000000089;2;Field  ;
+                SourceExpr="VAT Identifier 1" }
+
+    { 1000000143;2;Field  ;
+                SourceExpr="Sales No. Online Discount 1" }
+
+    { 1000000140;2;Field  ;
+                SourceExpr="Sales No. Set Discount 1" }
+
+    { 1000000088;2;Field  ;
+                SourceExpr="VAT Identifier 2" }
+
+    { 1000000082;2;Field  ;
+                SourceExpr="Sales No. Online Discount 2" }
+
+    { 1000000083;2;Field  ;
+                SourceExpr="Sales No. Set Discount 2" }
+
+    { 1000000087;2;Field  ;
+                SourceExpr="VAT Identifier 3" }
+
+    { 1000000041;2;Field  ;
+                CaptionML=DEU=VK-Nr. Online-Rabatt;
+                SourceExpr="Sales No. Online Discount";
+                Visible=FALSE }
+
+    { 1000000084;2;Field  ;
+                SourceExpr="Sales No. Online Discount 3" }
+
+    { 1000000139;2;Field  ;
+                SourceExpr="Sales No. Set Discount 3" }
+
+    { 1000000042;2;Field  ;
+                CaptionML=DEU=Rechnungsrabatte anzeigen;
+                SourceExpr="Display Inv. Disc. in Checkout" }
+
+    { 1000000075;2;Field  ;
+                CaptionML=DEU=Max. Vertreterrabatt;
+                SourceExpr="Max Salesperson Discount %" }
+
+    { 1000000045;2;Field  ;
+                CaptionML=DEU=Gew�nschtes Lieferdatum w�hlbar;
+                SourceExpr="Select Req. Delivery Date" }
+
+    { 1000000046;2;Field  ;
+                CaptionML=DEU=Tage Aufschlag gew�nschtes Lieferdatum;
+                SourceExpr="Addition Req. Delivery Date" }
+
+    { 1000000107;2;Field  ;
+                SourceExpr="Order Options Display" }
+
+    { 1000000108;2;Field  ;
+                SourceExpr="Order Options Sorting" }
+
+    { 1000000012;1;Group  ;
+                CaptionML=[DEU=Online-Bezahlung;
+                           ENU=Online Payment];
+                GroupType=Group }
+
+    { 1000000114;2;Field  ;
+                CaptionML=DEU=Zahlungsanbieter ID;
+                SourceExpr="Payment Provider Account ID" }
+
+    { 1000000029;2;Field  ;
+                ExtendedDatatype=Masked;
+                CaptionML=DEU=Zahlungsdienstleister Passwort;
+                SourceExpr="Payment Provider Password" }
+
+    { 1000000117;2;Field  ;
+                ExtendedDatatype=Masked;
+                SourceExpr="Payment Provider HMAC Key" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Paydirekt Api Key" }
+
+    { 1000000047;1;Group  ;
+                Name=Gutscheine;
+                CaptionML=[DEU=Gutscheine;
+                           ENU=Coupons];
+                GroupType=Group }
+
+    { 1000000048;2;Field  ;
+                SourceExpr="Coupon Group Filter";
+                OnValidate=BEGIN
+                             CurrPage.UPDATE;
+                           END;
+                            }
+
+    { 1000000049;2;Field  ;
+                CaptionML=[DEU=Anzahl aktiver Gutscheincodes;
+                           ENU=No. of active Coupon Codes];
+                SourceExpr=NoOfCoupons;
+                Editable=false;
+                OnLookup=VAR
+                           CouponHeader@1000000000 : Record 5447471;
+                         BEGIN
+                           IF "Coupon Group Filter" <> '' THEN
+                             CouponHeader.SETFILTER("Coupon Group","Coupon Group Filter");
+                           PAGE.RUN(5447471,CouponHeader);
+                         END;
+                          }
+
+    { 1000000078;1;Group  ;
+                Name=Reklamationen;
+                CaptionML=[DEU=Reklamationen;
+                           ENU=Return Orders];
+                GroupType=Group }
+
+    { 1000000079;2;Field  ;
+                SourceExpr="Return Order Type" }
+
+    { 1000000080;2;Field  ;
+                SourceExpr="Return Order No. Series" }
+
+    { 1000000081;2;Field  ;
+                SourceExpr="Return Max. Days Shipment" }
+
+    { 1000000052;1;Group  ;
+                Name=Artikelmerkmale;
+                CaptionML=[DEU=Artikelmerkmale;
+                           ENU=Item Properties];
+                GroupType=Group }
+
+    { 1000000053;2;Field  ;
+                CaptionML=DEU=Merkmalfilter aktiv;
+                SourceExpr="Attribute Filter Active" }
+
+    { 1000000054;2;Field  ;
+                CaptionML=DEU=Artikelvergleich aktiv;
+                SourceExpr="Atrribute Comparison Active" }
+
+    { 1000000055;2;Field  ;
+                CaptionML=DEU=Merkmale auf Artikelkarte anzeigen;
+                SourceExpr="Attribute Info Active" }
+
+    { 1000000056;2;Field  ;
+                CaptionML=DEU=Anzahl Merkmalfilter;
+                SourceExpr="No. of Global Filters" }
+
+    { 1000000059;2;Field  ;
+                SourceExpr="Attribute Brand" }
+
+    { 1000000092;1;Group  ;
+                Name=Abonnements;
+                CaptionML=[DEU=Abonnements;
+                           ENU=Subscriptions];
+                GroupType=Group }
+
+    { 1000000093;2;Field  ;
+                SourceExpr="Forerun Subscr. Order Create" }
+
+    { 1000000094;2;Field  ;
+                SourceExpr="Forerun Payment Capture" }
+
+    { 1000000095;2;Field  ;
+                SourceExpr="Sales No. Subscr. Discount" }
+
+    { 1000000096;2;Field  ;
+                SourceExpr="Subscr. Order No. Series Code" }
+
+    { 1000000097;2;Field  ;
+                SourceExpr="G/L Account Subscriptions" }
+
+    { 1000000116;1;Group  ;
+                Name=Copernica;
+                CaptionML=[DEU=E-Mail Marketing;
+                           ENU=Email marketing];
+                GroupType=Group }
+
+    { 1000000150;2;Field  ;
+                SourceExpr="Newsletter Account" }
+
+    { 1000000149;2;Field  ;
+                SourceExpr="Newsletter Login" }
+
+    { 1000000148;2;Field  ;
+                ExtendedDatatype=Masked;
+                SourceExpr="Newsletter Password" }
+
+    { 1000000147;2;Field  ;
+                SourceExpr="Newsletter Group" }
+
+    { 1000000146;2;Field  ;
+                SourceExpr="Newsletter Segment" }
+
+    { 1000000145;2;Field  ;
+                SourceExpr="Salutation Code Filter Male" }
+
+    { 1000000144;2;Field  ;
+                SourceExpr="Salutation Code Filter Female" }
+
+    { 1000000066;1;Group  ;
+                Name=Google Merchant;
+                CaptionML=[DEU=Google Merchant;
+                           ENU=Google Merchant];
+                GroupType=Group }
+
+    { 1000000067;2;Field  ;
+                SourceExpr="Google FTP URL" }
+
+    { 1000000068;2;Field  ;
+                SourceExpr="Google FTP User" }
+
+    { 1000000069;2;Field  ;
+                SourceExpr="Google FTP Password" }
+
+    { 1000000070;2;Field  ;
+                SourceExpr="Google Channel Title" }
+
+    { 1000000071;2;Field  ;
+                SourceExpr="Google Channel Link" }
+
+    { 1000000072;2;Field  ;
+                SourceExpr="Google Channel Description" }
+
+    { 1000000077;2;Field  ;
+                SourceExpr="Google Product Category" }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000001 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+      CustomerLinkVisible@1000 : Boolean;
+      SalespersonLinkVisible@1001 : Boolean;
+      NoSeries@1000000002 : Record 308;
+      UseOnlineOrderNoPossible@1000000003 : Boolean;
+      UseOnlineOrderNoError@1000000004 : Text;
+      Text001@1000000005 : TextConst 'DEU=Bitte aktivieren Sie "Manuelle Nr." in der Nummernserie "%1".;ENU=Please activate "Manual No." in number series "%1"';
+      Text002@1000000006 : TextConst 'DEU=Konnte Nummernserie "%1" nicht finden.;ENU=Could not find number series "%1"';
+      Text003@1000000007 : TextConst 'DEU=Bitte aktivieren Sie "Manuelle Nr." in der Nummernserie "%1".;ENU=Please activate "Manual No." in number series "%1"';
+      Text004@1000000008 : TextConst 'DEU=Keine Standard-Nummernserie definiert.;ENU=No default number series defined';
+      SalesSetup@1000000009 : Record 311;
+      AmazonFieldsVisible@1000000010 : Boolean;
+      EbayFieldsVisible@1000000011 : Boolean;
+      MarketplaceVisible@1000000012 : Boolean;
+      ClientAddInType@1000000018 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000017 : Codeunit 5447320;
+      WebshopWebform@1000000016 : Page 5447366;
+      Type@1000000015 : 'Description1,Promotion,Description2';
+      WebshopShop@1000000013 : Record 5447301;
+      Text007@1000000019 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+      WebformType@1000000020 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection,ShippingOption,PaymentOption,ShippingOptionIcon,PaymentOptionIcon,Marketplace';
+      EbayAuthToken@1000000014 : Text;
+      EbayAuthTokenBigText@1000000022 : BigText;
+      OStream@1000000021 : OutStream;
+      IStream@1000000023 : InStream;
+      Text008@1000000025 : TextConst 'DEU=Anfrage wird verarbeitet...;ENU=Request is processed';
+      Text009@1000000024 : TextConst 'DEU=Kategorien werden abgeholt;ENU=Categories are being fetched';
+      NoOfCoupons@1000000026 : Integer;
+
+    LOCAL PROCEDURE CheckUseOnlineOrderNo@1000000000();
+    BEGIN
+      UseOnlineOrderNoPossible := FALSE;
+      UseOnlineOrderNoError := '';
+      SalesSetup.GET;
+
+      IF "Create Webshop Orders As" = "Create Webshop Orders As"::Quotes THEN BEGIN
+        IF "Code No. Series Quotes" <> '' THEN BEGIN
+          IF NoSeries.GET("Code No. Series Quotes") THEN BEGIN
+            IF NoSeries."Manual Nos." THEN
+              UseOnlineOrderNoPossible := TRUE
+            ELSE
+              UseOnlineOrderNoError := STRSUBSTNO(Text001,FORMAT("Code No. Series Quotes"));
+          END ELSE
+            UseOnlineOrderNoError := STRSUBSTNO(Text002,FORMAT("Code No. Series Quotes"));
+        END ELSE BEGIN
+          NoSeries.SETRANGE(NoSeries.Code,SalesSetup."Quote Nos.");
+          IF NoSeries.FINDSET(FALSE,FALSE) THEN BEGIN
+            IF NoSeries."Manual Nos." THEN
+              UseOnlineOrderNoPossible := TRUE
+            ELSE
+              UseOnlineOrderNoError := STRSUBSTNO(Text003,FORMAT(SalesSetup."Quote Nos."));
+          END ELSE
+            UseOnlineOrderNoError := Text004;
+        END;
+      END ELSE BEGIN
+        IF "Code No. Series Orders" <> '' THEN BEGIN
+          IF NoSeries.GET("Code No. Series Orders") THEN BEGIN
+            IF NoSeries."Manual Nos." THEN
+              UseOnlineOrderNoPossible := TRUE
+            ELSE
+              UseOnlineOrderNoError := STRSUBSTNO(Text001,FORMAT("Code No. Series Orders"));
+          END ELSE
+            UseOnlineOrderNoError := STRSUBSTNO(Text002,FORMAT("Code No. Series Orders"));
+        END ELSE BEGIN
+          NoSeries.SETRANGE(NoSeries.Code,SalesSetup."Order Nos.");
+          IF NoSeries.FINDSET(FALSE,FALSE) THEN BEGIN
+            IF NoSeries."Manual Nos." THEN
+              UseOnlineOrderNoPossible := TRUE
+            ELSE
+              UseOnlineOrderNoError := STRSUBSTNO(Text003,FORMAT(SalesSetup."Order Nos."));
+          END ELSE
+            UseOnlineOrderNoError := Text004;
+        END;
+      END;
+
+      IF (NOT (UseOnlineOrderNoPossible)) AND ("Use Online Order No.") THEN
+        ERROR(UseOnlineOrderNoError);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

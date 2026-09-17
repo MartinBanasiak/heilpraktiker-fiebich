@@ -1,0 +1,9 @@
+T5401-F1-P8629-A1031-L999:Code
+T5401-F2-P8629-A1031-L999:Artikelnr.
+T5401-F3-P8629-A1031-L999:Beschreibung
+T5401-F4-P8629-A1031-L999:Beschreibung 2
+T5401-F5447300-P8629-A1031-L999:Ist Webshop Aktiv
+T5401-F5447301-P8629-A1031-L999:Zuletzt übertr. Webshop Lagerbestand
+T5401-P8629-A1031-L999:Artikelvariante
+T5401-Q1000-P26171-A1031-L999:Die Artikelvariante '%1' kann nicht gelöscht werden, da noch mindestens ein offener Fertigungsauftrag vorhanden ist, der diesen Artikel enthält.
+T5401-Q1001-P26171-A1031-L999:Die Artikelvariante '%1' kann nicht gelöscht werden, da noch mindestens ein Element vom Typ '%2' vorhanden ist, das diesen Variantencode enthält.

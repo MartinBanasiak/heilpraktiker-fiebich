@@ -1,0 +1,168 @@
+OBJECT Report 5447304 Webshop Import Item Files
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Dateien f�r Webshopartikel importieren;
+               ENU=Import webshop item files];
+    ProcessingOnly=Yes;
+  }
+  DATASET
+  {
+    { 8129;    ;DataItem;                    ;
+               DataItemTable=Table27;
+               DataItemTableView=SORTING(No.)
+                                 ORDER(Ascending)
+                                 WHERE(No. 2=FILTER(<>''));
+               OnPreDataItem=BEGIN
+                               WebshopManagement.StateIndicatorOpen('Dateien importieren');
+                               WebshopManagement.StateIndicatorRegisterTable(TABLECAPTION,COUNT);
+                               WebshopManagement.StateIndicatorNewTable(TABLECAPTION,COUNT);
+                               WebshopSetup.GET;
+                               ShopCode := Shop;
+                               LanguageCode := Language;
+                               AllLanguageCodes := TRUE;
+                             END;
+
+               OnAfterGetRecord=BEGIN
+
+                                  WebshopManagement.StateIndicatorUpdate();
+
+                                  CASE FileType OF
+                                    FileType::Picture: Filename := 'jpg';
+                                    FileType::Document: Filename := 'pdf';
+                                    FileType::Videoclip: Filename := 'flv';
+                                  END;
+
+                                  TempFolder.SETRANGE(Path,FilePath);
+                                  TempFolder.SETRANGE("Is a file",TRUE);
+                                  Filename := STRSUBSTNO('%1*%2',Item."No.",Filename);
+                                  TempFolder.SETFILTER(Name,Filename);
+                                  IF TempFolder.FINDSET THEN REPEAT
+                                    IF FILE.EXISTS(FilePath + TempFolder.Name) THEN BEGIN
+                                      IF InsertFiles THEN BEGIN
+                                        // Webshop Artikel anlegen falls n�tig
+                                        IF NOT WebshopItem.GET(ShopCode,LanguageCode,"No.") THEN BEGIN
+                                          WebshopItem.INIT;
+                                          WebshopItem.VALIDATE("Shop Code",ShopCode);
+                                          WebshopItem.VALIDATE("Language Code",LanguageCode);
+                                          WebshopItem.VALIDATE("Item No.","No.");
+                                          WebshopItem.INSERT(TRUE);
+                                        END;
+                                        // Webshop Artikel aktiv setzten (Optional)
+                                        IF ActivateItem THEN BEGIN
+                                          WebshopItem.VALIDATE("Is Active",TRUE);
+                                          WebshopItem.MODIFY(TRUE);
+                                        END;
+                                        ItemNo := WebshopItem."Item No.";
+                                        ItemDescription := WebshopItem.Description;
+
+                                        // Datei anlegen
+                                        WebshopItemFile.SETRANGE(Type,FileType);
+                                        WebshopItemFile.SETRANGE("Shop Code",WebshopItem."Shop Code");
+                                        WebshopItemFile.SETRANGE("Language Code",WebshopItem."Language Code");
+                                        WebshopItemFile.SETRANGE("Item No.",WebshopItem."Item No.");
+                                        WebshopItemFile.SETFILTER("Temp Filename",'%1',TempFolder.Name);
+                                        IF NOT WebshopItemFile.FINDSET THEN BEGIN
+                                          WebshopItemFile.SETRANGE("Temp Filename");
+                                          IF WebshopItemFile.FINDLAST THEN BEGIN
+                                            NextLineNo := WebshopItemFile."Line No." + 10000
+                                          END ELSE BEGIN
+                                            NextLineNo := 10000;
+                                          END;
+                                          NewWebshopItemFile.INIT;
+                                          NewWebshopItemFile."Shop Code" := WebshopItem."Shop Code";
+                                          NewWebshopItemFile."Language Code" := WebshopItem."Language Code";
+                                          NewWebshopItemFile."Item No." := WebshopItem."Item No.";
+                                          NewWebshopItemFile.Type := FileType;
+                                          NewWebshopItemFile."Line No." := NextLineNo;
+                                          NewWebshopItemFile.INSERT(TRUE);
+                                          NewWebshopItemFile.Description := WebshopItem.Description;
+                                          NewWebshopItemFile."All Language Codes" := AllLanguageCodes;
+                                          NewWebshopItemFile."Temp Filename" := TempFolder.Name;
+                                          NewWebshopItemFile.MODIFY(TRUE);
+                                          InsertCounter += 1;
+                                        END;
+
+                                        // Artikel aktualisieren (Optional)
+                                        IF UpdateItem THEN BEGIN
+                                          WebshopUpdateManagement.UpdateWebshopItem(WebshopItem);
+                                          WebshopUpdateManagement.UpdateWebshopItemFile(NewWebshopItemFile);
+                                          WebshopUpdateManagement.CheckWebshopItemFile(NewWebshopItemFile);
+                                        END;
+                                      END;
+                                      Counter += 1;
+                                    END;
+
+                                  UNTIL TempFolder.NEXT = 0;
+                                END;
+
+               OnPostDataItem=VAR
+                                Text001@1000000000 : TextConst 'DEU=Es wurden %1 Dateien zugeordnet und %2 Dateien angelegt;ENU=%1 Files were assigned and %2 Files created';
+                              BEGIN
+                                WebshopManagement.StateIndicatorClose();
+                                MESSAGE(Text001,Counter,InsertCounter);
+                              END;
+
+               ReqFilterFields=No. }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopItem@1000000012 : Record 5447304;
+      WebshopItemFile@1000000000 : Record 5447307;
+      NewWebshopItemFile@1000000002 : Record 5447307;
+      Filename@1000000001 : Text[100];
+      NextLineNo@1000000003 : Integer;
+      i@1000000004 : Integer;
+      WebshopManagement@1000000005 : Codeunit 5447300;
+      LanguageCode@1000000011 : Code[20];
+      FileType@1000000006 : 'Picture,Document,Videoclip';
+      FilePath@1000000007 : Text[100];
+      InsertFiles@1000000009 : Boolean;
+      ActivateItem@1000000008 : Boolean;
+      UpdateItem@1000000010 : Boolean;
+      InsertCounter@1000000013 : Integer;
+      Counter@1000000014 : Integer;
+      AllLanguageCodes@1000000015 : Boolean;
+      ItemNo@1000000016 : Code[20];
+      ItemDescription@1000000018 : Text[50];
+      ParentWebshopItem@1000000017 : Record 5447304;
+      TempFolder@1000000019 : Record 2000000022;
+      WebshopSetup@1000000020 : Record 5447300;
+      WebshopCustomizedUpdateMgt@1000000021 : Codeunit 5447302;
+      WebshopUpdateManagement@1000000022 : Codeunit 5447301;
+      ShopCode@1000000023 : Code[20];
+      FileNo@1000000024 : Integer;
+      Shop@1000000025 : Code[10];
+      Language@1000000026 : Code[10];
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

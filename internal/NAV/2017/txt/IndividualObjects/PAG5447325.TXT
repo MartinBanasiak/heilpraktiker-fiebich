@@ -1,0 +1,281 @@
+OBJECT Page 5447325 Webshop Attribute Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Artikelmerkmal Verkn�pfung;
+               ENU=Webshop Attribute Link];
+    SourceTable=Table5447321;
+    DelayedInsert=Yes;
+    PageType=List;
+    OnOpenPage=BEGIN
+
+                 CASE (GETFILTER(Type)) OF
+                   'Item': BEGIN
+                     ShowValueControl := TRUE;
+                     ShowTranslationButton := TRUE;
+                     CategoryVisible := FALSE;
+                     SETCURRENTKEY(Type,"No.",Sorting);
+                   END;
+                   'Category': BEGIN
+                     ShowValueControl := FALSE;
+                     ShowTranslationButton := FALSE;
+                     CategoryVisible := TRUE;
+                     SETCURRENTKEY(Type,"Shop Code","Language Code","Category Line No.",Sorting);
+                   END;
+                   'Shop': BEGIN
+                     ShowValueControl := FALSE;
+                     ShowTranslationButton := FALSE;
+                     CategoryVisible := FALSE;
+                     SETCURRENTKEY(Type,"Shop Code",Sorting);
+                   END;
+                   'Template': BEGIN
+                     ShowValueControl := TRUE;
+                     ShowTranslationButton := TRUE;
+                     CategoryVisible := FALSE;
+                     SETCURRENTKEY(Type,"No.",Sorting);
+                   END;
+                 END;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       ValueControlIsEditable := ValueIsEditable();
+                       Value := GetValue();
+                     END;
+
+    OnNewRecord=BEGIN
+                  CLEAR(Value);
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000011;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000012;1 ;Action    ;
+                      CaptionML=[DEU=Nach oben;
+                                 ENU=Move Up];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=MoveUp;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 MoveUp();
+                               END;
+                                }
+      { 1000000013;1 ;Action    ;
+                      CaptionML=[DEU=Nach unten;
+                                 ENU=Move Down];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=MoveDown;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 MoveDown();
+                               END;
+                                }
+      { 1000000014;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000015;1 ;Action    ;
+                      CaptionML=[DEU=Merkmalzuordnung �bersetzungen;
+                                 ENU=Attribute Link Translations];
+                      RunObject=Page 5447324;
+                      RunPageLink=Type=CONST(Attribute Link),
+                                  Attribute Code=FIELD(Attribute Code),
+                                  Attribute Link No.=FIELD(No.);
+                      Visible=ShowTranslationButton;
+                      Image=Translations }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="No.";
+                Visible=FALSE }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Merkmalcode;
+                           ENU=Attribute Code];
+                SourceExpr="Attribute Code" }
+
+    { 1000000009;2;Field  ;
+                CaptionML=[DEU=Merkmalsbeschreibung;
+                           ENU=Attribute Description];
+                SourceExpr="Attribute Description" }
+
+    { 1000000010;2;Field  ;
+                CaptionML=[DEU=Wert;
+                           ENU=Value];
+                SourceExpr=Value;
+                Visible=ShowValueControl;
+                Editable=ValueControlIsEditable;
+                OnValidate=BEGIN
+                             SaveValue(Value);
+                             CurrPage.UPDATE;
+                           END;
+
+                OnAssistEdit=BEGIN
+                               EditValue();
+                               CurrPage.UPDATE(TRUE);
+                             END;
+                              }
+
+    { 1000000004;2;Field  ;
+                CaptionML=[DEU=Wert Option;
+                           ENU=Value Option];
+                SourceExpr="Value Option";
+                Visible=FALSE }
+
+    { 1000000005;2;Field  ;
+                CaptionML=[DEU=Wert Dezimalzahl;
+                           ENU=Value Decimal];
+                SourceExpr="Value Decimal";
+                Visible=FALSE }
+
+    { 1000000006;2;Field  ;
+                CaptionML=[DEU=Wert Ganzzahl;
+                           ENU=Value Integer];
+                SourceExpr="Value Integer";
+                Visible=FALSE }
+
+    { 1000000007;2;Field  ;
+                CaptionML=[DEU=Wert Ja/Nein-Feld;
+                           ENU=Value Boolean];
+                SourceExpr="Value Boolean";
+                Visible=FALSE }
+
+    { 1000000008;2;Field  ;
+                CaptionML=[DEU=Wert Text;
+                           ENU=Value Text];
+                SourceExpr="Value Text";
+                Visible=FALSE }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Reihenfolge;
+                           ENU=Sorting];
+                SourceExpr=Sorting;
+                Visible=FALSE }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Defines Marketpl. Variants";
+                Visible=CategoryVisible }
+
+    { 1000000018;2;Field  ;
+                SourceExpr="Is Marketpl. Req. Attribute";
+                Visible=CategoryVisible }
+
+  }
+  CODE
+  {
+    VAR
+      ShowValueControl@1000000000 : Boolean INDATASET;
+      ValueControlIsEditable@1000000003 : Boolean;
+      ShowTranslationButton@1000000001 : Boolean INDATASET;
+      Value@1000000002 : Text[100];
+      CategoryVisible@1000000004 : Boolean;
+
+    PROCEDURE MoveUp@1000000000();
+    VAR
+      ToAttributeLink@1000000002 : Record 5447321;
+      FromSorting@1000000001 : Integer;
+      ToSorting@1000000000 : Integer;
+    BEGIN
+      CurrPage.UPDATE(FALSE);
+      CASE Type OF
+        Type::Item: BEGIN
+          ToAttributeLink.SETCURRENTKEY(Type,"No.",Sorting);
+          ToAttributeLink.SETRANGE(Type,Type::Item);
+          ToAttributeLink.SETRANGE("No.","No.");
+        END;
+        Type::Category: BEGIN
+          ToAttributeLink.SETCURRENTKEY(Type,"Shop Code","Language Code","Category Line No.",Sorting);
+          ToAttributeLink.SETRANGE(Type,Type::Category);
+          ToAttributeLink.SETRANGE("Shop Code","Shop Code");
+          ToAttributeLink.SETRANGE("Language Code","Language Code");
+          ToAttributeLink.SETRANGE("Category Line No.","Category Line No.");
+        END;
+        Type::Shop: BEGIN
+          ToAttributeLink.SETCURRENTKEY(Type,"Shop Code",Sorting);
+          ToAttributeLink.SETRANGE(Type,Type::Shop);
+          ToAttributeLink.SETRANGE("Shop Code","Shop Code");
+        END;
+        Type::Template: BEGIN
+          ToAttributeLink.SETCURRENTKEY(Type,"No.",Sorting);
+          ToAttributeLink.SETRANGE(Type,Type::Template);
+          ToAttributeLink.SETRANGE("No.","No.");
+        END;
+      END;
+      ToAttributeLink.SETFILTER(Sorting,'<%1',Sorting);
+      IF ToAttributeLink.FINDLAST THEN BEGIN
+        FromSorting := Sorting;
+        ToSorting := ToAttributeLink.Sorting;
+        Sorting := ToSorting;
+        MODIFY(FALSE);
+        ToAttributeLink.Sorting := FromSorting;
+        ToAttributeLink.MODIFY(FALSE);
+      END;
+      CurrPage.UPDATE(FALSE);
+    END;
+
+    PROCEDURE MoveDown@1000000001();
+    VAR
+      ToAttributeLink@1000000002 : Record 5447321;
+      FromSorting@1000000001 : Integer;
+      ToSorting@1000000000 : Integer;
+    BEGIN
+      CurrPage.UPDATE(FALSE);
+      CASE Type OF
+        Type::Item: BEGIN
+          ToAttributeLink.SETCURRENTKEY(Type,"No.",Sorting);
+          ToAttributeLink.SETRANGE(Type,Type::Item);
+          ToAttributeLink.SETRANGE("No.","No.");
+        END;
+        Type::Category: BEGIN
+          ToAttributeLink.SETCURRENTKEY(Type,"Shop Code","Language Code","Category Line No.",Sorting);
+          ToAttributeLink.SETRANGE(Type,Type::Category);
+          ToAttributeLink.SETRANGE("Shop Code","Shop Code");
+          ToAttributeLink.SETRANGE("Language Code","Language Code");
+          ToAttributeLink.SETRANGE("Category Line No.","Category Line No.");
+        END;
+        Type::Shop: BEGIN
+          ToAttributeLink.SETCURRENTKEY(Type,"Shop Code",Sorting);
+          ToAttributeLink.SETRANGE(Type,Type::Shop);
+          ToAttributeLink.SETRANGE("Shop Code","Shop Code");
+        END;
+        Type::Template: BEGIN
+          ToAttributeLink.SETCURRENTKEY(Type,"No.",Sorting);
+          ToAttributeLink.SETRANGE(Type,Type::Template);
+          ToAttributeLink.SETRANGE("No.","No.");
+        END;
+      END;
+      ToAttributeLink.SETFILTER(Sorting,'>%1',Sorting);
+      IF ToAttributeLink.FINDFIRST THEN BEGIN
+        FromSorting := Sorting;
+        ToSorting := ToAttributeLink.Sorting;
+        Sorting := ToSorting;
+        MODIFY(FALSE);
+        ToAttributeLink.Sorting := FromSorting;
+        ToAttributeLink.MODIFY(FALSE);
+      END;
+      CurrPage.UPDATE(FALSE);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

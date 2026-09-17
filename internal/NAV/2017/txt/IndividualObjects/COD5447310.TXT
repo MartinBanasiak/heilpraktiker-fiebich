@@ -1,0 +1,443 @@
+OBJECT Codeunit 5447310 Webshop  Role Center Mgmt.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    SingleInstance=Yes;
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      Text001@1000000000 : TextConst 'DEU=Webshop Auftragskommentare;ENU=Webshop Order Comments';
+      Text002@1000000001 : TextConst 'DEU=Keine Auftr�ge gefunden;ENU=No Orders Found';
+      Text003@1000000002 : TextConst 'DEU=Ma�einheit: %1 | Zeitraum: %2..%3;ENU=Measure: %1 | Period: %2..%3';
+      gCalendar@1000000003 : Record 2000000007;
+      gDateArray@1000000004 : ARRAY [31] OF Date;
+      gShopCodeArray@1000000005 : ARRAY [200] OF Code[20];
+      Text004@1000000006 : TextConst 'DEU=Zeitraum;ENU=Period';
+      gPeriodLength@1000000007 : 'Day,Week,Month,Quarter,Year';
+      gDateFilterArray@1000000008 : ARRAY [50] OF Text[100];
+      CurrStartDate@1000000010 : Date;
+      CurrEndDate@1000000009 : Date;
+      gStartDate@1000000011 : Date;
+      gEndDate@1000000012 : Date;
+      gWorkdate@1000000013 : Date;
+      gMeasure@1000000014 : 'Amount,AmountVAT,NoOfPostedInvoices,NoOfPostedCrMemos';
+      gChartType@1000000015 : 'Point,,Bubble,Line,,StepLine,,,,,Column,StackedColumn,StackedColumn100,Area,,StackedArea,StackedArea100,Pie,Doughnut,,,Range,,,,Radar,,,,,,,,Funnel';
+
+    PROCEDURE UpdateWebshopOrderSalesChart@1000000000(VAR BusinessChartBuffer@1000000000 : Record 485;MovePeriod@1000000001 : ' ,Next,Previous';PeriodLength@1000000002 : 'Day,Week,Month,Quarter,Year');
+    VAR
+      WebshopShop@1000000003 : Record 5447301;
+      Calendar@1000000004 : Record 2000000007;
+      XIndex@1000000005 : Integer;
+      YIndex@1000000012 : Integer;
+      CalendarEntry@1000000006 : Record 99000757;
+      Amount@1000000007 : ARRAY [200] OF Decimal;
+      "Amount (incl. VAT)"@1000000008 : ARRAY [200] OF Decimal;
+      WebshopCode@1000000009 : ARRAY [200] OF Code[20];
+      ShopCounter@1000000010 : Integer;
+      ShopCodeFilterString@1000000011 : Text;
+      SalesInvoiceHeader@1000000013 : Record 112;
+      SalesCrMemoHeader@1000000014 : Record 114;
+      CurrColumnIndex@1000000017 : Integer;
+      NoOfColumns@1000000018 : Integer;
+      LocAmnt@1000000015 : Decimal;
+      LocAmntVAT@1000000016 : Decimal;
+      InvoiceCount@1000000019 : Integer;
+      CrMemoCount@1000000020 : Integer;
+    BEGIN
+      WITH BusinessChartBuffer DO BEGIN
+        Initialize;
+
+      //  gWorkdate := GetEndDateForCurrInterval(gWorkdate,PeriodLength);
+
+        //Generate the period to be displayed
+        SetChartPeriod(PeriodLength, MovePeriod,gWorkdate);
+
+        //Add Measures for Webshop
+        ShopCounter := 0;
+        ShopCodeFilterString := '';
+        IF WebshopShop.FINDSET THEN REPEAT
+          AddMeasure(WebshopShop.Code,1,"Data Type"::Decimal, gChartType);
+          gShopCodeArray[ShopCounter + 1] := WebshopShop.Code;
+          IF ShopCounter > 0 THEN
+            ShopCodeFilterString += '|';
+          ShopCodeFilterString += WebshopShop.Code;
+          Amount[ShopCounter + 1] := 0;
+          "Amount (incl. VAT)"[ShopCounter + 1] := 0;
+          ShopCounter += 1;
+        UNTIL WebshopShop.NEXT = 0;
+
+        //Set X-Axis  Value
+        SetXAxis(Text004, "Data Type"::String);
+
+        XIndex := 0;
+        CurrStartDate := GetStartDateForPeriodLength(PeriodLength);
+        CurrEndDate := GetEndDateForCurrInterval(CurrStartDate,PeriodLength);
+        NoOfColumns := GetNoOfColumnsForPeriod(PeriodLength);
+        gStartDate := GetStartDateForPeriodLength(PeriodLength);
+        gEndDate :=  GetEndDateForPeriodLength(PeriodLength);
+        FOR CurrColumnIndex := 1 TO NoOfColumns DO BEGIN
+
+          gDateFilterArray[CurrColumnIndex] := FORMAT(CurrStartDate,0,'<Standard Format,5>')+'..'+FORMAT(CurrEndDate,0,'<Standard Format,5>');
+
+          AddColumn(GetCurrPeriodName(CurrStartDate,PeriodLength));
+
+          //Calculate Totals for All Webshops
+          FOR YIndex := 0 TO ShopCounter - 1 DO BEGIN
+            LocAmnt := 0;
+            LocAmntVAT := 0;
+            //Add Posted Sales Invoices
+            SalesInvoiceHeader.RESET;
+            SalesInvoiceHeader.SETRANGE("Posting Date",CurrStartDate,CurrEndDate);
+            SalesInvoiceHeader.SETRANGE("Webshop Shop Code",gShopCodeArray[YIndex + 1]);
+            InvoiceCount := 0;
+            IF SalesInvoiceHeader.FINDSET THEN REPEAT
+              InvoiceCount += 1;
+              SalesInvoiceHeader.CALCFIELDS(Amount,"Amount Including VAT");
+              LocAmnt += SalesInvoiceHeader.Amount;
+              LocAmntVAT += SalesInvoiceHeader."Amount Including VAT";
+            UNTIL SalesInvoiceHeader.NEXT = 0;
+
+            //Subtract Posted Sales Cr Memos
+            SalesCrMemoHeader.RESET;
+            SalesCrMemoHeader.SETRANGE("Posting Date",CurrStartDate,CurrEndDate);
+            SalesCrMemoHeader.SETRANGE("Webshop Shop Code",gShopCodeArray[YIndex + 1]);
+            CrMemoCount := 0;
+            IF SalesCrMemoHeader.FINDSET THEN REPEAT
+              CrMemoCount += 1;
+              SalesCrMemoHeader.CALCFIELDS(Amount,"Amount Including VAT");
+              LocAmnt -= SalesCrMemoHeader.Amount;
+              LocAmntVAT -= SalesCrMemoHeader."Amount Including VAT";
+            UNTIL SalesCrMemoHeader.NEXT = 0;
+
+            // Set the values for each of the stacks
+            CASE gMeasure OF
+              gMeasure::Amount:
+                SetValueByIndex(YIndex,XIndex,LocAmnt);
+              gMeasure::AmountVAT:
+                SetValueByIndex(YIndex,XIndex,LocAmntVAT);
+              gMeasure::NoOfPostedInvoices:
+                SetValueByIndex(YIndex,XIndex,InvoiceCount);
+              gMeasure::NoOfPostedCrMemos:
+                SetValueByIndex(YIndex,XIndex,CrMemoCount);
+            END;
+          END;
+
+          CurrEndDate := GetEndDateForNextInterval(CurrStartDate,PeriodLength);
+          CurrStartDate := GetStartDateForNextInterval(CurrStartDate,PeriodLength);
+
+          XIndex += 1;
+
+        END;
+
+
+      END;
+    END;
+
+    PROCEDURE SetChartPeriod@1000000002(PeriodLength@1000000000 : 'Day,Week,Month,Quarter,Year';MovePeriod@1000000001 : ' ,Next,Previous';VAR GlobalWorkdate@1000000004 : Date);
+    VAR
+      SearchText@1000000002 : Text[20];
+      PeriodFormMgt@1000000003 : Codeunit 359;
+    BEGIN
+      CASE MovePeriod OF
+        MovePeriod::Next:
+          GlobalWorkdate := GetEndDateForNextInterval(GlobalWorkdate,PeriodLength);
+        MovePeriod::Previous:
+          GlobalWorkdate := GetEndDateForPrevInterval(GlobalWorkdate,PeriodLength);
+      END;
+    END;
+
+    PROCEDURE GetChartStatusText@1000000004() : Text[250];
+    VAR
+      MeasureText@1000000000 : Text[250];
+      Text001@1000000001 : TextConst 'DEU=Gesamtumsatz (ohne MwSt.);ENU=Totals (without VAT)';
+      Text002@1000000002 : TextConst 'DEU=Gesamtumsatz (inkl. MwSt.);ENU=Totals (incl. VAT)';
+      Text003@1000000003 : TextConst 'DEU=Anzahl Geb. Rechnungen;ENU=Number of posted sales invoices';
+      Text004@1000000004 : TextConst 'DEU=Anzahl gebuchte Verkaufsgutschriften;ENU=Number of posted sales credit memos';
+      Text005@1000000005 : TextConst 'DEU=Ma�einheit: %1 | Zeitraum: %2..%3;ENU=Measure: %1 | Period: %2..%3';
+    BEGIN
+      CASE gMeasure OF
+        gMeasure::Amount:
+          MeasureText := Text001;
+        gMeasure::AmountVAT:
+          MeasureText := Text002;
+        gMeasure::NoOfPostedInvoices:
+          MeasureText := Text003;
+        gMeasure::NoOfPostedCrMemos:
+          MeasureText := Text004;
+      END;
+      EXIT(STRSUBSTNO(Text005,MeasureText,FORMAT(gStartDate),FORMAT(gEndDate)));
+    END;
+
+    PROCEDURE ChartDrillDown@1000000005(VAR BusinessChartBuffer@1000000000 : Record 485);
+    VAR
+      SalesInvoiceHeader@1000000001 : Record 112;
+      PostedSalesInvoices@1000000002 : Page 143;
+      SalesCrMemoHeader@1000000004 : Record 114;
+      PostedSalesCreditMemos@1000000003 : Page 144;
+    BEGIN
+      SalesInvoiceHeader.SETFILTER("Posting Date",gDateFilterArray[BusinessChartBuffer."Drill-Down X Index" + 1]);
+      SalesInvoiceHeader.SETRANGE("Webshop Shop Code",gShopCodeArray[BusinessChartBuffer."Drill-Down Measure Index" + 1]);
+      IF NOT SalesInvoiceHeader.ISEMPTY THEN BEGIN
+        PostedSalesInvoices.SETTABLEVIEW(SalesInvoiceHeader);
+        PostedSalesInvoices.RUN;
+      END;
+
+      SalesCrMemoHeader.SETFILTER("Posting Date",gDateFilterArray[BusinessChartBuffer."Drill-Down X Index" + 1]);
+      SalesCrMemoHeader.SETRANGE("Webshop Shop Code",gShopCodeArray[BusinessChartBuffer."Drill-Down Measure Index" + 1]);
+      IF NOT SalesCrMemoHeader.ISEMPTY THEN BEGIN
+        PostedSalesCreditMemos.SETTABLEVIEW(SalesCrMemoHeader);
+        PostedSalesCreditMemos.RUN;
+      END;
+    END;
+
+    LOCAL PROCEDURE GetNoOfColumnsForPeriod@1000000001(PeriodLength@1000000000 : 'Day,Week,Month,Quarter,Year') : Integer;
+    BEGIN
+      CASE PeriodLength OF
+        PeriodLength::Day:
+          EXIT(14);
+        PeriodLength::Week:
+          EXIT(8);
+        PeriodLength::Month:
+          EXIT(6);
+        PeriodLength::Quarter:
+          EXIT(4);
+        ELSE
+          EXIT(2);
+      END;
+    END;
+
+    PROCEDURE GenerateDataForChart@1000000006(BusinessChartBuffer@1000000000 : Record 485);
+    VAR
+      SalesInvoiceHeader@1000000001 : Record 112;
+      SalesCrMemoHeader@1000000002 : Record 114;
+    BEGIN
+    END;
+
+    PROCEDURE GetEndDateForPeriodLength@1000000007(PeriodLength@1000000000 : 'Day,Week,Month,Quarter,Year') : Date;
+    VAR
+      DateExprString@1000000001 : Text[250];
+    BEGIN
+      CASE PeriodLength OF
+        PeriodLength::Day:
+          DateExprString := '<+CD-1D>';
+        PeriodLength::Week:
+          DateExprString := '<+CW-1W>';
+        PeriodLength::Month:
+          DateExprString := '<+CM-1M>';
+        PeriodLength::Quarter:
+          DateExprString := '<+CQ-1Q>';
+        ELSE
+          DateExprString := '<+CY-1Y>';
+      END;
+      EXIT(CALCDATE(DateExprString,gWorkdate));
+    END;
+
+    PROCEDURE GetStartDateForPeriodLength@1000000012(PeriodLength@1000000000 : 'Day,Week,Month,Quarter,Year') : Date;
+    VAR
+      DateExprString@1000000001 : Text[250];
+      NoOfIntervalsBack@1000000002 : Integer;
+    BEGIN
+      CASE PeriodLength OF
+        PeriodLength::Day:
+          BEGIN
+            NoOfIntervalsBack := GetNoOfColumnsForPeriod(PeriodLength);
+            DateExprString := '<-CD-' + FORMAT(NoOfIntervalsBack) + 'D>';
+          END;
+
+        PeriodLength::Week:
+          BEGIN
+            NoOfIntervalsBack := GetNoOfColumnsForPeriod(PeriodLength);
+            DateExprString := '<-CW-' + FORMAT(NoOfIntervalsBack) + 'W>';
+          END;
+
+        PeriodLength::Month:
+          BEGIN
+            NoOfIntervalsBack := GetNoOfColumnsForPeriod(PeriodLength);
+            DateExprString := '<-CM-' + FORMAT(NoOfIntervalsBack) + 'M>';
+          END;
+
+        PeriodLength::Quarter:
+          BEGIN
+            NoOfIntervalsBack := GetNoOfColumnsForPeriod(PeriodLength);
+            DateExprString := '<-CQ-' + FORMAT(NoOfIntervalsBack) + 'Q>';
+          END;
+
+        ELSE
+          BEGIN
+            NoOfIntervalsBack := GetNoOfColumnsForPeriod(PeriodLength);
+            DateExprString := '<-CY-' + FORMAT(NoOfIntervalsBack) + 'Y>';
+          END;
+
+      END;
+      EXIT(CALCDATE(DateExprString,gWorkdate));
+    END;
+
+    PROCEDURE GetStartDateForNextInterval@1000000016(LastStartDate@1000000003 : Date;PeriodLength@1000000000 : 'Day,Week,Month,Quarter,Year') : Date;
+    VAR
+      DateExprString@1000000001 : Text[250];
+      NoOfIntervalsBack@1000000002 : Integer;
+    BEGIN
+      CASE PeriodLength OF
+        PeriodLength::Day:
+          BEGIN
+            LastStartDate := CALCDATE('<+CD>',LastStartDate);
+            DateExprString := '<+CD+1D>';
+          END;
+
+        PeriodLength::Week:
+          BEGIN
+            LastStartDate := CALCDATE('<+CW>',LastStartDate);
+            DateExprString := '<+CW+1D>';
+          END;
+
+        PeriodLength::Month:
+          BEGIN
+            LastStartDate := CALCDATE('<+CM>',LastStartDate);
+            DateExprString := '<+CM+1D>';
+          END;
+
+        PeriodLength::Quarter:
+          BEGIN
+            LastStartDate := CALCDATE('<+CQ>',LastStartDate);
+            DateExprString := '<+CQ+1D>';
+          END;
+
+        ELSE
+          BEGIN
+            LastStartDate := CALCDATE('<+CY>',LastStartDate);
+            DateExprString := '<+CY+1D>';
+          END;
+
+      END;
+      EXIT(CALCDATE(DateExprString,LastStartDate));
+    END;
+
+    PROCEDURE GetEndDateForNextInterval@1000000018(LastStartDate@1000000003 : Date;PeriodLength@1000000000 : 'Day,Week,Month,Quarter,Year') : Date;
+    VAR
+      DateExprString@1000000001 : Text[250];
+      NoOfIntervalsBack@1000000002 : Integer;
+    BEGIN
+      CASE PeriodLength OF
+        PeriodLength::Day:
+          DateExprString := '<+CD+1D>';
+
+        PeriodLength::Week:
+          DateExprString := '<+CW+1W>';
+
+        PeriodLength::Month:
+          DateExprString := '<+CM+1M>';
+
+        PeriodLength::Quarter:
+          DateExprString := '<+CQ+1Q>';
+
+        ELSE
+          DateExprString := '<+CY+1Y>';
+      END;
+      EXIT(CALCDATE(DateExprString,LastStartDate));
+    END;
+
+    PROCEDURE GetEndDateForPrevInterval@1000000021(LastStartDate@1000000003 : Date;PeriodLength@1000000000 : 'Day,Week,Month,Quarter,Year') : Date;
+    VAR
+      DateExprString@1000000001 : Text[250];
+      NoOfIntervalsBack@1000000002 : Integer;
+    BEGIN
+      CASE PeriodLength OF
+        PeriodLength::Day:
+          DateExprString := '<+CD-1D>';
+
+        PeriodLength::Week:
+          DateExprString := '<+CW-1W>';
+
+        PeriodLength::Month:
+          DateExprString := '<+CM-1M>';
+
+        PeriodLength::Quarter:
+          DateExprString := '<+CQ-1Q>';
+
+        ELSE
+          DateExprString := '<+CY-1Y>';
+      END;
+      EXIT(CALCDATE(DateExprString,LastStartDate));
+    END;
+
+    LOCAL PROCEDURE GetCurrPeriodName@1000000020(PeriodStartDate@1000000000 : Date;PeriodLength@1000000001 : 'Day,Week,Month,Quarter,Year') : Text[250];
+    VAR
+      Text001@1000000002 : TextConst 'DEU="KW ";ENU="CW "';
+    BEGIN
+      CASE PeriodLength OF
+
+        PeriodLength::Day:
+          EXIT(FORMAT(PeriodStartDate,0,'<Standard Format,0>'));
+
+        PeriodLength::Week:
+          EXIT(Text001+FORMAT(DATE2DWY(PeriodStartDate,2))+' '+FORMAT(PeriodStartDate,0,'<Year>'));
+
+        PeriodLength::Month:
+          EXIT(FORMAT(PeriodStartDate,0,'<Month Text,3>')+' '+FORMAT(PeriodStartDate,0,'<Year>'));
+
+        PeriodLength::Quarter:
+          EXIT('Q'+FORMAT(PeriodStartDate,0,'<Quarter>')+' '+FORMAT(PeriodStartDate,0,'<Year>'));
+
+        ELSE
+          EXIT(FORMAT(PeriodStartDate,0,'<Year4>'));
+
+      END;
+    END;
+
+    PROCEDURE GetEndDateForCurrInterval@1000000023(CurrStartDate@1000000003 : Date;PeriodLength@1000000000 : 'Day,Week,Month,Quarter,Year') : Date;
+    VAR
+      DateExprString@1000000001 : Text[250];
+      NoOfIntervalsBack@1000000002 : Integer;
+    BEGIN
+      CASE PeriodLength OF
+        PeriodLength::Day:
+          DateExprString := '<+CD>';
+
+        PeriodLength::Week:
+          DateExprString := '<+CW>';
+
+        PeriodLength::Month:
+          DateExprString := '<+CM>';
+
+        PeriodLength::Quarter:
+          DateExprString := '<+CQ>';
+
+        ELSE
+          DateExprString := '<+CY>';
+      END;
+      EXIT(CALCDATE(DateExprString,CurrStartDate));
+    END;
+
+    PROCEDURE SetGlobalWorkdate@1000000022(NewGlobalWorkdate@1000000000 : Date);
+    BEGIN
+      gWorkdate := NewGlobalWorkdate;
+    END;
+
+    PROCEDURE SetGlobalCharttype@1000000032(NewChartType@1000000000 : 'Point,,Bubble,Line,,StepLine,,,,,Column,StackedColumn,StackedColumn100,Area,,StackedArea,StackedArea100,Pie,Doughnut,,,Range,,,,Radar,,,,,,,,Funnel');
+    BEGIN
+      gChartType := NewChartType;
+    END;
+
+    PROCEDURE SetGlobalMeasure@1000000040(NewMeasure@1000000000 : 'Amount,AmountVAT,NoOfPostedInvoices,NoOfPostedCrMemos');
+    BEGIN
+      gMeasure := NewMeasure;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

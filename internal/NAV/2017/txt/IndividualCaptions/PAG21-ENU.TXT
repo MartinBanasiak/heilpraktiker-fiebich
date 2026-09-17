@@ -1,0 +1,268 @@
+N21-C100-P8629-A1033-L999:Sales This Year
+N21-C101-P8629-A1033-L999:Agent
+N21-C101-P8631-A1033-L999:Specifies which shipping company is used when you ship items to the customer.
+N21-C102-P8629-A1033-L999:Average Late Payments (Days)
+N21-C102-P8631-A1033-L999:Specifies the average number of days the customer is late with payments.
+N21-C103-P8629-A1033-L999:Average Collection Period (Days)
+N21-C103-P8631-A1033-L999:Specifies how long the customer typically takes to pay invoices in the current fiscal year.
+N21-C104-P8631-A1033-L999:Specifies the customer's fax number.
+N21-C105-P8629-A1033-L999:Payments This Year
+N21-C105-P8631-A1033-L999:Specifies the sum of payments received from the customer in the current fiscal year.
+N21-C106-P8631-A1033-L999:Specifies the sum of outstanding payments from the customer.
+N21-C107-P8631-A1033-L999:Specifies the customer's email address.
+N21-C108-P8629-A1033-L999:Payments
+N21-C109-P8631-A1033-L999:Specifies the customer's home page address.
+N21-C10-P8631-A1033-L999:Specifies the customer's city.
+N21-C110-P8629-A1033-L999:Usage Of Credit Limit
+N21-C110-P8631-A1033-L999:Specifies how much of the customers payment balance consists of credit.
+N21-C111-P8629-A1033-L999:Credit Limit
+N21-C111-P8631-A1033-L999:Specifies the maximum amount you allow the customer to exceed the payment balance before warnings are issued.
+N21-C115-P8629-A1033-L999:Money Owed - Total
+N21-C115-P8631-A1033-L999:Specifies the payment amount that the customer owes for completed sales plus sales that are still ongoing. The value is the sum of the values in the Money Owed - Current and Money Owed - Expected fields.
+N21-C116-P8629-A1033-L999:Money Owed - Expected
+N21-C116-P8631-A1033-L999:Specifies the payment amount that the customer will owe when ongoing sales invoices and credit memos are completed.
+N21-C117-P8629-A1033-L999:Money Owed - Current
+N21-C117-P8631-A1033-L999:Specifies the payment amount that the customer owes for completed sales. This value is also known as the customer's balance.
+N21-C119-P8631-A1033-L999:Specifies the shipping time of the order.
+N21-C11-P8631-A1033-L999:Specifies how the customer usually submits payment, such as bank transfer or check.
+N21-C120-P8629-A1033-L999:Balance
+N21-C122-P8629-A1033-L999:Primary Contact Code
+N21-C122-P8631-A1033-L999:Specifies the primary contact number for the customer.
+N21-C123-P8631-A1033-L999:Specifies if the customer accepts partial shipment of orders.
+N21-C124-P8629-A1033-L999:Statistics
+N21-C125-P8631-A1033-L999:Specifies the customer's address on your preferred map website.
+N21-C129-P8631-A1033-L999:Specifies if the Unit Price and Line Amount fields on sales lines for this customer should be shown with or without VAT.
+N21-C12-P8631-A1033-L999:Specifies the customer's telephone number.
+N21-C131-P8629-A1033-L999:Agent Service
+N21-C131-P8631-A1033-L999:Specifies the code for the shipping agent service to use for this customer.
+N21-C135-P8629-A1033-L999:Details
+N21-C137-P8629-A1033-L999:Blocked
+N21-C137-P8631-A1033-L999:Specifies if transactions with the customer are blocked, for example, because the customer is insolvent.
+N21-C137-P8632-A1033-L999: ,,,All
+N21-C141-P8631-A1033-L999:Specifies a customizable calendar for shipment planning that holds the customer's working days and holidays.
+N21-C143-P8631-A1033-L999:Specifies that the customer is not allowed a payment tolerance.
+N21-C144-P8631-A1033-L999:Specifies payments from the customer that are overdue per today's date.
+N21-C145-P8629-A1033-L999:Shipment Method
+N21-C146-P8629-A1033-L999:Customized Calendar
+N21-C146-P8631-A1033-L999:Specifies that you have set up a customized version of a base calendar.
+N21-C154-P8631-A1033-L999:Specifies the customer's IC partner code, if the customer is one of your intercompany partners.
+N21-C156-P8631-A1033-L999:Specifies which customer address is inserted on sales quotes that you create for the customer.
+N21-C158-P8631-A1033-L999:Specifies whether items will never, automatically (Always), or optionally be reserved for this customer.
+N21-C15-P8631-A1033-L999:Specifies how reminders about late payments are handled for this customer.
+N21-C160-P8631-A1033-L999:Contains a prepayment percentage that applies to all orders for this customer, regardless of the items or services on the order lines.
+N21-C16-P8629-A1033-L999:Contact Name
+N21-C16-P8631-A1033-L999:Specifies the name of the person you regularly contact when you do business with this customer.
+N21-C18-P8631-A1033-L999:Specifies an alternate name that you can use to search for a customer.
+N21-C1901677601-P8629-A1033-L999:Payments
+N21-C1902768601-P8629-A1033-L999:Address & Contact
+N21-C1905885101-P8629-A1033-L999:Invoicing
+N21-C1906801201-P8629-A1033-L999:Shipping
+N21-C1-P8629-A1033-L999:General
+N21-C20-P8631-A1033-L999:Specifies the payment amount that the customer owes for completed sales. This value is also known as the customer's balance.
+N21-C21-P8631-A1033-L999:Specifies for direct debit collections if the customer that the payment is collected from is a person or a company.
+N21-C22-P8631-A1033-L999:Specifies the maximum amount you allow the customer to exceed the payment balance before warnings are issued.
+N21-C23-P8631-A1033-L999:Specifies the preferred method of sending documents to this customer, so that you do not have to select a sending option every time that you post and send a document to the customer. Sales documents to this customer will be sent using the specified sending profile and will override the default document sending profile.
+N21-C24-P8631-A1033-L999:Specifies a code for the salesperson who normally handles this customer's account.
+N21-C25-P8631-A1033-L999:Specifies the customer's bank account that will be used by default when you process refunds to the customer and direct debit collections.
+N21-C26-P8631-A1033-L999:Specifies which transactions with the customer that cannot be blocked, for example, because the customer is insolvent.
+N21-C28-P8631-A1033-L999:Specifies when the customer card was last modified.
+N21-C29-P8631-A1033-L999:Specifies the customer's VAT registration number for customers in EU countries/regions.
+N21-C2-P8631-A1033-L999:Specifies the number of the customer. The field is either filled automatically from a defined number series, or you enter the number manually because you have enabled manual number entry in the number-series setup.
+N21-C30-P8629-A1033-L999:Code
+N21-C30-P8631-A1033-L999:Specifies which shipment method to use when you ship items to the customer.
+N21-C32-P8631-A1033-L999:Specifies if several orders delivered to the customer can appear on the same sales invoice.
+N21-C34-P8629-A1033-L999:Bill-to Customer
+N21-C34-P8631-A1033-L999:Specifies a different customer who will be invoiced for products that you sell to the customer in the Name field on the customer card.
+N21-C36-P8631-A1033-L999:Specifies how many copies of a invoice for the customer will be printed at a time.
+N21-C38-P8631-A1033-L999:Specifies the customer's market type to link business transactions to.
+N21-C3-P8631-A1033-L999:Specifies a payment term that will be used to calculate cash flow for the customer.
+N21-C40-P8631-A1033-L999:Specifies the customer price group code, which you can use to set up special sales prices in the Sales Prices window.
+N21-C42-P8631-A1033-L999:Specifies a code for the invoice discount terms that you have defined for the customer.
+N21-C44-P8631-A1033-L999:Specifies the customer discount group code, which you can use as a criterion to set up special discounts in the Sales Line Discounts window.
+N21-C46-P8631-A1033-L999:Specifies if a sales line discount is calculated when a special sales price is offered according to setup in the Sales Prices window.
+N21-C48-P8631-A1033-L999:Specifies how to apply payments to entries for this customer.
+N21-C4-P8631-A1033-L999:Specifies the customer's name. This name will appear on all sales documents for the customer. You can enter a maximum of 50 characters, both numbers and letters.
+N21-C50-P8631-A1033-L999:Specifies a code that indicates the payment terms that you require of the customer.
+N21-C52-P8631-A1033-L999:Specifies finance charges are calculated for the customer.
+N21-C54-P8631-A1033-L999:Specifies whether to include this customer when you print the Statement report.
+N21-C58-P8631-A1033-L999:Specifies the customer's VAT specification to link transactions made for this customer to.
+N21-C60-P8631-A1033-L999:Specifies the number of the last statement that was printed for this customer.
+N21-C61-P8631-A1033-L999:Specifies the customer in connection with electronic document sending.
+N21-C63-P8629-A1033-L999:Address
+N21-C64-P8631-A1033-L999:Specifies the code for the responsibility center that will administer this customer by default.
+N21-C65-P8629-A1033-L999:Contact
+N21-C66-P8631-A1033-L999:Specifies the language to be used on printouts for this customer.
+N21-C67-P8631-A1033-L999:Specifies the default currency for the customer.
+N21-C68-P8629-A1033-L999:Prices and Discounts
+N21-C69-P8629-A1033-L999:Profit %
+N21-C69-P8631-A1033-L999:Specifies how much profit you have made from the customer in the current fiscal year, expressed as a percentage of the customers total sales.
+N21-C6-P8631-A1033-L999:Specifies the customer's address. This address will appear on all sales documents for the customer.
+N21-C70-P8631-A1033-L999:Specifies the customer's trade type to link transactions made for this customer with the appropriate general ledger account according to the general posting setup.
+N21-C71-P8629-A1033-L999:Profit (LCY)
+N21-C71-P8631-A1033-L999:Specifies how much profit you have made from the customer in the current fiscal year.
+N21-C72-P8629-A1033-L999:Costs (LCY)
+N21-C72-P8631-A1033-L999:Specifies how much cost you have incurred from the customer in the current fiscal year.
+N21-C73-P8629-A1033-L999:Total Sales
+N21-C73-P8631-A1033-L999:Specifies your total sales turnover with the customer in the current fiscal year. It is calculated from amounts excluding VAT on all completed and open invoices and credit memos.
+N21-C75-P8629-A1033-L999:Special Prices & Discounts
+N21-C88-P8629-A1033-L999:Invoice Discounts
+N21-C88-P8631-A1033-L999:Specifies the total of all invoice discounts that you have granted to the customer in the current fiscal year.
+N21-C89-P8629-A1033-L999:Total Sales
+N21-C89-P8631-A1033-L999:Specifies your total sales turnover with the customer in the current fiscal year. It is calculated from amounts excluding VAT on all completed and open invoices and credit memos.
+N21-C8-P8631-A1033-L999:Specifies additional address information.
+N21-C90-P8631-A1033-L999:Specifies the postal code.
+N21-C91-P8631-A1033-L999:Specifies the country/region of the address.
+N21-C92-P8631-A1033-L999:Specifies your refunds to the customer in the current fiscal year based on ongoing sales credit memos. The figure in parenthesis shows the number of ongoing sales credit memos.
+N21-C93-P8631-A1033-L999:Contains the code for the service zone that is assigned to the customer.
+N21-C95-P8631-A1033-L999:Specifies from which location sales to this customer will be processed by default.
+N21-C96-P8631-A1033-L999:Specifies your expected sales to the customer in the current fiscal year based on ongoing sales invoices. The figure in parenthesis shows the number of ongoing sales invoices.
+N21-C97-P8631-A1033-L999:Specifies your expected refunds to the customer in the current fiscal year based on posted sales credit memos. The figure in parenthesis shows the number of posted sales credit memos.
+N21-C98-P8631-A1033-L999:Specifies your sales to the customer in the current fiscal year based on posted sales invoices. The figure in parenthesis Specifies the number of posted sales invoices.
+N21-P55132-A1033-L999:New,Process,Report,New Document,Approve,Request Approval,Prices and Discounts,Navigate,Customer
+N21-P55242-G1000000008-P8629-A1033-L999:Category Permissions
+N21-P55242-G1000000009-P8629-A1033-L999:Item permissions
+N21-P55242-G1000000010-P8629-A1033-L999:Group permissions
+N21-P55242-G1000000011-P8629-A1033-L999:Open customer login
+N21-P55242-G1000000012-P55160-Q1000000000-P26171-A1033-L999:Customer has been updated
+N21-P55242-G1000000012-P8629-A1033-L999:Update online
+N21-P55242-G1000000013-P55160-Q1000000000-P26171-A1033-L999:Login data has been send successfully
+N21-P55242-G1000000013-P8629-A1033-L999:Send login data
+N21-P55242-G1000000015-P8629-A1033-L999:Webshop Permissions
+N21-P55242-G1000000016-P8629-A1033-L999:Shipping Permissions
+N21-P55242-G1000000017-P8629-A1033-L999:Payment Permissions
+N21-P55242-G1000000018-P8629-A1033-L999:Permissions
+N21-P55242-G112-P8629-A1033-L999:Statistics by C&urrencies
+N21-P55242-G113-P8629-A1033-L999:Prices
+N21-P55242-G113-P8631-A1033-L999:View or set up different prices for items that you sell to the customer. An item price is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.
+N21-P55242-G114-P8629-A1033-L999:Blanket Orders
+N21-P55242-G118-P8629-A1033-L999:Recurring Sales Lines
+N21-P55242-G118-P8631-A1033-L999:Set up recurring sales lines for the customer, such as a monthly replenishment order, that can quickly be inserted on a sales document for the customer.
+N21-P55242-G121-P8629-A1033-L999:Return Orders
+N21-P55242-G126-P8629-A1033-L999:Ser&vice Contracts
+N21-P55242-G127-P8629-A1033-L999:Service &Items
+N21-P55242-G128-P8629-A1033-L999:Service Orders
+N21-P55242-G130-P8629-A1033-L999:Prices and Discounts
+N21-P55242-G132-P8629-A1033-L999:Save as Template
+N21-P55242-G132-P8631-A1033-L999:Save the customer card as a template that can be reused to create new customer cards. Customer templates contain preset information to help you fill fields on customer cards.
+N21-P55242-G133-P8629-A1033-L999:Statement
+N21-P55242-G133-P8631-A1033-L999:View a list of a customer's transactions for a selected period, for example, to send to the customer at the close of an accounting period. You can choose to have all overdue balances displayed regardless of the period specified, or you can choose to include an aging band.
+N21-P55242-G136-P8629-A1033-L999:Line Discounts
+N21-P55242-G136-P8631-A1033-L999:Set up different discounts for items that you sell to the customer. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.
+N21-P55242-G138-P8629-A1033-L999:Manage Approval Workflows
+N21-P55242-G138-P8631-A1033-L999:View or edit existing approval workflows for creating or changing customers.
+N21-P55242-G139-P8629-A1033-L999:Templates
+N21-P55242-G139-P8631-A1033-L999:View or edit customer templates.
+N21-P55242-G13-P8629-A1033-L999:Service
+N21-P55242-G142-P8629-A1033-L999:Workflow
+N21-P55242-G147-P8629-A1033-L999:&Jobs
+N21-P55242-G148-P8629-A1033-L999:Comments
+N21-P55242-G148-P8631-A1033-L999:View or add comments.
+N21-P55242-G14-P8629-A1033-L999:C&ontact
+N21-P55242-G14-P8631-A1033-L999:View or edit detailed information about the contact person at the customer.
+N21-P55242-G151-P8629-A1033-L999:Issued Documents
+N21-P55242-G152-P8629-A1033-L999:Issued &Reminders
+N21-P55242-G152-P8631-A1033-L999:View the reminders that you have sent to the customer.
+N21-P55242-G153-P8629-A1033-L999:Issued &Finance Charge Memos
+N21-P55242-G153-P8631-A1033-L999:View the finance charge memos that you have sent to the customer.
+N21-P55242-G162-P8629-A1033-L999:Prepa&yment Percentages
+N21-P55242-G163-P8629-A1033-L999:F&unctions
+N21-P55242-G167-P8629-A1033-L999:Apply Template
+N21-P55242-G167-P8631-A1033-L999:Apply a customer template to quickly register this customer.
+N21-P55242-G17-P8629-A1033-L999:Create Approval Workflow
+N21-P55242-G17-P8631-A1033-L999:Set up an approval workflow for creating or changing customers, by going through a few pages that will guide you.
+N21-P55242-G1900246505-P8629-A1033-L999:Sales Quote
+N21-P55242-G1900246505-P8631-A1033-L999:Create a new sales quote where you offer items or services to a customer.
+N21-P55242-G1900839804-P8629-A1033-L999:Post Cash Receipts
+N21-P55242-G1900839804-P8631-A1033-L999:Create a cash receipt journal line for the customer, for example, to post a payment receipt.
+N21-P55242-G1901102005-P8629-A1033-L999:Finance Charge Memo
+N21-P55242-G1901102005-P8631-A1033-L999:Create a finance charge memo for the customer.
+N21-P55242-G1901662105-P8629-A1033-L999:Service Credit Memo
+N21-P55242-G1901662105-P8631-A1033-L999:Create a service credit memo for the customer.
+N21-P55242-G1902079405-P8629-A1033-L999:Service Invoice
+N21-P55242-G1902079405-P8631-A1033-L999:Create a service invoice for the customer.
+N21-P55242-G1902299006-P8629-A1033-L999:Customer - Balance to Date
+N21-P55242-G1902299006-P8631-A1033-L999:View a list with customers' payment history up until a certain date. You can use the report to extract your total sales income at the close of an accounting period or fiscal year.
+N21-P55242-G1902575205-P8629-A1033-L999:Blanket Sales Order
+N21-P55242-G1902575205-P8631-A1033-L999:Create a blanket sales order for the customer.
+N21-P55242-G1902583505-P8629-A1033-L999:Sales Credit Memo
+N21-P55242-G1902583505-P8631-A1033-L999:Create a new sales credit memo to revert a posted sales invoice.
+N21-P55242-G1903839805-P8629-A1033-L999:Reminder
+N21-P55242-G1903839805-P8631-A1033-L999:Create a remainder for the customer.
+N21-P55242-G1904747105-P8629-A1033-L999:Sales Order
+N21-P55242-G1904747105-P8631-A1033-L999:Create a sales order for the customer.
+N21-P55242-G1905163705-P8629-A1033-L999:Sales Return Order
+N21-P55242-G1905163705-P8631-A1033-L999:Create a sales return order for the customer.
+N21-P55242-G1905171704-P8629-A1033-L999:Sales Journal
+N21-P55242-G1905185205-P8629-A1033-L999:Service Quote
+N21-P55242-G1905185205-P8631-A1033-L999:Create a service quote for the customer.
+N21-P55242-G1906384905-P8629-A1033-L999:Sales Invoice
+N21-P55242-G1906384905-P8631-A1033-L999:Create a sales invoice for the customer.
+N21-P55242-G1906813206-P8629-A1033-L999:Customer Detailed Aging
+N21-P55242-G1906813206-P8631-A1033-L999:View a detailed list of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.
+N21-P55242-G1907102005-P8629-A1033-L999:Service Order
+N21-P55242-G1907102005-P8631-A1033-L999:Create a service order for the customer.
+N21-P55242-G1907586706-P8629-A1033-L999:Customer - Labels
+N21-P55242-G1907586706-P8631-A1033-L999:View mailing labels with the customers' names and addresses.
+N21-P55242-G19-P8629-A1033-L999:Direct Debit Mandates
+N21-P55242-G19-P8631-A1033-L999:View the direct-debit mandates that reflect agreements with customers to collect invoice payments from their bank account.
+N21-P55242-G243-P8629-A1033-L999:Document Layouts
+N21-P55242-G243-P8631-A1033-L999:Set up a layout for different types of documents such as invoices, quotes, and credit memos.
+N21-P55242-G31-P8629-A1033-L999:Dynamics CRM
+N21-P55242-G33-P8629-A1033-L999:Account
+N21-P55242-G33-P8631-A1033-L999:Open the coupled Microsoft Dynamics CRM account.
+N21-P55242-G37-P8629-A1033-L999:Cancel Approval Re&quest
+N21-P55242-G37-P8631-A1033-L999:Cancel the approval request.
+N21-P55242-G390-P8629-A1033-L999:Reject
+N21-P55242-G390-P8631-A1033-L999:Reject the approval request.
+N21-P55242-G41-P8629-A1033-L999:Delegate
+N21-P55242-G41-P8631-A1033-L999:Delegate the approval to a substitute approver.
+N21-P55242-G43-P8629-A1033-L999:Update Account Statistics
+N21-P55242-G43-P8631-A1033-L999:Send customer statistics data to Dynamics CRM to update the Account Statistics FactBox.
+N21-P55242-G45-P8629-A1033-L999:Request Approval
+N21-P55242-G47-P8629-A1033-L999:Set Up Coupling
+N21-P55242-G47-P8631-A1033-L999:Create or modify the coupling to a Microsoft Dynamics CRM account.
+N21-P55242-G49-P8629-A1033-L999:Delete Coupling
+N21-P55242-G49-P8631-A1033-L999:Delete the coupling to a Microsoft Dynamics CRM account.
+N21-P55242-G51-P8629-A1033-L999:Coupling
+N21-P55242-G51-P8631-A1033-L999:Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Microsoft Dynamics CRM record.
+N21-P55242-G53-P8629-A1033-L999:Synchronize Now
+N21-P55242-G53-P8631-A1033-L999:Send or get updated data to or from Microsoft Dynamics CRM.
+N21-P55242-G55-P8629-A1033-L999:Send A&pproval Request
+N21-P55242-G55-P8631-A1033-L999:Send an approval request.
+N21-P55242-G56-P8629-A1033-L999:Approve
+N21-P55242-G56-P8631-A1033-L999:Approve the requested changes.
+N21-P55242-G57-P8629-A1033-L999:Approval
+N21-P55242-G59-P8629-A1033-L999:Approvals
+N21-P55242-G59-P8631-A1033-L999:View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.
+N21-P55242-G5-P8629-A1033-L999:History
+N21-P55242-G6500-P8629-A1033-L999:Item &Tracking Entries
+N21-P55242-G74-P8629-A1033-L999:&Customer
+N21-P55242-G76-P8629-A1033-L999:Statistics
+N21-P55242-G77-P8629-A1033-L999:Entry Statistics
+N21-P55242-G78-P8629-A1033-L999:Co&mments
+N21-P55242-G79-P8629-A1033-L999:S&ales
+N21-P55242-G7-P8629-A1033-L999:Documents
+N21-P55242-G80-P8629-A1033-L999:Ledger E&ntries
+N21-P55242-G80-P8631-A1033-L999:View the history of transactions that have been posted for the selected record.
+N21-P55242-G81-P8629-A1033-L999:Ship-&to Addresses
+N21-P55242-G81-P8631-A1033-L999:View or edit alternate shipping addresses where the customer wants items delivered if different from the regular address.
+N21-P55242-G82-P8629-A1033-L999:S&ales
+N21-P55242-G83-P8629-A1033-L999:Invoice &Discounts
+N21-P55242-G83-P8631-A1033-L999:Set up different discounts that are applied to invoices for the customer. An invoice discount is automatically granted to the customer when the total on a sales invoice exceeds a certain amount.
+N21-P55242-G84-P8629-A1033-L999:Dimensions
+N21-P55242-G84-P8631-A1033-L999:View or edits dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.
+N21-P55242-G85-P8629-A1033-L999:Quotes
+N21-P55242-G85-P8631-A1033-L999:View a list of ongoing sales quotes for the customer.
+N21-P55242-G86-P8629-A1033-L999:Orders
+N21-P55242-G86-P8631-A1033-L999:View a list of ongoing sales orders for the customer.
+N21-P55242-G94-P8629-A1033-L999:Cross Re&ferences
+N21-P55242-G94-P8631-A1033-L999:Set up the customer's own identification of items that you sell to the customer. Cross-references to the customer's item number means that the item number is automatically shown on sales documents instead of the number that you use.
+N21-P55242-G99-P8629-A1033-L999:Bank Accounts
+N21-P55242-G99-P8631-A1033-L999:View or set up the customer's bank accounts. You can set up any number of bank accounts for each customer.
+N21-P8629-A1033-L999:Customer Card
+N21-Q1033-P26171-A1033-L999:Overdue Payments as of %1
+N21-Q1036-P26171-A1033-L999:Posted Invoices (%1)
+N21-Q1037-P26171-A1033-L999:Posted Credit Memos (%1)
+N21-Q1038-P26171-A1033-L999:Ongoing Credit Memos (%1)
+N21-Q1039-P26171-A1033-L999:Ongoing Invoices (%1)
+N21-Q1066-P26171-A1033-L999:Show on Map

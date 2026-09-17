@@ -1,0 +1,1195 @@
+OBJECT Codeunit 5447312 Webshop Marketplace Management
+{
+  OBJECT-PROPERTIES
+  {
+    Date=04.06.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            WebshopCategory@1000000000 : Record 5447303;
+          BEGIN
+            StateIndicatorOpen('');
+            GetAllFetchedMktplCategories('EBAY','DEU',TRUE,0);
+            GetAllFetchedMktplCategories('EBAY','DEU',FALSE,0);
+            StateIndicatorClose();
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopSetup@1000000001 : Record 5447300;
+      Text001@1000000002 : TextConst 'DEU=Amazon_;ENU=Amazon_';
+      Text002@1000000003 : TextConst 'DEU=Ebay_;ENU=Ebay_';
+      Error001@1000000004 : TextConst 'DEU=Konnte keine Logdatei am angegebenen Pfad erzeugen.;ENU=Could not create logfile at specified location.';
+      Error002@1000000005 : TextConst 'DEU=Konnte bestehende Logdatei nicht lesen.;ENU=Could not read existing logfile.';
+      Error003@1000000006 : TextConst 'DEU=Kein Pfad f�r Logdatei angegeben.;ENU=No path specified for logfile.';
+
+    PROCEDURE "--- WebshopManagement ---"@1000000040();
+    BEGIN
+    END;
+
+    PROCEDURE AddVar@1000000041(VAR Data@1000000002 : Text[1024];VarName@1000000001 : Text[100];VarValue@1000000000 : Variant);
+    BEGIN
+      WebshopManagement.AddVar(Data,VarName,VarValue);
+    END;
+
+    PROCEDURE StateIndicatorOpen@1000000014(Title@1000 : Text[250]);
+    BEGIN
+      WebshopManagement.StateIndicatorOpen(Title);
+    END;
+
+    PROCEDURE StateIndicatorClose@1();
+    BEGIN
+      WebshopManagement.StateIndicatorClose();
+    END;
+
+    PROCEDURE "--- Webshop Marketplace ---"@1000000011();
+    BEGIN
+    END;
+
+    PROCEDURE UpdateMarketplace@1000000001(WebshopShopCode@1000000003 : Code[10];WebshopLanguageCode@1000000000 : Code[10];Operation@1000000004 : Text[20];ParamKeys@1000000005 : ARRAY [20] OF Text[20];ParamValues@1000000001 : ARRAY [20] OF Text);
+    VAR
+      CurrRec@1000000002 : Text[1024];
+      I@1000000006 : Integer;
+      WebshopShop@1000000007 : Record 5447301;
+      WebshopLanguage@1000000008 : Record 5447302;
+    BEGIN
+
+      IF (WebshopShop.GET(WebshopShopCode)) AND (WebshopLanguage.GET(WebshopShopCode,WebshopLanguageCode)) THEN BEGIN
+        AddVar(CurrRec,'company',COMPANYNAME);
+        AddVar(CurrRec,'shop_code',WebshopLanguage."Shop Code");
+        AddVar(CurrRec,'language_code',WebshopLanguage.Code);
+        IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::Amazon THEN
+          AddVar(CurrRec,'marketplace_type','1');
+        IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::eBay THEN
+          AddVar(CurrRec,'marketplace_type','2');
+
+        AddVar(CurrRec,'operation',Operation);
+
+        FOR I := 1 TO ARRAYLEN(ParamKeys) DO BEGIN
+          IF (ParamKeys[I] <> '') THEN BEGIN
+            AddVar(CurrRec,'parameter[' + ParamKeys[I] + ']',ParamValues[I]);
+          END;
+        END;
+
+        WebshopManagement.SendRequest('update_marketplace_queue',CurrRec);
+      END;
+    END;
+
+    PROCEDURE UpdateMarketplaceItems@1000000006(CountRecords@1000000003 : Boolean);
+    VAR
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000001 : Record 5447302;
+      CurrRec@1000000000 : Text[1024];
+      ParamKeys@1000000004 : ARRAY [20] OF Text;
+      ParamValues@1000000005 : ARRAY [20] OF Text;
+    BEGIN
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT);
+
+        WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+        IF WebshopShop.FINDSET THEN REPEAT
+          IF (WebshopShop."AWS Access Key ID" <> '') OR (WebshopShop."Ebay App Name" <> '') THEN BEGIN
+            WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",WebshopShop.Code);
+            IF WebshopLanguage.FINDSET THEN REPEAT
+              UpdateMarketplace(WebshopShop.Code,WebshopLanguage.Code,'send_products',ParamKeys,ParamValues);
+            UNTIL WebshopLanguage.NEXT = 0;
+          END;
+        UNTIL WebshopShop.NEXT = 0;
+
+        WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE UpdateMarketplaceItem@1000000003(ParamWebshopItem@1000000000 : Record 5447304);
+    VAR
+      WebshopItem@1000000001 : Record 5447304;
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000003 : Record 5447302;
+      ParamKeys@1000000005 : ARRAY [20] OF Text;
+      ParamValues@1000000004 : ARRAY [20] OF Text;
+    BEGIN
+      WebshopItem.GET(ParamWebshopItem."Shop Code",ParamWebshopItem."Language Code",ParamWebshopItem."Item No.");
+
+      WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+      IF WebshopShop.FINDSET THEN REPEAT
+        IF (WebshopShop.Code = WebshopItem."Shop Code") OR (WebshopShop."Use Items from Shop Code" = WebshopItem."Shop Code") THEN BEGIN
+          ParamKeys[1] := 'item_no';
+          EVALUATE(ParamValues[1],WebshopItem."Item No.");
+          //ParamKeys[2] := 'function';
+
+          //ParamValues[2] := 'update_products';
+          IF WebshopItem."Active on Marketplace" THEN
+            UpdateMarketplace(WebshopShop.Code,WebshopItem."Language Code",'send_products',ParamKeys,ParamValues)
+          ELSE
+            UpdateMarketplace(WebshopShop.Code,WebshopItem."Language Code",'end_products',ParamKeys,ParamValues);
+
+          //ParamValues[2] := 'update_inventory';
+          //UpdateMarketplace(WebshopShop.Code,WebshopItem."Language Code",'send_products',ParamKeys,ParamValues);
+
+          //ParamValues[2] := 'update_price';
+          //UpdateMarketplace(WebshopShop.Code,WebshopItem."Language Code",'send_products',ParamKeys,ParamValues);
+
+          IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::Amazon THEN BEGIN
+            ParamValues[2] := 'update_images';
+            UpdateMarketplace(WebshopShop.Code,WebshopItem."Language Code",'send_products',ParamKeys,ParamValues);
+
+            ParamValues[2] := 'update_relationship';
+            UpdateMarketplace(WebshopShop.Code,WebshopItem."Language Code",'send_products',ParamKeys,ParamValues);
+          END;
+        END;
+      UNTIL WebshopShop.NEXT = 0;
+    END;
+
+    PROCEDURE UpdateMarketplacePrice@1000000020(CountRecords@1000000003 : Boolean);
+    VAR
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000001 : Record 5447302;
+      CurrRec@1000000000 : Text[1024];
+      ParamKeys@1000000005 : ARRAY [20] OF Text;
+      ParamValues@1000000004 : ARRAY [20] OF Text;
+    BEGIN
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT);
+
+        WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+        IF WebshopShop.FINDSET THEN REPEAT
+          IF (WebshopShop."AWS Access Key ID" <> '') OR (WebshopShop."Ebay App Name" <> '') THEN BEGIN
+            WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",WebshopShop.Code);
+            IF WebshopLanguage.FINDSET THEN REPEAT
+              ParamKeys[1] := 'function';
+              ParamValues[1] := 'update_price';
+              UpdateMarketplace(WebshopShop.Code,WebshopLanguage.Code,'send_products',ParamKeys,ParamValues);
+            UNTIL WebshopLanguage.NEXT = 0;
+          END;
+        UNTIL WebshopShop.NEXT = 0;
+
+        WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE UpdateMarketplaceInventory@1000000021(CountRecords@1000000003 : Boolean);
+    VAR
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000001 : Record 5447302;
+      CurrRec@1000000000 : Text[1024];
+      ParamKeys@1000000005 : ARRAY [20] OF Text;
+      ParamValues@1000000004 : ARRAY [20] OF Text;
+    BEGIN
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT);
+
+        WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+        IF WebshopShop.FINDSET THEN REPEAT
+          IF (WebshopShop."AWS Access Key ID" <> '') OR (WebshopShop."Ebay App Name" <> '') THEN BEGIN
+            WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",WebshopShop.Code);
+            IF WebshopLanguage.FINDSET THEN REPEAT
+              ParamKeys[1] := 'function';
+              ParamValues[1] := 'update_inventory';
+              UpdateMarketplace(WebshopShop.Code,WebshopLanguage.Code,'send_products',ParamKeys,ParamValues);
+            UNTIL WebshopLanguage.NEXT = 0;
+          END;
+        UNTIL WebshopShop.NEXT = 0;
+
+        WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE UpdateMarketplaceProducts@1000000022(CountRecords@1000000003 : Boolean);
+    VAR
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000001 : Record 5447302;
+      CurrRec@1000000000 : Text[1024];
+      ParamKeys@1000000005 : ARRAY [20] OF Text;
+      ParamValues@1000000004 : ARRAY [20] OF Text;
+    BEGIN
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT);
+
+        WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+        IF WebshopShop.FINDSET THEN REPEAT
+          IF (WebshopShop."AWS Access Key ID" <> '') OR (WebshopShop."Ebay App Name" <> '') THEN BEGIN
+            WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",WebshopShop.Code);
+            IF WebshopLanguage.FINDSET THEN REPEAT
+              ParamKeys[1] := 'function';
+              ParamValues[1] := 'update_products';
+              UpdateMarketplace(WebshopShop.Code,WebshopLanguage.Code,'send_products',ParamKeys,ParamValues);
+            UNTIL WebshopLanguage.NEXT = 0;
+          END;
+        UNTIL WebshopShop.NEXT = 0;
+
+        WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE UpdateMarketplaceImages@1000000023(CountRecords@1000000003 : Boolean);
+    VAR
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000001 : Record 5447302;
+      CurrRec@1000000000 : Text[1024];
+      ParamKeys@1000000005 : ARRAY [20] OF Text;
+      ParamValues@1000000004 : ARRAY [20] OF Text;
+    BEGIN
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT);
+
+        WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+        IF WebshopShop.FINDSET THEN REPEAT
+          IF WebshopShop."AWS Access Key ID" <> '' THEN BEGIN
+            WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",WebshopShop.Code);
+            IF WebshopLanguage.FINDSET THEN REPEAT
+              ParamKeys[1] := 'function';
+              ParamValues[1] := 'update_images';
+              UpdateMarketplace(WebshopShop.Code,WebshopLanguage.Code,'send_products',ParamKeys,ParamValues);
+            UNTIL WebshopLanguage.NEXT = 0;
+          END;
+        UNTIL WebshopShop.NEXT = 0;
+
+        WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE UpdateMarketplaceRelationship@1000000024(CountRecords@1000000003 : Boolean);
+    VAR
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000001 : Record 5447302;
+      CurrRec@1000000000 : Text[1024];
+      ParamKeys@1000000005 : ARRAY [20] OF Text;
+      ParamValues@1000000004 : ARRAY [20] OF Text;
+    BEGIN
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT);
+
+        WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+        IF WebshopShop.FINDSET THEN REPEAT
+          IF WebshopShop."AWS Access Key ID" <> '' THEN BEGIN
+            WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",WebshopShop.Code);
+            IF WebshopLanguage.FINDSET THEN REPEAT
+              ParamKeys[1] := 'function';
+              ParamValues[1] := 'update_relationship';
+              UpdateMarketplace(WebshopShop.Code,WebshopLanguage.Code,'send_products',ParamKeys,ParamValues);
+            UNTIL WebshopLanguage.NEXT = 0;
+          END;
+        UNTIL WebshopShop.NEXT = 0;
+
+        WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE UpdateMarketplaceOrders@1000000000(CountRecords@1000000003 : Boolean);
+    VAR
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000001 : Record 5447302;
+      CurrRec@1000000000 : Text[1024];
+      ParamKeys@1000000005 : ARRAY [20] OF Text;
+      ParamValues@1000000004 : ARRAY [20] OF Text;
+    BEGIN
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT);
+        WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+        IF WebshopShop.FINDSET THEN REPEAT
+        IF (WebshopShop."AWS Access Key ID" <> '') OR (WebshopShop."Ebay App Name" <> '') THEN BEGIN
+            WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",WebshopShop.Code);
+            IF WebshopLanguage.FINDSET THEN REPEAT
+              UpdateMarketplace(WebshopShop.Code,WebshopLanguage.Code,'get_orders',ParamKeys,ParamValues);
+            UNTIL WebshopLanguage.NEXT = 0;
+          END;
+        UNTIL WebshopShop.NEXT = 0;
+
+        WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE UpdateMarketplaceOrderState@1000000002(CountRecords@1000000003 : Boolean);
+    VAR
+      WebshopShop@1000000002 : Record 5447301;
+      WebshopLanguage@1000000001 : Record 5447302;
+      CurrRec@1000000000 : Text[1024];
+      ParamKeys@1000000005 : ARRAY [20] OF Text;
+      ParamValues@1000000004 : ARRAY [20] OF Text;
+    BEGIN
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopShop.TABLECAPTION,WebshopShop.COUNT);
+
+        WebshopShop.SETFILTER(WebshopShop."Shop Type",'%1',WebshopShop."Shop Type"::marketplace);
+        IF WebshopShop.FINDSET THEN REPEAT
+          IF (WebshopShop."AWS Access Key ID" <> '') OR (WebshopShop."Ebay App Name" <> '') THEN BEGIN
+            WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",WebshopShop.Code);
+            IF WebshopLanguage.FINDSET THEN REPEAT
+              UpdateMarketplace(WebshopShop.Code,WebshopLanguage.Code,'complete_orders',ParamKeys,ParamValues);
+            UNTIL WebshopLanguage.NEXT = 0;
+          END;
+        UNTIL WebshopShop.NEXT = 0;
+
+        WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE GetItemLink@1000000074(WebshopItem@1000000000 : Record 5447304) Link : Text[250];
+    VAR
+      CurrRec@1000000001 : Text[1024];
+      Shop@1000000002 : Record 5447301;
+      Language@1000000004 : Record 5447302;
+      Customer@1000000003 : Record 18;
+      CustomerNo@1000000005 : Code[20];
+    BEGIN
+      // Link auf einen Webshopartikel erzeugen
+
+      WITH WebshopItem DO BEGIN
+        Shop.GET("Shop Code");
+        Language.GET("Shop Code","Language Code");
+        Shop.TESTFIELD("Webshop URL");
+        WebshopItem.TESTFIELD("Date Last Updated");
+        WebshopItem.TESTFIELD("Is Active");
+        AddVar(CurrRec,'company',COMPANYNAME);
+        AddVar(CurrRec,'shop_code',"Shop Code");
+        AddVar(CurrRec,'language_code',"Language Code");
+        AddVar(CurrRec,'item_no',"Item No.");
+        Link := Shop."Webshop URL" + WebshopManagement.GetRequest('get_item_link_ebay',CurrRec);
+      END;
+    END;
+
+    PROCEDURE CheckMarketplaceErrors@1000000005(CountRecords@1000000000 : Boolean);
+    VAR
+      Text001@1000000001 : TextConst 'DEU=Marktplatz Fehler pr�fen;ENU=Check Marketplace Errors';
+      CurrRec@1000000003 : Text[1024];
+      ErrorCount@1000000002 : Integer;
+      GetResponseText@1000000004 : Text[1024];
+      ErrorCount2@1000000005 : Integer;
+      I@1000000006 : Integer;
+    BEGIN
+      ErrorCount := 0;
+
+      AddVar(CurrRec,'table','shop_marketplace_errors');
+      AddVar(CurrRec,'filter[update_insert]',TRUE);
+      GetResponseText := WebshopManagement.GetRequest('get_no_of_records',CurrRec);
+      EVALUATE(ErrorCount,GetResponseText);
+
+      CLEAR(CurrRec);
+      AddVar(CurrRec,'table','shop_item');
+      AddVar(CurrRec,'filter[marketplace_error]','NOTEMPTY');
+      GetResponseText := WebshopManagement.GetRequest('get_no_of_records',CurrRec);
+      EVALUATE(ErrorCount2,GetResponseText);
+
+      ErrorCount := ErrorCount + ErrorCount2;
+
+
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(Text001,ErrorCount)
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(Text001,ErrorCount);
+        CLEAR(CurrRec);
+        AddVar(CurrRec,'company',COMPANYNAME);
+        WebshopManagement.SendRequest('send_marketplace_errors',CurrRec);
+        FOR I := 1 TO ErrorCount DO
+          WebshopManagement.StateIndicatorUpdate;
+      END;
+    END;
+
+    PROCEDURE DelMarketplaceSubCategories@1000000204(ShopCode@1000000000 : Code[30];ShopLanguageCode@1000000001 : Code[10];MarketplaceType@1000000002 : Option;ParentCode@1000000003 : Text[45]) Success : Boolean;
+    VAR
+      CurrRec@1000000004 : Text[1024];
+    BEGIN
+      AddVar(CurrRec,'company',COMPANYNAME);
+      AddVar(CurrRec,'shop_code',ShopCode);
+      AddVar(CurrRec,'language_code',ShopLanguageCode);
+      AddVar(CurrRec,'marketplace_type',MarketplaceType);
+      AddVar(CurrRec,'parent_id',ParentCode);
+      Success := WebshopManagement.SendRequest('clearMarketplaceCategorySubTreePost',CurrRec);
+    END;
+
+    PROCEDURE QueueMktplSubCategoriesFetch@1000000205(ShopCode@1000000003 : Code[30];ShopLanguageCode@1000000002 : Code[10];MarketplaceType@1000000001 : Option;ParentCode@1000000000 : Code[45]) : Boolean;
+    VAR
+      CurrRec@1000000004 : Text[1024];
+      ResponseText@1000000006 : Text[1024];
+      QueueEntryID@1000000005 : Integer;
+    BEGIN
+      AddVar(CurrRec,'company',COMPANYNAME);
+      AddVar(CurrRec,'shop_code',ShopCode);
+      AddVar(CurrRec,'language_code',ShopLanguageCode);
+      AddVar(CurrRec,'marketplace_type',MarketplaceType);
+      AddVar(CurrRec,'parent_id',ParentCode);
+      ResponseText := WebshopManagement.GetRequest('queueSubCategoryFetchPost',CurrRec);
+      IF EVALUATE(QueueEntryID,ResponseText) THEN BEGIN
+        EXIT(QueueEntryID > 0);
+      END;
+    END;
+
+    PROCEDURE CheckMktplSubCategoriesFetch@1000000206(ShopCode@1000000003 : Code[30];ShopLanguageCode@1000000002 : Code[10];MarketplaceType@1000000001 : Option;ParentCode@1000000000 : Text[45]) : Boolean;
+    VAR
+      GetRec@1000000004 : Text[1024];
+      ResponseText@1000000005 : Text[1024];
+    BEGIN
+      AddVar(GetRec,'company',COMPANYNAME);
+      AddVar(GetRec,'shop_code',ShopCode);
+      AddVar(GetRec,'language_code',ShopLanguageCode);
+      AddVar(GetRec,'marketplace_type',MarketplaceType);
+      AddVar(GetRec,'parent_id',ParentCode);
+      ResponseText := WebshopManagement.GetRequest('checkMarketplaceSubcategoriesFetchedPost',GetRec);
+      EXIT(ResponseText = '1');
+    END;
+
+    PROCEDURE GetAllFetchedMktplCategories@1000000207(ShopCode@1000000000 : Code[30];ShopLanguageCode@1000000007 : Code[10];CountRecords@1000000008 : Boolean;AboveLineNo@1000000011 : Integer);
+    VAR
+      NoOfRec@1000000006 : Integer;
+      GetRec@1000000001 : Text[1024];
+      ResponseText@1000000002 : Text[1024];
+      i@1000000003 : Integer;
+      CategoryFetched@1000000004 : Boolean;
+      Error001@1000000005 : TextConst 'DEU=Ein Datensatz f�r eine Marketplace-Kategorie konnte nicht synchronisiert werden.;ENU=A Record for a Marketplace-Category could not be synchronized.';
+      Text001@1000000009 : TextConst 'DEU=Ermittelte Marktplatz-Kategorien;ENU=Fetched Marketplace Categories';
+      LineNoInterval@1000000010 : Integer;
+      Category@1000000012 : Record 5447303;
+    BEGIN
+      AddVar(GetRec,'table','shop_marketplace_categories');
+      IF AboveLineNo > 0 THEN BEGIN
+        Category.GET(ShopCode,ShopLanguageCode,AboveLineNo);
+        AddVar(GetRec,'filter[parent_category_code]',Category."Search Code");
+      END ELSE BEGIN
+        AddVar(GetRec,'filter[parent_category_code]','');
+      END;
+      AddVar(GetRec,'filter[update_insert]',TRUE);
+
+      CLEAR(ResponseText);
+      ResponseText := WebshopManagement.GetRequest('get_no_of_records',GetRec);
+
+      IF EVALUATE(NoOfRec,WebshopManagement.GetRequest('get_no_of_records',GetRec)) THEN BEGIN
+        IF CountRecords THEN BEGIN
+          WebshopManagement.StateIndicatorRegisterTable(Text001,NoOfRec)
+        END ELSE BEGIN
+          //Verschiebe nachfolgende Kategorien
+          LineNoInterval := 10000;
+          MoveAllCategoriesBelowLineNo(ShopCode,ShopLanguageCode,AboveLineNo,(NoOfRec * LineNoInterval));
+
+          WebshopManagement.StateIndicatorNewTable(Text001,NoOfRec);
+          i := 1;
+          WHILE (i <= NoOfRec) DO BEGIN
+            CategoryFetched := GetNextFetchedMktplCategory(ShopCode,ShopLanguageCode,AboveLineNo);
+            IF CategoryFetched THEN BEGIN
+              i += 1;
+              WebshopManagement.StateIndicatorUpdate;
+            END ELSE BEGIN
+              ERROR(Error001);
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE GetNextFetchedMktplCategory@1000000208(ShopCode@1000000013 : Code[30];ShopLanguageCode@1000000014 : Code[10];AboveLineNo@1000000018 : Integer) Success : Boolean;
+    VAR
+      Delimiter@1000000001 : Text[5];
+      SendRec@1000000002 : Text[1024];
+      GetRec@1000000007 : Text[1024];
+      GetResponseText@1000000005 : Text[1024];
+      Category@1000000000 : Record 5447303;
+      LogFile@1000000004 : File;
+      AboveCategoryCode@1000000003 : Text[40];
+      RecID@1000000006 : Integer;
+      RecMarketplaceType@1000000008 : Option;
+      RecCategoryCode@1000000009 : Text[45];
+      RecName@1000000012 : Text[45];
+      RecLevel@1000000010 : Integer;
+      RecParentCode@1000000011 : Text[45];
+      RecRootCode@1000000019 : Text[45];
+      CategoryInsert@1000000015 : Boolean;
+      SetRec@1000000016 : Text[1024];
+      NewLineNo@1000000017 : Integer;
+    BEGIN
+      WITH Category DO BEGIN
+        Delimiter := '-;-';
+        CLEAR(GetRec);
+        CLEAR(SendRec);
+        AddVar(SendRec,'table','shop_marketplace_categories');
+        AddVar(SendRec,'delimiter',Delimiter);
+        AddVar(SendRec,'fields','id,marketplace_type,category_code,category_name,' +
+               'category_level,parent_category_code,root_category_code');
+        IF AboveLineNo > 0 THEN BEGIN
+          Category.RESET;
+          Category.GET(ShopCode,ShopLanguageCode,AboveLineNo);
+          AddVar(SendRec,'filter[parent_category_code]',Category."Search Code");
+        END ELSE BEGIN
+          AddVar(SendRec,'filter[parent_category_code]','');
+        END;
+
+        AddVar(SendRec,'filter[update_insert]',TRUE);
+        GetRec := WebshopManagement.GetRequest('get_content',SendRec);
+        IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+          EVALUATE(RecID,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(RecMarketplaceType,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(RecCategoryCode,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(RecName,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(RecLevel,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(RecParentCode,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(RecRootCode,WebshopManagement.Explode(GetRec,Delimiter));
+
+          AboveCategoryCode := Category.GetAboveCodeForParentCode(ShopCode,ShopLanguageCode,RecParentCode);
+          Category.RESET;
+          NewLineNo := Category.GetNextCategoryLineNo(ShopCode,ShopLanguageCode,AboveCategoryCode);
+          Category.INIT;
+          VALIDATE(Category."Shop Code",ShopCode);
+          VALIDATE(Category."Language Code",ShopLanguageCode);
+          VALIDATE(Category.Name,RecName);
+          VALIDATE(Category.Level,RecLevel);
+          VALIDATE(Category."Search Code",RecCategoryCode);
+          VALIDATE(Category."Line No.",NewLineNo);
+          IF RecRootCode <> '' THEN
+            VALIDATE(Category."Marketplace Root Category Code",RecRootCode)
+          ELSE
+            VALIDATE(Category."Marketplace Root Category Code",RecCategoryCode);
+          CategoryInsert := Category.INSERT;
+          IF CategoryInsert THEN BEGIN
+              CLEAR(SetRec);
+              AddVar(SetRec,'table','shop_marketplace_categories');
+              AddVar(SetRec,'primary[id]',RecID);
+              AddVar(SetRec,'data[update_insert]',FALSE);
+              WebshopManagement.SendRequest('update',SetRec);
+
+              //FetchCategoryAttributes(Category,TRUE);
+
+          END;
+          COMMIT;
+          EXIT(CategoryInsert);
+        END ELSE BEGIN
+          IF GetRec<>'0' THEN BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(GetRec)
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error001);
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR(Error002);
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(GetRec);
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(GetRec);
+              END ELSE
+                ERROR(Error003);
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE MoveAllCategoriesBelowLineNo@1000000129(ShopCode@1000000003 : Code[30];LanguageCode@1000000004 : Code[10];AboveLineNo@1000000000 : Integer;MoveByInterval@1000000001 : Integer);
+    VAR
+      Category@1000000002 : Record 5447303;
+      NewLineNo@1000000005 : Integer;
+      LineNoInterval@1000000006 : Integer;
+    BEGIN
+      Category.SETRANGE("Shop Code",ShopCode);
+      Category.SETRANGE("Language Code",LanguageCode);
+      Category.SETFILTER("Line No.",'>%1',AboveLineNo);
+      Category.ASCENDING(FALSE);
+      IF Category.FINDFIRST THEN REPEAT
+        NewLineNo := Category."Line No." + MoveByInterval;
+        Category.RENAME(Category."Shop Code",Category."Language Code",NewLineNo);
+      UNTIL Category.NEXT = 0;
+      COMMIT;
+    END;
+
+    PROCEDURE FetchCategoryAttributes@1000000124(ParamCategory@1000000000 : Record 5447303;CountRecords@1000000015 : Boolean);
+    VAR
+      Category@1000000001 : Record 5447303;
+      CurrRec@1000000002 : Text[1024];
+      GetRec@1000000003 : Text[1024];
+      Delimiter@1000000004 : Text[1024];
+      IsVariation@1000000005 : Boolean;
+      Description@1000000006 : Text[250];
+      WebshopAttribute@1000000007 : Record 5447320;
+      WebshopAttributeLink@1000000008 : Record 5447321;
+      WebshopShop@1000000009 : Record 5447301;
+      NextWebshopAttribute@1000000010 : Boolean;
+      IsRequired@1000000011 : Boolean;
+      SetRec@1000000012 : Text[1024];
+      AttributeId@1000000013 : Integer;
+      AttributeType@1000000014 : Integer;
+      Prefix@1000000016 : Text;
+      DescriptionCode@1000000017 : Text[30];
+      NoOfRec@1000000018 : Integer;
+      ResponseText@1000000019 : Text[1024];
+    BEGIN
+      WebshopShop.GET(ParamCategory."Shop Code");
+      CLEAR(SetRec);
+      AddVar(SetRec,'table','shop_marketplace_variant_attributes');
+      IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::Amazon THEN
+        AddVar(SetRec,'filter[category_code]',ParamCategory."Marketplace Root Category Code")
+      ELSE IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::eBay THEN
+        AddVar(SetRec,'filter[category_code]',ParamCategory."Search Code");
+      AddVar(SetRec,'filter[marketplace_type]',WebshopShop."Marketplace Type");
+      AddVar(SetRec,'data[update_insert]',TRUE);
+      WebshopManagement.SendRequest('bulk_update',SetRec);
+
+      CLEAR(GetRec);
+      AddVar(GetRec,'table','shop_marketplace_variant_attributes');
+      IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::Amazon THEN
+        AddVar(GetRec,'filter[category_code]',ParamCategory."Marketplace Root Category Code")
+      ELSE IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::eBay THEN
+        AddVar(GetRec,'filter[category_code]',ParamCategory."Search Code");
+      AddVar(GetRec,'filter[marketplace_type]',WebshopShop."Marketplace Type");
+      AddVar(GetRec,'filter[update_insert]',TRUE);
+
+      ResponseText := WebshopManagement.GetRequest('get_no_of_records',GetRec);
+      EVALUATE(NoOfRec,ResponseText);
+
+      IF CountRecords THEN BEGIN
+        WebshopManagement.StateIndicatorRegisterTable(WebshopAttribute.TABLECAPTION,NoOfRec);
+      END ELSE BEGIN
+        WebshopManagement.StateIndicatorNewTable(WebshopAttribute.TABLECAPTION,NoOfRec);
+        WITH Category DO REPEAT
+          NextWebshopAttribute := FALSE;
+
+          IF Category.GET(ParamCategory."Shop Code",ParamCategory."Language Code",ParamCategory."Line No.") THEN BEGIN
+            Delimiter := '-;-';
+
+            CLEAR(CurrRec);
+            AddVar(CurrRec,'table','shop_marketplace_variant_attributes');
+            AddVar(CurrRec,'delimiter',Delimiter);
+            AddVar(CurrRec,'fields','id,description,is_variation,is_required');
+
+            IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::Amazon THEN
+              AddVar(CurrRec,'filter[category_code]',ParamCategory."Marketplace Root Category Code")
+            ELSE IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::eBay THEN
+              AddVar(CurrRec,'filter[category_code]',ParamCategory."Search Code");
+
+            AddVar(CurrRec,'filter[marketplace_type]',WebshopShop."Marketplace Type");
+            AddVar(CurrRec,'filter[update_insert]',TRUE);
+            GetRec := WebshopManagement.GetRequest('get_content',CurrRec);
+            IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+              EVALUATE(AttributeId,WebshopManagement.Explode(GetRec,Delimiter));
+              EVALUATE(Description,WebshopManagement.Explode(GetRec,Delimiter));
+              EVALUATE(IsVariation,WebshopManagement.Explode(GetRec,Delimiter));
+              EVALUATE(IsRequired,WebshopManagement.Explode(GetRec,Delimiter));
+              CLEAR(WebshopAttribute);
+              CLEAR(WebshopAttributeLink);
+              WebshopAttribute.RESET;
+              IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::Amazon THEN BEGIN
+                Prefix := Text001;
+                AttributeType := 1;
+              END ELSE IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::eBay THEN BEGIN
+                Prefix := Text002;
+                AttributeType := 2;
+              END ELSE BEGIN
+                Prefix := '';
+                AttributeType := 0;
+              END;
+
+              DescriptionCode := COPYSTR(Description,1,30-STRLEN(Prefix));
+              DescriptionCode := Prefix + DescriptionCode;
+
+              WebshopAttribute.SETRANGE(WebshopAttribute.Code,DescriptionCode);
+              IF NOT WebshopAttribute.FINDFIRST THEN BEGIN
+                WebshopAttribute.INIT;
+                WebshopAttribute.Code := DescriptionCode;
+                WebshopAttribute.Description := Description;
+                WebshopAttribute."Attribute Type" := AttributeType;
+                WebshopAttribute.INSERT;
+              END;
+
+              FetchCategoryAttributesValues(Category,WebshopAttribute);
+
+              WebshopAttributeLink.RESET;
+              WebshopAttributeLink.SETRANGE(WebshopAttributeLink.Type,WebshopAttributeLink.Type::Category);
+              WebshopAttributeLink.SETRANGE(WebshopAttributeLink."Shop Code",Category."Shop Code");
+              WebshopAttributeLink.SETRANGE(WebshopAttributeLink."Language Code",Category."Language Code");
+              WebshopAttributeLink.SETRANGE(WebshopAttributeLink."Category Line No.",Category."Line No.");
+              WebshopAttributeLink.SETRANGE(WebshopAttributeLink."Attribute Code",DescriptionCode);
+              IF NOT WebshopAttributeLink.FINDFIRST THEN BEGIN
+                WebshopAttributeLink.INIT;
+                WebshopAttributeLink.Type := WebshopAttributeLink.Type::Category;
+                WebshopAttributeLink."Shop Code" := Category."Shop Code";
+                WebshopAttributeLink."Language Code" := Category."Language Code";
+                WebshopAttributeLink."Category Line No." := Category."Line No.";
+                WebshopAttributeLink."Attribute Code" := DescriptionCode;
+                WebshopAttributeLink."Defines Marketpl. Variants" := IsVariation;
+                WebshopAttributeLink."Is Marketpl. Req. Attribute" := IsRequired;
+                WebshopAttributeLink.INSERT;
+              END;
+              CLEAR(SetRec);
+              AddVar(SetRec,'table','shop_marketplace_variant_attributes');
+              AddVar(SetRec,'primary[id]',AttributeId);
+              AddVar(SetRec,'data[update_insert]',FALSE);
+              WebshopManagement.SendRequest('update',SetRec);
+
+              NextWebshopAttribute := TRUE;
+              WebshopManagement.StateIndicatorUpdate;
+            END;
+          END;
+        UNTIL NextWebshopAttribute = FALSE;
+      END;
+    END;
+
+    PROCEDURE FetchCategoryAttributesValues@1000000004(WebshopCategory@1000000015 : Record 5447303;WebshopAttribute@1000000000 : Record 5447320);
+    VAR
+      WebshopShop@1000000001 : Record 5447301;
+      WebshopAttributeOption@1000000010 : Record 5447322;
+      CurrRec@1000000002 : Text[1024];
+      GetRec@1000000003 : Text[1024];
+      Delimiter@1000000004 : Text[1024];
+      IsVariation@1000000005 : Boolean;
+      Description@1000000006 : Text[250];
+      SetRec@1000000012 : Text[1024];
+      NextAttributeValue@1000000007 : Boolean;
+      AttributeValueId@1000000008 : Integer;
+      AttributeValue@1000000009 : Text[100];
+      AttributeDescription@1000000011 : Text[100];
+      Prefix@1000000013 : Text[30];
+      AttributeDescriptionCode@1000000014 : Text[30];
+      AttributeValueCode@1000000016 : Text[30];
+    BEGIN
+
+      WebshopShop.GET(WebshopCategory."Shop Code");
+
+      Delimiter := '~|~';
+
+      WITH WebshopAttributeOption DO REPEAT
+        NextAttributeValue := FALSE;
+
+        CLEAR(CurrRec);
+        AddVar(CurrRec,'table','shop_marketplace_variant_attribute_values');
+        AddVar(CurrRec,'delimiter',Delimiter);
+        AddVar(CurrRec,'fields','id,description,value');
+
+        IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::Amazon THEN
+          AddVar(CurrRec,'filter[category_code]',WebshopCategory."Marketplace Root Category Code")
+        ELSE IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::eBay THEN
+          AddVar(CurrRec,'filter[category_code]',WebshopCategory."Search Code");
+
+        AddVar(CurrRec,'filter[marketplace_type]',WebshopShop."Marketplace Type");
+        AddVar(CurrRec,'filter[description]',WebshopAttribute.Description);
+        AddVar(CurrRec,'filter[update_insert]',TRUE);
+        GetRec := WebshopManagement.GetRequest('get_content',CurrRec);
+        IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+
+          EVALUATE(AttributeValueId,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(AttributeDescription,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(AttributeValue,WebshopManagement.Explode(GetRec,Delimiter));
+
+          IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::Amazon THEN
+            Prefix := Text001
+          ELSE IF WebshopShop."Marketplace Type" = WebshopShop."Marketplace Type"::eBay THEN
+            Prefix := Text002
+          ELSE
+            Prefix := '';
+
+          //AttributeDescriptionCode := COPYSTR(AttributeDescription,1,30-STRLEN(Prefix));
+          //AttributeDescriptionCode := Prefix + AttributeDescriptionCode;
+
+          AttributeValueCode := COPYSTR(AttributeValue,1,30);
+
+          IF NOT GET(WebshopAttribute.Code,AttributeValueCode) THEN BEGIN
+            INIT;
+            "Attribute Code" := WebshopAttribute.Code;
+            Code := AttributeValueCode;
+            Description := AttributeDescription;
+            Sorting := 0;
+            INSERT(TRUE);
+          END;
+
+          CLEAR(SetRec);
+          AddVar(SetRec,'table','shop_marketplace_variant_attribute_values');
+          AddVar(SetRec,'primary[id]',AttributeValueId);
+          AddVar(SetRec,'data[update_insert]',FALSE);
+          WebshopManagement.SendRequest('update',SetRec);
+
+          NextAttributeValue := TRUE;
+
+        END;
+      UNTIL NOT NextAttributeValue;
+    END;
+
+    PROCEDURE QueueMktplAttributesFetch@1000000026(ShopCode@1000000003 : Code[30];ShopLanguageCode@1000000002 : Code[10];MarketplaceType@1000000001 : Option;CategoryCode@1000000000 : Code[45]) QueueEntryID : Integer;
+    VAR
+      CurrRec@1000000004 : Text[1024];
+      ResponseText@1000000006 : Text[1024];
+    BEGIN
+      AddVar(CurrRec,'company',COMPANYNAME);
+      AddVar(CurrRec,'shop_code',ShopCode);
+      AddVar(CurrRec,'language_code',ShopLanguageCode);
+      AddVar(CurrRec,'marketplace_type',MarketplaceType);
+      AddVar(CurrRec,'category_code',CategoryCode);
+      ResponseText := WebshopManagement.GetRequest('queueAttributesFetchPost',CurrRec);
+      IF EVALUATE(QueueEntryID,ResponseText) THEN BEGIN
+        EXIT(QueueEntryID);
+      END;
+    END;
+
+    PROCEDURE CheckMktplAttributesFetch@1000000025(ShopCode@1000000003 : Code[30];ShopLanguageCode@1000000002 : Code[10];MarketplaceType@1000000001 : Option;CategoryCode@1000000000 : Text[45];EntryId@1000000006 : Integer) : Boolean;
+    VAR
+      GetRec@1000000004 : Text[1024];
+      ResponseText@1000000005 : Text[1024];
+    BEGIN
+      AddVar(GetRec,'company',COMPANYNAME);
+      AddVar(GetRec,'marketplace_type',MarketplaceType);
+      AddVar(GetRec,'category_code',CategoryCode);
+      AddVar(GetRec,'QueueEntryId',EntryId);
+      ResponseText := WebshopManagement.GetRequest('checkMarketplaceAttributesFetchedPost',GetRec);
+      EXIT(ResponseText = '1');
+    END;
+
+    PROCEDURE GetAllMarketplaceErrors@1000000016(CountRecords@1000000000 : Boolean);
+    VAR
+      Text001@1000000001 : TextConst 'DEU=Marktplatz Fehlermeldungen abrufen;ENU=Fetch marketplace errors';
+      NoOfError@1000000002 : Integer;
+      CurrRec@1000000003 : Text[1024];
+      GetResponseText@1000 : Text[1024];
+      LogFile@1001 : File;
+    BEGIN
+      //Alle neuen Marktplatz Fehlermeldungen abrufen
+
+      WebshopSetup.GET;
+      AddVar(CurrRec,'table','shop_marketplace_errors');
+      AddVar(CurrRec,'filter[update_insert]',TRUE);
+      AddVar(CurrRec,'filter[errormsg]','NOTEMPTY');
+      GetResponseText := WebshopManagement.GetRequest('get_no_of_records',CurrRec);
+      IF EVALUATE(NoOfError,GetResponseText) THEN BEGIN
+        IF CountRecords THEN BEGIN
+          WebshopManagement.StateIndicatorRegisterTable(Text001,NoOfError);
+        END ELSE BEGIN
+          WebshopManagement.StateIndicatorNewTable(Text001,NoOfError);
+          GetMarketplaceError;
+        END;
+      END ELSE BEGIN
+        IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+          ERROR(GetResponseText)
+        ELSE BEGIN
+          IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+            LogFile.TEXTMODE(TRUE);
+            LogFile.WRITEMODE(TRUE);
+            IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+             IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+              ERROR(Error001);
+            END ELSE BEGIN
+              IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                ERROR(Error002);
+            END;
+            LogFile.SEEK(LogFile.LEN);
+            LogFile.WRITE(GetResponseText);
+            LogFile.CLOSE;
+            IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+              MESSAGE(GetResponseText);
+          END ELSE
+            ERROR(Error003);
+        END;
+      END;
+    END;
+
+    PROCEDURE GetMarketplaceError@1000000013();
+    VAR
+      Shop@1000000012 : Record 5447301;
+      Language@1000000011 : Record 5447302;
+      CurrRec@1000000003 : Text[1024];
+      GetRec@1000000020 : Text[1024];
+      SetRec@1000000030 : Text[1024];
+      Delimiter@1000000006 : Text[1024];
+      i@1000000027 : Integer;
+      Pos@1000000005 : Integer;
+      NextError@1000000001 : Boolean;
+      ErrorId@1000000009 : Integer;
+      ShopCode@1000000032 : Code[20];
+      LanguageCode@1000000033 : Code[10];
+      ResetRec@1000000096 : Text[1024];
+      Counter@1000000108 : Integer;
+      WebshopMarketplaceErrors@1000000000 : Record 5447318;
+      MarketplaceType@1000000002 : Integer;
+      GOperation@1000000004 : Text[250];
+      GParameter@1000000007 : Text[250];
+      ErrorMsg@1000000008 : Text[250];
+      LogFile@1000000010 : File;
+      WebshopMarketplaceErrors2@1000000013 : Record 5447318;
+      PrimaryID@1000000014 : Integer;
+    BEGIN
+      //Alle neuen Marktplatz Fehlermeldungen abrufen
+      Delimiter := '-;-';
+
+      Counter := 0;
+      WITH WebshopMarketplaceErrors DO REPEAT
+        NextError := FALSE;
+
+        CLEAR(CurrRec);
+        AddVar(CurrRec,'table','shop_marketplace_errors');
+        AddVar(CurrRec,'delimiter',Delimiter);
+        AddVar(CurrRec,'fields','id,marketplace_type,operation,parameter,errormsg');
+        AddVar(CurrRec,'filter[update_insert]',TRUE);
+        AddVar(CurrRec,'filter[errormsg]','NOTEMPTY');
+        GetRec := WebshopManagement.GetRequest('get_content',CurrRec);
+        IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+
+          EVALUATE(ErrorId,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(MarketplaceType,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(GOperation,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(GParameter,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(ErrorMsg,WebshopManagement.Explode(GetRec,Delimiter));
+
+          RESET;
+          IF ErrorId > 0 THEN BEGIN
+            INIT;
+            WebshopMarketplaceErrors2.RESET;
+            IF WebshopMarketplaceErrors2.FINDLAST THEN
+              PrimaryID := WebshopMarketplaceErrors2."No." +1 ELSE
+              PrimaryID := 1;
+            VALIDATE("No.",PrimaryID);
+
+            VALIDATE("Error Type","Error Type"::General);
+            VALIDATE("Marketplace Type",MarketplaceType);
+            VALIDATE(Operation,GOperation);
+            VALIDATE(Parameter,GParameter);
+            VALIDATE(Errortext,COPYSTR(ErrorMsg,1,250));
+            VALIDATE(WebId,ErrorId);
+            INSERT(TRUE);
+
+            // Error als �bertragen markieren
+            CLEAR(SetRec);
+            AddVar(SetRec,'table','shop_marketplace_errors');
+            AddVar(SetRec,'primary[id]',ErrorId);
+            AddVar(SetRec,'data[update_insert]',FALSE);
+            WebshopManagement.SendRequest('update',SetRec);
+            NextError := TRUE;
+            WebshopManagement.StateIndicatorUpdate;
+            COMMIT;
+            END ELSE BEGIN
+              // Error als �bertragen markieren
+              CLEAR(SetRec);
+              AddVar(SetRec,'table','shop_marketplace_errors');
+              AddVar(SetRec,'primary[id]',ErrorId);
+              AddVar(SetRec,'data[update_insert]',FALSE);
+              WebshopManagement.SendRequest('update',SetRec);
+              NextError := TRUE;
+              WebshopManagement.StateIndicatorUpdate;
+            END;
+        END ELSE BEGIN
+          IF GetRec<>'0' THEN BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(GetRec)
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error001);
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR(Error002);
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(GetRec);
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(GetRec);
+              END ELSE
+                ERROR(Error003);
+            END;
+          END;
+        END;
+      UNTIL NOT NextError;
+    END;
+
+    PROCEDURE GetAllMarketplaceItemErrors@1000000010(CountRecords@1000000000 : Boolean);
+    VAR
+      Text001@1000000001 : TextConst 'DEU=Marktplatz Fehlermeldungen abrufen;ENU=Fetch marketplace errors';
+      NoOfError@1000000002 : Integer;
+      CurrRec@1000000003 : Text[1024];
+      GetResponseText@1000 : Text[1024];
+      LogFile@1001 : File;
+    BEGIN
+      //Alle neuen Marktplatz Artikel Fehlermeldungen abrufen
+
+      WebshopSetup.GET;
+      AddVar(CurrRec,'table','shop_marketplace_item_errors');
+      AddVar(CurrRec,'filter[company]',COMPANYNAME);
+      AddVar(CurrRec,'filter[update_insert]',TRUE);
+      AddVar(CurrRec,'filter[errortext]','NOTEMPTY');
+      GetResponseText := WebshopManagement.GetRequest('get_no_of_records',CurrRec);
+      IF EVALUATE(NoOfError,GetResponseText) THEN BEGIN
+        IF CountRecords THEN BEGIN
+          WebshopManagement.StateIndicatorRegisterTable(Text001,NoOfError);
+        END ELSE BEGIN
+          WebshopManagement.StateIndicatorNewTable(Text001,NoOfError);
+          GetMarketplaceItemError;
+        END;
+      END ELSE BEGIN
+        IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+          ERROR(GetResponseText)
+        ELSE BEGIN
+          IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+            LogFile.TEXTMODE(TRUE);
+            LogFile.WRITEMODE(TRUE);
+            IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+             IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+              ERROR(Error001);
+            END ELSE BEGIN
+              IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                ERROR(Error002);
+            END;
+            LogFile.SEEK(LogFile.LEN);
+            LogFile.WRITE(GetResponseText);
+            LogFile.CLOSE;
+            IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+              MESSAGE(GetResponseText);
+          END ELSE
+            ERROR(Error003);
+        END;
+      END;
+    END;
+
+    PROCEDURE GetMarketplaceItemError@1000000018();
+    VAR
+      Shop@1000000012 : Record 5447301;
+      Language@1000000011 : Record 5447302;
+      CurrRec@1000000003 : Text[1024];
+      GetRec@1000000020 : Text[1024];
+      SetRec@1000000030 : Text[1024];
+      Delimiter@1000000006 : Text[1024];
+      i@1000000027 : Integer;
+      Pos@1000000005 : Integer;
+      NextError@1000000001 : Boolean;
+      ErrorId@1000000009 : Integer;
+      ShopCode@1000000032 : Code[20];
+      LanguageCode@1000000033 : Code[10];
+      ResetRec@1000000096 : Text[1024];
+      Counter@1000000108 : Integer;
+      WebshopMarketplaceErrors@1000000000 : Record 5447318;
+      MarketplaceType@1000000002 : Integer;
+      GOperation@1000000004 : Text[250];
+      GErrorCode@1000000007 : Text[250];
+      ErrorMsg@1000000008 : Text[1024];
+      LogFile@1000000010 : File;
+      ItemNo@1000000013 : Code[20];
+      Item@1000000014 : Record 27;
+      WebshopMarketplaceErrors2@1000000015 : Record 5447318;
+      PrimaryId@1000000016 : Integer;
+      WebshopItem@1000000017 : Record 5447304;
+    BEGIN
+      //Alle neuen Marktplatz Artikel Fehlermeldungen abrufen
+      Delimiter := '-;-';
+
+      Counter := 0;
+      WITH WebshopMarketplaceErrors DO REPEAT
+        NextError := FALSE;
+
+        CLEAR(CurrRec);
+        AddVar(CurrRec,'table','shop_marketplace_item_errors');
+        AddVar(CurrRec,'delimiter',Delimiter);
+        AddVar(CurrRec,'fields','id,marketplace_type,shop_code,language_code,item_no,operation,errorcode,errortext');
+        AddVar(CurrRec,'filter[company]',COMPANYNAME);
+        AddVar(CurrRec,'filter[update_insert]',TRUE);
+        AddVar(CurrRec,'filter[errortext]','NOTEMPTY');
+        GetRec := WebshopManagement.GetRequest('get_content',CurrRec);
+        IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+
+          EVALUATE(ErrorId,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(MarketplaceType,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(ShopCode,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(LanguageCode,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(ItemNo,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(GOperation,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(GErrorCode,WebshopManagement.Explode(GetRec,Delimiter));
+          EVALUATE(ErrorMsg,WebshopManagement.Explode(GetRec,Delimiter));
+
+          RESET;
+          IF ErrorId > 0 THEN BEGIN
+            // Einrichtung ermitteln
+            WebshopSetup.GET;
+            Shop.GET(ShopCode);
+            Language.GET(ShopCode,LanguageCode);
+            INIT;
+            WebshopMarketplaceErrors2.RESET;
+            IF WebshopMarketplaceErrors2.FINDLAST THEN
+              PrimaryId := WebshopMarketplaceErrors2."No." +1 ELSE
+              PrimaryId := 1;
+            VALIDATE("No.",PrimaryId);
+            VALIDATE("Error Type","Error Type"::Item);
+            VALIDATE("Marketplace Type",MarketplaceType);
+            VALIDATE("Shop Code",Shop.Code);
+            VALIDATE("Language Code",Language.Code);
+            VALIDATE("Item No.",ItemNo);
+            VALIDATE(Operation,GOperation);
+            VALIDATE(Errorcode,GErrorCode);
+            VALIDATE(Errortext,COPYSTR(ErrorMsg,1,250));
+            VALIDATE(WebId,ErrorId);
+            INSERT(TRUE);
+
+            // Error als �bertragen markieren
+            CLEAR(SetRec);
+            AddVar(SetRec,'table','shop_marketplace_item_errors');
+            AddVar(SetRec,'primary[id]',ErrorId);
+            AddVar(SetRec,'data[update_insert]',FALSE);
+            WebshopManagement.SendRequest('update',SetRec);
+            NextError := TRUE;
+            WebshopManagement.StateIndicatorUpdate;
+            COMMIT;
+            END ELSE BEGIN
+              // Error als �bertragen markieren
+              CLEAR(SetRec);
+              AddVar(SetRec,'table','shop_marketplace_item_errors');
+              AddVar(SetRec,'primary[id]',ErrorId);
+              AddVar(SetRec,'data[update_insert]',FALSE);
+              WebshopManagement.SendRequest('update',SetRec);
+              NextError := TRUE;
+              WebshopManagement.StateIndicatorUpdate;
+            END;
+        END ELSE BEGIN
+          IF GetRec<>'0' THEN BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(GetRec)
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error001);
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR(Error002);
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(GetRec);
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(GetRec);
+              END ELSE
+                ERROR(Error003);
+            END;
+          END;
+        END;
+      UNTIL NOT NextError;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

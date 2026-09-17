@@ -1,0 +1,122 @@
+OBJECT Report 5447319 Webshop Upd. Item Joint Purch.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.08.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikel Gemeinsame K�ufe;
+               ENU=Webshop Item Common Purchase];
+    ProcessingOnly=Yes;
+    OnPreReport=BEGIN
+
+                  WebshopSetup.GET;
+                  IF WebshopSetup.GET AND (WebshopSetup."Last Document No. Joint Purch." <> '') THEN BEGIN
+                    LastDocumentNoFilter := WebshopSetup."Last Document No. Joint Purch.";
+                  END;
+                  "Sales Invoice Header".SETFILTER("No.",'>%1',LastDocumentNoFilter);
+                END;
+
+    OnPostReport=BEGIN
+                   MESSAGE(FORMAT(i) + ' Sibling Item Lines checked, ' + FORMAT(j) + ' Links created');
+                 END;
+
+  }
+  DATASET
+  {
+    { 1000000000;;DataItem;                  ;
+               DataItemTable=Table112;
+               OnAfterGetRecord=BEGIN
+                                  LinkDate := "Sales Invoice Header"."Order Date";
+                                  LinkShopCode := "Sales Invoice Header"."Webshop Shop Code";
+                                  LinkDocNo := "Sales Invoice Header"."No.";
+                                END;
+
+               OnPostDataItem=BEGIN
+                                WebshopSetup.GET;
+                                WebshopSetup."Last Document No. Joint Purch." := LinkDocNo;
+                                WebshopSetup.MODIFY;
+                              END;
+                               }
+
+    { 1000000001;1;DataItem;                 ;
+               DataItemTable=Table113;
+               DataItemTableView=WHERE(Type=CONST(Item));
+               OnPreDataItem=BEGIN
+                               "Sales Invoice Line".SETRANGE(Type,"Sales Invoice Line".Type::Item);
+                             END;
+
+               OnAfterGetRecord=VAR
+                                  SiblingSalesInvoiceLine@1000000000 : Record 113;
+                                BEGIN
+                                  SourceItemNo := "Sales Invoice Line"."No.";
+                                  SiblingSalesInvoiceLine.RESET;
+                                  SiblingSalesInvoiceLine.SETRANGE("Document No.","Sales Invoice Line"."Document No.");
+                                  SiblingSalesInvoiceLine.SETRANGE(Type,SiblingSalesInvoiceLine.Type::Item);
+                                  SiblingSalesInvoiceLine.SETFILTER("No.",'<>%1',SourceItemNo);
+                                  IF SiblingSalesInvoiceLine.FINDSET(FALSE,FALSE) THEN REPEAT
+                                    i += 1;
+                                    TargetItemNo := SiblingSalesInvoiceLine."No.";
+                                    IF (SourceItemNo <> '') AND (TargetItemNo <> '') AND (LinkDate <> 0D) THEN BEGIN
+                                      WebshopItemJointPurch.RESET;
+                                      IF WebshopItemJointPurch.GET(SourceItemNo,TargetItemNo,LinkShopCode,LinkDate) THEN BEGIN
+                                        WebshopItemJointPurch.Counter += 1;
+                                        WebshopItemJointPurch.MODIFY;
+                                      END ELSE BEGIN
+                                        WebshopItemJointPurch.INIT;
+                                        WebshopItemJointPurch."Shop Code" := LinkShopCode;
+                                        WebshopItemJointPurch."Item No." := SourceItemNo;
+                                        WebshopItemJointPurch."Linked Item No." := TargetItemNo;
+                                        WebshopItemJointPurch.Date := LinkDate;
+                                        WebshopItemJointPurch.Counter := 1;
+                                        WebshopItemJointPurch.INSERT;
+                                        j += 1;
+                                      END;
+                                    END;
+                                  UNTIL SiblingSalesInvoiceLine.NEXT = 0;
+                                END;
+
+               DataItemLink=Document No.=FIELD(No.) }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+      { 1000000000;;Container;
+                  ContainerType=ContentArea }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      LastDocumentNoFilter@1000000006 : Text;
+      WebshopSetup@1000000000 : Record 5447300;
+      WebshopItemJointPurch@1000000001 : Record 5447319;
+      SourceItemNo@1000000002 : Code[30];
+      TargetItemNo@1000000003 : Code[30];
+      LinkDate@1000000004 : Date;
+      CurrCount@1000000005 : Integer;
+      LinkShopCode@1000000007 : Code[10];
+      LinkDocNo@1000000008 : Code[20];
+      i@1000000010 : Integer;
+      j@1000000009 : Integer;
+
+    BEGIN
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

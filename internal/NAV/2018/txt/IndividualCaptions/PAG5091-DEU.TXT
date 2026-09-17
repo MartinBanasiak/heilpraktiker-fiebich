@@ -1,0 +1,82 @@
+N5091-C10-P8631-A1031-L999:Gibt den Aktivitätenvorlagencode der Aktivität mit dem Segment an.
+N5091-C12-P8631-A1031-L999:Gibt den Code des Verkäufers an, der für dieses Segment und/oder die Aktivität verantwortlich ist.
+N5091-C14-P8631-A1031-L999:Gibt die Kosten einer Einheit des Artikels oder der Ressource in der Zeile in der Mandantenwährung an.
+N5091-C16-P8631-A1031-L999:Gibt die Dauer einer einzelnen Aktivität an, die für dieses Segment erstellt wurde.
+N5091-C18-P8629-A1031-L999:Dateianhang
+N5091-C18-P8631-A1031-L999:Gibt an, ob der verknüpfte Anhang übernommen wurde oder eindeutig ist.
+N5091-C1900598201-P8629-A1031-L999:Kampagne
+N5091-C1907335101-P8629-A1031-L999:Aktivität
+N5091-C1-P8629-A1031-L999:Allgemein
+N5091-C2-P8631-A1031-L999:Gibt die Nummer des beteiligten Postens oder Datensatz entsprechend der festgelegten Nummernserie an.
+N5091-C39-P8631-A1031-L999:Gibt die Anzahl der Zeilen im Segment an.
+N5091-C41-P8631-A1031-L999:Gibt an, dass das Segment Teil des Ziels der Kampagne ist, mit der es verknüpft ist.
+N5091-C43-P8631-A1031-L999:Gibt an, dass die für das Segment erstellte Aktivität die Reaktion auf eine Kampagne ist.
+N5091-C45-P8631-A1031-L999:Gibt die Richtung des Informationsflusses innerhalb der Aktivität an, die für das Segment erstellt wurde. Es sind zwei Optionen verfügbar: "Eingehend" und "Ausgehend".
+N5091-C47-P8631-A1031-L999:Gibt an, ob die für diese Segmentszeile erfasste Aktivität von Ihrem Unternehmen oder von einem Ihrer Kontakte veranlasst wurde. Die Option "Uns" gibt an, dass Ihr Unternehmen der Initiator war. Die Option "Kontakt" gibt an, dass ein Kontakt der Initiator war.
+N5091-C4-P8631-A1031-L999:Gibt die Beschreibung des Segments an.
+N5091-C52-P8631-A1031-L999:Gibt die Anzahl der Aktionen an, die Sie beim Ändern der Segmentkriterien unternommen haben, z. B. beim Hinzufügen von Kontakten zum Segment oder beim Neudefinieren oder Entfernen des Segments.
+N5091-C57-P8631-A1031-L999:Gibt die bevorzugte Korrespondenzart für die Aktivität an. HINWEIS: Bei Verwendung des Webclients dürfen Sie nicht die Option "Brief" auswählen, da der Druck über den Webclient nicht möglich ist.
+N5091-C66-P8631-A1031-L999:Gibt an, dass das Microsoft Word-Dokument als Dateianhang in der E-Mail-Nachricht versendet werden soll.
+N5091-C6-P8631-A1031-L999:Gibt das Datum an, an dem das Segment erstellt wurde.
+N5091-C70-P8631-A1031-L999:Gibt den Sprachcode für das Segment an.
+N5091-C72-P8631-A1031-L999:Gibt an, dass die Korrespondenzart verwendet werden soll, die Sie im Feld "Korrespondenzart (Vorgabe)" ausgewählt haben. Wenn sich hier kein Häkchen befindet, wird die auf der Kontaktkarte gewählte Korrespondenzart verwendet.
+N5091-C74-P8631-A1031-L999:Gibt den Betreff des Segments an. Der Text in diesem Feld wird als Betreff in E-Mails und in Word-Dokumenten verwendet.
+N5091-C76-P8631-A1031-L999:Gibt eine Beschreibung der Kampagne an, mit der das Segment verknüpft ist. Die Beschreibung wird von der Kampagnenkarte übernommen.
+N5091-C8-P8631-A1031-L999:Gibt die Nummer der Kampagne an, für die das Segment erstellt wurde.
+N5091-P55242-G1000000000-P55160-Q1000000000-P26171-A1031-L999:Kontakte an Newsletter-System senden
+N5091-P55242-G1000000000-P55160-Q1000000007-P26171-A1031-L999:Mit welchem Webshop sollen die Kontakte verknüpft werden?
+N5091-P55242-G1000000000-P8629-A1031-L999:Kontakte mit E-Commerce Marketing synchronisieren
+N5091-P55242-G22-P8629-A1031-L999:D&rucken
+N5091-P55242-G23-P8629-A1031-L999:F&unktion
+N5091-P55242-G24-P8629-A1031-L999:&Segment
+N5091-P55242-G25-P8629-A1031-L999:&Protokoll
+N5091-P55242-G25-P8631-A1031-L999:Protokolliert Segmente und Aktivitäten, die Ihren Segmenten und Lieferungsanhängen, die Sie gesendet haben, zugewiesen sind.
+N5091-P55242-G27-P8629-A1031-L999:A&ufgaben
+N5091-P55242-G27-P8631-A1031-L999:Zeigt alle Marketingaufgaben an, die das Segment betreffen.
+N5091-P55242-G28-P8629-A1031-L999:S&egment
+N5091-P55242-G29-P8629-A1031-L999:Kontakte hinzufügen
+N5091-P55242-G29-P8631-A1031-L999:Wählt aus, welche Kontakte dem Segment hinzugefügt werden sollen.
+N5091-P55242-G30-P8629-A1031-L999:Kontakte entfernen
+N5091-P55242-G30-P8631-A1031-L999:Wählt aus, welche Kontakte aus dem Segment entfernt werden sollen.
+N5091-P55242-G31-P8629-A1031-L999:Kontakte neu de&finieren
+N5091-P55242-G31-P8631-A1031-L999:Wählt aus, welche Kontakte im Segment beibehalten werden sollen.
+N5091-P55242-G33-P8629-A1031-L999:Ein Kriterium zurück
+N5091-P55242-G33-P8631-A1031-L999:Wechseln Sie einen Schritt zurück, wenn Sie beispielsweise versehentlich einem Segment Kontakte hinzugefügt haben.
+N5091-P55242-G34-P8629-A1031-L999:Kontakte e&xportieren
+N5091-P55242-G34-P8631-A1031-L999:Exportiert die Segmentkontaktübersicht als Excel-Datei.
+N5091-P55242-G35-P8629-A1031-L999:&Verteiler zuweisen
+N5091-P55242-G35-P8631-A1031-L999:Weist einen Verteiler einem Segment zu.
+N5091-P55242-G37-P8629-A1031-L999:&Deckblätter drucken
+N5091-P55242-G37-P8631-A1031-L999:Zeigt Deckblätter, die an Ihren Kontakt gesendet werden.
+N5091-P55242-G38-P8629-A1031-L999:&Etiketten drucken
+N5091-P55242-G38-P8631-A1031-L999:Zeigt Adressetiketten mit Namen und Adressen.
+N5091-P55242-G50-P8629-A1031-L999:Kriterien speichern
+N5091-P55242-G50-P8631-A1031-L999:Speichert Segmentkriterien.
+N5091-P55242-G54-P8629-A1031-L999:
+N5091-P55242-G55-P8629-A1031-L999:Segment wiederverwenden
+N5091-P55242-G55-P8631-A1031-L999:Verwendet ein protokolliertes Segment erneut.
+N5091-P55242-G56-P8629-A1031-L999:Kriterien wiederverwenden
+N5091-P55242-G56-P8631-A1031-L999:Verwendet ein gespeichertes Segmentkriterium erneut.
+N5091-P55242-G59-P8629-A1031-L999:
+N5091-P55242-G5-P8629-A1031-L999:Verkaufschancen erstellen
+N5091-P55242-G5-P8631-A1031-L999:Erstellt eine neue Verkaufschancenkarte, die mit dem Segment verknüpft ist.
+N5091-P55242-G60-P8629-A1031-L999:Dateianhang
+N5091-P55242-G61-P8629-A1031-L999:Öffnen
+N5091-P55242-G61-P8631-A1031-L999:Öffnet die Karte für den ausgewählten Datensatz.
+N5091-P55242-G62-P8629-A1031-L999:Erstellen
+N5091-P55242-G62-P8631-A1031-L999:Erstellt einen Dateianhang.
+N5091-P55242-G63-P8629-A1031-L999:Importieren
+N5091-P55242-G63-P8631-A1031-L999:Importiert einen Dateianhang.
+N5091-P55242-G64-P8629-A1031-L999:Exportieren
+N5091-P55242-G64-P8631-A1031-L999:Exportiert einen Dateianhang.
+N5091-P55242-G65-P8629-A1031-L999:Löschen
+N5091-P55242-G65-P8631-A1031-L999:Entfernt einen Dateianhang.
+N5091-P55242-G68-P8629-A1031-L999:Kriterien
+N5091-P55242-G68-P8631-A1031-L999:Zeigt eine Liste der Aktionen (Hinzufügen oder Entfernen von Kontakten) an, die Sie zur Definition der Segmentkriterien durchgeführt haben.
+N5091-P55242-G69-P8629-A1031-L999:Verkaufs&chancen
+N5091-P55242-G69-P8631-A1031-L999:Zeigt die Verkaufschancen für das Segment an, die von Verkäufern bearbeitet werden. Verkaufschancen benötigen einen Kontakt und können mit Kampagnen verbunden werden.
+N5091-P55242-G90-P8629-A1031-L999:Kontakte
+N5091-P8629-A1031-L999:Segment
+N5091-Q1000-P26171-A1031-L999:Möchten Sie eine Verkaufschance für alle Kontakte im Segment erstellen?
+N5091-Q1011-P26171-A1031-L999:Segment %1 wurde protokolliert.
+N5091-Q1013-P26171-A1031-L999:Dadurch wird die letzte Kriterienaktion rückgängig gemacht.\Möchten Sie fortfahren?

@@ -1,0 +1,608 @@
+OBJECT Table 5447314 Webshop Update Buffer
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Primary Key         ;Integer        }
+    { 2   ;   ;SendRequestBuffer   ;BLOB          ;Compressed=No;
+                                                   CaptionML=[DEU=SendRequest Puffer;
+                                                              ENU=SendRequest Buffer];
+                                                   SubType=Memo }
+    { 3   ;   ;RequestCounter      ;Integer        }
+    { 4   ;   ;Last Modified       ;DateTime       }
+    { 5   ;   ;Last Reset          ;DateTime       }
+  }
+  KEYS
+  {
+    {    ;Primary Key                             ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000000 : Record 5447300;
+      ReqOutstream@1000000001 : OutStream;
+      ReqInstream@1000000002 : InStream;
+      BLOBText@1000000003 : Text;
+      NewCounter@1000000004 : Integer;
+      NewData@1000000005 : Text;
+      WebshopManagement@1000000006 : Codeunit 5447300;
+      z@1000 : Integer;
+
+    PROCEDURE SendRequest@1000000015(Action@1000000001 : Text[100];Data@1000000002 : Text;ClearBuffer@1000000019 : Boolean;SendNow@1000000000 : Boolean) Response : Boolean;
+    VAR
+      Request@1000000003 : Text;
+      Error200@1000000004 : TextConst 'DEU=Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1;ENU=Could not establish connection to webshop\Action: %1';
+      Error300@1000000005 : TextConst 'DEU=Keine Antwort vom Webshop erhalten\Aktion: %1;ENU=No response from webshop\Action: %1';
+      BigTextResponse@1000000008 : Text;
+      LogFile@1000000009 : File;
+      Error400@1000000013 : TextConst 'DEU=Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2;ENU=Invalid response from Webshop\Action: %1\Response: %2';
+      Log001@1000000010 : TextConst 'DEU=### SendRequest: %1 - %2 ###;ENU=### SendRequest: %1 - %2 ###';
+      Log002@1000000011 : TextConst;
+      Log003@1000000012 : TextConst;
+      LogResponse@1000000016 : Text;
+      i@1000000015 : Integer;
+      ResponseText@1000000017 : Text;
+      HTTPRequest@1000 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequestClass";
+      Counter1@1001 : Integer;
+      Counter2@1002 : Integer;
+      ReqReadyState@1003 : Integer;
+      SleepDuration@1004 : Duration;
+      SleepUntilDateTime@1005 : DateTime;
+      DataSent@1006 : Boolean;
+      ResponseAsText@1007 : Text;
+      LogResponseText@1008 : Text[1024];
+      DoRequest@1000000007 : Boolean;
+      DataChanged@1000000014 : Boolean;
+      NewReqLength@1000000018 : Integer;
+      BufferHasContent@1000000006 : Boolean;
+      CurrData@1000000020 : Text;
+      ReqData@1000000021 : Text;
+      NewBufferData@1000000022 : Text;
+      BLOBBigText@1009 : BigText;
+      StreamReader@1010 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.StreamReader";
+      BLOBTextLength@1011 : Integer;
+      ReqState@1000000023 : Integer;
+      SendComplete@1000000024 : Boolean;
+      HTTPWebRequest@1000000025 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebRequest";
+      HTTPWebResponse@1000000026 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebResponse";
+      InStream@1000000027 : InStream;
+      OutStream@1000000028 : OutStream;
+    BEGIN
+      //Control function for webrequest handling with buffer
+      //PARAMETERS
+      //Action:       Current webrequest action
+      //Data:         Current webrequest data
+      //ClearBuffer:  Flush buffer to webserver
+      //SendNow:      Send current request instead of appending to Buffer
+
+      //When the stringlength of the request-data in the buffer exceeds a given limit
+      //it is flushed to the webserver irrespective of whether the Parameter 'ClearBuffer' is set.
+
+      //INTEGRATION
+      //In Update-CUs, add "WebshopUpdateBuffer" as global variable
+      //Replace "WebshopManagement.SendRequest(ACTION,Data)" with "WebshopUpdateBuffer.SendRequest(ACTION,Data,ClearBuffer,SendNow);
+      //BE CAREFUL WITH DELETE-STATEMENTS - always pass "SendNow" as TRUE when calling delete or any webfunction from a button-press
+      //Replace Get-Requests - or don't... data-fetches will never go to buffer, but can be handled from this table
+      //Modify Navconnect/-Functions to handle URL-encoded,stringified JSON-Object with further requests to fill POST-Superglobal Array
+      //Done
+
+      z += 1;
+      //GET Setup, Reset Variables
+      WebshopSetup.GET;
+      ReqData := '';
+      CurrData := '';
+      NewData := '';
+      CLEAR(BLOBBigText);
+      CLEAR(BLOBText);
+      CLEAR(ReqInstream);
+      CLEAR(StreamReader);
+      CLEAR(ReqOutstream);
+      CLEAR(BufferHasContent);
+      //Initialize & Insert if not exists
+      IF NOT GET THEN BEGIN
+        INIT;
+        INSERT;
+      END;
+
+      //Evaluate buffer content
+      CALCFIELDS(SendRequestBuffer);
+      IF SendRequestBuffer.HASVALUE THEN BEGIN
+        SendRequestBuffer.CREATEINSTREAM(ReqInstream);
+        StreamReader := StreamReader.StreamReader(ReqInstream, TRUE);
+        BLOBText := StreamReader.ReadToEnd();
+        BLOBTextLength := STRLEN(BLOBText);
+        IF BLOBTextLength>0 THEN
+          BufferHasContent := TRUE;
+      END;
+
+      //Exit true if nothing to do
+      IF (STRLEN(Action+Data)=0) AND ClearBuffer AND (NOT BufferHasContent) THEN
+        EXIT(TRUE);
+
+      //Prepare request wrapper if there is anything to send
+      //'%5B' starts URL-encoded JSON-Object-Wrapper for following requests
+      IF SendNow OR ClearBuffer OR (BufferHasContent AND (BLOBTextLength>150000)) THEN
+        ReqData += 'json=true&pass='+WebshopSetup."Server Synch. Password"+'&wrapperdata='+'%5B';
+
+      //Create URL-encoded, stringified JSON-array for current request if exists
+      IF STRLEN(Action+Data)>1 THEN
+        CurrData := '%7B%22reqaction%22%3A%22'+Action+'%22%2C%22reqdata%22%3A%22'+WebshopManagement.EncodeURIComponent(Data)+'%22%7D';
+
+      //If buffer is to be flushed, append buffer-string to ReqData
+      IF (ClearBuffer AND BufferHasContent) OR (BufferHasContent AND (BLOBTextLength>150000)) THEN BEGIN
+        ReqData += BLOBText;
+        //Append URL-encoded Comma if current request must be appended as well
+        IF SendNow AND (STRLEN(Action+Data)>1) THEN
+          ReqData += '%2C';
+      END;
+
+      //Concatenate (possibly empty) string-representation of current request to ReqData if and only if parameter 'SendNow' isset
+      IF SendNow THEN
+        ReqData := ReqData+CurrData;
+
+      //Close wrapper if there is anything to send
+      IF SendNow OR ClearBuffer OR (BufferHasContent AND (BLOBTextLength>150000)) THEN
+        ReqData += '%5D';
+
+      //If combined request from buffer and current request is not empty, set 'DoRequest' Flag
+      IF STRLEN(ReqData)>0 THEN
+        DoRequest := TRUE;
+
+      //If data is to be written to the buffer, construct the string for its new content
+      IF NOT ((ClearBuffer AND BufferHasContent) OR (BufferHasContent AND (BLOBTextLength>150000))) THEN BEGIN
+        IF (BLOBTextLength>0) AND (STRLEN(CurrData)>0) THEN
+          NewData := BLOBText+'%2C'+CurrData
+        ELSE
+          NewData := CurrData
+      END;
+
+      //There is something to send
+      IF DoRequest THEN BEGIN
+        NewReqLength := STRLEN(ReqData);
+        Request := WebshopSetup."Server Synch. Endpoint URL" + 'navconnect.php?action=wrapper';
+
+        //Write to Logfile if setup-option is true
+        IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+            LogFile.CREATE(WebshopSetup."Connection Log File Path")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Connection Log File Path");
+          LogFile.SEEK(LogFile.LEN);
+          LogFile.WRITE(STRSUBSTNO(Log001,Action,CURRENTDATETIME));
+          IF ReqData <> '' THEN
+            LogFile.WRITE(COPYSTR(ReqData,1,1020));
+          LogFile.CLOSE;
+        END;
+
+        //Open Asynchronous HTTP-Webrequest over .NET MSXML
+        {
+        HTTPWebRequest.CreateHttp(Request);
+      //  HTTPWebRequest.Timeout := (60 * 1000);
+        HTTPWebRequest.ReadWriteTimeout := (60 * 1000);
+        HTTPWebRequest.Method := 'POST';
+        HTTPWebRequest.ContentType('application/x-www-form-urlencoded');
+        OutStream := HTTPWebRequest.GetRequestStream();
+        OutStream.WRITE(ReqData);
+
+        HTTPWebResponse := HTTPWebRequest.GetResponse();
+        InStream := HTTPWebResponse.GetResponseStream();
+        InStream.READ(ResponseAsText);
+                  }
+
+        HTTPRequest := HTTPRequest.XMLHTTPRequestClass;
+        HTTPRequest.open('POST',Request,TRUE,'','');
+        HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        HTTPRequest.ToString();
+        HTTPRequest.send(ReqData);
+
+        //Check ReadyState of XMLHTTPRequest periodically with given waiting time
+        //for a set number of iterations or until the ReadyState is read as completed successfully
+        Counter1 := 0;
+        SleepDuration := 30;
+        WHILE (HTTPRequest.readyState<2) AND (Counter1<2001) DO BEGIN
+          IF (Counter1=2000) AND (HTTPRequest.readyState<2) THEN BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR('Could not send Data. Request: '+Request+'; Data: '+ReqData+' Ready State'+FORMAT(HTTPRequest.readyState))
+            ELSE BEGIN
+              //Otherwise try to log error, abort and throw error if logging is unsuccessful
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR('Could not create logfile at specified location');
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR('Could not open existing logfile');
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(FORMAT(CURRENTDATETIME)+' - Could not send Data. Request: '+Request+'; Data: '+ReqData+' Ready State'+FORMAT(HTTPRequest.readyState));
+                LogFile.CLOSE;
+                //If user-interface exists and setup-option is set, message errors to user
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(FORMAT(CURRENTDATETIME)+' - Could not send Data. Request: '+Request+'; Data: '+ReqData+' Ready State'+FORMAT(HTTPRequest.readyState));
+                EXIT(TRUE);
+              END ELSE
+                ERROR('No Logfile specified');
+            END;
+          END;
+
+          IF (HTTPRequest.readyState=0) THEN BEGIN
+            HTTPRequest.abort();
+            HTTPRequest.open('POST',Request,TRUE,'','');
+            HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            HTTPRequest.ToString();
+            HTTPRequest.send(ReqData);
+          END;
+          SLEEP(SleepDuration);
+        END;
+
+        IF (HTTPRequest.readyState>1) THEN
+          SendComplete := TRUE;
+
+
+        WHILE (HTTPRequest.readyState<>4) AND (Counter1<1201) DO BEGIN
+          ReqReadyState := HTTPRequest.readyState;
+          Counter2 := 0;
+
+          //Abort if not successfully finished after max. no of iterations
+          IF (Counter1=1200) AND (ReqReadyState<>4) THEN BEGIN
+            //Throw error if ignore-option in setup is not true
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR('Could not send Data. Request: '+Request+'; Data: '+ReqData+' Ready State'+FORMAT(HTTPRequest.readyState))
+            ELSE BEGIN
+              //Otherwise try to log error, abort and throw error if logging is unsuccessful
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR('Could not create logfile at specified location');
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR('Could not open existing logfile');
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(FORMAT(CURRENTDATETIME)+' - Could not send Data. Request: '+Request+'; Data: '+ReqData+' Ready State'+FORMAT(HTTPRequest.readyState));
+                LogFile.CLOSE;
+                //If user-interface exists and setup-option is set, message errors to user
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(FORMAT(CURRENTDATETIME)+' - Could not send Data. Request: '+Request+'; Data: '+ReqData+' Ready State'+FORMAT(HTTPRequest.readyState));
+                EXIT(TRUE);
+              END ELSE
+                ERROR('No Logfile specified');
+            END;
+          END;
+
+          //If the request failed in a way result in a reset, wait and re-send
+          IF (ReqReadyState=0) THEN BEGIN
+            SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+            WHILE (CURRENTDATETIME <= SleepUntilDateTime) DO BEGIN
+              Counter2 += 1;
+            END;
+            SleepUntilDateTime := 0DT;
+              HTTPRequest.open('POST',Request,TRUE,'','');
+            HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            HTTPRequest.ToString();
+            HTTPRequest.send(ReqData);
+            ReqReadyState := HTTPRequest.readyState;
+          END;
+
+          //Wait until one interval has passed (or request has completed succesfully), then increment counter and continue with loop
+          SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+          WHILE (CURRENTDATETIME <= SleepUntilDateTime) AND (ReqReadyState<>4) DO BEGIN
+            Counter2 += 1;
+          END;
+          SleepUntilDateTime := 0DT;
+          Counter1 += 1;
+        END;
+
+        //Loop has finished without exiting or throwing an error
+        //Evaluate HTTP-Status Code of Response
+        //If response is not "success" throw or log errors and exit true, output as message if desired
+        IF (HTTPRequest.status <> 200) THEN BEGIN
+          IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN BEGIN
+            ERROR(FORMAT(CURRENTDATETIME)+' - Serverside Error Response. Request: '+Request+'; Data: '
+            +ReqData+' Response-Code: '+FORMAT(HTTPRequest.status)+'; Response-Text: '+HTTPRequest.statusText);
+          END ELSE BEGIN
+            IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+              LogFile.TEXTMODE(TRUE);
+              LogFile.WRITEMODE(TRUE);
+              IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+               IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                ERROR('Could not create logfile at specified location');
+              END ELSE BEGIN
+                IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                  ERROR('Could not open existing logfile');
+              END;
+              LogFile.SEEK(LogFile.LEN);
+              LogFile.WRITE(FORMAT(CURRENTDATETIME)+' - Serverside Error Response. Request: '+Request+'; Data: '
+              +ReqData+' Response-Code: '+FORMAT(HTTPRequest.status)+'; Response-Text: '+HTTPRequest.statusText);
+              LogFile.CLOSE;
+              IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                MESSAGE(FORMAT(CURRENTDATETIME)+' - Serverside Error Response. Request: '+Request+'; Data: '
+                +ReqData+' Response-Code: '+FORMAT(HTTPRequest.status)+'; Response-Text: '+HTTPRequest.statusText);
+              EXIT(TRUE);
+            END ELSE
+              ERROR('No Logfile specified');
+          END;
+        END;
+        ReqState := HTTPRequest.status;
+
+
+
+        //Server successfully responded to request
+        //Get responsetext and log if required
+        ResponseAsText := HTTPRequest.responseText;
+
+        IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+            LogFile.CREATE(WebshopSetup."Connection Log File Path")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Connection Log File Path");
+          LogFile.SEEK(LogFile.LEN);
+          i := 1;
+          REPEAT
+            LogResponseText := COPYSTR(ResponseAsText,i,1020);
+            LogFile.WRITE(LogResponseText);
+            i += 1020;
+          UNTIL i > STRLEN(ResponseAsText);
+
+          LogFile.WRITE('');
+          LogFile.CLOSE;
+        END;
+
+        //If script-response is "ok" then set flag "response"
+        IF ResponseAsText = '100' THEN BEGIN
+          Response := TRUE;
+          //If request included a buffer-flush, clear the buffer-content variable, set 'data changed' flag and 'last reset' datetime
+          IF (ClearBuffer AND BufferHasContent) OR (BufferHasContent AND (BLOBTextLength>150000)) THEN BEGIN
+            CLEAR(SendRequestBuffer);
+            DataChanged := TRUE;
+            "Last Reset" := CURRENTDATETIME;
+          END;
+        END ELSE BEGIN
+          //If Response is not "ok" but not empty, throw error or catch,log and exit true, output as message if desired
+          IF ResponseText <> '' THEN BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(Error400,Action,ResponseText)
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR('Could not create logfile at specified location');
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR('Could not open existing logfile');
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(STRSUBSTNO(Error400,Action,ResponseText));
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(STRSUBSTNO(Error400,Action,ResponseText));
+                Response := TRUE;
+              END ELSE
+                ERROR('No Logfile specified');
+            END;
+          END ELSE BEGIN
+            //If request empty, throw error or catch, log and exit true, output as message if desired
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(Error300,Action)
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR('Could not create logfile at specified location');
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR('Could not open existing logfile');
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(STRSUBSTNO(Error300,Action));
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(STRSUBSTNO(Error300,Action));
+                Response := TRUE;
+              END ELSE
+                ERROR('No Logfile specified');
+            END;
+          END;
+        END;
+      END;
+
+      //If there is content for the buffer, stream new data into blob, set flag
+      IF (STRLEN(NewData) > 0) THEN BEGIN
+        BLOBBigText.ADDTEXT(NewData);
+        SendRequestBuffer.CREATEOUTSTREAM(ReqOutstream);
+        BLOBBigText.WRITE(ReqOutstream);
+        DataChanged := TRUE;
+      END;
+
+      //If record has changed, set modified (and reset) date - modify true
+      IF DataChanged THEN BEGIN
+        "Last Modified" := CURRENTDATETIME;
+        IF "Last Reset" > 0DT THEN
+          "Last Reset" := "Last Modified";
+        MODIFY(TRUE);
+      END;
+    END;
+
+    PROCEDURE GetRequest@2(Action@1000000001 : Text[100];Data@1000000002 : Text) Response : Text;
+    VAR
+      Request@1000000003 : Text;
+      Error200@1000000004 : TextConst 'DEU=Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1;ENU=Could not establish connection to webshop\Action: %1';
+      Error300@1000000005 : TextConst 'DEU=Keine Antwort vom Webshop erhalten\Aktion: %1;ENU=No response from webshop\Action: %1';
+      BigTextResponse@1000000008 : Text;
+      LogFile@1000000009 : File;
+      Error400@1000000013 : TextConst 'DEU=Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2;ENU=Invalid response from Webshop\Action: %1\Response: %2';
+      Log001@1000000010 : TextConst 'DEU=### SendRequest: %1 - %2 ###;ENU=### SendRequest: %1 - %2 ###';
+      Log002@1000000011 : TextConst 'DEU="--> ";ENU="--> "';
+      Log003@1000000012 : TextConst 'DEU="<-- ";ENU="<-- "';
+      LogResponse@1000000016 : Text;
+      i@1000000015 : Integer;
+      ResponseText@1000000017 : Text;
+      HTTPRequest@1000 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequestClass";
+      Counter1@1001 : Integer;
+      Counter2@1002 : Integer;
+      ReqReadyState@1003 : Integer;
+      SleepDuration@1004 : Duration;
+      SleepUntilDateTime@1005 : DateTime;
+      DataSent@1006 : Boolean;
+      ResponseAsText@1007 : Text;
+      LogResponseText@1008 : Text;
+      ReqLength@1009 : Integer;
+    BEGIN
+      // Datensatz senden (Antwort /TRUE/FALSE)
+
+      WebshopSetup.GET;
+      Request := WebshopSetup."Server Synch. Endpoint URL" + 'navconnect.php?action=' + Action;
+      IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+        LogFile.TEXTMODE(TRUE);
+        LogFile.WRITEMODE(TRUE);
+        IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+          LogFile.CREATE(WebshopSetup."Connection Log File Path")
+        ELSE
+          LogFile.OPEN(WebshopSetup."Connection Log File Path");
+        LogFile.SEEK(LogFile.LEN);
+        LogFile.WRITE(STRSUBSTNO(Log001,Action,CURRENTDATETIME));
+        IF Data <> '' THEN
+          LogFile.WRITE(COPYSTR(Data,1,1020));
+        LogFile.CLOSE;
+      END;
+      Data := Data + 'pass=' + WebshopSetup."Server Synch. Password";
+      //CREATE(HTTPRequest);
+      //ResponseText := SendRequestHelp(Request,Data);
+      HTTPRequest := HTTPRequest.XMLHTTPRequestClass;
+
+      HTTPRequest.open('POST',Request,TRUE,'','');
+      HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+      HTTPRequest.ToString();
+      HTTPRequest.send(Data);
+
+      Counter1 := 0;
+      SleepDuration := 25;   //25 Millisekunden Wartezeit
+      WHILE (HTTPRequest.readyState<>4) AND (Counter1<121) DO BEGIN
+        ReqReadyState := HTTPRequest.readyState;
+        Counter2 := 0;
+        IF (Counter1=120) AND (ReqReadyState<>4) THEN BEGIN
+          IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+            ERROR('Could not send Data. Request: '+Request+'; Data: '+Data+' Ready State'+FORMAT(HTTPRequest.readyState))
+          ELSE BEGIN
+            IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+              LogFile.TEXTMODE(TRUE);
+              LogFile.WRITEMODE(TRUE);
+              IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+               IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                ERROR('Could not create logfile at specified location');
+              END ELSE BEGIN
+                IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                  ERROR('Could not open existing logfile');
+              END;
+              LogFile.SEEK(LogFile.LEN);
+              LogFile.WRITE(FORMAT(CURRENTDATETIME)+' - Could not send Data. Request: '+Request+'; Data: '+Data+' Ready State'+FORMAT(HTTPRequest.readyState));
+              LogFile.CLOSE;
+              IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                MESSAGE(FORMAT(CURRENTDATETIME)+' - Could not send Data. Request: '+Request+'; Data: '+Data+' Ready State'+FORMAT(HTTPRequest.readyState));
+            END ELSE
+              ERROR('No Logfile specified');
+          END;
+        END;
+        IF (ReqReadyState=0) THEN BEGIN
+          SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+          WHILE (CURRENTDATETIME <= SleepUntilDateTime) AND (ReqReadyState<>4) DO BEGIN
+            Counter2 += 1;
+          END;
+          SleepUntilDateTime := 0DT;
+            HTTPRequest.open('POST',Request,TRUE,'','');
+          HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+          HTTPRequest.ToString();
+          HTTPRequest.send(Data);
+          ReqReadyState := HTTPRequest.readyState;
+        END;
+        SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+        WHILE (CURRENTDATETIME <= SleepUntilDateTime) AND (ReqReadyState<>4) DO BEGIN
+          Counter2 += 1;
+        END;
+        SleepUntilDateTime := 0DT;
+        Counter1 += 1;
+      END;
+
+      //Vollst�ndige Antwort
+      IF (HTTPRequest.status <> 200) THEN BEGIN
+        IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN BEGIN
+          ERROR(FORMAT(CURRENTDATETIME)+' - Serverside Error Response. Request: '+Request+'; Data: '
+          +Data+' Response-Code: '+FORMAT(HTTPRequest.status)+'; Response-Text: '+HTTPRequest.statusText);
+        END ELSE BEGIN
+          IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+            LogFile.TEXTMODE(TRUE);
+            LogFile.WRITEMODE(TRUE);
+            IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+             IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+              ERROR('Could not create logfile at specified location');
+            END ELSE BEGIN
+              IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                ERROR('Could not open existing logfile');
+            END;
+            LogFile.SEEK(LogFile.LEN);
+            LogFile.WRITE(FORMAT(CURRENTDATETIME)+' - Serverside Error Response. Request: '+Request+'; Data: '
+            +Data+' Response-Code: '+FORMAT(HTTPRequest.status)+'; Response-Text: '+HTTPRequest.statusText);
+            LogFile.CLOSE;
+            IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+              MESSAGE(FORMAT(CURRENTDATETIME)+' - Serverside Error Response. Request: '+Request+'; Data: '
+              +Data+' Response-Code: '+FORMAT(HTTPRequest.status)+'; Response-Text: '+HTTPRequest.statusText);
+          END ELSE
+            ERROR('No Logfile specified');
+        END;
+      END;
+
+
+      ResponseAsText := HTTPRequest.responseText;
+        IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+            LogFile.CREATE(WebshopSetup."Connection Log File Path")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Connection Log File Path");
+          LogFile.SEEK(LogFile.LEN);
+          i := 1;
+          REPEAT
+            LogResponseText := COPYSTR(ResponseAsText,i,1020);
+            LogFile.WRITE(LogResponseText);
+            i += 1020;
+          UNTIL i > STRLEN(ResponseAsText);
+
+          LogFile.WRITE('');
+          LogFile.CLOSE;
+        END;
+
+        Response := ResponseAsText;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

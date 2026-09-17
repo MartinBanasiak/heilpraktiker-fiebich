@@ -1,0 +1,78 @@
+OBJECT Page 5447363 Webshop Edit Text Module
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Textbaustein bearbeiten;
+               ENU=Edit Webshop Text-Module];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    SourceTable=Table5447309;
+    PageType=StandardDialog;
+    InstructionalTextML=[DEU=Test;
+                         ENU=Test];
+    ShowFilter=No;
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+               END;
+
+    OnClosePage=VAR
+                  OK@1000000000 : Boolean;
+                  Text001@1000000001 : TextConst 'DEU=Haben Sie alle �nderungen gespeichert?;ENU=Did you save your changes?';
+                BEGIN
+                  OK := CONFIRM(Text001);
+                END;
+
+    OnNextRecord=BEGIN
+                   EXIT;
+                 END;
+
+    OnAfterGetRecord=BEGIN
+                       RANDOMIZE();
+                       Request :=
+                         STRSUBSTNO('%1webforms/edit_text_module.php?pass=%2&company=%3',
+                           WebshopSetup."Server Synch. Endpoint URL",
+                           WebshopSetup."Server Synch. Password",
+                           WebshopManagement.URLEncode(COMPANYNAME));
+                       Request +=
+                         STRSUBSTNO('&code=%1&rand=%2&nav_lang=%3&rtc=TRUE',
+                           WebshopManagement.URLEncode(Code),
+                           RANDOM(2000),
+                           GLOBALLANGUAGE);
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000004;1;Field  ;
+                Name=RequestCon;
+                SourceExpr=Request;
+                ControlAddIn=[MysydeShop;PublicKeyToken=eb1e70a97bfaeec6] }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000001 : Record 5447300;
+      Language@1000000004 : Record 8;
+      WebshopManagement@1000000005 : Codeunit 5447300;
+      Request@1000000002 : Text[1024];
+      Type@1000000000 : 'Image,Symbol';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

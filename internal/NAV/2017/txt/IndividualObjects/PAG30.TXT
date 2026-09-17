@@ -1,0 +1,2246 @@
+OBJECT Page 30 Item Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.07.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,NAVDACH10.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Artikelkarte;
+               ENU=Item Card];
+    SourceTable=Table27;
+    PageType=Card;
+    RefreshOnActivate=Yes;
+    PromotedActionCategoriesML=[DEU=Neu,Verarbeiten,Melden,Artikel,Historie,Sonderpreise und -rabatte,Genehmigen,Genehmigung anfordern;
+                                ENU=New,Process,Report,Item,History,Special Prices & Discounts,Approve,Request Approval];
+    OnInit=BEGIN
+             InitControls
+           END;
+
+    OnOpenPage=BEGIN
+                 IsFoundationEnabled := ApplicationAreaSetup.IsFoundationEnabled;
+                 EnableControls;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       EnableControls
+                     END;
+
+    OnNewRecord=BEGIN
+                  OnNewRec
+                END;
+
+    OnInsertRecord=BEGIN
+                     InsertItemUnitOfMeasure;
+                   END;
+
+    OnAfterGetCurrRecord=VAR
+                           CRMCouplingManagement@1002 : Codeunit 5331;
+                           WorkflowManagement@1001 : Codeunit 1501;
+                           WorkflowEventHandling@1000 : Codeunit 1520;
+                         BEGIN
+                           CreateItemFromTemplate;
+                           CRMIsCoupledToRecord := CRMIntegrationEnabled AND CRMCouplingManagement.IsRecordCoupledToCRM(RECORDID);
+                           OpenApprovalEntriesExistCurrUser := ApprovalsMgmt.HasOpenApprovalEntriesForCurrentUser(RECORDID);
+                           OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(RECORDID);
+                           ShowWorkflowStatus := CurrPage.WorkflowStatus.PAGE.SetFilterOnWorkflowRecord(RECORDID);
+
+                           EventFilter := WorkflowEventHandling.RunWorkflowOnSendItemForApprovalCode + '|' +
+                             WorkflowEventHandling.RunWorkflowOnItemChangedCode;
+
+                           EnabledApprovalWorkflowsExist := WorkflowManagement.EnabledWorkflowExist(DATABASE::Item,EventFilter);
+
+                           CurrPage.ItemAttributesFactbox.PAGE.LoadItemAttributesData("No.");
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 123     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Artikel;
+                                 ENU=Item];
+                      Image=DataEntry }
+      { 199     ;2   ;Action    ;
+                      Name=Attributes;
+                      AccessByPermission=TableData 7500=R;
+                      CaptionML=[DEU=Attribute;
+                                 ENU=Attributes];
+                      ToolTipML=[DEU=Zeigt die Attribute des Artikels wie Farbe, Gr��e oder andere Eigenschaften, die bei der Beschreibung helfen, an oder bearbeitet diese.;
+                                 ENU=View or edit the item's attributes, such as color, size, or other characteristics that help to describe the item.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Image=Category;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 PAGE.RUNMODAL(PAGE::"Item Attribute Value Editor",Rec);
+                                 CurrPage.SAVERECORD;
+                                 CurrPage.ItemAttributesFactbox.PAGE.LoadItemAttributesData("No.");
+                               END;
+                                }
+      { 186     ;2   ;Action    ;
+                      Name=AdjustInventory;
+                      CaptionML=[DEU=Lager regulieren;
+                                 ENU=Adjust Inventory];
+                      ToolTipML=[DEU=Erh�hen oder senken Sie die Lagerbestandsmenge des Artikels manuell, indem Sie eine neue Menge eingeben. Das manuelle Regulieren des Lagerbestands ist m�glicherweise nach einer physischen Z�hlung relevant, oder falls keine erworbenen Mengen erfasst wurden.;
+                                 ENU=Increase or decrease the item's inventory quantity manually by entering a new quantity. Adjusting the inventory quantity manually may be relevant after a physical count or if you do not record purchased quantities.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Visible=IsFoundationEnabled;
+                      Enabled=InventoryItemEditable;
+                      Image=InventoryCalculation;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 COMMIT;
+                                 PAGE.RUNMODAL(PAGE::"Adjust Inventory",Rec)
+                               END;
+                                }
+      { 119     ;2   ;Action    ;
+                      CaptionML=[DEU=Varia&nten;
+                                 ENU=Va&riants];
+                      RunObject=Page 5401;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ItemVariant }
+      { 218     ;2   ;Action    ;
+                      CaptionML=[DEU=Artikelbarcodes;
+                                 ENU=Identifiers];
+                      RunObject=Page 7706;
+                      RunPageView=SORTING(Item No.,Variant Code,Unit of Measure Code);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BarCode }
+      { 182     ;1   ;ActionGroup;
+                      Name=PricesandDiscounts;
+                      CaptionML=[DEU=Sonderpreise und -rabatte;
+                                 ENU=Special Prices & Discounts] }
+      { 82      ;2   ;Action    ;
+                      CaptionML=[DEU=Sonderpreise festlegen;
+                                 ENU=Set Special Prices];
+                      ToolTipML=[DEU=Richten Sie verschiedene Preise f�r den Artikel ein. Ein Artikelpreis wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Debitor, Menge oder Enddatum.;
+                                 ENU=Set up different prices for the item. An item price is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 7002;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Price;
+                      PromotedCategory=Category6 }
+      { 80      ;2   ;Action    ;
+                      CaptionML=[DEU=Sonderrabatte festlegen;
+                                 ENU=Set Special Discounts];
+                      ToolTipML=[DEU=Richten Sie verschiedene Rabatte f�r den Artikel ein. Ein Artikelrabatt wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Debitor, Menge oder Enddatum.;
+                                 ENU=Set up different discounts for the item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 7004;
+                      RunPageView=SORTING(Type,Code);
+                      RunPageLink=Type=CONST(Item),
+                                  Code=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=LineDiscount;
+                      PromotedCategory=Category6 }
+      { 165     ;2   ;Action    ;
+                      Name=PricesDiscountsOverview;
+                      CaptionML=[DEU=�bersicht �ber Sonderpreise und -rabatte;
+                                 ENU=Special Prices & Discounts Overview];
+                      ToolTipML=[DEU=Zeigt die Sonderpreise und Zeilenrabatte an, die Sie f�r diesen Artikel gew�hren, wenn bestimmte Kriterien erf�llt sind, wie etwa Debitor, Menge oder Enddatum.;
+                                 ENU=View the special prices and line discounts that you grant for this item when certain criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=PriceWorksheet;
+                      PromotedCategory=Category6;
+                      OnAction=VAR
+                                 SalesPriceAndLineDiscounts@1000 : Page 1345;
+                               BEGIN
+                                 SalesPriceAndLineDiscounts.InitPage(TRUE);
+                                 SalesPriceAndLineDiscounts.LoadItem(Rec);
+                                 SalesPriceAndLineDiscounts.RUNMODAL;
+                               END;
+                                }
+      { 160     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Genehmigung;
+                                 ENU=Approval] }
+      { 159     ;2   ;Action    ;
+                      Name=Approve;
+                      CaptionML=[DEU=Genehmigen;
+                                 ENU=Approve];
+                      ToolTipML=[DEU=Genehmigen Sie die angeforderten �nderungen.;
+                                 ENU=Approve the requested changes.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=OpenApprovalEntriesExistCurrUser;
+                      PromotedIsBig=Yes;
+                      Image=Approve;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.ApproveRecordApprovalRequest(RECORDID);
+                               END;
+                                }
+      { 156     ;2   ;Action    ;
+                      Name=Reject;
+                      CaptionML=[DEU=Ablehnen;
+                                 ENU=Reject];
+                      ToolTipML=[DEU=Verweigert die Genehmigungsanforderung.;
+                                 ENU=Reject the approval request.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=OpenApprovalEntriesExistCurrUser;
+                      PromotedIsBig=Yes;
+                      Image=Reject;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.RejectRecordApprovalRequest(RECORDID);
+                               END;
+                                }
+      { 154     ;2   ;Action    ;
+                      Name=Delegate;
+                      CaptionML=[DEU=Delegieren;
+                                 ENU=Delegate];
+                      ToolTipML=[DEU=Delegiert die Genehmigung an einen Ersatzgenehmiger.;
+                                 ENU=Delegate the approval to a substitute approver.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=OpenApprovalEntriesExistCurrUser;
+                      Image=Delegate;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.DelegateRecordApprovalRequest(RECORDID);
+                               END;
+                                }
+      { 503     ;2   ;Action    ;
+                      Name=Comment;
+                      CaptionML=[DEU=Kommentare;
+                                 ENU=Comments];
+                      ToolTipML=[DEU=Zeigt Bemerkungen an oder f�gt diese hinzu.;
+                                 ENU=View or add comments.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=OpenApprovalEntriesExistCurrUser;
+                      Image=ViewComments;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.GetApprovalComment(Rec);
+                               END;
+                                }
+      { 150     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Genehmigungsanforderung;
+                                 ENU=Request Approval];
+                      Image=SendApprovalRequest }
+      { 149     ;2   ;Action    ;
+                      Name=SendApprovalRequest;
+                      CaptionML=[DEU=&Genehmigungsanforderung senden;
+                                 ENU=Send A&pproval Request];
+                      ToolTipML=[DEU=Sendet eine Genehmigungsanforderung.;
+                                 ENU=Send an approval request.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Enabled=(NOT OpenApprovalEntriesExist) AND EnabledApprovalWorkflowsExist;
+                      Image=SendApprovalRequest;
+                      PromotedCategory=Category8;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                               BEGIN
+                                 IF ApprovalsMgmt.CheckItemApprovalsWorkflowEnabled(Rec) THEN
+                                   ApprovalsMgmt.OnSendItemForApproval(Rec);
+                               END;
+                                }
+      { 148     ;2   ;Action    ;
+                      Name=CancelApprovalRequest;
+                      CaptionML=[DEU=&Genehmigungsanforderung stornieren;
+                                 ENU=Cancel Approval Re&quest];
+                      ToolTipML=[DEU=Storniert die Genehmigungsanforderung.;
+                                 ENU=Cancel the approval request.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Enabled=OpenApprovalEntriesExist;
+                      Image=CancelApprovalRequest;
+                      PromotedCategory=Category8;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.OnCancelItemApprovalRequest(Rec);
+                               END;
+                                }
+      { 193     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Workflow;
+                                 ENU=Workflow] }
+      { 197     ;2   ;Action    ;
+                      Name=CreateApprovalWorkflow;
+                      CaptionML=[DEU=Genehmigungsworkflow erstellen;
+                                 ENU=Create Approval Workflow];
+                      ToolTipML=[DEU=Richten Sie einen Genehmigungsworkflow f�r das Erstellen oder �ndern von Artikeln ein, in dem Sie einige Seiten zur Anleitung durchgehen.;
+                                 ENU=Set up an approval workflow for creating or changing items, by going through a few pages that will guide you.];
+                      Enabled=NOT EnabledApprovalWorkflowsExist;
+                      Image=CreateWorkflow;
+                      OnAction=BEGIN
+                                 PAGE.RUNMODAL(PAGE::"Item Approval WF Setup Wizard");
+                               END;
+                                }
+      { 195     ;2   ;Action    ;
+                      Name=ManageApprovalWorkflow;
+                      CaptionML=[DEU=Genehmigungsworkflow verwalten;
+                                 ENU=Manage Approval Workflow];
+                      ToolTipML=[DEU=Zeigen Sie vorhandene Genehmigungsworkflows f�r das Erstellen oder �ndern von Artikeln an, oder bearbeiten Sie sie.;
+                                 ENU=View or edit existing approval workflows for creating or changing items.];
+                      Enabled=EnabledApprovalWorkflowsExist;
+                      Image=WorkflowSetup;
+                      OnAction=VAR
+                                 WorkflowManagement@1000 : Codeunit 1501;
+                               BEGIN
+                                 WorkflowManagement.NavigateToWorkflows(DATABASE::Item,EventFilter);
+                               END;
+                                }
+      { 91      ;1   ;ActionGroup;
+                      CaptionML=[DEU=F&unktion;
+                                 ENU=F&unctions];
+                      Image=Action }
+      { 92      ;2   ;Action    ;
+                      AccessByPermission=TableData 5700=R;
+                      CaptionML=[DEU=&Lagerhaltungsdaten erstellen;
+                                 ENU=&Create Stockkeeping Unit];
+                      Image=CreateSKU;
+                      OnAction=VAR
+                                 Item@1001 : Record 27;
+                               BEGIN
+                                 Item.SETRANGE("No.","No.");
+                                 REPORT.RUNMODAL(REPORT::"Create Stockkeeping Unit",TRUE,FALSE,Item);
+                               END;
+                                }
+      { 7380    ;2   ;Action    ;
+                      Name=CalculateCountingPeriod;
+                      AccessByPermission=TableData 7380=R;
+                      CaptionML=[DEU=&Inventurh�ufigkeit berechnen;
+                                 ENU=C&alculate Counting Period];
+                      Image=CalculateCalendar;
+                      OnAction=VAR
+                                 Item@1001 : Record 27;
+                                 PhysInvtCountMgt@1000 : Codeunit 7380;
+                               BEGIN
+                                 Item.SETRANGE("No.","No.");
+                                 PhysInvtCountMgt.UpdateItemPhysInvtCount(Item);
+                               END;
+                                }
+      { 241     ;2   ;Separator  }
+      { 178     ;2   ;Action    ;
+                      Name=Templates;
+                      CaptionML=[DEU=Vorlagen;
+                                 ENU=Templates];
+                      ToolTipML=[DEU=Zeigen Sie Artikelvorlagen an, oder bearbeiten Sie sie.;
+                                 ENU=View or edit item templates.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 1340;
+                      RunPageLink=Table ID=CONST(27);
+                      Image=Template }
+      { 242     ;2   ;Action    ;
+                      Name=ApplyTemplate;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Vorlage anwenden;
+                                 ENU=Apply Template];
+                      ToolTipML=[DEU=Verwenden Sie eine Vorlage, um schnell eine neue Artikelkarte zu erstellen.;
+                                 ENU=Use a template to quickly create a new item card.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=ApplyTemplate;
+                      OnAction=VAR
+                                 ItemTemplate@1002 : Record 1301;
+                               BEGIN
+                                 ItemTemplate.UpdateItemFromTemplate(Rec);
+                               END;
+                                }
+      { 1150000 ;2   ;Action    ;
+                      Name=CopyItem;
+                      CaptionML=[DEU=Artikel k&opieren;
+                                 ENU=C&opy Item];
+                      ApplicationArea=#Basic,#Suite;
+                      OnAction=VAR
+                                 CopyItem@1000002 : Report 11511;
+                                 ReturnItem@1000001 : Record 27;
+                               BEGIN
+                                 CopyItem.ItemDef(Rec);
+                                 CopyItem.RUNMODAL;
+                                 IF CopyItem.ItemReturn(ReturnItem) THEN
+                                   IF CONFIRM(Text11500,TRUE) THEN
+                                     Rec := ReturnItem;
+                               END;
+                                }
+      { 179     ;2   ;Action    ;
+                      Name=SaveAsTemplate;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Als Vorlage speichern;
+                                 ENU=Save as Template];
+                      ToolTipML=[DEU=Speichern Sie die Artikelkarte als Vorlage, die zum Erstellen neuer Artikelkarten wiederverwendet werden kann. Artikelvorlagen enthalten voreingestellte Informationen, mit denen Sie Felder auf Artikelkarten ausf�llen k�nnen.;
+                                 ENU=Save the item card as a template that can be reused to create new item cards. Item templates contain preset information to help you fill in fields on item cards.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=Save;
+                      OnAction=VAR
+                                 TempItemTemplate@1002 : TEMPORARY Record 1301;
+                               BEGIN
+                                 TempItemTemplate.SaveAsTemplate(Rec);
+                               END;
+                                }
+      { 1905370404;1 ;Action    ;
+                      CaptionML=[DEU=Bestellvorschlag;
+                                 ENU=Requisition Worksheet];
+                      RunObject=Page 291;
+                      Image=Worksheet }
+      { 1904344904;1 ;Action    ;
+                      CaptionML=[DEU=Artikel Buch.-Blatt;
+                                 ENU=Item Journal];
+                      RunObject=Page 40;
+                      Promoted=Yes;
+                      Image=Journals;
+                      PromotedCategory=Process }
+      { 1906716204;1 ;Action    ;
+                      CaptionML=[DEU=Artikel Umlag. Buch.-Blatt;
+                                 ENU=Item Reclassification Journal];
+                      RunObject=Page 393;
+                      Promoted=Yes;
+                      Image=Journals;
+                      PromotedCategory=Process }
+      { 1902532604;1 ;Action    ;
+                      CaptionML=[DEU=Artikelablaufverfolgung;
+                                 ENU=Item Tracing];
+                      RunObject=Page 6520;
+                      Image=ItemTracing }
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 126     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Historie;
+                                 ENU=History];
+                      Image=History }
+      { 101     ;2   ;ActionGroup;
+                      CaptionML=[DEU=&Posten;
+                                 ENU=E&ntries];
+                      Image=Entries }
+      { 105     ;3   ;Action    ;
+                      ShortCutKey=Ctrl+F7;
+                      CaptionML=[DEU=&Posten;
+                                 ENU=Ledger E&ntries];
+                      ToolTipML=[DEU=Zeigt die Historie der Transaktionen an, die f�r den ausgew�hlten Datensatz gebucht wurden.;
+                                 ENU=View the history of transactions that have been posted for the selected record.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 38;
+                      RunPageView=SORTING(Item No.)
+                                  ORDER(Descending);
+                      RunPageLink=Item No.=FIELD(No.);
+                      PromotedIsBig=Yes;
+                      Image=ItemLedger;
+                      PromotedCategory=Category5 }
+      { 112     ;3   ;Action    ;
+                      CaptionML=[DEU=&Inventurposten;
+                                 ENU=&Phys. Inventory Ledger Entries];
+                      ToolTipML=[DEU=Zeigen Sie an, wie viele Einheiten des Artikels bei der letzten physischen Z�hlung auf Lager waren.;
+                                 ENU=View how many units of the item you had in stock at the last physical count.];
+                      RunObject=Page 390;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=PhysicalInventoryLedger;
+                      PromotedCategory=Category5 }
+      { 75      ;3   ;Action    ;
+                      CaptionML=[DEU=&Reservierungsposten;
+                                 ENU=&Reservation Entries];
+                      RunObject=Page 497;
+                      RunPageView=SORTING(Item No.,Variant Code,Location Code,Reservation Status);
+                      RunPageLink=Reservation Status=CONST(Reservation),
+                                  Item No.=FIELD(No.);
+                      Image=ReservationLedger }
+      { 5800    ;3   ;Action    ;
+                      CaptionML=[DEU=&Wertposten;
+                                 ENU=&Value Entries];
+                      RunObject=Page 5802;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ValueLedger }
+      { 6500    ;3   ;Action    ;
+                      CaptionML=[DEU=Artikel&verfolgungsposten;
+                                 ENU=Item &Tracking Entries];
+                      Image=ItemTrackingLedger;
+                      OnAction=VAR
+                                 ItemTrackingDocMgt@1000 : Codeunit 6503;
+                               BEGIN
+                                 ItemTrackingDocMgt.ShowItemTrackingForMasterData(3,'',"No.",'','','','');
+                               END;
+                                }
+      { 11      ;3   ;Action    ;
+                      CaptionML=[DEU=&Lagerplatzposten;
+                                 ENU=&Warehouse Entries];
+                      RunObject=Page 7318;
+                      RunPageView=SORTING(Item No.,Bin Code,Location Code,Variant Code,Unit of Measure Code,Lot No.,Serial No.,Entry Type,Dedicated);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BinLedger }
+      { 237     ;3   ;Action    ;
+                      CaptionML=[DEU=Ausgleichsvorschlag;
+                                 ENU=Application Worksheet];
+                      RunObject=Page 521;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ApplicationWorksheet }
+      { 190     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Artikel;
+                                 ENU=Item] }
+      { 184     ;2   ;Action    ;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DEU=Dimensionen;
+                                 ENU=Dimensions];
+                      ToolTipML=[DEU=Zeigt Dimensionen an oder bearbeitet sie, wie etwa einen Bereich, ein Projekt oder eine Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen k�nnen, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.;
+                                 ENU=View or edits dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 540;
+                      RunPageLink=Table ID=CONST(27),
+                                  No.=FIELD(No.);
+                      PromotedIsBig=Yes;
+                      Image=Dimensions;
+                      PromotedCategory=Category4 }
+      { 161     ;2   ;Action    ;
+                      CaptionML=[DEU=Re&ferenzen;
+                                 ENU=Cross Re&ferences];
+                      ToolTipML=[DEU=Richtet eine eigene Benutzereinrichtung des Debitors oder Kreditors f�r den Artikel ein. Querverweise auf die Artikelnummer des Debitors bedeuten, dass die Artikelnummer automatisch anstelle der von Ihnen verwendeten Nummer auf den Verkaufsbelegen angezeigt wird.;
+                                 ENU=Set up a customer's or vendor's own identification of the item. Cross-references to the customer's item number means that the item number is automatically shown on sales documents instead of the number that you use.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5721;
+                      RunPageLink=Item No.=FIELD(No.);
+                      PromotedIsBig=Yes;
+                      Image=Change;
+                      PromotedCategory=Category4 }
+      { 114     ;2   ;Action    ;
+                      CaptionML=[DEU=&Einheiten;
+                                 ENU=&Units of Measure];
+                      ToolTipML=[DEU=Richten Sie verschiedene Einheiten ein, in denen der Artikel gehandelt werden kann, wie St�ck, Karton oder Stunde.;
+                                 ENU=Set up the different units that the item can be traded in, such as piece, box, or hour.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5404;
+                      RunPageLink=Item No.=FIELD(No.);
+                      PromotedIsBig=Yes;
+                      Image=UnitOfMeasure;
+                      PromotedCategory=Category4 }
+      { 117     ;2   ;Action    ;
+                      CaptionML=[DEU=&Textbausteine;
+                                 ENU=E&xtended Texts];
+                      ToolTipML=[DEU=Richten Sie einen zus�tzlichen Text f�r die Beschreibung des Artikels ein. Erweiterter Text kann im Feld "Beschreibung" in Belegzeilen f�r den Artikel eingef�gt werden.;
+                                 ENU=Set up additional text for the description of the item. Extended text can be inserted under the Description field on document lines for the item.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 391;
+                      RunPageView=SORTING(Table Name,No.,Language Code,All Language Codes,Starting Date,Ending Date);
+                      RunPageLink=Table Name=CONST(Item),
+                                  No.=FIELD(No.);
+                      PromotedIsBig=Yes;
+                      Image=Text;
+                      PromotedCategory=Category4 }
+      { 116     ;2   ;Action    ;
+                      CaptionML=[DEU=�bersetzungen;
+                                 ENU=Translations];
+                      ToolTipML=[DEU=Zeigt �bersetzte Artikelbeschreibungen an oder bearbeitet sie. �bersetzte Artikelbeschreibungen werden automatisch gem�� dem Sprachcode in Belege eingef�gt.;
+                                 ENU=View or edit translated item descriptions. Translated item descriptions are automatically inserted on documents according to the language code.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 35;
+                      RunPageLink=Item No.=FIELD(No.);
+                      PromotedIsBig=Yes;
+                      Image=Translations;
+                      PromotedCategory=Category4 }
+      { 158     ;2   ;Action    ;
+                      CaptionML=[DEU=Ersat&zartikel;
+                                 ENU=Substituti&ons];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 5716;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ItemSubstitution }
+      { 129     ;2   ;Action    ;
+                      Name=ApprovalEntries;
+                      AccessByPermission=TableData 454=R;
+                      CaptionML=[DEU=Genehmigungen;
+                                 ENU=Approvals];
+                      ToolTipML=[DEU=Zeigt eine Liste der Datens�tze an, die noch genehmigt werden m�ssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.;
+                                 ENU=View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Image=Approvals;
+                      PromotedCategory=Category8;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 ApprovalsMgmt.OpenApprovalEntriesPage(RECORDID);
+                               END;
+                                }
+      { 147     ;1   ;ActionGroup;
+                      Name=ActionGroupCRM;
+                      CaptionML=[DEU=Dynamics CRM;
+                                 ENU=Dynamics CRM];
+                      Visible=CRMIntegrationEnabled }
+      { 146     ;2   ;Action    ;
+                      Name=CRMGoToProduct;
+                      CaptionML=[DEU=Produkt;
+                                 ENU=Product];
+                      ToolTipML=[DEU=�ffnen Sie das gekoppelte Microsoft Dynamics CRM-Produkt.;
+                                 ENU=Open the coupled Microsoft Dynamics CRM product.];
+                      ApplicationArea=#All;
+                      Image=CoupledItem;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.ShowCRMEntityFromRecordID(RECORDID);
+                               END;
+                                }
+      { 144     ;2   ;Action    ;
+                      Name=CRMSynchronizeNow;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Jetzt synchronisieren;
+                                 ENU=Synchronize Now];
+                      ToolTipML=[DEU=Senden Sie die aktualisierten Daten an Microsoft Dynamics CRM.;
+                                 ENU=Send updated data to Microsoft Dynamics CRM.];
+                      ApplicationArea=#All;
+                      Image=Refresh;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1001 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.UpdateOneNow(RECORDID);
+                               END;
+                                }
+      { 142     ;2   ;ActionGroup;
+                      Name=Coupling;
+                      CaptionML=[@@@=Coupling is a noun;
+                                 DEU=Kopplung;
+                                 ENU=Coupling];
+                      ToolTipML=[DEU=Erstellt, �ndert oder l�scht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Microsoft Dynamics CRM-Datensatz.;
+                                 ENU=Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Microsoft Dynamics CRM record.];
+                      Image=LinkAccount }
+      { 140     ;3   ;Action    ;
+                      Name=ManageCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Kopplung einrichten;
+                                 ENU=Set Up Coupling];
+                      ToolTipML=[DEU=Erstellen oder �ndern Sie die Kopplung mit einem Microsoft Dynamics CRM-Produkt.;
+                                 ENU=Create or modify the coupling to a Microsoft Dynamics CRM product.];
+                      ApplicationArea=#All;
+                      Image=LinkAccount;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.DefineCoupling(RECORDID);
+                               END;
+                                }
+      { 138     ;3   ;Action    ;
+                      Name=DeleteCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Kopplung l�schen;
+                                 ENU=Delete Coupling];
+                      ToolTipML=[DEU=L�schen Sie die Kopplung mit einem Microsoft Dynamics CRM-Produkt.;
+                                 ENU=Delete the coupling to a Microsoft Dynamics CRM product.];
+                      ApplicationArea=#All;
+                      Enabled=CRMIsCoupledToRecord;
+                      Image=UnLinkAccount;
+                      OnAction=VAR
+                                 CRMCouplingManagement@1000 : Codeunit 5331;
+                               BEGIN
+                                 CRMCouplingManagement.RemoveCoupling(RECORDID);
+                               END;
+                                }
+      { 124     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Verf�gbarkeit;
+                                 ENU=Availability];
+                      Image=ItemAvailability }
+      { 68      ;2   ;Action    ;
+                      Name=ItemsByLocation;
+                      AccessByPermission=TableData 14=R;
+                      CaptionML=[DEU=&Artikel nach Lagerort;
+                                 ENU=Items b&y Location];
+                      ToolTipML=[DEU=Zeigt eine Liste der Elemente an, angeordnet nach Speicherort.;
+                                 ENU=Show a list of items grouped by location.];
+                      Image=ItemAvailbyLoc;
+                      OnAction=BEGIN
+                                 PAGE.RUN(PAGE::"Items by Location",Rec);
+                               END;
+                                }
+      { 76      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Artikelverf�&gbarkeit nach;
+                                 ENU=&Item Availability by];
+                      Image=ItemAvailability }
+      { 3       ;3   ;Action    ;
+                      Name=<Action110>;
+                      CaptionML=[DEU=Ereignis;
+                                 ENU=Event];
+                      ToolTipML=[DEU=Zeigt an, wie sich die tats�chliche und die voraussichtliche Lagerebene eines Artikels im Zeitverlauf gem�� den Angebots- und Nachfrageereignissen entwickelt.;
+                                 ENU=View how the actual and projected inventory level of an item will develop over time according to supply and demand events.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=Event;
+                      OnAction=BEGIN
+                                 ItemAvailFormsMgt.ShowItemAvailFromItem(Rec,ItemAvailFormsMgt.ByEvent);
+                               END;
+                                }
+      { 110     ;3   ;Action    ;
+                      CaptionML=[DEU=Periode;
+                                 ENU=Period];
+                      ToolTipML=[DEU=Zeigt die tats�chliche und die voraussichtliche Menge eines Artikels im Lauf der Zeit gem�� einem angegebenen Zeitintervall an, wie etwa nach Tag, Woche oder Monat.;
+                                 ENU=Show the actual and projected quantity of an item over time according to a specified time interval, such as by day, week or month.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 157;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Period }
+      { 77      ;3   ;Action    ;
+                      CaptionML=[DEU=Variante;
+                                 ENU=Variant];
+                      ToolTipML=[DEU=Zeigen Sie an, wie sich die Lagerebene eines Artikels im Zeitverlauf je nach ausgew�hlter Variante entwickelt.;
+                                 ENU=View how the inventory level of an item will develop over time according to the variant that you select.];
+                      RunObject=Page 5414;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=ItemVariant }
+      { 69      ;3   ;Action    ;
+                      CaptionML=[DEU=Lagerort;
+                                 ENU=Location];
+                      RunObject=Page 492;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Warehouse }
+      { 67      ;3   ;Action    ;
+                      CaptionML=[DEU=St�cklistenebene;
+                                 ENU=BOM Level];
+                      ToolTipML=[DEU=Zeigen Sie Verf�gbarkeitszahlen f�r St�cklistenartikel an, die angeben, wie viele Einheiten eines �bergeordneten Elements Sie auf Basis der Verf�gbarkeit von untergeordneten Elementen in zugrunde liegenden Zeilen erstellen k�nnen.;
+                                 ENU=View availability figures for BOM items that indicate how many units of a parent you can make based on the availability of child items on underlying lines.];
+                      Image=BOMLevel;
+                      OnAction=BEGIN
+                                 ItemAvailFormsMgt.ShowItemAvailFromItem(Rec,ItemAvailFormsMgt.ByBOM);
+                               END;
+                                }
+      { 74      ;3   ;Action    ;
+                      CaptionML=[DEU=Zeitachse;
+                                 ENU=Timeline];
+                      ToolTipML=[DEU=Zeigen Sie eine grafische Ansicht des voraussichtlichen Lagerwerts eines Artikels basierend auf zuk�nftigen Angebots- und Nachfrageereignissen mit oder ohne Planungsvorschl�gen an.;
+                                 ENU=View a graphical view of an item�s projected inventory based on future supply and demand events, with or without planning suggestions.];
+                      Image=Timeline;
+                      OnAction=BEGIN
+                                 ShowTimelineFromItem(Rec);
+                               END;
+                                }
+      { 102     ;2   ;ActionGroup;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      Image=Statistics }
+      { 107     ;3   ;Action    ;
+                      Name=Statistics;
+                      ShortCutKey=F7;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      ToolTipML=[DEU=Zeigt statistische Informationen f�r den Datensatz an, wie etwa den Wert der gebuchten Posten.;
+                                 ENU=View statistical information, such as the value of posted entries, for the record.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=Statistics;
+                      OnAction=VAR
+                                 ItemStatistics@1001 : Page 5827;
+                               BEGIN
+                                 ItemStatistics.SetItem(Rec);
+                                 ItemStatistics.RUNMODAL;
+                               END;
+                                }
+      { 108     ;3   ;Action    ;
+                      CaptionML=[DEU=Buchungsstatistik;
+                                 ENU=Entry Statistics];
+                      ToolTipML=[DEU=Zeigen Sie die Statistik f�r Artikelposten an.;
+                                 ENU=View statistics for item ledger entries.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 304;
+                      RunPageLink=No.=FIELD(No.),
+                                  Date Filter=FIELD(Date Filter),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=EntryStatistics }
+      { 111     ;3   ;Action    ;
+                      CaptionML=[DEU=&Umsatz;
+                                 ENU=T&urnover];
+                      ToolTipML=[DEU=Zeigen Sie eine detaillierte Aufstellung des Artikelumsatzes nach Perioden an, nachdem Sie die gew�nschten Filter f�r Lagerort und Variante festgelegt haben.;
+                                 ENU=View a detailed account of item turnover by periods after you have set the relevant filters for location and variant.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 158;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Turnover }
+      { 106     ;2   ;Action    ;
+                      CaptionML=[DEU=Be&merkungen;
+                                 ENU=Co&mments];
+                      ToolTipML=[DEU=Zeigt Bemerkungen an oder f�gt diese hinzu.;
+                                 ENU=View or add comments.];
+                      RunObject=Page 124;
+                      RunPageLink=Table Name=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ViewComments }
+      { 84      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Einkauf;
+                                 ENU=&Purchases];
+                      Image=Purchasing }
+      { 81      ;2   ;Action    ;
+                      CaptionML=[DEU=&Lieferanten;
+                                 ENU=Ven&dors];
+                      RunObject=Page 114;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Vendor }
+      { 85      ;2   ;Action    ;
+                      CaptionML=[DEU=Sonderpreise festlegen;
+                                 ENU=Set Special Prices];
+                      RunObject=Page 7012;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Price }
+      { 86      ;2   ;Action    ;
+                      CaptionML=[DEU=Sonderrabatte festlegen;
+                                 ENU=Set Special Discounts];
+                      RunObject=Page 7014;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=LineDiscount }
+      { 240     ;2   ;Action    ;
+                      CaptionML=[DEU=&Vorauszahlungsprozents�tze;
+                                 ENU=Prepa&yment Percentages];
+                      RunObject=Page 665;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=PrepaymentPercentages }
+      { 47      ;2   ;Separator  }
+      { 87      ;2   ;Action    ;
+                      CaptionML=[DEU=Bestellungen;
+                                 ENU=Orders];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 56;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Document }
+      { 191     ;2   ;Action    ;
+                      CaptionML=[DEU=Reklamationen;
+                                 ENU=Return Orders];
+                      RunObject=Page 6643;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ReturnOrder }
+      { 70      ;2   ;Action    ;
+                      CaptionML=[DEU=&Katalogartikel;
+                                 ENU=Nonstoc&k Items];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5726;
+                      Image=NonStockItem }
+      { 79      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Verkauf;
+                                 ENU=S&ales];
+                      Image=Sales }
+      { 300     ;2   ;Action    ;
+                      CaptionML=[DEU=&Vorauszahlungsprozents�tze;
+                                 ENU=Prepa&yment Percentages];
+                      RunObject=Page 664;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=PrepaymentPercentages }
+      { 46      ;2   ;Separator  }
+      { 83      ;2   ;Action    ;
+                      CaptionML=[DEU=Auftr�ge;
+                                 ENU=Orders];
+                      RunObject=Page 48;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Document }
+      { 163     ;2   ;Action    ;
+                      CaptionML=[DEU=Reklamationen;
+                                 ENU=Return Orders];
+                      RunObject=Page 6633;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ReturnOrder }
+      { 128     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Montage/Produktion;
+                                 ENU=Assembly/Production];
+                      Image=Production }
+      { 121     ;2   ;Action    ;
+                      CaptionML=[DEU=Struktur;
+                                 ENU=Structure];
+                      Image=Hierarchy;
+                      OnAction=VAR
+                                 BOMStructure@1000 : Page 5870;
+                               BEGIN
+                                 BOMStructure.InitItem(Rec);
+                                 BOMStructure.RUN;
+                               END;
+                                }
+      { 104     ;2   ;Action    ;
+                      CaptionML=[DEU=Kostenanteile;
+                                 ENU=Cost Shares];
+                      Image=CostBudget;
+                      OnAction=VAR
+                                 BOMCostShares@1000 : Page 5872;
+                               BEGIN
+                                 BOMCostShares.InitItem(Rec);
+                                 BOMCostShares.RUN;
+                               END;
+                                }
+      { 100     ;2   ;ActionGroup;
+                      CaptionML=[DEU=Mo&ntage;
+                                 ENU=Assemb&ly];
+                      Image=AssemblyBOM }
+      { 98      ;3   ;Action    ;
+                      CaptionML=[DEU=Montagest�ckliste;
+                                 ENU=Assembly BOM];
+                      RunObject=Page 36;
+                      RunPageLink=Parent Item No.=FIELD(No.);
+                      Image=BOM }
+      { 96      ;3   ;Action    ;
+                      CaptionML=[DEU=Verwendung;
+                                 ENU=Where-Used];
+                      RunObject=Page 37;
+                      RunPageView=SORTING(Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Track }
+      { 94      ;3   ;Action    ;
+                      AccessByPermission=TableData 90=R;
+                      CaptionML=[DEU=St�ckl. Einst.-Preis &berechnen;
+                                 ENU=Calc. Stan&dard Cost];
+                      Image=CalculateCost;
+                      OnAction=BEGIN
+                                 CLEAR(CalculateStdCost);
+                                 CalculateStdCost.CalcItem("No.",TRUE);
+                               END;
+                                }
+      { 90      ;3   ;Action    ;
+                      AccessByPermission=TableData 90=R;
+                      CaptionML=[DEU=Ber. VK-Preis;
+                                 ENU=Calc. Unit Price];
+                      Image=SuggestItemPrice;
+                      OnAction=BEGIN
+                                 CLEAR(CalculateStdCost);
+                                 CalculateStdCost.CalcAssemblyItemPrice("No.")
+                               END;
+                                }
+      { 89      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Produktion;
+                                 ENU=Production];
+                      Image=Production }
+      { 88      ;3   ;Action    ;
+                      CaptionML=[DEU=Fertigungsst�ckliste;
+                                 ENU=Production BOM];
+                      RunObject=Page 99000786;
+                      RunPageLink=No.=FIELD(Production BOM No.);
+                      Image=BOM }
+      { 78      ;3   ;Action    ;
+                      AccessByPermission=TableData 99000771=R;
+                      CaptionML=[DEU=Verwendung;
+                                 ENU=Where-Used];
+                      Image=Where-Used;
+                      OnAction=VAR
+                                 ProdBOMWhereUsed@1001 : Page 99000811;
+                               BEGIN
+                                 ProdBOMWhereUsed.SetItem(Rec,WORKDATE);
+                                 ProdBOMWhereUsed.RUNMODAL;
+                               END;
+                                }
+      { 5       ;3   ;Action    ;
+                      AccessByPermission=TableData 99000771=R;
+                      CaptionML=[DEU=St�ckl. Einst.-Preis &berechnen;
+                                 ENU=Calc. Stan&dard Cost];
+                      Image=CalculateCost;
+                      OnAction=BEGIN
+                                 CLEAR(CalculateStdCost);
+                                 CalculateStdCost.CalcItem("No.",FALSE);
+                               END;
+                                }
+      { 103     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Lager;
+                                 ENU=Warehouse];
+                      Image=Warehouse }
+      { 212     ;2   ;Action    ;
+                      CaptionML=[DEU=Lagerplatz&inhalt;
+                                 ENU=&Bin Contents];
+                      RunObject=Page 7379;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BinContent }
+      { 157     ;2   ;Action    ;
+                      CaptionML=[DEU=Lagerhalt&ungsdaten;
+                                 ENU=Stockkeepin&g Units];
+                      RunObject=Page 5701;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=SKU }
+      { 122     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Service;
+                                 ENU=Service];
+                      Image=ServiceItem }
+      { 183     ;2   ;Action    ;
+                      CaptionML=[DEU=Ser&viceartikel;
+                                 ENU=Ser&vice Items];
+                      RunObject=Page 5988;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ServiceItem }
+      { 17      ;2   ;Action    ;
+                      AccessByPermission=TableData 5900=R;
+                      CaptionML=[DEU=Problembehebung;
+                                 ENU=Troubleshooting];
+                      Image=Troubleshoot;
+                      OnAction=VAR
+                                 TroubleshootingHeader@1000 : Record 5943;
+                               BEGIN
+                                 TroubleshootingHeader.ShowForItem(Rec);
+                               END;
+                                }
+      { 185     ;2   ;Action    ;
+                      CaptionML=[DEU=L�sungsanleitung Einrichtung;
+                                 ENU=Troubleshooting Setup];
+                      RunObject=Page 5993;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Troubleshoot }
+      { 127     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Ressourcen;
+                                 ENU=Resources];
+                      Image=Resource }
+      { 151     ;2   ;ActionGroup;
+                      CaptionML=[DEU=Ressour&cen;
+                                 ENU=R&esource];
+                      Image=Resource }
+      { 187     ;3   ;Action    ;
+                      CaptionML=[DEU=Ressourcenqualifikationen;
+                                 ENU=Resource Skills];
+                      ToolTipML=[DEU=Zeigt die Zuweisung von Qualifikationen zu Ressourcen, Artikeln, Serviceartikelgruppen und Serviceartikeln an. Sie k�nnen Qualifikationscodes verwenden, um den Serviceartikeln oder Artikeln, f�r deren Wartung spezielle Qualifikationen erforderlich sind, qualifizierte Ressourcen zuzuordnen.;
+                                 ENU=View the assignment of skills to resources, items, service item groups, and service items. You can use skill codes to allocate skilled resources to service items or items that need special skills for servicing.];
+                      RunObject=Page 6019;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ResourceSkills }
+      { 188     ;3   ;Action    ;
+                      AccessByPermission=TableData 5900=R;
+                      CaptionML=[DEU=Qualifizierte Ressourcen;
+                                 ENU=Skilled Resources];
+                      ToolTipML=[DEU=Zeigt eine �bersicht aller Ressourcen mit Informationen dar�ber an, ob sie �ber die erforderlichen Qualifikationen verf�gen, um die bestimmte Serviceartikelgruppe, den Artikel oder den Serviceartikel zu bearbeiten.;
+                                 ENU=View a list of all registered resources with information about whether they have the skills required to service the particular service item group, item, or service item.];
+                      Image=ResourceSkills;
+                      OnAction=VAR
+                                 ResourceSkill@1001 : Record 5956;
+                               BEGIN
+                                 CLEAR(SkilledResourceList);
+                                 SkilledResourceList.Initialize(ResourceSkill.Type::Item,"No.",Description);
+                                 SkilledResourceList.RUNMODAL;
+                               END;
+                                }
+      { 1000000003;1 ;ActionGroup;
+                      CaptionML=[DEU=E-Commerce;
+                                 ENU=E-Commerce] }
+      { 1000000000;2 ;Action    ;
+                      Name=Webshop Item;
+                      CaptionML=[DEU=Webshop Artikel;
+                                 ENU=Webshop];
+                      RunObject=Page 5447308;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Web;
+                      PromotedCategory=Category4 }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                Name=Item;
+                CaptionML=[DEU=Artikel;
+                           ENU=Item];
+                GroupType=Group }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Artikels an.;
+                           ENU=Specifies the number of the item.];
+                ApplicationArea=#All;
+                SourceExpr="No.";
+                Importance=Additional;
+                Visible=NoFieldVisible;
+                OnAssistEdit=BEGIN
+                               IF AssistEdit THEN
+                                 CurrPage.UPDATE;
+                             END;
+                              }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Beschreibung des Artikels an.;
+                           ENU=Specifies a description of the item.];
+                ApplicationArea=#All;
+                SourceExpr=Description;
+                ShowMandatory=TRUE }
+
+    { 20  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, dass Transaktionen mit dem Artikel nicht gebucht werden k�nnen, z. B. weil sich der Artikel in Quarant�ne befindet.;
+                           ENU=Specifies that transactions with the item cannot be posted, for example, because the item is in quarantine.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Blocked }
+
+    { 166 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob die Artikelkarte einen physischen Artikel (Inventory) oder Service (Service) repr�sentiert.;
+                           ENU=Specifies if the item card represents a physical item (Inventory) or a service (Service).];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Type;
+                OnValidate=BEGIN
+                             EnableControls;
+                           END;
+                            }
+
+    { 6   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Einheit an, in der der Artikel im Lager gef�hrt wird.;
+                           ENU=Specifies the unit in which the item is held in inventory.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Base Unit of Measure";
+                Importance=Promoted;
+                OnValidate=BEGIN
+                             CurrPage.UPDATE(TRUE);
+                             GET("No.");
+                           END;
+
+                ShowMandatory=TRUE }
+
+    { 22  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wann die Artikelkarte zuletzt ge�ndert wurde.;
+                           ENU=Specifies when the item card was last modified.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Last Date Modified";
+                Importance=Additional }
+
+    { 135 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Artikel in Verbindung mit dem Senden und Empfangen von elektronischen Belegen an.;
+                           ENU=Specifies the item in connection with electronic document sending and receiving.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=GTIN;
+                Importance=Additional }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Is Webshop Item";
+                Editable=FALSE;
+                LookupPageID=Webshop Item List }
+
+    { 171 ;1   ;Group     ;
+                Name=InventoryGrp;
+                CaptionML=[DEU=Lagerbestand;
+                           ENU=Inventory];
+                GroupType=Group }
+
+    { 8   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob der Artikel eine Montagest�ckliste ist.;
+                           ENU=Indicates if the item is an assembly BOM.];
+                SourceExpr="Assembly BOM" }
+
+    { 10  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wo der Artikel im Lager zu finden ist.;
+                           ENU=Specifies where to find the item in the warehouse.];
+                SourceExpr="Shelf No." }
+
+    { 164 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, dass der Artikel aus einem Katalogartikel erstellt wurde.;
+                           ENU=Specifies that the item was created from a nonstock item.];
+                SourceExpr="Created From Nonstock Item";
+                Importance=Additional }
+
+    { 170 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Kategorie an, zu der der Artikel geh�rt.;
+                           ENU=Specifies the category that the item belongs to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Item Category Code";
+                OnValidate=VAR
+                             ItemAttributeManagement@1000 : Codeunit 7500;
+                           BEGIN
+                             ItemAttributeManagement.InheritAttributesFromItemCategory(Rec,"Item Category Code",xRec."Item Category Code");
+                             CurrPage.ItemAttributesFactbox.PAGE.LoadItemAttributesData("No.");
+                             EnableCostingControls;
+                           END;
+                            }
+
+    { 168 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt einen Produktgruppencode, der der Artikelkategorie zugeordnet ist.;
+                           ENU=Contains a product group code associated with the item category.];
+                SourceExpr="Product Group Code";
+                Visible=FALSE }
+
+    { 12  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Suchbegriff an.;
+                           ENU=Specifies a search description.];
+                SourceExpr="Search Description";
+                Importance=Additional }
+
+    { 14  ;2   ;Field     ;
+                DrillDown=No;
+                ToolTipML=[DEU=Gibt an, wie viele Einheiten (z.�B. St�ck, Schachteln oder Dosen) eines Artikels am Lager verf�gbar sind.;
+                           ENU=Specifies how many units, such as pieces, boxes, or cans, of the item are in inventory.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Inventory;
+                Importance=Promoted;
+                Enabled=InventoryItemEditable;
+                OnAssistEdit=BEGIN
+                               MODIFY(TRUE);
+                               COMMIT;
+                               IF PAGE.RUNMODAL(PAGE::"Adjust Inventory",Rec) = ACTION::LookupOK THEN
+                                 FIND;
+                               CurrPage.UPDATE
+                             END;
+                              }
+
+    { 16  ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels in Bestellungen eingegangen sind, d. h. in ausstehenden Bestellzeilen aufgelistet sind.;
+                           ENU=Shows how many units of the item are inbound on purchase orders, meaning listed on outstanding purchase order lines.];
+                SourceExpr="Qty. on Purch. Order" }
+
+    { 172 ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels Fertigungsauftr�gen zugeordnet sind, d. h. in ausstehenden Fertigungsauftragszeilen aufgelistet sind.;
+                           ENU=Shows how many units of the item are allocated to production orders, meaning listed on outstanding production order lines.];
+                SourceExpr="Qty. on Prod. Order" }
+
+    { 174 ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels als Fertigungsauftragskomponenten zugeordnet sind, d. h. unter ausstehenden Fertigungsauftragszeilen aufgelistet sind.;
+                           ENU=Shows how many units of the item are allocated as production order components, meaning listed under outstanding production order lines.];
+                SourceExpr="Qty. on Component Lines" }
+
+    { 18  ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels Verkaufsauftr�gen zugeordnet sind, d. h. in ausstehenden Verkaufsauftragszeilen aufgelistet sind.;
+                           ENU=Shows how many units of the item are allocated to sales orders, meaning listed on outstanding sales orders lines.];
+                SourceExpr="Qty. on Sales Order" }
+
+    { 189 ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels Serviceauftr�gen zugeordnet sind, d. h. in ausstehenden Serviceauftragszeilen aufgelistet sind.;
+                           ENU=Shows how many units of the item are allocated to service orders, meaning listed on outstanding service order lines.];
+                SourceExpr="Qty. on Service Order";
+                Importance=Additional }
+
+    { 180 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den Code der Serviceartikelgruppe, zu der der Artikel geh�rt.;
+                           ENU=Contains the code of the service item group that the item belongs to.];
+                SourceExpr="Service Item Group";
+                Importance=Additional }
+
+    { 7   ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels Montageauftr�gen zugeordnet sind, d. h. wie viele Einheiten in ausstehenden Montageauftragsk�pfen aufgelistet sind.;
+                           ENU=Shows how many units of the item are allocated to assembly orders, which is how many are listed on outstanding assembly order headers.];
+                SourceExpr="Qty. on Assembly Order";
+                Importance=Additional }
+
+    { 9   ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels als Montagekomponenten zugeordnet sind, d. h. wie viele Einheiten in ausstehenden Montageauftragszeilen aufgelistet sind.;
+                           ENU=Shows how many units of the item are allocated as assembly components, which means how many are listed on outstanding assembly order lines.];
+                SourceExpr="Qty. on Asm. Component";
+                Importance=Additional }
+
+    { 113 ;2   ;Field     ;
+                Name=StockoutWarningDefaultYes;
+                CaptionML=[DEU=Bestandswarnung;
+                           ENU=Stockout Warning];
+                ToolTipML=[DEU=Gibt an, ob eine Warnmeldung angezeigt wird, wenn Sie eine Menge auf einem Verkaufsbeleg eingeben, der zu einem Lagerbestand des Artikels von unter Null f�hrt.;
+                           ENU=Specifies if a warning is displayed when you enter a quantity on a sales document that brings the item's inventory below zero.];
+                OptionCaptionML=[DEU=Standard (Ja),Nein,Ja;
+                                 ENU=Default (Yes),No,Yes];
+                ApplicationArea=#All;
+                SourceExpr="Stockout Warning";
+                Visible=ShowStockoutWarningDefaultYes }
+
+    { 115 ;2   ;Field     ;
+                Name=StockoutWarningDefaultNo;
+                CaptionML=[DEU=Bestandswarnung;
+                           ENU=Stockout Warning];
+                ToolTipML=[DEU=Gibt an, ob eine Warnmeldung angezeigt wird, wenn Sie eine Menge auf einem Verkaufsbeleg eingeben, der zu einem Lagerbestand des Artikels von unter Null f�hrt.;
+                           ENU=Specifies if a warning is displayed when you enter a quantity on a sales document that brings the item's inventory below zero.];
+                OptionCaptionML=[DEU=Standard (Nein),Nein,Ja;
+                                 ENU=Default (No),No,Yes];
+                ApplicationArea=#All;
+                SourceExpr="Stockout Warning";
+                Visible=ShowStockoutWarningDefaultNo }
+
+    { 120 ;2   ;Field     ;
+                Name=PreventNegInventoryDefaultYes;
+                CaptionML=[DEU=Negativen Lagerbestand verhindern;
+                           ENU=Prevent Negative Inventory];
+                ToolTipML=[DEU=Gibt an, ob Sie eine Transaktion buchen k�nnen, die den Lagerbestand des Artikels auf einen Buchwert unter null bringt.;
+                           ENU=Specifies if you can post a transaction that will bring the item's inventory below zero.];
+                OptionCaptionML=[DEU=Standard (Ja),Nein,Ja;
+                                 ENU=Default (Yes),No,Yes];
+                ApplicationArea=#All;
+                SourceExpr="Prevent Negative Inventory";
+                Importance=Additional;
+                Visible=ShowPreventNegInventoryDefaultYes }
+
+    { 130 ;2   ;Field     ;
+                Name=PreventNegInventoryDefaultNo;
+                CaptionML=[DEU=Negativen Lagerbestand verhindern;
+                           ENU=Prevent Negative Inventory];
+                ToolTipML=[DEU=Gibt an, ob Sie eine Transaktion buchen k�nnen, die den Lagerbestand des Artikels auf einen Buchwert unter null bringt.;
+                           ENU=Specifies if you can post a transaction that will bring the item's inventory below zero.];
+                OptionCaptionML=[DEU=Standard (Nein),Nein,Ja;
+                                 ENU=Default (No),No,Yes];
+                ApplicationArea=#All;
+                SourceExpr="Prevent Negative Inventory";
+                Importance=Additional;
+                Visible=ShowPreventNegInventoryDefaultNo }
+
+    { 196 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Nettogewicht des Artikels an.;
+                           ENU=Specifies the net weight of the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Net Weight";
+                Importance=Additional }
+
+    { 235 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Bruttogewicht des Artikels an.;
+                           ENU=Specifies the gross weight of the item.];
+                SourceExpr="Gross Weight";
+                Importance=Additional }
+
+    { 97  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, dass ein Textbaustein, den Sie eingerichtet haben, automatisch in Einkaufs- und Verkaufsbelegen f�r diesen Artikel hinzugef�gt wird.;
+                           ENU=Specifies that an extended text that you have set up will be added automatically on sales or purchase documents for this item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Automatic Ext. Texts";
+                Importance=Additional }
+
+    { 169 ;1   ;Group     ;
+                Name=Price & Posting;
+                CaptionML=[DEU=Preis und Buchung;
+                           ENU=Price & Posting];
+                GroupType=Group }
+
+    { 38  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Preis einer Einheit des Artikels in MW an.;
+                           ENU=Specifies the price for one unit of the item, in LCY.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Unit Price";
+                Importance=Promoted;
+                Editable=PriceEditable }
+
+    { 173 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den VK-Preis ohne MwSt. an.;
+                           ENU=Specifies the unit price excluding VAT.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=CalcUnitPriceExclVAT;
+                CaptionClass='2,0,' + FIELDCAPTION("Unit Price");
+                Importance=Additional }
+
+    { 175 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob die Felder "VK-Preis" und "Zeilenbetrag" in Verkaufsbelegzeilen f�r diesen Artikel mit oder ohne MwSt. angezeigt werden.;
+                           ENU=Specifies if the Unit Price and Line Amount fields on sales document lines for this item should be shown with or without VAT.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Price Includes VAT";
+                Importance=Additional;
+                OnValidate=BEGIN
+                             IF "Price Includes VAT" = xRec."Price Includes VAT" THEN
+                               EXIT;
+                           END;
+                            }
+
+    { 34  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob das Feld "DB %", das Feld "VK-Preis" oder keines dieser Felder berechnet und ausgef�llt wird.;
+                           ENU=Specifies if the Profit Percentage field, the Unit Price field, or neither field is calculated and filled.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Price/Profit Calculation";
+                Importance=Additional;
+                OnValidate=BEGIN
+                             EnableControls;
+                           END;
+                            }
+
+    { 181 ;2   ;Field     ;
+                CaptionML=[DEU=Sonderpreise und -rabatte;
+                           ENU=Special Prices & Discounts];
+                ToolTipML=[DEU=Gibt Sonderpreise und Zeilenrabatte f�r den Artikel an.;
+                           ENU=Specifies special prices and line discounts for the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=SpecialPricesAndDiscountsTxt;
+                Importance=Promoted;
+                Editable=FALSE;
+                OnDrillDown=VAR
+                              SalesPrice@1001 : Record 7002;
+                              SalesLineDiscount@1002 : Record 7004;
+                              SalesPriceAndLineDiscounts@1000 : Page 1345;
+                            BEGIN
+                              IF SpecialPricesAndDiscountsTxt = ViewOrChangeExistingTxt THEN BEGIN
+                                SalesPriceAndLineDiscounts.InitPage(TRUE);
+                                SalesPriceAndLineDiscounts.LoadItem(Rec);
+                                SalesPriceAndLineDiscounts.RUNMODAL;
+                                EXIT;
+                              END;
+
+                              CASE STRMENU(STRSUBSTNO('%1,%2',CreateNewSpecialPriceTxt,CreateNewSpecialDiscountTxt),1,'') OF
+                                1:
+                                  BEGIN
+                                    SalesPrice.SETRANGE("Item No.","No.");
+                                    PAGE.RUNMODAL(PAGE::"Sales Prices",SalesPrice);
+                                  END;
+                                2:
+                                  BEGIN
+                                    SalesLineDiscount.SETRANGE(Type,SalesLineDiscount.Type::Item);
+                                    SalesLineDiscount.SETRANGE(Code,"No.");
+                                    PAGE.RUNMODAL(PAGE::"Sales Line Discounts",SalesLineDiscount);
+                                  END;
+                              END;
+                            END;
+                             }
+
+    { 36  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Gewinnspanne an, mit der Sie den Artikel verkaufen m�chten.;
+                           ENU=Specifies the profit margin you want to sell the item at.];
+                ApplicationArea=#Basic,#Suite;
+                DecimalPlaces=2:2;
+                SourceExpr="Profit %";
+                Editable=ProfitEditable }
+
+    { 30  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Lagerwert pro Einheit des Artikels an.;
+                           ENU=Specifies the cost per unit of the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Unit Cost";
+                Enabled=UnitCostEnable;
+                Editable=UnitCostEditable;
+                OnDrillDown=VAR
+                              ShowAvgCalcItem@1000 : Codeunit 5803;
+                            BEGIN
+                              ShowAvgCalcItem.DrillDownAvgCostAdjmtPoint(Rec)
+                            END;
+                             }
+
+    { 153 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die indirekten Kosten des Artikels als absoluten Betrag an.;
+                           ENU=Specifies the item's indirect cost as an absolute amount.];
+                SourceExpr="Overhead Rate";
+                Importance=Additional }
+
+    { 44  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob der Artikel in der Berechnung eines Rechnungsrabatts auf Belegen enthalten ist, in denen der Artikel gehandelt wird.;
+                           ENU=Specifies if the item should be included in the calculation of an invoice discount on documents where the item is traded.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Allow Invoice Disc.";
+                Importance=Additional }
+
+    { 48  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Artikelgruppencode an, der als Kriterium verwendet werden kann, um einen Skonto zu gew�hren, wenn der Artikel an einen bestimmten Debitor verkauft wird.;
+                           ENU=Specifies an item group code that can be used as a criterion to grant a discount when the item is sold to a certain customer.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Item Disc. Group";
+                Importance=Additional }
+
+    { 167 ;2   ;Group     ;
+                Name=Cost Details;
+                CaptionML=[DEU=Kostendetails;
+                           ENU=Cost Details];
+                GroupType=Group }
+
+    { 24  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wie der Kostenfluss des Artikels erfasst ist und ob ein tats�chlicher oder budgetierter Wert gebucht und in der Kostenberechnung verwendet wird.;
+                           ENU=Specifies how the item's cost flow is recorded and whether an actual or budgeted value is capitalized and used in the cost calculation.];
+                SourceExpr="Costing Method";
+                Importance=Additional;
+                OnValidate=BEGIN
+                             EnableCostingControls;
+                           END;
+                            }
+
+    { 155 ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt den Prozentsatz des EK-Preises des Artikels an, aus dem indirekte Kosten entstehen, wie Fracht und Lagerdurchlauf.;
+                           ENU=Specifies the percentage of the item's direct unit cost that makes up indirect costs, such as freight and warehouse handling.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Indirect Cost %";
+                Importance=Additional }
+
+    { 32  ;3   ;Field     ;
+                CaptionML=[DEU=Kosten letzter Einkauf;
+                           ENU=Last Purchase Cost];
+                ToolTipML=[DEU=Gibt den aktuellen EK-Preis des Artikels an.;
+                           ENU=Specifies the most recent direct unit cost of the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Last Direct Cost";
+                Importance=Additional }
+
+    { 176 ;2   ;Group     ;
+                Name=Financial Details;
+                CaptionML=[DEU=Finanzielle Details;
+                           ENU=Financial Details];
+                GroupType=Group }
+
+    { 95  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt die Produktbuchungsgruppe des Artikels an. Verkn�pft Gesch�ftstransaktionen f�r diesen Artikel mit der Finanzbuchhaltung, um den Wert des Handels mit dem Artikel zu erhalten.;
+                           ENU=Specifies the item's general product posting group. It links business transactions made for this item with the general ledger to account for the value of trade with the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Gen. Prod. Posting Group";
+                Importance=Additional;
+                ShowMandatory=TRUE }
+
+    { 66  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt die MwSt.-Produktbuchungsgruppe an. Verkn�pft Gesch�ftstransaktionen f�r diesen Artikel mit der Finanzbuchhaltung, um die MwSt.-Betr�ge anzugeben, die das Ergebnis des Handels mit dem Artikel sind.;
+                           ENU=Specifies the VAT product posting group. Links business transactions made for this item with the general ledger, to account for VAT amounts resulting from trade with the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="VAT Prod. Posting Group";
+                Importance=Additional;
+                ShowMandatory=TRUE }
+
+    { 40  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt die Lagerbuchungsgruppe an. Verkn�pft die Gesch�ftstransaktionen, die f�r den Artikel mit einem Lagerkonto in der Finanzbuchhaltung gebucht werden, um Betr�ge f�r diese Artikelart zu gruppieren.;
+                           ENU=Specifies the inventory posting group. Links business transactions made for the item with an inventory account in the general ledger, to group amounts for that item type.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Inventory Posting Group";
+                Importance=Additional;
+                Editable=InventoryItemEditable;
+                ShowMandatory=InventoryItemEditable }
+
+    { 177 ;2   ;Group     ;
+                Name=ForeignTrade;
+                CaptionML=[DEU=Au�enhandel;
+                           ENU=Foreign Trade];
+                GroupType=Group }
+
+    { 62  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Code f�r die Zollposition des Artikels an.;
+                           ENU=Specifies a code for the item's tariff number.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Tariff No.";
+                Importance=Additional }
+
+    { 93  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Code des Landes/der Region an, in dem/der der Artikel hergestellt oder verarbeitet wurde.;
+                           ENU=Specifies a code for the country/region where the item was produced or processed.];
+                SourceExpr="Country/Region of Origin Code";
+                Importance=Additional }
+
+    { 1905885101;1;Group  ;
+                CaptionML=[DEU=Fakturierung;
+                           ENU=Invoicing] }
+
+    { 238 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob der Einstandspreis des Artikels automatisch oder manuell reguliert wurde.;
+                           ENU=Specifies whether the item's unit cost has been adjusted, either automatically or manually.];
+                SourceExpr="Cost is Adjusted" }
+
+    { 26  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, dass alle Lagerkosten f�r diesen Artikel in die Finanzbuchhaltung gebucht wurden.;
+                           ENU=Specifies that all the inventory costs for this item have been posted to the general ledger.];
+                SourceExpr="Cost is Posted to G/L" }
+
+    { 28  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Einstandspreis an, der als Standardkennzahl verwendet wird.;
+                           ENU=Specifies the unit cost that is used as a standard measure.];
+                SourceExpr="Standard Cost";
+                Enabled=StandardCostEnable;
+                OnDrillDown=VAR
+                              ShowAvgCalcItem@1000 : Codeunit 5803;
+                            BEGIN
+                              ShowAvgCalcItem.DrillDownAvgCostAdjmtPoint(Rec)
+                            END;
+                             }
+
+    { 136 ;2   ;Field     ;
+                CaptionML=[DEU=Standard-Abgrenzungsvorlage;
+                           ENU=Default Deferral Template];
+                ToolTipML=[DEU=Gibt an, wie Einnahmen oder Ausgaben f�r den Artikel vorgabem��ig in andere Buchhaltungsperioden abgegrenzt werden.;
+                           ENU=Specifies how revenue or expenses for the item are deferred to other accounting periods by default.];
+                ApplicationArea=#Suite;
+                SourceExpr="Default Deferral Template Code" }
+
+    { 42  ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels im Lagerbestand fakturiert wurden.;
+                           ENU=Shows how many units of the item in inventory have been invoiced.];
+                SourceExpr="Net Invoiced Qty." }
+
+    { 73  ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den beim Verkauf des Artikels verwendeten Einheitencode.;
+                           ENU=Contains the unit of measure code used when you sell the item.];
+                SourceExpr="Sales Unit of Measure" }
+
+    { 19  ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt die ID eines Benutzers an, der im Fenster "Ausgleichsvorschlag" arbeitet.;
+                           ENU=Specifies the ID of a user who is working in the Application Worksheet window.];
+                SourceExpr="Application Wksh. User ID";
+                Importance=Additional;
+                Visible=FALSE }
+
+    { 1904731401;1;Group  ;
+                CaptionML=[DEU=Beschaffung;
+                           ENU=Replenishment] }
+
+    { 133 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Art des Beschaffungsauftrags an, der vom Planungssystem erstellt wird, wenn der Artikel aufgef�llt werden muss.;
+                           ENU=Specifies the type of supply order created by the planning system when the item needs to be replenished.];
+                SourceExpr="Replenishment System";
+                Importance=Promoted }
+
+    { 54  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Datumsformel f�r die Beschaffungszeit des Artikels an.;
+                           ENU=Specifies a date formula for the amount of time it takes to replenish the item.];
+                SourceExpr="Lead Time Calculation" }
+
+    { 229 ;2   ;Group     ;
+                CaptionML=[DEU=Einkauf;
+                           ENU=Purchase] }
+
+    { 50  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code des Kreditors an, der diesen Artikel standardm��ig liefert.;
+                           ENU=Specifies the vendor code of who supplies this item by default.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Vendor No." }
+
+    { 52  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer an, die der Kreditor f�r diesen Artikel verwendet.;
+                           ENU=Specifies the number that the vendor uses for this item.];
+                SourceExpr="Vendor Item No." }
+
+    { 99  ;3   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den beim Kauf des Artikels verwendeten Einheitencode.;
+                           ENU=Contains the unit of measure code used when you purchase the item.];
+                SourceExpr="Purch. Unit of Measure" }
+
+    { 230 ;2   ;Group     ;
+                CaptionML=[DEU=Produktion;
+                           ENU=Production] }
+
+    { 227 ;3   ;Field     ;
+                ToolTipML=[DEU=Legt fest, ob zus�tzliche Auftr�ge f�r verkn�pfte Komponenten berechnet werden.;
+                           ENU=Defines whether additional orders for any related components are calculated.];
+                SourceExpr="Manufacturing Policy" }
+
+    { 137 ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Arbeitsplans an.;
+                           ENU=Specifies the number of the routing.];
+                SourceExpr="Routing No." }
+
+    { 139 ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer der Fertigungsst�ckliste an.;
+                           ENU=Specifies the number of the production BOM.];
+                SourceExpr="Production BOM No." }
+
+    { 141 ;3   ;Field     ;
+                ToolTipML=[DEU=Definiert, wie berechnete Verbrauchsmengen gerundet werden, wenn sie in FA-Verbrauchs Buch.-Blattzeilen eingegeben werden.;
+                           ENU=Defines how calculated consumption quantities are rounded when entered on consumption journal lines.];
+                SourceExpr="Rounding Precision" }
+
+    { 143 ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt die Methode an, die f�r die Berechnung und Bearbeitung des Verbrauchs des Artikels als Komponente in Produktionsprozessen verwendet wird.;
+                           ENU=Specifies the method used to calculate and handle the consumption of the item as a component in production processes.];
+                SourceExpr="Flushing Method" }
+
+    { 118 ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt den Prozentsatz des Artikels an, den Sie als Ausschuss im Fertigungsvorgang erwarten.;
+                           ENU=Specifies the percentage of the item that you expect to be scrapped in the production process.];
+                SourceExpr="Scrap %" }
+
+    { 145 ;3   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels in einem Fertigungsarbeitsgang standardm��ig verarbeitet werden.;
+                           ENU=Specifies how many units of the item are processed in one production operation by default.];
+                SourceExpr="Lot Size" }
+
+    { 13  ;2   ;Group     ;
+                CaptionML=[DEU=Montage;
+                           ENU=Assembly];
+                GroupType=Group }
+
+    { 15  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt an, welcher Standardbestellfluss verwendet wird, um diesen Montageartikel zu liefern.;
+                           ENU=Specifies which default order flow is used to supply this assembly item.];
+                SourceExpr="Assembly Policy" }
+
+    { 1901343701;1;Group  ;
+                CaptionML=[DEU=Planung;
+                           ENU=Planning] }
+
+    { 125 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Wiederbeschaffungsverfahren an.;
+                           ENU=Specifies the reordering policy.];
+                SourceExpr="Reordering Policy";
+                Importance=Promoted;
+                OnValidate=BEGIN
+                             EnablePlanningControls
+                           END;
+                            }
+
+    { 59  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob Reservierungen f�r diesen Artikel vorgenommen werden k�nnen.;
+                           ENU=Indicates whether the program will allow reservations to be made for this item.];
+                SourceExpr=Reserve;
+                Importance=Additional }
+
+    { 58  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob und wie Bedarfsverursacherposten zwischen Vorrat und dem zugeh�rigen Bedarf erstellt und verwaltet werden.;
+                           ENU=Specifies if and how order tracking entries are created and maintained between supply and its corresponding demand.];
+                SourceExpr="Order Tracking Policy";
+                Importance=Promoted }
+
+    { 57  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, dass Lagerhaltungsdaten f�r diesen Artikel vorhanden sind.;
+                           ENU=Specifies that a SKU exists for this item.];
+                SourceExpr="Stockkeeping Unit Exists" }
+
+    { 56  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Zeitspanne an, innerhalb derer vom Planungssystem nicht vorgeschlagen werden soll, bestehende Beschaffungsauftr�ge in der Planung vorzuverlegen.;
+                           ENU=Specifies a period of time during which you do not want the planning system to propose to reschedule existing supply orders.];
+                SourceExpr="Dampener Period";
+                Importance=Additional;
+                Enabled=DampenerPeriodEnable }
+
+    { 55  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Toleranzmenge an, um unwichtige �nderungsvorschl�ge f�r eine vorhandene Lieferung zu sperren, wenn die �nderungsmenge die Toleranzmenge nicht �bersteigt.;
+                           ENU=Specifies a dampener quantity to block insignificant change suggestions for an existing supply, if the change quantity is lower than the dampener quantity.];
+                SourceExpr="Dampener Quantity";
+                Importance=Additional;
+                Enabled=DampenerQtyEnable }
+
+    { 53  ;2   ;Field     ;
+                ToolTipML=[DEU=Zeigt an, ob der Artikel in Verf�gbarkeitsberechnungen ber�cksichtigt wird, um ein Lieferdatum f�r einen �bergeordneten Artikel zuzusagen.;
+                           ENU=Specifies if the item is included in availability calculations to promise a shipment date for its parent item.];
+                SourceExpr=Critical }
+
+    { 51  ;2   ;Field     ;
+                ToolTipML=[DEU=Definiert eine Datumsformel, die einen Sicherheitszuschlag Beschaffungszeit angibt, der als Pufferzeit f�r Verz�gerungen bei der Produktion und andere Verz�gerungen verwendet werden kann.;
+                           ENU=Defines a date formula to indicate a safety lead time that can be used as a buffer period for production and other delays.];
+                SourceExpr="Safety Lead Time";
+                Enabled=SafetyLeadTimeEnable }
+
+    { 49  ;2   ;Field     ;
+                ToolTipML=[DEU=Definiert eine Menge, die immer im Lager verf�gbar sein soll, um gegen Schwankungen von Bedarf und Angebot w�hrend der Beschaffungszeit gesch�tzt zu sein.;
+                           ENU=Defines a quantity of stock to have in inventory to protect against supply-and-demand fluctuations during replenishment lead time.];
+                SourceExpr="Safety Stock Quantity";
+                Enabled=SafetyStockQtyEnable }
+
+    { 43  ;2   ;Group     ;
+                CaptionML=[DEU=Los-f�r-Los-Parameter;
+                           ENU=Lot-for-Lot Parameters];
+                GroupType=Group }
+
+    { 45  ;3   ;Field     ;
+                ToolTipML=[DEU=Schlie�t den Lagerbestand in den Verf�gbarkeitssaldo ein, wenn Ersatzauftr�ge berechnet werden.;
+                           ENU=Includes inventory in the projected available balance when replenishment orders are calculated.];
+                SourceExpr="Include Inventory";
+                Enabled=IncludeInventoryEnable;
+                OnValidate=BEGIN
+                             EnablePlanningControls
+                           END;
+                            }
+
+    { 27  ;3   ;Field     ;
+                ToolTipML=[DEU=Definiert eine Periode, in der mehrere Bedarfsposten in einen Beschaffungsauftrag kumuliert werden, wenn Sie das Los-f�r-Los-Wiederbeschaffungsverfahren verwenden.;
+                           ENU=Defines a period in which multiple demands are accumulated into one supply order when you use the Lot-for-Lot reordering policy.];
+                SourceExpr="Lot Accumulation Period";
+                Enabled=LotAccumulationPeriodEnable }
+
+    { 41  ;3   ;Field     ;
+                ToolTipML=[DEU=Definiert eine Periode, innerhalb der jeder Vorschlag, ein Lieferdatum zu �ndern, immer aus einer Aktion "Neu berechnen" und nie aus einer Aktion "Abbrechen + Neu" besteht.;
+                           ENU=Defines a period within which any suggestion to change a supply date always consists of a Reschedule action and never a Cancel + New action.];
+                SourceExpr="Rescheduling Period";
+                Enabled=ReschedulingPeriodEnable }
+
+    { 39  ;2   ;Group     ;
+                CaptionML=[DEU=Minimalbestandsparameter;
+                           ENU=Reorder-Point Parameters];
+                GroupType=Group }
+
+    { 65  ;3   ;Group     ;
+                GroupType=GridLayout;
+                Layout=Rows }
+
+    { 64  ;4   ;Group     ;
+                GroupType=Group }
+
+    { 37  ;5   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Bestand an, der den Lagerbestand festlegt, bei dessen Unterschreitung der Artikel beschafft werden muss.;
+                           ENU=Specifies a stock quantity that sets the inventory below the level that you must replenish the item.];
+                SourceExpr="Reorder Point";
+                Enabled=ReorderPointEnable }
+
+    { 35  ;5   ;Field     ;
+                ToolTipML=[DEU=Gibt eine f�r alle Bestellvorschl�ge zu verwendende Standardlosgr��e an.;
+                           ENU=Specifies a standard lot size quantity to be used for all order proposals.];
+                SourceExpr="Reorder Quantity";
+                Enabled=ReorderQtyEnable }
+
+    { 33  ;5   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Menge an, die Sie als maximalen Lagerbestand verwenden m�chten.;
+                           ENU=Specifies a quantity that you want to use as a maximum inventory level.];
+                SourceExpr="Maximum Inventory";
+                Enabled=MaximumInventoryEnable }
+
+    { 31  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Menge an, um die der voraussichtliche Lagerbestand den Minimalbestand �berschreiten darf, bevor das System vorschl�gt, die Beschaffungsauftr�ge zu vermindern.;
+                           ENU=Specifies a quantity you allow projected inventory to exceed the reorder point, before the system suggests to decrease supply orders.];
+                SourceExpr="Overflow Level";
+                Importance=Additional;
+                Enabled=OverflowLevelEnable }
+
+    { 29  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Zeitraum an, der den mit den Wiederbeschaffungsverfahren "Feste Bestellmenge" oder "Auff�llen auf Maximalbestand" verwendeten wiederkehrenden Planungszeitraum festlegt.;
+                           ENU=Specifies a time period that defines the recurring planning horizon used with Fixed Reorder Qty. or Maximum Qty. reordering policies.];
+                SourceExpr="Time Bucket";
+                Importance=Additional;
+                Enabled=TimeBucketEnable }
+
+    { 63  ;2   ;Group     ;
+                CaptionML=[DEU=Bestellungsmodifizierer;
+                           ENU=Order Modifiers];
+                GroupType=Group }
+
+    { 60  ;3   ;Group     ;
+                GroupType=GridLayout;
+                Layout=Rows }
+
+    { 61  ;4   ;Group     ;
+                GroupType=Group }
+
+    { 25  ;5   ;Field     ;
+                ToolTipML=[DEU=Legt eine minimal erlaubte Menge f�r einen Artikelauftragsvorschlag fest.;
+                           ENU=Defines a minimum allowable quantity for an item order proposal.];
+                SourceExpr="Minimum Order Quantity";
+                Enabled=MinimumOrderQtyEnable }
+
+    { 23  ;5   ;Field     ;
+                ToolTipML=[DEU=Gibt eine maximal erlaubte Menge f�r einen Artikelauftragsvorschlag an.;
+                           ENU=Specifies a maximum allowable quantity for an item order proposal.];
+                SourceExpr="Maximum Order Quantity";
+                Enabled=MaximumOrderQtyEnable }
+
+    { 21  ;5   ;Field     ;
+                ToolTipML=[DEU=Definiert einen Parameter, der vom Planungssystem verwendet wird, um die Menge geplanter Beschaffungsauftr�ge zu �ndern.;
+                           ENU=Defines a parameter used by the planning system to modify the quantity of planned supply orders.];
+                SourceExpr="Order Multiple";
+                Enabled=OrderMultipleEnable }
+
+    { 1904830201;1;Group  ;
+                CaptionML=[DEU=Artikelverfolgung;
+                           ENU=Item Tracking] }
+
+    { 225 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den Code, der angibt, wie der Artikel im Bestand verfolgt wird.;
+                           ENU=Contains the code that indicates how the program will track the item in inventory.];
+                SourceExpr="Item Tracking Code";
+                Importance=Promoted }
+
+    { 210 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Nummernseriencode an, der f�r die fortlaufende Seriennummernvergabe an gefertigte Artikel verwendet werden soll.;
+                           ENU=Specifies a number series code to assign consecutive serial numbers to items produced.];
+                SourceExpr="Serial Nos." }
+
+    { 72  ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den Nummernseriencode, der bei der Zuordnung von Chargennummern verwendet wird.;
+                           ENU=Contains the number series code that will be used when assigning lot numbers.];
+                SourceExpr="Lot Nos." }
+
+    { 71  ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt die Formel, nach der das Ablaufdatum in der Artikelverfolgungszeile berechnet wird.;
+                           ENU=Contains the formula for calculating the expiration date on the item tracking line.];
+                SourceExpr="Expiration Calculation" }
+
+    { 1907509201;1;Group  ;
+                CaptionML=[DEU=Lager;
+                           ENU=Warehouse] }
+
+    { 215 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Lagerklassencode f�r den Artikel an.;
+                           ENU=Specifies the warehouse class code for the item.];
+                SourceExpr="Warehouse Class Code" }
+
+    { 213 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den Code des Hilfsmittels, das Lagermitarbeiter bei Arbeitsprozessen mit dem Artikel einsetzen m�ssen.;
+                           ENU=Contains the code of the equipment that warehouse employees must use when handling the item.];
+                SourceExpr="Special Equipment Code";
+                Importance=Additional }
+
+    { 206 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den Code der Einlagerungsvorlage, mittels derer die Anwendung die am besten geeignete Zone und Lagerplatz f�r die Einlagerung des Artikels nach dem Wareneingang bestimmt.;
+                           ENU=Contains the code of the put-away template by which the program determines the most appropriate zone and bin for storage of the item after receipt.];
+                SourceExpr="Put-away Template Code" }
+
+    { 204 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den Code der Artikeleinheit, der f�r die Einlagerung verwendet werden soll.;
+                           ENU=Contains the code of the item unit of measure in which the program will put the item away.];
+                SourceExpr="Put-away Unit of Measure Code";
+                Importance=Promoted }
+
+    { 202 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt den Code der Inventurh�ufigkeit, die angibt, wie oft der Artikel �ber eine Inventur erfasst werden soll.;
+                           ENU=Contains the code of the counting period that indicates how often you want to count the item in a physical inventory.];
+                SourceExpr="Phys Invt Counting Period Code";
+                Importance=Promoted }
+
+    { 200 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt das Datum, an dem zuletzt die Ergebnisse einer Inventur f�r den Artikel in den Artikelposten gebucht wurden.;
+                           ENU=Contains the date on which you last posted the results of a physical inventory for the item to the item ledger.];
+                SourceExpr="Last Phys. Invt. Date" }
+
+    { 198 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt das Datum, an dem Sie die Inventurh�ufigkeit zuletzt berechnet haben. Es wird aktualisiert, wenn Sie die Funktion "Inventurh�ufigkeit berechnen" verwenden.;
+                           ENU=Contains the last date on which you calculated the counting period. It is updated when you use the function Calculate Counting Period.];
+                SourceExpr="Last Counting Period Update" }
+
+    { 194 ;2   ;Field     ;
+                SourceExpr="Next Counting Start Date" }
+
+    { 131 ;2   ;Field     ;
+                SourceExpr="Next Counting End Date" }
+
+    { 192 ;2   ;Field     ;
+                ToolTipML=[DEU=Enth�lt einen eindeutigen Code f�r den Artikel, mit dem die automatische Datenerfassung vereinfacht wird.;
+                           ENU=Contains a unique code for the item in terms that are useful for automatic data capture.];
+                SourceExpr="Identifier Code";
+                Importance=Additional }
+
+    { 208 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob dieser Artikel in Zuordnungen einbezogen werden kann.;
+                           ENU=Specifies if this item can be cross-docked.];
+                SourceExpr="Use Cross-Docking";
+                Importance=Additional }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 109 ;1   ;Part      ;
+                Name=ItemPicture;
+                CaptionML=[DEU=Bild;
+                           ENU=Picture];
+                ApplicationArea=#All;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Variant Filter=FIELD(Variant Filter);
+                PagePartID=Page346;
+                PartType=Page }
+
+    { 201 ;1   ;Part      ;
+                Name=ItemAttributesFactbox;
+                ApplicationArea=#Basic,#Suite;
+                PagePartID=Page9110;
+                PartType=Page }
+
+    { 132 ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Source Type=CONST(Item),
+                            Source No.=FIELD(No.);
+                PagePartID=Page875;
+                Visible=SocialListeningVisible;
+                PartType=Page }
+
+    { 134 ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Source Type=CONST(Item),
+                            Source No.=FIELD(No.);
+                PagePartID=Page876;
+                Visible=SocialListeningSetupVisible;
+                PartType=Page;
+                UpdatePropagation=Both }
+
+    { 162 ;1   ;Part      ;
+                Name=WorkflowStatus;
+                ApplicationArea=#Suite;
+                PagePartID=Page1528;
+                Visible=ShowWorkflowStatus;
+                Enabled=FALSE;
+                Editable=FALSE;
+                PartType=Page;
+                ShowFilter=No }
+
+    { 1900383207;1;Part   ;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      ApplicationAreaSetup@1027 : Record 9178;
+      CalculateStdCost@1005 : Codeunit 5812;
+      ItemAvailFormsMgt@1000 : Codeunit 353;
+      ApprovalsMgmt@1013 : Codeunit 1535;
+      SkilledResourceList@1001 : Page 6023;
+      IsFoundationEnabled@1028 : Boolean;
+      ShowStockoutWarningDefaultYes@1006 : Boolean;
+      ShowStockoutWarningDefaultNo@1004 : Boolean;
+      ShowPreventNegInventoryDefaultYes@1003 : Boolean;
+      ShowPreventNegInventoryDefaultNo@1002 : Boolean;
+      TimeBucketEnable@19054765 : Boolean INDATASET;
+      SafetyLeadTimeEnable@19079647 : Boolean INDATASET;
+      SafetyStockQtyEnable@19036196 : Boolean INDATASET;
+      ReorderPointEnable@19067744 : Boolean INDATASET;
+      ReorderQtyEnable@19013534 : Boolean INDATASET;
+      MaximumInventoryEnable@19059424 : Boolean INDATASET;
+      MinimumOrderQtyEnable@19021857 : Boolean INDATASET;
+      MaximumOrderQtyEnable@19007977 : Boolean INDATASET;
+      OrderMultipleEnable@19004365 : Boolean INDATASET;
+      IncludeInventoryEnable@19061544 : Boolean INDATASET;
+      ReschedulingPeriodEnable@19049766 : Boolean INDATASET;
+      LotAccumulationPeriodEnable@19019376 : Boolean INDATASET;
+      DampenerPeriodEnable@19045210 : Boolean INDATASET;
+      DampenerQtyEnable@19051814 : Boolean INDATASET;
+      OverflowLevelEnable@19033283 : Boolean INDATASET;
+      StandardCostEnable@19016419 : Boolean INDATASET;
+      UnitCostEnable@19054429 : Boolean INDATASET;
+      Text11500@1000000 : TextConst 'DEU=M�chten Sie den neuen Artikel bearbeiten?;ENU=Do you want to edit the new item?';
+      SocialListeningSetupVisible@1008 : Boolean INDATASET;
+      SocialListeningVisible@1007 : Boolean INDATASET;
+      CRMIntegrationEnabled@1010 : Boolean;
+      CRMIsCoupledToRecord@1009 : Boolean;
+      OpenApprovalEntriesExistCurrUser@1012 : Boolean;
+      OpenApprovalEntriesExist@1011 : Boolean;
+      ShowWorkflowStatus@1014 : Boolean;
+      InventoryItemEditable@1015 : Boolean INDATASET;
+      UnitCostEditable@1022 : Boolean INDATASET;
+      ProfitEditable@1017 : Boolean;
+      PriceEditable@1018 : Boolean;
+      SpecialPricesAndDiscountsTxt@1019 : Text;
+      CreateNewTxt@1020 : TextConst 'DEU=Neue erstellen...;ENU=Create New...';
+      ViewOrChangeExistingTxt@1021 : TextConst 'DEU=Vorhandene anzeigen oder �ndern...;ENU=View or Change Existing...';
+      CreateNewSpecialPriceTxt@1023 : TextConst 'DEU=Neuen Sonderpreis erstellen...;ENU=Create New Special Price...';
+      CreateNewSpecialDiscountTxt@1024 : TextConst 'DEU=Neuen Sonderrabatt erstellen...;ENU=Create New Special Discount...';
+      EnabledApprovalWorkflowsExist@1025 : Boolean;
+      EventFilter@1026 : Text;
+      NoFieldVisible@1016 : Boolean;
+      NewMode@1029 : Boolean;
+
+    LOCAL PROCEDURE EnableControls@6();
+    VAR
+      ItemLedgerEntry@1000 : Record 32;
+      CRMIntegrationManagement@1001 : Codeunit 5330;
+      DocumentNoVisibility@1002 : Codeunit 1400;
+    BEGIN
+      InventoryItemEditable := Type = Type::Inventory;
+
+      IF Type = Type::Inventory THEN BEGIN
+        ItemLedgerEntry.SETRANGE("Item No.","No.");
+        UnitCostEditable := ItemLedgerEntry.ISEMPTY;
+      END ELSE
+        UnitCostEditable := TRUE;
+
+      ProfitEditable := "Price/Profit Calculation" <> "Price/Profit Calculation"::"Profit=Price-Cost";
+      PriceEditable := "Price/Profit Calculation" <> "Price/Profit Calculation"::"Price=Cost+Profit";
+
+      EnablePlanningControls;
+      EnableCostingControls;
+
+      EnableShowStockOutWarning;
+
+      SetSocialListeningFactboxVisibility;
+      NoFieldVisible := DocumentNoVisibility.ItemNoIsVisible;
+      EnableShowShowEnforcePositivInventory;
+      CRMIntegrationEnabled := CRMIntegrationManagement.IsCRMIntegrationEnabled;
+
+      UpdateSpecialPricesAndDiscountsTxt;
+    END;
+
+    LOCAL PROCEDURE OnNewRec@16();
+    VAR
+      DocumentNoVisibility@1002 : Codeunit 1400;
+    BEGIN
+      IF GUIALLOWED THEN BEGIN
+        EnableControls;
+        IF "No." = '' THEN
+          IF DocumentNoVisibility.ItemNoSeriesIsDefault THEN
+            NewMode := TRUE;
+      END;
+    END;
+
+    LOCAL PROCEDURE EnableShowStockOutWarning@4();
+    VAR
+      SalesSetup@1000 : Record 311;
+    BEGIN
+      SalesSetup.GET;
+      ShowStockoutWarningDefaultYes := SalesSetup."Stockout Warning";
+      ShowStockoutWarningDefaultNo := NOT ShowStockoutWarningDefaultYes;
+
+      EnableShowShowEnforcePositivInventory
+    END;
+
+    LOCAL PROCEDURE InsertItemUnitOfMeasure@8();
+    VAR
+      ItemUnitOfMeasure@1000 : Record 5404;
+    BEGIN
+      IF "Base Unit of Measure" <> '' THEN BEGIN
+        ItemUnitOfMeasure.INIT;
+        ItemUnitOfMeasure."Item No." := "No.";
+        ItemUnitOfMeasure.VALIDATE(Code,"Base Unit of Measure");
+        ItemUnitOfMeasure."Qty. per Unit of Measure" := 1;
+        ItemUnitOfMeasure.INSERT;
+      END;
+    END;
+
+    LOCAL PROCEDURE EnableShowShowEnforcePositivInventory@2();
+    VAR
+      InventorySetup@1000 : Record 313;
+    BEGIN
+      InventorySetup.GET;
+      ShowPreventNegInventoryDefaultYes := InventorySetup."Prevent Negative Inventory";
+      ShowPreventNegInventoryDefaultNo := NOT ShowPreventNegInventoryDefaultYes;
+    END;
+
+    LOCAL PROCEDURE EnablePlanningControls@1();
+    VAR
+      PlanningGetParam@1000 : Codeunit 99000855;
+      TimeBucketEnabled@1010 : Boolean;
+      SafetyLeadTimeEnabled@1009 : Boolean;
+      SafetyStockQtyEnabled@1008 : Boolean;
+      ReorderPointEnabled@1007 : Boolean;
+      ReorderQtyEnabled@1006 : Boolean;
+      MaximumInventoryEnabled@1005 : Boolean;
+      MinimumOrderQtyEnabled@1004 : Boolean;
+      MaximumOrderQtyEnabled@1003 : Boolean;
+      OrderMultipleEnabled@1002 : Boolean;
+      IncludeInventoryEnabled@1001 : Boolean;
+      ReschedulingPeriodEnabled@1015 : Boolean;
+      LotAccumulationPeriodEnabled@1014 : Boolean;
+      DampenerPeriodEnabled@1013 : Boolean;
+      DampenerQtyEnabled@1012 : Boolean;
+      OverflowLevelEnabled@1011 : Boolean;
+    BEGIN
+      PlanningGetParam.SetUpPlanningControls("Reordering Policy","Include Inventory",
+        TimeBucketEnabled,SafetyLeadTimeEnabled,SafetyStockQtyEnabled,
+        ReorderPointEnabled,ReorderQtyEnabled,MaximumInventoryEnabled,
+        MinimumOrderQtyEnabled,MaximumOrderQtyEnabled,OrderMultipleEnabled,IncludeInventoryEnabled,
+        ReschedulingPeriodEnabled,LotAccumulationPeriodEnabled,
+        DampenerPeriodEnabled,DampenerQtyEnabled,OverflowLevelEnabled);
+
+      TimeBucketEnable := TimeBucketEnabled;
+      SafetyLeadTimeEnable := SafetyLeadTimeEnabled;
+      SafetyStockQtyEnable := SafetyStockQtyEnabled;
+      ReorderPointEnable := ReorderPointEnabled;
+      ReorderQtyEnable := ReorderQtyEnabled;
+      MaximumInventoryEnable := MaximumInventoryEnabled;
+      MinimumOrderQtyEnable := MinimumOrderQtyEnabled;
+      MaximumOrderQtyEnable := MaximumOrderQtyEnabled;
+      OrderMultipleEnable := OrderMultipleEnabled;
+      IncludeInventoryEnable := IncludeInventoryEnabled;
+      ReschedulingPeriodEnable := ReschedulingPeriodEnabled;
+      LotAccumulationPeriodEnable := LotAccumulationPeriodEnabled;
+      DampenerPeriodEnable := DampenerPeriodEnabled;
+      DampenerQtyEnable := DampenerQtyEnabled;
+      OverflowLevelEnable := OverflowLevelEnabled;
+    END;
+
+    LOCAL PROCEDURE EnableCostingControls@3();
+    BEGIN
+      StandardCostEnable := "Costing Method" = "Costing Method"::Standard;
+      UnitCostEnable := "Costing Method" <> "Costing Method"::Standard;
+    END;
+
+    LOCAL PROCEDURE SetSocialListeningFactboxVisibility@5();
+    VAR
+      SocialListeningMgt@1000 : Codeunit 871;
+    BEGIN
+      SocialListeningMgt.GetItemFactboxVisibility(Rec,SocialListeningSetupVisible,SocialListeningVisible);
+    END;
+
+    LOCAL PROCEDURE InitControls@12();
+    BEGIN
+      UnitCostEnable := TRUE;
+      StandardCostEnable := TRUE;
+      OverflowLevelEnable := TRUE;
+      DampenerQtyEnable := TRUE;
+      DampenerPeriodEnable := TRUE;
+      LotAccumulationPeriodEnable := TRUE;
+      ReschedulingPeriodEnable := TRUE;
+      IncludeInventoryEnable := TRUE;
+      OrderMultipleEnable := TRUE;
+      MaximumOrderQtyEnable := TRUE;
+      MinimumOrderQtyEnable := TRUE;
+      MaximumInventoryEnable := TRUE;
+      ReorderQtyEnable := TRUE;
+      ReorderPointEnable := TRUE;
+      SafetyStockQtyEnable := TRUE;
+      SafetyLeadTimeEnable := TRUE;
+      TimeBucketEnable := TRUE;
+
+      InventoryItemEditable := Type = Type::Inventory;
+      "Costing Method" := "Costing Method"::FIFO;
+      UnitCostEditable := TRUE;
+    END;
+
+    LOCAL PROCEDURE UpdateSpecialPricesAndDiscountsTxt@7();
+    VAR
+      TempSalesPriceAndLineDiscBuff@1000 : TEMPORARY Record 1304;
+    BEGIN
+      SpecialPricesAndDiscountsTxt := CreateNewTxt;
+      TempSalesPriceAndLineDiscBuff.LoadDataForItem(Rec);
+      IF NOT TempSalesPriceAndLineDiscBuff.ISEMPTY THEN
+        SpecialPricesAndDiscountsTxt := ViewOrChangeExistingTxt;
+    END;
+
+    LOCAL PROCEDURE CreateItemFromTemplate@11();
+    VAR
+      ItemTemplate@1001 : Record 1301;
+      Item@1000 : Record 27;
+    BEGIN
+      IF NewMode THEN BEGIN
+        IF ItemTemplate.NewItemFromTemplate(Item) THEN BEGIN
+          COPY(Item);
+          CurrPage.UPDATE;
+        END;
+
+        // Enforce FIFO costing method for Foundation
+        IF ApplicationAreaSetup.IsFoundationEnabled THEN
+          Item.VALIDATE("Costing Method","Costing Method"::FIFO);
+
+        NewMode := FALSE;
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (1):
+
+          TYPE            SUBTYPE         SOURCEEXPR                      NAME                            CAPTION
+
+          Field                           "Is Webshop Item"               <Is Webshop Item>               <Webshopartikel>
+
+
+        PAGE ACTIONS (2):
+
+          NAME                            CAPTION                         TYPE                 SUBTYPE
+
+          <Action132>                     <E-Commerce>                    ActionGroup
+          Webshop Item                    Webshop Artikel                 Action
+
+
+        TRIGGERS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

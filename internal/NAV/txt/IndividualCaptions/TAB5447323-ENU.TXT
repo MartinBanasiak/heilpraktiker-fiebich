@@ -1,0 +1,7 @@
+T5447323-F10-P8629-A1033-L999:Description
+T5447323-F1-P8629-A1033-L999:Type
+T5447323-F1-P8632-A1033-L999:Attribute,Attribute Link,Attribute Option,Attribute Template
+T5447323-F2-P8629-A1033-L999:Attribute Code
+T5447323-F3-P8629-A1033-L999:Attribute Link No.
+T5447323-F4-P8629-A1033-L999:Language Code
+T5447323-P8629-A1033-L999:Webshop Attribute Translation

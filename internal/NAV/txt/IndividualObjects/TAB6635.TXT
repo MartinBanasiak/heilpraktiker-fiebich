@@ -1,0 +1,68 @@
+OBJECT Table 6635 Return Reason
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.01.18;
+    Time=16:00:00;
+    Version List=NAVW19.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Reklamationsgrund;
+               ENU=Return Reason];
+    LookupPageID=Page6635;
+    DrillDownPageID=Page6635;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code10        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 3   ;   ;Default Location Code;Code10       ;TableRelation=Location WHERE (Use As In-Transit=CONST(No));
+                                                   CaptionML=[DEU=Standardlagerortcode;
+                                                              ENU=Default Location Code] }
+    { 4   ;   ;Inventory Value Zero;Boolean       ;CaptionML=[DEU=Ohne Lagerbewertung;
+                                                              ENU=Inventory Value Zero] }
+    { 5447300;;Is Webshop Active   ;Boolean       ;CaptionML=[DEU=Ist Webshop aktiv;
+                                                              ENU=Is Webshop active];
+                                                   Description=dynamic commerce }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+    { 1   ;DropDown            ;Code,Description,Default Location Code,Inventory Value Zero }
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        FIELDS (1):
+
+          NO.        NAME                                DATATYPE        LENGTH
+
+          5447300      "Is Webshop Active"               Boolean
+
+
+        TRIGGERS (0):
+        KEYS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

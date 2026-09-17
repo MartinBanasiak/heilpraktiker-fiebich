@@ -1,0 +1,106 @@
+OBJECT Table 5447313 Webshop Cue
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Stapel;
+               ENU=Webshop Cue];
+    LookupPageID=Page5447351;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Primary Key         ;Code10         }
+    { 2   ;   ;Webshop Orders - Open;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Sales Header" WHERE (Document Type=FILTER(Order),
+                                                                                           Webshop Shop Code=FILTER(<>''),
+                                                                                           Status=FILTER(Open)));
+                                                   CaptionML=[DEU=Bestellungen - Offen;
+                                                              ENU=Orders - Open] }
+    { 3   ;   ;Webshop Items - No Image;Integer   ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item" WHERE (No. of Pictures=FILTER(0),
+                                                                                           Is Variant=FILTER(No)));
+                                                   CaptionML=[DEU=Artikel - ohne Bild;
+                                                              ENU=Items - No Images] }
+    { 4   ;   ;Webshop Items - No Description;Integer;
+                                                   FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item" WHERE (No. of Descriptions=CONST(0),
+                                                                                           Is Variant=CONST(No)));
+                                                   CaptionML=[DEU=Artikel - ohne Beschreibung;
+                                                              ENU=Items - No Descriptions] }
+    { 5   ;   ;Webshop Promotion Starting;Integer ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Category" WHERE (Promtion Validity from=FIELD(Date Filter)));
+                                                   CaptionML=[DEU=Aktionen starten;
+                                                              ENU=Promotions starting] }
+    { 7   ;   ;Webshop Promotion Ending;Integer   ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Category" WHERE (Promtion Validity to=FIELD(Date Filter)));
+                                                   CaptionML=[DEU=Aktionen enden;
+                                                              ENU=Promotions ending] }
+    { 8   ;   ;Webshop Quotes - Open;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Sales Header" WHERE (Document Type=CONST(Quote),
+                                                                                           Webshop Order No.=FILTER(<>''),
+                                                                                           Status=CONST(Open)));
+                                                   CaptionML=[DEU=Angebote - Offen;
+                                                              ENU=Quotes - Open] }
+    { 9   ;   ;Webshop Coupons - Starting;Integer ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Coupon Header" WHERE (Starting Date=FIELD(Date Filter)));
+                                                   CaptionML=[DEU=Gutscheine - starten;
+                                                              ENU=Coupons - starting] }
+    { 10  ;   ;Webshop Coupons - Ending;Integer   ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Coupon Header" WHERE (Ending Date=FIELD(Date Filter)));
+                                                   CaptionML=[DEU=Gutscheine - enden;
+                                                              ENU=Coupons - ending] }
+    { 11  ;   ;Webshop Item Starting;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item" WHERE (Starting Date=FIELD(Date Filter)));
+                                                   CaptionML=[DEU=Artikel starten;
+                                                              ENU=Items starting] }
+    { 12  ;   ;Webshop Item Ending ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item" WHERE (Ending Date=FIELD(Date Filter)));
+                                                   CaptionML=[DEU=Artikel enden;
+                                                              ENU=Items ending] }
+    { 14  ;   ;Date Filter         ;Date          ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Datumsfilter;
+                                                              ENU=Date Filter] }
+    { 15  ;   ;Webshop Ratings - New;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Ratings" WHERE (Checked=CONST(No)));
+                                                   CaptionML=[DEU=Artikelbewertungen - Neu;
+                                                              ENU=Ratings - New] }
+    { 16  ;   ;Webshop Ratings - not released;Integer;
+                                                   FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Ratings" WHERE (Is Review Released=CONST(No)));
+                                                   CaptionML=[DEU=Artikelbewertungen - nicht freigegeben;
+                                                              ENU=Ratings - not released] }
+  }
+  KEYS
+  {
+    {    ;Primary Key                             ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    PROCEDURE GetOpenWebshopOrders@1000000000() : Integer;
+    VAR
+      SalesHeader@1000000000 : Record 36;
+    BEGIN
+      SalesHeader.SETRANGE("Document Type",SalesHeader."Document Type"::Order);
+      SalesHeader.SETRANGE("Document Date","Date Filter");
+      SalesHeader.SETFILTER("Webshop Shop Code",'<>%1','');
+      SalesHeader.SETRANGE(Status,SalesHeader.Status::Open);
+      EXIT(SalesHeader.COUNT);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

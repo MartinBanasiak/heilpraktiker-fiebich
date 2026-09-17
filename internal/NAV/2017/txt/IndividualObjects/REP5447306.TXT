@@ -1,0 +1,125 @@
+OBJECT Report 5447306 Webshop Set Item Active Status
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshopartikel Aktiv-Status setzen;
+               ENU=Webshop Set Item Active Status];
+    ProcessingOnly=Yes;
+  }
+  DATASET
+  {
+    { 8129;    ;DataItem;                    ;
+               DataItemTable=Table27;
+               DataItemTableView=SORTING(No.)
+                                 ORDER(Ascending);
+               OnPreDataItem=BEGIN
+                               WebshopShop.GET(ShopCode);
+                               WebshopLanguage.GET(ShopCode,LanguageCode);
+                               IF ActivateOption = ActivateOption::Activate THEN
+                                 Activate := TRUE;
+                               WebshopManagement.StateIndicatorOpen(Text001);
+                               WebshopManagement.StateIndicatorRegisterTable(TABLECAPTION,COUNT);
+                               WebshopManagement.StateIndicatorNewTable(TABLECAPTION,COUNT);
+                             END;
+
+               OnAfterGetRecord=BEGIN
+                                  IF NOT WebshopItem.GET(ShopCode,LanguageCode,"No.") THEN BEGIN
+                                    WebshopItem.INIT;
+                                    WebshopItem.VALIDATE("Shop Code",ShopCode);
+                                    WebshopItem.VALIDATE("Language Code",LanguageCode);
+                                    WebshopItem.VALIDATE("Item No.","No.");
+                                    WebshopItem.INSERT(TRUE);
+                                  END;
+                                  IF WebshopItem."Is Active" <> Activate THEN BEGIN
+                                    WebshopItem."Is Active" := Activate;
+                                    WebshopItem.MODIFY(TRUE);
+                                    Counter += 1;
+                                  END;
+
+                                  WebshopManagement.StateIndicatorUpdate();
+                                END;
+
+               OnPostDataItem=BEGIN
+                                WebshopManagement.StateIndicatorClose();
+                                IF Activate THEN
+                                  MESSAGE(Text002,Counter)
+                                ELSE
+                                  MESSAGE(Text003,Counter);
+                              END;
+
+               ReqFilterFields=No.,No. 2,Field5079265,Field5079281,Field5079351,Field5079352,Field5079230,Field63815 }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+      { 1000000000;;Container;
+                  Name=Optionen;
+                  ContainerType=ContentArea }
+
+      { 1000000001;1;Group  ;
+                  Name=Allgemein;
+                  GroupType=Group }
+
+      { 1000000002;2;Field  ;
+                  CaptionML=[DEU=Webshop;
+                             ENU=Webshop];
+                  SourceExpr=ShopCode;
+                  TableRelation="Webshop Shop".Code }
+
+      { 1000000003;2;Field  ;
+                  CaptionML=[DEU=Sprache;
+                             ENU=Language];
+                  SourceExpr=LanguageCode;
+                  TableRelation="Webshop Language".Code }
+
+      { 1000000004;2;Field  ;
+                  CaptionML=[DEU=Artikel...;
+                             ENU=Items...];
+                  OptionCaptionML=[DEU=aktivieren,deaktivieren;
+                                   ENU=activate,deactivate];
+                  SourceExpr=ActivateOption }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      Text001@1000000000 : TextConst 'DEU=Artikel aktivieren/deaktivieren;ENU=Activate/deactivate item';
+      Text002@1000000001 : TextConst 'DEU=Es wurden %1 Artikel aktiviert;ENU=%1 items were activated';
+      Text003@1000000002 : TextConst 'DEU=Es wurden %1 Artikel deaktiviert;ENU=%1 items were deactivated';
+      WebshopManagement@1000000004 : Codeunit 5447300;
+      WebshopItem@1000000005 : Record 5447304;
+      WebshopSetup@1000000011 : Record 5447300;
+      WebshopShop@1000000006 : Record 5447301;
+      WebshopLanguage@1000000007 : Record 5447302;
+      ShopCode@1000000008 : Code[10];
+      LanguageCode@1000000009 : Code[10];
+      ActivateOption@1000000010 : 'Activate,Deactivate';
+      Activate@1000000012 : Boolean;
+      Counter@1000000003 : Integer;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

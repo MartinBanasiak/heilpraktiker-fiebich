@@ -1,0 +1,73 @@
+T5447300-F101-P8629-A1031-L999:Marktplatz Akt.-Fehlermeldungen abholen
+T5447300-F102-P8629-A1031-L999:Marktplatzbestellungen bestätigen
+T5447300-F10-P8629-A1031-L999:Akt.-Intervall Bewegungsdaten (min.)
+T5447300-F11-P8629-A1031-L999:Uhrzeit gesamt-Aktualisierung Webshop
+T5447300-F12-P8629-A1031-L999:Uhrzeit letzte Aktualisierung Bewegungsdaten
+T5447300-F13-P8629-A1031-L999:Uhrzeit letzte Gesamtaktualisierung
+T5447300-F14-P8629-A1031-L999:Uhrzeit letzte aut. Aktualisierung Bewegungsdaten
+T5447300-F151-P8629-A1031-L999:Computop Paygate URL
+T5447300-F15-P8629-A1031-L999:Uhrzeit letzte autom. Gesamtaktualisierung
+T5447300-F1-P8629-A1031-L999:Code
+T5447300-F20-P8629-A1031-L999:NAS Fehler E-Mail Text
+T5447300-F21-P8629-A1031-L999:NAS Fehler E-Mail Empfänger
+T5447300-F22-P8629-A1031-L999:NAS Fehler E-Mail Empfänger 2
+T5447300-F23-P8629-A1031-L999:NAS Fehler E-Mail Absender Adr.
+T5447300-F24-P8629-A1031-L999:NAS Fehler aufgetreten
+T5447300-F2-P8629-A1031-L999:Server Synch. Endpunkt URL
+T5447300-F30-P8629-A1031-L999:Servername
+T5447300-F31-P8629-A1031-L999:Mandant
+T5447300-F32-P8629-A1031-L999:Pfad Verbindungsprotoll-Datei
+T5447300-F33-P8629-A1031-L999:Ist Verbindungsprotokoll aktiv
+T5447300-F3-P8629-A1031-L999:Server Synch. Passwort
+T5447300-F40-P8629-A1031-L999:Standard Shop Code
+T5447300-F4-P8629-A1031-L999:CMS URL
+T5447300-F50-P8629-A1031-L999:Artikel aktualisieren
+T5447300-F51-P8629-A1031-L999:Artikelvarianten aktualisieren
+T5447300-F52-P8629-A1031-L999:Lagerbestände aktualisieren
+T5447300-F53-P8629-A1031-L999:Kategorien aktualisieren
+T5447300-F54-P8629-A1031-L999:Aktive Debitoren aktualisieren
+T5447300-F55-P8629-A1031-L999:Alle Debitoren aktualisieren
+T5447300-F56-P8629-A1031-L999:Kreditoren aktualisieren
+T5447300-F57-P8629-A1031-L999:Verkäufer aktualisieren
+T5447300-F58-P8629-A1031-L999:Rechnungsrabatte aktualisieren
+T5447300-F59-P8629-A1031-L999:Aufträge aktualisieren
+T5447300-F5-P8629-A1031-L999:Proxy Server Adresse
+T5447300-F60-P8629-A1031-L999:Geb. Rechnungen aktualisieren
+T5447300-F61-P8629-A1031-L999:Geb. Lieferscheine aktualisieren
+T5447300-F62-P8629-A1031-L999:Verkaufszeilenrabatte aktualisieren
+T5447300-F63-P8629-A1031-L999:Artikelmerkmale aktualisieren
+T5447300-F64-P8629-A1031-L999:Artikelbewertungen aktualisieren
+T5447300-F65-P8629-A1031-L999:Server URL
+T5447300-F66-P8629-A1031-L999:Berechtigungen aktualisieren
+T5447300-F67-P8629-A1031-L999:Google Merchant Center aktualisieren
+T5447300-F68-P8629-A1031-L999:WebRequest-Fehler abfangen und loggen
+T5447300-F69-P8629-A1031-L999:Zeige Fehler als Meldungen
+T5447300-F6-P8629-A1031-L999:Proxy Server Port
+T5447300-F70-P8629-A1031-L999:Support URL
+T5447300-F71-P8629-A1031-L999:E-Mail Marketing URL
+T5447300-F72-P8629-A1031-L999:Update-Puffer Benutzen
+T5447300-F73-P8629-A1031-L999:Bestellungen an E-Mail Marketing System senden
+T5447300-F74-P8629-A1031-L999:Gutscheine verarbeiten
+T5447300-F79-P8629-A1031-L999:Reklamationen aktualisieren
+T5447300-F7-P8629-A1031-L999:Classic Client nutzt Proxy
+T5447300-F80-P8629-A1031-L999:Geb. Gutschriften aktualisieren
+T5447300-F81-P8629-A1031-L999:Reklamationen abholen
+T5447300-F82-P8629-A1031-L999:Letzte Aktualisierung Artikel-Suche
+T5447300-F83-P8629-A1031-L999:Verkaufspreise aktualisieren
+T5447300-F84-P8629-A1031-L999:Bestellungen abholen
+T5447300-F85-P8629-A1031-L999:Abo-Bestellungen abholen
+T5447300-F86-P8629-A1031-L999:Abonemments aktualisieren
+T5447300-F87-P8629-A1031-L999:Abo-Sequenz-Schritte aktualisieren
+T5447300-F88-P8629-A1031-L999:Abo-Artikelverknüpfungen aktualisieren
+T5447300-F89-P8629-A1031-L999:Abo-Kunden aktualisieren
+T5447300-F8-P8629-A1031-L999:NAS nutzt Proxy
+T5447300-F90-P8629-A1031-L999:Abo-Verkaufsaufträge erzeugen
+T5447300-F91-P8629-A1031-L999:Artikelindividualisierungen aktualisieren
+T5447300-F92-P8629-A1031-L999:Marktplätze aktualisieren
+T5447300-F93-P8629-A1031-L999:Marktplatz-Preise aktualisieren
+T5447300-F94-P8629-A1031-L999:Marktplatz Lagerbestände aktualisieren
+T5447300-F95-P8629-A1031-L999:Marktplatz-Artikel aktualisieren
+T5447300-F96-P8629-A1031-L999:Marktplatz-Bilder aktualisieren
+T5447300-F97-P8629-A1031-L999:Marktplatz Artikelverknüpfungen aktualisieren
+T5447300-F99-P8629-A1031-L999:Marktplatz-Bestellungen abholen
+T5447300-F9-P8629-A1031-L999:Windows Client nutzt Proxy

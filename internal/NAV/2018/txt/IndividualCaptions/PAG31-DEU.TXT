@@ -1,0 +1,336 @@
+N31-C101-P8631-A1031-L999:Gibt die Nummer der Produktionsbestellung an, in der der Artikel verwendet wird.
+N31-C106-P8631-A1031-L999:Gibt an, ob die Artikelkarte einen physischen Artikel (Inventory) oder Service (Service) repräsentiert.
+N31-C1102601000-P8631-A1031-L999:Gibt die Kategorie an, zu der der Artikel gehört. Artikelkategorien enthalten auch alle zugeordneten Artikelattribute.
+N31-C1102601002-P8631-A1031-L999:Gibt einen Produktgruppencode an, der der Artikelkategorie zugeordnet ist.
+N31-C1102601004-P8631-A1031-L999:Gibt an, dass Transaktionen mit dem Artikel nicht gebucht werden können, z. B. weil sich der Artikel in Quarantäne befindet.
+N31-C1102601006-P8631-A1031-L999:Gibt an, wann die Artikelkarte zuletzt geändert wurde.
+N31-C1102601010-P8631-A1031-L999:Gibt den beim Verkauf des Artikels verwendeten Einheitencode an.
+N31-C1102601012-P8631-A1031-L999:Gibt die Art des Beschaffungsauftrags an, der vom Planungssystem erstellt wird, wenn der Artikel aufgefüllt werden muss.
+N31-C1102601016-P8631-A1031-L999:Gibt den beim Kauf des Artikels verwendeten Einheitencode an.
+N31-C1102601018-P8631-A1031-L999:Gibt eine Datumsformel für die Beschaffungszeit des Artikels an.
+N31-C1102601020-P8631-A1031-L999:Gibt an, ob zusätzliche Aufträge für verknüpfte Komponenten berechnet werden.
+N31-C1102601024-P8631-A1031-L999:Gibt an, wie der Verbrauch des Artikels (Komponente) berechnet und in Produktionsprozessen abgewickelt wird. Manuell: Geben Sie den Verbrauch manuell in das Verbrauchs Buch.-Blatt ein, und buchen Sie ihn. Vorwärts: Bucht den Verbrauch automatisch entsprechend den Fertigungsauftragskomponentenzeilen zu Beginn des ersten Arbeitsgangs. Rückwärts: Berechnet und bucht automatisch den Verbrauch entsprechend den Fertigungsauftragskomponentenzeilen am Ende des Fertigungsauftrags. Kommiss. + Vorwärts/Kommiss. + Rückwärts: Variationen mit Logistik.
+N31-C1102601026-P8631-A1031-L999:Gibt an, wie Artikel in der Lieferkette nachverfolgt werden.
+N31-C112-P8631-A1031-L999:Gibt an, dass Lagerhaltungsdaten für diesen Artikel vorhanden sind.
+N31-C113-P8631-A1031-L999:Gibt an, wie viele Einheiten (z. B. Stück, Schachteln oder Dosen) eines Artikels am Lager verfügbar sind.
+N31-C122-P8631-A1031-L999:Gibt an, ob der Einstandspreis des Artikels automatisch oder manuell reguliert wurde.
+N31-C12-P8631-A1031-L999:Gibt den Produkttyp des Artikels an, um Transaktionen für diesen Artikel mit dem entsprechenden Sachkonto entsprechend der Buchungsmatrix Einrichtung zu verknüpfen.
+N31-C140-P8629-A1031-L999:Power BI-Berichte
+N31-C1-P8629-A1031-L999:Artikel
+N31-C2-P8631-A1031-L999:Gibt die Nummer des Artikels an.
+N31-C31-P8629-A1031-L999:Standard-Abgrenzungsvorlage
+N31-C31-P8631-A1031-L999:Gibt die Standardvorlage an, die regelt, wie Einnahmen und Ausgaben von den Perioden des Auftretens abgegrenzt werden.
+N31-C35-P8631-A1031-L999:Gibt einen Artikelgruppencode an, der als Kriterium verwendet werden kann, um einen Rabatt zu gewähren, wenn der Artikel an einen bestimmten Debitor verkauft wird.
+N31-C43-P8631-A1031-L999:Gibt an, wo der Artikel im Lager zu finden ist. Dies dient nur Informationszwecken.
+N31-C45-P8631-A1031-L999:Gibt an, wie der Kostenfluss des Artikels erfasst ist und ob ein tatsächlicher oder budgetierter Wert gebucht und in der Kostenberechnung verwendet wird.
+N31-C4-P8631-A1031-L999:Gibt eine Beschreibung des Artikels an.
+N31-C51-P8631-A1031-L999:Gibt den Einstandspreis an, der als Schätzung verwendet und zu einem späteren Zeitpunkt mit Abweichung angepasst wird. Er wird in der Regel in Montage oder Fertigung verwendet, wenn Kosten abweichen können.
+N31-C53-P8631-A1031-L999:Gibt den Lagerwert pro Einheit des Artikels an.
+N31-C55-P8631-A1031-L999:Gibt den letzten EK-Preis an, der für diesen Artikel bezahlt wurde.
+N31-C57-P8631-A1031-L999:Gibt die Beziehung zwischen den Feldern "Einstandspreis", "VK-Preis" und "DB %" für diesen Artikel an.
+N31-C59-P8631-A1031-L999:Gibt die Gewinnspanne an, mit der Sie den Artikel verkaufen möchten. Sie können einen Deckungsbeitrag in Prozent manuell eingeben oder ihn entsprechend dem Feld "VK-Preis/DB - Berechnung" eingeben lassen.
+N31-C61-P8631-A1031-L999:Gibt den Preis einer Einheit des Artikels in MW an.
+N31-C63-P8631-A1031-L999:Gibt Verknüpfungen zwischen den Geschäftstransaktionen, die für den Artikel gebucht wurden, und einem Lagerkonto in der Finanzbuchhaltung an, um Beträge für diese Artikelart zu gruppieren.
+N31-C65-P8631-A1031-L999:Gibt den Code des Kreditors an, der diesen Artikel standardmäßig liefert.
+N31-C67-P8631-A1031-L999:Gibt die Nummer an, die der Kreditor für diesen Artikel verwendet.
+N31-C69-P8631-A1031-L999:Gibt einen Code für die Zollposition des Artikels an.
+N31-C6-P8631-A1031-L999:Gibt die Basiseinheit an, in der der Artikel gemessen wird, beispielsweise Stück, Kiste oder Palette. Die Basiseinheit dient auch als Konvertierungsbasis für alternative Einheiten.
+N31-C71-P8631-A1031-L999:Gibt einen Suchbegriff an, mit dem der Artikel in Listen zu finden ist.
+N31-C74-P8631-A1031-L999:Gibt die MwSt.-Produktbuchungsgruppe an. Verknüpft Geschäftstransaktionen für den Artikel, die Ressource oder den Betrag im Hauptbuch mit der Finanzbuchhaltung, um die MwSt.-Beträge zu erfassen, die sich aus dem Handel mit dem betreffenden Datensatz ergeben.
+N31-C89-P8631-A1031-L999:Gibt den Prozentsatz des letzten Einkaufspreises des Artikels an, aus dem indirekte Kosten entstehen, wie Frachtkosten, die mit dem Kauf des Artikels verknüpft sind.
+N31-C8-P8631-A1031-L999:Gibt an, ob der Artikel eine Montagestückliste ist.
+N31-C91-P8631-A1031-L999:Gibt die indirekten Kosten des Artikels als absoluten Betrag an.
+N31-C95-P8631-A1031-L999:Gibt an, dass der Artikel aus einem Katalogartikel erstellt wurde.
+N31-C97-P8631-A1031-L999:Gibt an, dass ein Ersatzartikel für diesen Artikel vorhanden ist.
+N31-C99-P8631-A1031-L999:Gibt die Nummer des Artikels in der Fertigungsstückliste an.
+N31-C9-P8631-A1031-L999:Gibt an, welcher Standardbestellfluss verwendet wird, um diesen Montageartikel zu liefern.
+N31-P55132-A1031-L999:Neu,Verarbeiten,Bericht,Artikel,Historie,Sonderpreise und Rabatte,Genehmigung anfordern,Periodische Aktivitäten,Lager,Attribute
+N31-P55242-G1000000000-P8629-A1031-L999:Webshop Artikel
+N31-P55242-G1000000003-P8629-A1031-L999:E-Commerce
+N31-P55242-G1000000-P8629-A1031-L999:Artikel k&opieren
+N31-P55242-G1000000-P8631-A1031-L999:Die Informationen von einer anderen Artikelkarte auf diese Artikelkarte kopieren.
+N31-P55242-G100-P8629-A1031-L999:Lagerbestand
+N31-P55242-G102-P8629-A1031-L999:Lagerstatistik
+N31-P55242-G103-P8629-A1031-L999:Ser&viceartikel
+N31-P55242-G103-P8631-A1031-L999:Zeigt Instanzen des Artikels als Serviceartikel an, wie z. B. Maschinen, die Sie für Debitoren über Serviceaufträge warten oder reparieren.
+N31-P55242-G104-P8629-A1031-L999:Finanzberichte
+N31-P55242-G105-P8629-A1031-L999:Lösungsanleitung Einrichtung
+N31-P55242-G105-P8631-A1031-L999:Zeigt Ihre Einstellungen für die Problembehandlung bei Serviceartikeln an, oder ermöglicht deren Bearbeitung.
+N31-P55242-G107-P8629-A1031-L999:Übersicht über Sonderpreise und -rabatte
+N31-P55242-G107-P8631-A1031-L999:Zeigt die Sonderpreise und Zeilenrabatte an, die Sie für diesen Artikel gewähren, wenn bestimmte Kriterien erfüllt sind, wie etwa Kreditor, Menge oder Enddatum.
+N31-P55242-G108-P8629-A1031-L999:&Ressourcenqualifikationen
+N31-P55242-G108-P8631-A1031-L999:Zeigt die Zuweisung von Qualifikationen zu Ressourcen, Artikeln, Serviceartikelgruppen und Serviceartikeln an. Sie können Qualifikationscodes verwenden, um den Serviceartikeln oder Artikeln, für deren Wartung spezielle Qualifikationen erforderlich sind, qualifizierte Ressourcen zuzuordnen.
+N31-P55242-G109-P8629-A1031-L999:&Qualifizierte Ressourcen
+N31-P55242-G109-P8631-A1031-L999:Zeigt eine Übersicht aller Ressourcen mit Informationen darüber an, ob sie über die erforderlichen Qualifikationen verfügen, um die bestimmte Serviceartikelgruppe, den Artikel oder den Serviceartikel zu bearbeiten.
+N31-P55242-G10-P8629-A1031-L999:Verfügbarkeit
+N31-P55242-G110-P8629-A1031-L999:F&unktion
+N31-P55242-G111-P8629-A1031-L999:&Lagerhaltungsdaten erstellen
+N31-P55242-G111-P8631-A1031-L999:Erstellt eine Instanz des Artikels an jedem eingerichtetem Standort.
+N31-P55242-G114-P8629-A1031-L999:Reklamationen
+N31-P55242-G114-P8631-A1031-L999:Zeigt laufende Verkaufs- oder Einkaufsreklamationen für den Artikel an.
+N31-P55242-G115-P8629-A1031-L999:Reklamationen
+N31-P55242-G115-P8631-A1031-L999:Öffnet die Liste laufender Reklamationen für den Artikel.
+N31-P55242-G116-P8629-A1031-L999:Lagerplatzin&halt
+N31-P55242-G116-P8631-A1031-L999:Zeigt die Mengen des Artikels in jedem Lagerplatz an, wenn vorhanden. Hier sehen Sie alle wichtigen Parameter für den Lagerplatzinhalt. Außerdem können Sie in diesem Fenster auch gewisse Parameter für den Lagerplatzinhalt ändern.
+N31-P55242-G117-P8629-A1031-L999:Periodische Aktivitäten
+N31-P55242-G118-P8629-A1031-L999:&Lieferanten
+N31-P55242-G118-P8631-A1031-L999:Zeigt die Liste der Kreditoren an, die den Artikel liefern können, und die jeweilige Vorlaufzeit.
+N31-P55242-G119-P8629-A1031-L999:Neubewertung Buch.-Blatt
+N31-P55242-G119-P8631-A1031-L999:Zeigen Sie den Lagerwert von Artikeln an, den Sie z. B. nach einer Inventur ändern können, oder bearbeiten Sie ihn.
+N31-P55242-G11-P8629-A1031-L999:Lösungsanleitung
+N31-P55242-G11-P8631-A1031-L999:Zeigt Informationen über technische Probleme bei einem Serviceartikel an, oder ermöglicht deren Bearbeitung.
+N31-P55242-G120-P8629-A1031-L999:Preise und Rabatte
+N31-P55242-G121-P8629-A1031-L999:Artikelbarcodes
+N31-P55242-G121-P8631-A1031-L999:Zeigt einen eindeutigen Bezeichner für jeden Artikel an, der innerhalb des Lagers bei Verwendung eines mobilen Gerätes verfolgt werden soll. Der Artikelbarcode kann die Artikelnummer, den Variantencode und die Einheit enthalten.
+N31-P55242-G123-P8629-A1031-L999:Genehmigungen
+N31-P55242-G123-P8631-A1031-L999:Zeigt eine Liste der Datensätze an, die noch genehmigt werden müssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.
+N31-P55242-G124-P8629-A1031-L999:&Vorauszahlungsprozentsätze
+N31-P55242-G124-P8631-A1031-L999:Zeigt die Prozentsätze des Preises an, oder ermöglicht deren Bearbeitung, die als Vorauszahlung beglichen werden können.
+N31-P55242-G125-P8629-A1031-L999:&Vorauszahlungsprozentsätze
+N31-P55242-G125-P8631-A1031-L999:Zeigt die Prozentsätze des Preises an, oder ermöglicht deren Bearbeitung, die als Vorauszahlung beglichen werden können.
+N31-P55242-G126-P8629-A1031-L999:Artikel
+N31-P55242-G127-P8629-A1031-L999:Montage/Produktion
+N31-P55242-G128-P8629-A1031-L999:Lagerbestand
+N31-P55242-G129-P8629-A1031-L999:Aufträge
+N31-P55242-G130-P8629-A1031-L999:Bewertung
+N31-P55242-G131-P8629-A1031-L999:Artikeljournal
+N31-P55242-G132-P8629-A1031-L999:Bewertung
+N31-P55242-G133-P8629-A1031-L999:Übersicht über Sonderpreise und -rabatte
+N31-P55242-G133-P8631-A1031-L999:Zeigt die Sonderpreise und Zeilenrabatte an, die Sie für diesen Artikel gewähren, wenn bestimmte Kriterien erfüllt sind, wie etwa Kreditor, Menge oder Enddatum.
+N31-P55242-G134-P8629-A1031-L999:Genehmigungsworkflow erstellen
+N31-P55242-G134-P8631-A1031-L999:Richten Sie einen Genehmigungsworkflow für das Erstellen oder Ändern von Artikeln ein, in dem Sie einige Seiten zur Anleitung durchgehen.
+N31-P55242-G135-P8629-A1031-L999:Workflow
+N31-P55242-G137-P8629-A1031-L999:Attribute
+N31-P55242-G137-P8631-A1031-L999:Zeigt die Attribute des Artikels wie Farbe, Größe oder andere Eigenschaften, die bei der Beschreibung helfen, an oder bearbeitet diese.
+N31-P55242-G138-P8629-A1031-L999:Nach Attributen filtern
+N31-P55242-G138-P8631-A1031-L999:Sucht Artikel, die bestimmten Attributen entsprechen. Damit Änderungen, die vor Kurzem von anderen Benutzern vorgenommen wurden, einbezogen werden, löschen Sie den Filter, und setzen Sie ihn anschließend zurück.
+N31-P55242-G139-P8629-A1031-L999:Attributefilter löschen
+N31-P55242-G139-P8631-A1031-L999:Entfernt den Filter für bestimmte Artikelattribute.
+N31-P55242-G13-P8629-A1031-L999:Stücklistenebene
+N31-P55242-G13-P8631-A1031-L999:Zeigt die Verfügbarkeitszahlen für Stücklistenartikel an, die angeben, wie viele Einheiten eines übergeordneten Elements Sie auf Basis der Verfügbarkeit von untergeordneten Elementen erstellen können.
+N31-P55242-G141-P8629-A1031-L999:Power BI-Berichte anzeigen/ausblenden
+N31-P55242-G141-P8631-A1031-L999:Wählt aus, ob die Power BI-Infobox angezeigt wird oder nicht.
+N31-P55242-G142-P8629-A1031-L999:Bildschirm
+N31-P55242-G143-P8629-A1031-L999:Sonderrabatte festlegen
+N31-P55242-G143-P8631-A1031-L999:Richtet verschiedene Rabatte für den Artikel ein. Ein Artikelrabatt wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Kreditor, Menge oder Enddatum.
+N31-P55242-G144-P8629-A1031-L999:Sonderpreise festlegen
+N31-P55242-G144-P8631-A1031-L999:Richten Sie verschiedene Preise für den Artikel ein. Ein Artikelpreis wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Kreditor, Menge oder Enddatum.
+N31-P55242-G146-P8629-A1031-L999:Sondereinkaufspreise und -rabatte
+N31-P55242-G147-P8629-A1031-L999:Vorlage anwenden
+N31-P55242-G147-P8631-A1031-L999:Wenden Sie eine Vorlage zum Aktualisieren einer oder mehrerer Einheiten mit Ihren Standardeinstellungen für einen bestimmten Einheitentyp an.
+N31-P55242-G14-P8629-A1031-L999:&Posten
+N31-P55242-G14-P8631-A1031-L999:Zeigt die Historie der Transaktionen an, die für den ausgewählten Datensatz gebucht wurden.
+N31-P55242-G15-P8629-A1031-L999:Be&merkungen
+N31-P55242-G15-P8631-A1031-L999:Zeigt Bemerkungen für den Datensatz an oder fügt welche hinzu.
+N31-P55242-G16-P8629-A1031-L999:Statistik
+N31-P55242-G16-P8631-A1031-L999:Zeigt statistische Informationen für den Datensatz an, wie etwa den Wert der gebuchten Posten.
+N31-P55242-G17-P8629-A1031-L999:Buchungsstatistik
+N31-P55242-G17-P8631-A1031-L999:Zeigt die Statistik für Artikelposten an.
+N31-P55242-G184-P8629-A1031-L999:Zuordnung für aktuellen Datensatz
+N31-P55242-G184-P8631-A1031-L999:Zeigt den für den ausgewählten Datensatz eingerichteten einzelnen Dimensionssatz an, oder bearbeitet ihn.
+N31-P55242-G18-P8629-A1031-L999:Auftragsmontage - Verkauf
+N31-P55242-G18-P8631-A1031-L999:Zeigt wichtige Verkaufszahlen für Montagekomponenten, die als Teil der Montageartikel in Auftragsmontageverkäufen oder als separate Artikel direkt aus dem Lagerbestand verkauft werden können, an. Mit diesem Bericht können Sie die Menge, die Kosten sowie die Verkaufs- und DB-Zahlen von Montagekomponenten analysieren, um bessere Entscheidungen bezüglich beispielsweise dem Preis von Kits oder der Verwendung bestimmter Artikel in Baugruppen treffen zu können.
+N31-P55242-G1900111206-P8629-A1031-L999:Artikellagerzeit - Menge
+N31-P55242-G1900111206-P8631-A1031-L999:Zeigen Sie einen Überblick über die aktuelle Lagerzeit von ausgewählten Artikeln in Ihrem Lager an, drucken oder speichern Sie sie.
+N31-P55242-G1900128906-P8629-A1031-L999:Lager - EK-/VK-Preisliste
+N31-P55242-G1900128906-P8631-A1031-L999:Zeigen Sie eine Liste Ihrer Artikel und Informationen zu deren VK/EK an, drucken oder speichern Sie sie. Der Bericht gibt Einstandspreis, EK-Preis (neuester), VK-Preis, Deckungsbeitrag in Prozent und Deckungsbeitrag an.
+N31-P55242-G1900210306-P8629-A1031-L999:Lager - Verkaufsrückstände
+N31-P55242-G1900210306-P8631-A1031-L999:Zeigt eine Liste mit Auftragszeilen mit Datumsangaben zu überschrittenen Warenausgängen an. Der Bericht zeigt auch andere Artikelrückstände für den Debitor an.
+N31-P55242-G1900430206-P8629-A1031-L999:Artikel/Lieferanten Katalog
+N31-P55242-G1900430206-P8631-A1031-L999:Zeigt eine Liste der Kreditoren für die ausgewählten Artikel an: Für jede Kombination von Artikel und Kreditor zeigt sie den EK-Preis, die Beschaffungszeit und die Artikelnummer des Kreditors an.
+N31-P55242-G1900461506-P8629-A1031-L999:Artikel Zu-/Abschl. - Spezif.
+N31-P55242-G1900461506-P8631-A1031-L999:Zeigt eine Spezifikation der direkten Kosten an, die Ihr Unternehmen als Artikelzuschläge/-abschläge zugewiesen und gebucht hat. Der Bericht zeigt die verschiedenen Wertposten, die als Artikelzuschläge/-abschläge gebucht wurden. Er enthält alle Kosten; sowohl die fakturierten Kosten als auch die Soll-Kosten.
+N31-P55242-G1900730006-P8629-A1031-L999:Lager - Einst.-Preisabweichung
+N31-P55242-G1900730006-P8631-A1031-L999:Zeigt Informationen über ausgewählte Artikel an - Einheit, Einstandspreis (fest) und Lagerabgangsmethode - sowie zusätzliche Informationen über Artikelposten: Stückpreis, Einstandspreis, Abweichung pro Einheit (Differenz zwischen Stückpreis und Einstandspreis), fakturierte Menge und Totalbetrag Abweichung (Menge * Abweichung pro Einheit). Der Bericht kann hauptsächlich dann verwendet werden, wenn Sie die Lagerabgangsmethode "Standard" auf der Artikelkarte gewählt haben.
+N31-P55242-G1900762706-P8629-A1031-L999:Lager - Verkaufsstatistik
+N31-P55242-G1900762706-P8631-A1031-L999:Zeigen Sie eine Zusammenfassung der Verkäufe der ausgewählten Artikel pro Debitor an, um beispielsweise den Deckungsbeitrag für einzelne Artikel oder Trends bei Einnahmen und Deckungsbeitrag zu analysieren. Der Bericht gibt Einstandspreis, Verkaufspreis, Verkaufsmenge, Verkäufe in MW, Deckungsbeitrag in Prozent und Deckungsbeitrag an.
+N31-P55242-G1900805004-P8629-A1031-L999:Artikelpreise justieren
+N31-P55242-G1900805004-P8631-A1031-L999:Passt die Felder "Direkte Kosten (neueste)", "Einstandspreis (fest)", "VK-Preis", "DB %" oder "Indirekte Kosten %" auf ausgewählten Artikel- oder Lagerhaltungsdatenkarten und für ausgewählte Filter an. Sie können z. B. die letzten direkten Kosten bei allen Artikeln eines bestimmten Lieferanten um 5 % ändern.
+N31-P55242-G1900812706-P8629-A1031-L999:Kosten der Strukturstückliste
+N31-P55242-G1900812706-P8631-A1031-L999:Zeigt die Kostenanteile aller Artikel in der Produktstruktur der übergeordneten Artikel an, deren Menge und deren Kostenanteil, angegeben in Materialkosten, Kapazitätskosten, Gemeinkosten sowie Gesamtkosten. Materialkosten werden als die Kosten aller Artikel in der Produktstruktur des übergeordneten Artikels berechnet. Kapazitäts- und Fremdbearbeitungskosten werden als Kosten im Zusammenhang mit der Fertigung aller Artikel in der Produktstruktur des übergeordneten Artikels berechnet. Materialkosten werden als Kosten aller Artikel in der Produktstruktur des Artikels berechnet. Kapazitäts- und Fremdbearbeitungskosten sind die Kosten, die nur im Zusammenhang mit dem übergeordneten Artikel stehen.
+N31-P55242-G1900869004-P8629-A1031-L999:Sonderrabatte
+N31-P55242-G1900869004-P8631-A1031-L999:Richten Sie verschiedene Rabatte für den ausgewählten Artikel ein. Ein Artikelrabatt wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Debitor, Menge oder Enddatum.
+N31-P55242-G1900907306-P8629-A1031-L999:Lager - Liste
+N31-P55242-G1900907306-P8631-A1031-L999:Zeigt eine Reihe von Informationen zum Artikel an, wie Name, Einheit, Buchungsgruppe, Regalnummer, Kred.-Artikelnummer, Beschaffungszeit, Minimalbestand und alternative Artikelnummer. Sie können zudem sehen, ob ein Artikel gesperrt ist.
+N31-P55242-G1901091106-P8629-A1031-L999:Lager - Verfügbarkeit
+N31-P55242-G1901091106-P8631-A1031-L999:Zeigen Sie eine Zusammenfassung der historischen Lagertransaktionen mit ausgewählten Artikeln an, drucken oder speichern Sie sie, um beispielsweise zu entscheiden, wann die Artikel gekauft werden sollen. Der Bericht gibt Folgendes an: Menge in Verkaufsaufträgen, Menge in Einkaufsbestellungen, Bestellrückstand bei Kreditoren, Minimalbestand und ob eine Wiederbestellung vorliegt.
+N31-P55242-G1901240604-P8629-A1031-L999:Sonderpreise
+N31-P55242-G1901240604-P8631-A1031-L999:Richten Sie verschiedene Preise für den ausgewählten Artikel ein. Ein Artikelpreis wird automatisch in Rechnungszeilen verwendet, wenn die angegebenen Kriterien erfüllt sind, wie Debitor, Menge oder Enddatum.
+N31-P55242-G1901254106-P8629-A1031-L999:Status
+N31-P55242-G1901254106-P8631-A1031-L999:Zeigen Sie den Status teilweise erfüllter oder nicht erfüllter Aufträge an, drucken oder speichern Sie ihn, sodass Sie bestimmen können, wie sich die Erfüllung dieser Aufträge auf den Lagerbestand auswirkt.
+N31-P55242-G1901316306-P8629-A1031-L999:Kosten pro Artikel
+N31-P55242-G1901316306-P8631-A1031-L999:Zeigt die Kostenanteile aller Artikel in der Produktstruktur des Artikels an, deren Menge und deren Kostenanteil, angegeben in Materialkosten, Kapazitätskosten, Gemeinkosten sowie Gesamtkosten. Materialkosten werden als die Kosten aller Artikel in der Produktstruktur des übergeordneten Artikels berechnet. Kapazitäts- und Fremdbearbeitungskosten werden als Kosten im Zusammenhang mit der Fertigung aller Artikel in der Produktstruktur des übergeordneten Artikels berechnet.
+N31-P55242-G1901374406-P8629-A1031-L999:Detailkalkulation
+N31-P55242-G1901374406-P8631-A1031-L999:Zeigt die Liste aller Kosten für den Artikel unter Berücksichtigung des Produktionsausschusses an.
+N31-P55242-G1902353206-P8629-A1031-L999:Teileverwendung (Struktur)
+N31-P55242-G1902353206-P8631-A1031-L999:Zeigt an, wo und in welchen Mengen der Artikel in der Produktstruktur verwendet wird. Der Bericht zeigt nur Informationen für den Artikel der obersten Ebene an. Wenn zum Beispiel Artikel "A" verwendet wird, um Artikel "B" zu fertigen und "B" verwendet wird, um Artikel "C" zu fertigen, zeigt der Bericht Artikel "B" an, wenn Sie diesen Bericht für Artikel "A" ausführen. Wenn Sie den Bericht für Artikel "B" ausführen, wird Artikel "C" in der Verwendung angezeigt.
+N31-P55242-G1902532604-P8629-A1031-L999:Artikelablaufverfolgung
+N31-P55242-G1902532604-P8631-A1031-L999:Verfolgt nach, wo eine Chargen- oder Seriennummer, die dem Artikel zugewiesen wurde, verwendet wurde. So können Sie beispielsweise herausfinden, von welcher Charge eine fehlerhafte Komponente herrührte, oder Sie können herausfinden, welche Debitoren Artikel mit der fehlerhaften Komponente erhalten haben.
+N31-P55242-G1902962906-P8629-A1031-L999:Artikeljournal - Wert
+N31-P55242-G1902962906-P8631-A1031-L999:Zeigt einen oder mehrere ausgewählte Artikeljournale an, die Werte enthalten. Der Bericht kann verwendet werden, um den Inhalt eines Journals für interne oder externe Buchprüfungen zu dokumentieren.
+N31-P55242-G1903262806-P8629-A1031-L999:Lager - Auftragsbestand
+N31-P55242-G1903262806-P8631-A1031-L999:Zeigt eine Liste der Aufträge an, deren Warenein- oder -ausgang noch nicht gebucht wurde, sowie die Artikel in Aufträgen. Die Auftragsnummer, der Name des Debitors, das Warenausgangsdatum, die Menge, die Menge in Rückstand, die Restauftragsmenge und der Verkaufspreis sowie ein möglicher Rabattprozentsatz und -betrag werden angezeigt. Die Menge in Rückstand und die Restauftragsmenge sowie der Betrag werden für jeden Artikel summiert. Dieser Bericht kann verwendet werden, um herauszufinden, ob es zurzeit Lieferprobleme gibt oder ob Lieferprobleme zu erwarten sind.
+N31-P55242-G1903496006-P8629-A1031-L999:Artikellagerzeit - Wert
+N31-P55242-G1903496006-P8631-A1031-L999:Zeigen Sie einen Überblick über die aktuelle Lagerzeit von ausgewählten Artikeln in Ihrem Lager an, drucken oder speichern Sie sie.
+N31-P55242-G1904034006-P8629-A1031-L999:Lager - Debitorenverkäufe
+N31-P55242-G1904034006-P8631-A1031-L999:Zeigen Sie eine Liste der Debitoren an, drucken oder speichern Sie sie, die ausgewählte Artikel innerhalb einer ausgewählten Periode gekauft haben, um beispielsweise Kaufmuster der Kunden zu analysieren. Der Bericht gibt Menge, Betrag, Rabatt, Deckungsbeitrag in Prozent und Deckungsbeitrag an.
+N31-P55242-G1904068306-P8629-A1031-L999:Lager - Kontoblatt
+N31-P55242-G1904068306-P8631-A1031-L999:Zeigt Kontoblätter mit Posten ausgewählter Artikel in einer ausgewählten Periode. Der Bericht zeigt den Lagerbestand am Anfang der Periode, alle Lagerzugangs- und -abgangsposten während der Periode mit laufender Aktualisierung des Lagerbestandes und den Lagerbestand am Ende der Periode an. Dieser Bericht kann z. B. beim Abschluss einer Buchhaltungsperiode verwendet werden oder bei einer Prüfung.
+N31-P55242-G1904299906-P8629-A1031-L999:Lagerbew.-Einst.-Pr.-Ermittl.
+N31-P55242-G1904299906-P8631-A1031-L999:Zeigt einen Überblick über den aktuellen Lagerwert ausgewählter Artikel an und gibt die Einstandspreise dieser Artikel zum Datum im Feld "Bewertungsdatum" an. Der Bericht enthält alle Kosten; sowohl die fakturierten Kosten als auch die Soll-Kosten. Für alle beim Einrichten des Berichts angegebenen Artikel zeigt der Bericht die Menge im Lagerbestand, den Einstandspreis pro Einheit und den Gesamtbetrag an. Für jede dieser Spalten gibt der Bericht den Lagerwert als die Postenarten der Wertposten an.
+N31-P55242-G1904344904-P8629-A1031-L999:Artikel Buch.-Blatt
+N31-P55242-G1904344904-P8631-A1031-L999:Öffnet eine Liste der Buchungsblätter, in der Sie die physische Menge der Artikel im Lager regulieren können.
+N31-P55242-G1904739806-P8629-A1031-L999:Lager - Bestellungen
+N31-P55242-G1904739806-P8631-A1031-L999:Zeigt eine Liste von Artikeln an, die sich in Bestellungen bei Kreditoren befinden. Sie zeigt darüber hinaus das erwartete Wareneingangsdatum und die Menge und den Betrag im Auftragsrückstand an. Der Bericht kann z. B. dazu verwendet werden, sich anzeigen zu lassen, wann der Wareneingang von Artikeln erfolgen sollte und ob eine Mahnung aufgrund einer Menge in Rückstand registriert werden sollte.
+N31-P55242-G1905370404-P8629-A1031-L999:Bestellvorschlag
+N31-P55242-G1905370404-P8631-A1031-L999:Berechnet einen Beschaffungsplan zur Erfüllung der Nachfrage für einen Artikel mit Einkäufen und Umlagerungen.
+N31-P55242-G1905572506-P8629-A1031-L999:VK-Preisliste
+N31-P55242-G1905572506-P8631-A1031-L999:Zeigen Sie eine Liste Ihrer Artikel und deren Preise an, drucken oder speichern Sie sie, um sie beispielsweise an Debitoren zu senden. Sie können die Liste für spezifische Debitoren, Kampagnen, Währungen oder andere Kriterien erstellen.
+N31-P55242-G1905753506-P8629-A1031-L999:Ersatzartikel
+N31-P55242-G1905753506-P8631-A1031-L999:Zeigt oder bearbeitet eingerichtete Ersatzartikel, die gegen den Artikel ausgetauscht werden, falls er nicht verfügbar ist.
+N31-P55242-G1905889606-P8629-A1031-L999:Kostenanteilsanalyse
+N31-P55242-G1905889606-P8631-A1031-L999:Zeigt den Einstandspreis des Artikels im Lagerbestand, WIP oder Lagerverbrauch entsprechend den Einkaufs- und Materialkosten, Kapazitätskosten, Kapazitätsgemeinkosten, Produktionsgemeinkosten, Fremdarbeitskosten, Abweichung, indirekten Kosten, der Neubewertung und Rundung an. Der Bericht berechnet Kosten auf Stücklistenebene allerdings nicht den Kostenanteil der Artikel, bei denen die Lagerabgangsmethode "Durchschnitt" verwendet wird.
+N31-P55242-G1906101206-P8629-A1031-L999:Lager - Wiederbestellung
+N31-P55242-G1906101206-P8631-A1031-L999:Zeigt eine Liste von Artikeln mit negativem Lagerbestand an, die nach Kreditoren sortiert ist. Sie können diesen Bericht verwenden, um zu entscheiden, welche Artikel wiederbestellt werden müssen. Der Bericht führt die Menge der eingehenden Artikel in Bestellungen oder Umlagerungsaufträgen sowie die Menge der Artikel im Lagerbestand auf. Auf Grundlage dieser Informationen und der definierten Bestellmenge für den Artikel wird ein Vorschlagswert in das Feld "Beschaffungsmenge" eingefügt.
+N31-P55242-G1906212206-P8629-A1031-L999:Lager - Verfügbarkeitsplan
+N31-P55242-G1906212206-P8631-A1031-L999:Zeigt eine Liste mit der Menge eines jeden Artikels in Debitorenaufträgen, Bestellungen und Umlagerungsaufträgen sowie die verfügbare Menge im Lagerbestand an. Die Liste ist in Spalten unterteilt, die sechs Perioden mit dem jeweiligen Start- und Enddatum sowie die Zeiträume vor und nach diesen Perioden abdecken. Es empfiehlt sich, diese Liste bei der Lagereinkaufsplanung zu verwenden.
+N31-P55242-G1906231806-P8629-A1031-L999:Lager - Kreditoreneinkäufe
+N31-P55242-G1906231806-P8631-A1031-L999:Zeigt eine Liste der Kreditoren an, von denen Ihr Unternehmen in der ausgewählten Periode Artikel gekauft hat. Die fakturierte Menge, der Betrag und der Rabatt werden angezeigt. Der Bericht kann dazu verwendet werden, die Einkäufe eines Unternehmens zu analysieren.
+N31-P55242-G1906316306-P8629-A1031-L999:Lagerwert berechnen
+N31-P55242-G1906316306-P8631-A1031-L999:Zeigen Sie eine Liste der Werte des Lagerbestands für jeden Lagerartikel an, drucken oder speichern Sie sie.
+N31-P55242-G1906716204-P8629-A1031-L999:Artikel Umlag. Buch.-Blatt
+N31-P55242-G1906716204-P8631-A1031-L999:Ändert Informationen über Artikelposten, wie Dimensionen, Standortcodes, Lagerplatzcodes und Serien- oder Chargennummern.
+N31-P55242-G1906747006-P8629-A1031-L999:Artikelablauf - Menge
+N31-P55242-G1906747006-P8631-A1031-L999:Gibt einen Überblick darüber, in welchen Mengen die ausgewählten Artikel, deren Ablaufdaten in eine bestimmte Periode fallen, im Lagerbestand vorhanden sind. Die Liste zeigt, wie viele Einheiten des ausgewählten Artikels, der in der angegebenen Periode abläuft, vorhanden sind. Für jeden Artikel, den Sie beim Einrichten des Berichts angegeben haben, zeigt der Bericht die Anzahl der Einheiten, die innerhalb jeder von drei gleichlangen Perioden ablaufen, sowie die gesamte Lagerbestandsmenge des ausgewählten Artikels.
+N31-P55242-G1907108104-P8629-A1031-L999:Lagerreg. fakt. Einst. Preise
+N31-P55242-G1907108104-P8631-A1031-L999:Reguliert Lagerwerte in Wertposten, sodass Sie für das Aktualisieren der Finanzbuchhaltung die richtigen regulierten Lagerwerte verwenden können und die Verkaufs- und Gewinnstatistiken auf dem neuesten Stand sind.
+N31-P55242-G1907253406-P8629-A1031-L999:Katalogartikel Verkauf
+N31-P55242-G1907253406-P8631-A1031-L999:Zeigt eine Liste der Artikelverkäufe für jeden Katalogartikel während eines ausgewählten Zeitraums an. Sie kann dazu verwendet werden, um die Verkäufe von Katalogartikeln eines Unternehmens zu überprüfen.
+N31-P55242-G1907629906-P8629-A1031-L999:Artikeljournal - Menge
+N31-P55242-G1907629906-P8631-A1031-L999:Zeigt einen oder mehrere ausgewählte Artikeljournale an, die Mengen enthalten. Der Bericht kann verwendet werden, um den Inhalt der Journale für interne oder externe Buchprüfungen zu dokumentieren.
+N31-P55242-G1907644006-P8629-A1031-L999:Inventurliste
+N31-P55242-G1907644006-P8631-A1031-L999:Eine Liste der Zeilen anzeigen, die im Fenster "Inventur Buch.-Blatt" berechnet wurden. Diesen Bericht können Sie bei einer Inventurzählung verwenden, um die tatsächlich am Lager vorhanden Mengen zu notieren und diese Werte mit den Werten zu vergleichen, die in der Anwendung erfasst sind.
+N31-P55242-G1907778006-P8629-A1031-L999:Strukturstückliste
+N31-P55242-G1907778006-P8631-A1031-L999:Zeigt eine eingerückte Stückliste für den oder die Artikel an, die Sie in den Filtern angeben. Die Fertigungsstückliste ist für alle Ebenen aufgelöst.
+N31-P55242-G1907846806-P8629-A1031-L999:Vergleichsliste
+N31-P55242-G1907846806-P8631-A1031-L999:Zeigt die Komponenten zweier Artikel im Vergleich an. Der Ausdruck vergleicht die Komponenten, deren Einstandspreis, Kostenanteil und Kosten je Komponente.
+N31-P55242-G1907928706-P8629-A1031-L999:Lagerbewertung - Aktiviert
+N31-P55242-G1907928706-P8631-A1031-L999:Zeigt die Lagerbewertung ausgewählter Fertigungsaufträge in Ihrem Lager für unfertige Arbeit an. Der Bericht enthält außerdem Informationen über den Wert von Verbrauch, Kapazitätsauslastung und Ausgabe im WIP an. Der gedruckte Bericht zeigt nur fakturierte Beträge, d. h. Einstandspreise von Posten, die als fakturiert gebucht wurden.
+N31-P55242-G1907930606-P8629-A1031-L999:Artikel - Top 10 Liste
+N31-P55242-G1907930606-P8631-A1031-L999:Zeigt Informationen zu den Artikeln mit den höchsten oder niedrigsten Verkäufen innerhalb eines ausgewählten Zeitraums an. Sie können zudem auswählen, dass Artikel, die nicht am Lager sind oder noch nie verkauft wurden, nicht im Bericht berücksichtigt werden sollen. Die Artikel werden nach Auftragsvolumen in der ausgewählten Periode sortiert. Die Liste liefert einen schnellen Überblick über die Artikel, die am besten oder am schlechtesten verkauft wurden oder die die meisten oder wenigsten Einheiten am Lager haben.
+N31-P55242-G19-P8629-A1031-L999:Zeitachse
+N31-P55242-G19-P8631-A1031-L999:Ruft eine grafische Ansicht des voraussichtlichen Lagerbestands eines Artikels auf Grundlage künftiger Angebots- und Nachfrageereignisse mit oder ohne Planungsvorschläge ab. Das Ergebnis ist eine grafische Darstellung des Lagerprofils.
+N31-P55242-G20-P8629-A1031-L999:Genehmigungsworkflow verwalten
+N31-P55242-G20-P8631-A1031-L999:Zeigen Sie vorhandene Genehmigungsworkflows für das Erstellen oder Ändern von Artikeln an, oder bearbeiten Sie sie.
+N31-P55242-G21-P8629-A1031-L999:Periode
+N31-P55242-G21-P8631-A1031-L999:Zeigt die voraussichtliche Menge des Artikels im Lauf der Zeit für Zeiträume an, wie etwa nach Tag, Woche oder Monat.
+N31-P55242-G22-P8629-A1031-L999:&Umsatz
+N31-P55242-G22-P8631-A1031-L999:Zeigt eine detaillierte Aufstellung des Artikelumsatzes nach Perioden an, nachdem Sie die gewünschten Filter für Lagerort und Variante festgelegt haben.
+N31-P55242-G23-P8629-A1031-L999:&Inventurposten
+N31-P55242-G23-P8631-A1031-L999:Zeigt an, wie viele Einheiten des Artikels bei der letzten physischen Zählung auf Lager waren.
+N31-P55242-G24-P8629-A1031-L999:Stückl. Einst.-Preis &berechnen
+N31-P55242-G24-P8631-A1031-L999:Berechnet den Einstandspreis des Artikels durch die Berechnung des Einstandspreises jeder Komponente und Ressource in der Montagestückliste oder der Fertigungsstückliste des Artikels. Der Einstandspreis eines übergeordneten Artikels muss immer gleich der Summe des Gesamtpreises der Komponenten, Halbfabrikate und Ressourcen sein.
+N31-P55242-G25-P8629-A1031-L999:&Einheiten
+N31-P55242-G25-P8631-A1031-L999:Richtet die verschiedenen Einheiten ein, in denen der Artikel gehandelt werden kann, wie Stück, Karton oder Stunde.
+N31-P55242-G27-P8629-A1031-L999:Übersetzungen
+N31-P55242-G27-P8631-A1031-L999:Richten Sie übersetzte Artikelbeschreibungen für den ausgewählten Artikel ein. Übersetzte Artikelbeschreibungen werden automatisch gemäß dem Sprachcode in Belege eingefügt.
+N31-P55242-G28-P8629-A1031-L999:&Textbausteine
+N31-P55242-G28-P8631-A1031-L999:Wählt einen zusätzlichen Text für die Beschreibung des Artikels aus oder verfasst diesen. Erweiterter Text kann unter dem Feld "Beschreibung" in Belegzeilen für den Artikel eingefügt werden.
+N31-P55242-G29-P8629-A1031-L999:Verwendung
+N31-P55242-G29-P8631-A1031-L999:Zeigt eine Liste der Stücklisten an, in denen der Artikel verwendet wird.
+N31-P55242-G30-P8629-A1031-L999:Varia&nten
+N31-P55242-G30-P8631-A1031-L999:Zeigt an, wie sich die Lagerebene eines Artikels im Zeitverlauf je nach ausgewählter Variante entwickelt.
+N31-P55242-G32-P8629-A1031-L999:Fertigungsstückliste
+N31-P55242-G32-P8631-A1031-L999:Öffnet die Fertigungsstückliste des Artikels, um dessen Komponenten anzuzeigen oder zu bearbeiten.
+N31-P55242-G33-P8629-A1031-L999:&Verkauf
+N31-P55242-G34-P8629-A1031-L999:Zeilenrabatte
+N31-P55242-G34-P8631-A1031-L999:Zeigt verschiedene Rabatte für den Artikel an oder richtet diese ein. Ein Artikelrabatt wird automatisch bei Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Kreditor, Menge oder Enddatum.
+N31-P55242-G36-P8629-A1031-L999:Preise
+N31-P55242-G36-P8631-A1031-L999:Zeigt verschiedene Preise für den Artikel an oder richtet diese ein. Ein Artikelpreis wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Kreditor, Menge oder Enddatum.
+N31-P55242-G37-P8629-A1031-L999:Aufträge
+N31-P55242-G37-P8631-A1031-L999:Zeigt eine Liste laufender Bestellungen für den Artikel.
+N31-P55242-G38-P8629-A1031-L999:&Einkauf
+N31-P55242-G39-P8629-A1031-L999:Preise
+N31-P55242-G39-P8631-A1031-L999:Zeigt verschiedene Preise für den Artikel an oder richtet diese ein. Ein Artikelpreis wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Kreditor, Menge oder Enddatum.
+N31-P55242-G40-P8629-A1031-L999:Bestellungen
+N31-P55242-G40-P8631-A1031-L999:Zeigt eine Liste laufender Bestellungen für den Artikel.
+N31-P55242-G41-P8629-A1031-L999:Produktion
+N31-P55242-G42-P8629-A1031-L999:Zeilenrabatte
+N31-P55242-G42-P8631-A1031-L999:Zeigt verschiedene Rabatte für den Artikel an oder richtet diese ein. Ein Artikelrabatt wird automatisch bei Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Kreditor, Menge oder Enddatum.
+N31-P55242-G44-P8629-A1031-L999:Ber. VK-Preis
+N31-P55242-G44-P8631-A1031-L999:Berechnet den VK-Preis basierend auf dem Einstandspreis und dem Deckungsbeitrag in Prozent.
+N31-P55242-G46-P8629-A1031-L999:Stückl. Einst.-Preis &berechnen
+N31-P55242-G46-P8631-A1031-L999:Berechnet den Einstandspreis des Artikels durch die Berechnung des Einstandspreises jeder Komponente und Ressource in der Montagestückliste oder der Fertigungsstückliste des Artikels. Der Einstandspreis eines übergeordneten Artikels muss immer gleich der Summe des Gesamtpreises der Komponenten, Halbfabrikate und Ressourcen sein.
+N31-P55242-G47-P8629-A1031-L999:Verwendung
+N31-P55242-G47-P8631-A1031-L999:Zeigt eine Liste der Stücklisten an, in denen der Artikel verwendet wird.
+N31-P55242-G48-P8629-A1031-L999:Montagestückliste
+N31-P55242-G48-P8631-A1031-L999:Zeigt die Stückliste an, die die für den Zusammenbau des Montageartikels erforderlichen Artikel und Ressourcen angibt und ermöglicht deren Bearbeitung.
+N31-P55242-G49-P8629-A1031-L999:Mo&ntage
+N31-P55242-G500-P8629-A1031-L999:Ersat&zartikel
+N31-P55242-G500-P8631-A1031-L999:Zeigen Sie Ersatzartikel an, die eingerichtet sind, um anstelle des Artikels verkauft zu werden.
+N31-P55242-G50-P8629-A1031-L999:Kostenanteile
+N31-P55242-G50-P8631-A1031-L999:Zeigt an, wie die Kosten der zugrunde liegenden Artikel in der Stückliste zu den übergeordneten Artikeln berechnet werden. Diese Informationen sind gemäß der Stücklistenstruktur unterteilt, um zu zeigen, welche Kosten auf den jeweiligen Ebenen entstehen. Jede Artikelebene kann erweitert oder reduziert werden, um eine Übersicht oder eine detaillierte Ansicht zu erhalten.
+N31-P55242-G52-P8629-A1031-L999:Struktur
+N31-P55242-G52-P8631-A1031-L999:Zeigt an, welche untergeordneten Artikel in der Montagestückliste oder Fertigungsstückliste eines Artikels verwendet werden. Jede Artikelebene kann erweitert oder reduziert werden, um eine Übersicht oder eine detaillierte Ansicht zu erhalten.
+N31-P55242-G54-P8629-A1031-L999:Montage/Produktion
+N31-P55242-G56-P8629-A1031-L999:Historie
+N31-P55242-G5800-P8629-A1031-L999:&Wertposten
+N31-P55242-G5800-P8631-A1031-L999:Zeigt die Historie der gebuchten Beträge an, die den Wert des Artikels beeinflussen. Wertposten werden für jede Transaktionen des Artikels erstellt.
+N31-P55242-G58-P8629-A1031-L999:Lager
+N31-P55242-G5-P8629-A1031-L999:Ereignis
+N31-P55242-G5-P8631-A1031-L999:Zeigt an, wie sich die tatsächliche und voraussichtliche verfügbare Menge eines Artikels im Laufe der Zeit gemäß den Angebots- und Nachfrageereignissen entwickelt.
+N31-P55242-G60-P8629-A1031-L999:Service
+N31-P55242-G62-P8629-A1031-L999:Ressourcen
+N31-P55242-G64-P8629-A1031-L999:Artikel
+N31-P55242-G6500-P8629-A1031-L999:Artikel&verfolgungsposten
+N31-P55242-G6500-P8631-A1031-L999:Zeigt Seriennummern oder Chargennummern an, die Artikel zugeordnet sind.
+N31-P55242-G66-P8629-A1031-L999:Kopplung löschen
+N31-P55242-G66-P8631-A1031-L999:Löscht die Kopplung mit einem Dynamics 365 for Sales-Produkt.
+N31-P55242-G68-P8629-A1031-L999:Kopplung einrichten
+N31-P55242-G68-P8631-A1031-L999:Erstellt oder ändert die Kopplung mit einem Dynamics 365 for Sales-Produkt.
+N31-P55242-G70-P8629-A1031-L999:Kopplung
+N31-P55242-G70-P8631-A1031-L999:Erstellt, ändert oder löscht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Dynamics 365 for Sales-Datensatz.
+N31-P55242-G72-P8629-A1031-L999:Synchronisieren
+N31-P55242-G72-P8631-A1031-L999:Sendet aktualisierte Daten an Dynamics 365 for Sales.
+N31-P55242-G7380-P8629-A1031-L999:&Inventurhäufigkeit berechnen
+N31-P55242-G7380-P8631-A1031-L999:Bereitet eine physische Inventur vor, indem berechnet wird, welche Artikel oder Lagerhaltungsdaten in der aktuellen Periode gezählt werden müssen.
+N31-P55242-G73-P8629-A1031-L999:&Artikel nach Lagerort
+N31-P55242-G73-P8631-A1031-L999:Zeigt eine Liste der Elemente an, angeordnet nach Speicherort.
+N31-P55242-G75-P8629-A1031-L999:Produkt
+N31-P55242-G75-P8631-A1031-L999:Öffnet das gekoppelte Dynamics 365 for Sales-Produkt.
+N31-P55242-G76-P8629-A1031-L999:&Katalogartikel
+N31-P55242-G76-P8631-A1031-L999:Zeigt die Liste der Artikel an, die Sie nicht im Lager führen.
+N31-P55242-G77-P8629-A1031-L999:&Reservierungsposten
+N31-P55242-G77-P8631-A1031-L999:Zeigt die Posten für alle manuell oder automatisch durchgeführten Reservierungen an.
+N31-P55242-G78-P8629-A1031-L999:Lagerort
+N31-P55242-G78-P8631-A1031-L999:Zeigt die tatsächliche und die voraussichtliche Menge eines Artikels nach Lagerort an.
+N31-P55242-G79-P8629-A1031-L999:Artikelverfü&gbarkeit nach
+N31-P55242-G7-P8629-A1031-L999:&Lagerplatzposten
+N31-P55242-G7-P8631-A1031-L999:Zeigt die Historie der Mengen an, die für den Artikel in Lageraktivitäten registriert werden.
+N31-P55242-G80-P8629-A1031-L999:Variante
+N31-P55242-G80-P8631-A1031-L999:Zeigt die Varianten des Artikels an, oder ermöglicht deren Bearbeitung. Anstatt jede Farbe eines Artikels als separaten Artikel anzulegen, können Sie die verschiedenen Farben als Varianten des Artikels einrichten.
+N31-P55242-G81-P8629-A1031-L999:Lagerhalt&ungsdaten
+N31-P55242-G81-P8631-A1031-L999:Öffnet die Lagerhaltungsdaten des Artikels zum Anzeigen oder Bearbeiten von Instanzen des Artikels an unterschiedlichen Lagerorten oder mit verschiedenen Varianten.
+N31-P55242-G82-P8629-A1031-L999:Re&ferenzen
+N31-P55242-G82-P8631-A1031-L999:Richtet eine eigene Benutzereinrichtung des Debitors oder Kreditors für den ausgewählten Artikel ein. Querverweise auf die Artikelnummer des Debitors bedeuten, dass ihre Artikelnummer automatisch anstelle der von Ihnen verwendeten Nummer auf den Verkaufsbelegen angezeigt wird.
+N31-P55242-G83-P8629-A1031-L999:Dynamics 365 for Sales
+N31-P55242-G84-P8629-A1031-L999:&Posten
+N31-P55242-G85-P8629-A1031-L999:Statistik
+N31-P55242-G86-P8629-A1031-L999:&Genehmigungsanforderung stornieren
+N31-P55242-G86-P8631-A1031-L999:Storniert die Genehmigungsanforderung.
+N31-P55242-G87-P8629-A1031-L999:&Genehmigungsanforderung senden
+N31-P55242-G87-P8631-A1031-L999:Fordert die Genehmigung zum Ändern des Datensatzes an.
+N31-P55242-G88-P8629-A1031-L999:Genehmigungsanforderung
+N31-P55242-G90-P8629-A1031-L999:Lager regulieren
+N31-P55242-G90-P8631-A1031-L999:Erhöhen oder senken Sie die Lagerbestandsmenge des Artikels manuell, indem Sie eine neue Menge eingeben. Das manuelle Regulieren des Lagerbestands ist möglicherweise nach einer physischen Zählung relevant, oder falls keine erworbenen Mengen erfasst wurden.
+N31-P55242-G92-P8629-A1031-L999:VK-Preisvorschlag
+N31-P55242-G92-P8631-A1031-L999:Nimmt Änderungen am VK-Preis für den Artikel vor oder gibt an, wie Änderungen an den Preisvereinbarungen für einen Debitor, eine Debitorengruppe oder alle Debitoren eingegeben werden sollen.
+N31-P55242-G93-P8629-A1031-L999:Zuordnung für &markierte Datensätze
+N31-P55242-G93-P8631-A1031-L999:Zeigt Standarddimensionen für eine Gruppe von Datensätzen an oder ermöglicht deren Bearbeitung. Sie können Transaktionen Dimensionscodes zuweisen, um die Kosten zu verteilen und historische Informationen zu analysieren.
+N31-P55242-G94-P8629-A1031-L999:Dimensionen
+N31-P55242-G96-P8629-A1031-L999:Lagerreg. buchen
+N31-P55242-G96-P8631-A1031-L999:Buchen Sie die Mengen- und Wertänderungen des Lagerbestands in den Artikelposten bzw. Wertposten, wenn Sie Lagerbestandstransaktionen wie Verkaufslieferungen oder Einkaufslieferungen buchen.
+N31-P55242-G98-P8629-A1031-L999:Inventur Buch.-Blatt
+N31-P55242-G98-P8631-A1031-L999:Wählen Sie aus, wie Sie eine aktuelle Erfassung Ihres Lagerbestand in unterschiedlichen Lagerorten erreichen möchten.
+N31-P8629-A1031-L999:Artikel
+N31-Q1140000-P26171-A1031-L999:Möchten Sie den neuen Artikel bearbeiten?

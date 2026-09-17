@@ -1,0 +1,53 @@
+N14-C12-P8631-A1031-L999:Gibt die Telefonnummer des Verkäufers oder Einkäufers an.
+N14-C2-P8631-A1031-L999:Gibt den Code des Datensatzes an.
+N14-C4-P8631-A1031-L999:Gibt den Namen des Datensatzes an.
+N14-C6-P8631-A1031-L999:Gibt den Prozentsatz an, der verwendet werden soll, um die Verkäuferprovision zu berechnen.
+N14-P55242-G1000000000-P8629-A1031-L999:Verkäuferbild löschen
+N14-P55242-G1000000001-P8629-A1031-L999:Verkäuferbild hochladen
+N14-P55242-G1000000002-P55160-Q1000000000-P26171-A1031-L999:Debitor wurde aktualisiert
+N14-P55242-G1000000002-P8629-A1031-L999:Verkäufer aktualisieren
+N14-P55242-G1000000003-P55160-Q1000000000-P26171-A1031-L999:Die Zugangsdaten wurden versandt
+N14-P55242-G1000000003-P8629-A1031-L999:Zugangsdaten versenden
+N14-P55242-G10-P8629-A1031-L999:Kopplung einrichten
+N14-P55242-G10-P8631-A1031-L999:Erstellt oder ändert die Kopplung mit einem Dynamics 365 for Sales-Benutzer.
+N14-P55242-G11-P8629-A1031-L999:&Verkäufer
+N14-P55242-G13-P8629-A1031-L999:Kopplung
+N14-P55242-G13-P8631-A1031-L999:Erstellt, ändert oder löscht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Dynamics 365 for Sales-Datensatz.
+N14-P55242-G14-P8629-A1031-L999:&Teams
+N14-P55242-G14-P8631-A1031-L999:Zeigt sämtliche Teams an oder ermöglicht deren Bearbeitung, von denen der Vertriebsmitarbeiter/Einkäufer ein Mitglied ist.
+N14-P55242-G15-P8629-A1031-L999:Ko&ntakte
+N14-P55242-G15-P8631-A1031-L999:Zeigen Sie eine Liste der Kontakte an, die dem Verkäufer/Einkäufer zugeordnet sind.
+N14-P55242-G16-P8629-A1031-L999:Synchronisieren
+N14-P55242-G16-P8631-A1031-L999:Sendet aktualisierte Daten an Dynamics 365 for Sales, oder ruft diese ab.
+N14-P55242-G17-P8629-A1031-L999:Aktiv&ität erstellen
+N14-P55242-G17-P8631-A1031-L999:Verwenden Sie eine Stapelverarbeitung, um Interaktionen für die beteiligten Verkäufer oder Einkäufer zu erstellen.
+N14-P55242-G18-P8629-A1031-L999:Zuordnung für aktuellen Datensatz
+N14-P55242-G18-P8631-A1031-L999:Zeigen Sie den für den ausgewählten Datensatz eingerichteten einzelnen Dimensionssatz an, oder bearbeiten Sie ihn.
+N14-P55242-G19-P8629-A1031-L999:Statistik
+N14-P55242-G19-P8631-A1031-L999:Zeigt statistische Informationen für den Datensatz an, wie etwa den Wert der gebuchten Posten.
+N14-P55242-G20-P8629-A1031-L999:Ka&mpagnen
+N14-P55242-G20-P8631-A1031-L999:Zeigt sämtliche Kampagnen an oder ermöglicht deren Bearbeitung, denen der Vertriebsmitarbeiter/Einkäufer zugewiesen ist.
+N14-P55242-G21-P8629-A1031-L999:Se&gmente
+N14-P55242-G21-P8631-A1031-L999:Zeigt eine Liste aller Segmente an.
+N14-P55242-G22-P8629-A1031-L999:
+N14-P55242-G23-P8629-A1031-L999:Aktivit&ätenprotokollposten
+N14-P55242-G23-P8631-A1031-L999:Zeigt eine Liste der Aktivitäten an, die Sie protokolliert haben, z. B. wenn Sie eine Aktivität erstellen, ein Deckblatt oder einen Auftrag drucken usw.
+N14-P55242-G24-P8629-A1031-L999:A&ufgaben
+N14-P55242-G24-P8631-A1031-L999:Zeigt Aufgaben für den Verkäufer/Einkäufer an.
+N14-P55242-G25-P8629-A1031-L999:Verkaufs&chancen
+N14-P55242-G25-P8631-A1031-L999:Zeigt Verkaufschancen für den Verkäufer/Einkäufer an.
+N14-P55242-G26-P8629-A1031-L999:Dimensionen
+N14-P55242-G27-P8629-A1031-L999:Zuordnung für &markierte Datensätze
+N14-P55242-G27-P8631-A1031-L999:Zeigt oder bearbeitet Standarddimensionen für eine Gruppe von Datensätzen. Sie können Transaktionen Dimensionscodes zuweisen, um die Kosten zu verteilen und historische Informationen zu analysieren.
+N14-P55242-G29-P8629-A1031-L999:Zurückgestellte &Aktivitäten
+N14-P55242-G29-P8631-A1031-L999:Zeigt zurückgestellte Aktivitäten für den Verkäufer/Einkäufer an.
+N14-P55242-G3-P8629-A1031-L999:Kopplung löschen
+N14-P55242-G3-P8631-A1031-L999:Löscht die Kopplung mit einem Dynamics 365 for Sales-Benutzer.
+N14-P55242-G5-P8629-A1031-L999:Dynamics 365 for Sales
+N14-P55242-G7-P8629-A1031-L999:Synchronisierungsprotokoll
+N14-P55242-G7-P8631-A1031-L999:Zeigt die Integrationssynchronisierungsaufträge für die Tabelle "Verkäufer/Einkäufer" an.
+N14-P55242-G9-P8629-A1031-L999:Benutzer
+N14-P55242-G9-P8631-A1031-L999:Öffnet den gekoppelten Dynamics 365 for Sales-Systembenutzer.
+N14-P8629-A1031-L999:Verkäufer/Einkäufer
+N14-Q1000000007-P26171-A1031-L999:Verkäuferbild gelöscht
+N14-Q1000000008-P26171-A1031-L999:Bitte zuerst das nötige Steuerelement installieren.

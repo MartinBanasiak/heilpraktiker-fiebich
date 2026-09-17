@@ -1,0 +1,293 @@
+OBJECT Report 5447308 Webshop Copy Items
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikel kopieren;
+               ENU=Webshop Copy Items];
+    ProcessingOnly=Yes;
+    OnPreReport=BEGIN
+                  IF (SourceShopCode = '') OR (GlobalShopLanguageCode = '') OR (TargetShopCode = '') THEN
+                    ERROR(Error001);
+
+                  ItemNoFilter := WebshopItem.GETFILTER("Item No.");
+                END;
+
+  }
+  DATASET
+  {
+    { 1000000000;;DataItem;WebshopItem       ;
+               DataItemTable=Table5447304;
+               DataItemTableView=SORTING(Shop Code,Language Code,Item No.)
+                                 ORDER(Ascending);
+               OnPreDataItem=BEGIN
+                               WebshopItem.SETRANGE("Shop Code",SourceShopCode);
+                             END;
+
+               OnAfterGetRecord=BEGIN
+                                  IF TargetWebshopItem.GET(TargetShopCode,GlobalShopLanguageCode,WebshopItem."Item No.") THEN
+                                    CurrReport.SKIP;
+
+                                  TargetWebshopItem.INIT;
+                                  TargetWebshopItem.TRANSFERFIELDS(WebshopItem);
+                                  TargetWebshopItem."Shop Code" := TargetShopCode;
+                                  TargetWebshopItem.INSERT;
+                                END;
+
+               ReqFilterFields=Item No.,Is Active }
+
+    { 1000000005;1;DataItem;WebshopItemLink  ;
+               DataItemTable=Table5447308;
+               OnPreDataItem=BEGIN
+                               IF NOT CopyItemLinks THEN
+                                 CurrReport.BREAK;
+
+                               IF ItemNoFilter <> '' THEN
+                                 WebshopItemLink.SETFILTER("Linked Item No.",ItemNoFilter);
+                             END;
+
+               OnAfterGetRecord=BEGIN
+                                  IF NOT CopyItemLinks THEN
+                                    CurrReport.BREAK;
+
+                                  TargetItemLink.INIT;
+                                  TargetItemLink.TRANSFERFIELDS(WebshopItemLink);
+                                  TargetItemLink."Shop Code" := TargetShopCode;
+                                  TargetItemLink.INSERT;
+                                END;
+
+               DataItemLink=Item No.=FIELD(Item No.),
+                            Shop Code=FIELD(Shop Code) }
+
+    { 1000000004;1;DataItem;WebshopItemLinked;
+               DataItemTable=Table5447308;
+               OnPreDataItem=BEGIN
+                               IF NOT CopyItemLinks THEN
+                                 CurrReport.BREAK;
+
+                               IF ItemNoFilter <> '' THEN
+                                 WebshopItemLinked.SETFILTER("Item No.",ItemNoFilter);
+                             END;
+
+               OnAfterGetRecord=BEGIN
+                                  IF NOT CopyItemLinks THEN
+                                    CurrReport.BREAK;
+
+                                  TargetItemLinked.INIT;
+                                  TargetItemLinked.TRANSFERFIELDS(WebshopItemLinked);
+                                  TargetItemLinked."Shop Code" := TargetShopCode;
+                                  TargetItemLinked.INSERT;
+                                END;
+
+               DataItemLink=Linked Item No.=FIELD(Item No.),
+                            Shop Code=FIELD(Shop Code) }
+
+    { 1000000001;1;DataItem;WebshopItemDescription;
+               DataItemTable=Table5447306;
+               OnPreDataItem=BEGIN
+                               IF NOT CopyItemDescriptions THEN
+                                 CurrReport.BREAK;
+                             END;
+
+               OnAfterGetRecord=BEGIN
+                                  IF NOT CopyItemDescriptions THEN
+                                    CurrReport.BREAK;
+
+                                  TargetItemDescription.INIT;
+                                  TargetItemDescription.TRANSFERFIELDS(WebshopItemDescription);
+                                  TargetItemDescription."Shop Code" := TargetShopCode;
+                                  TargetItemDescription.INSERT;
+                                END;
+
+               DataItemLink=Item No.=FIELD(Item No.),
+                            Language Code=FIELD(Language Code),
+                            Shop Code=FIELD(Shop Code) }
+
+    { 1000000002;1;DataItem;WebshopItemFile  ;
+               DataItemTable=Table5447307;
+               OnPreDataItem=BEGIN
+                               IF NOT CopyItemFiles THEN
+                                 CurrReport.BREAK;
+                             END;
+
+               OnAfterGetRecord=BEGIN
+                                  IF NOT CopyItemFiles THEN
+                                    CurrReport.BREAK;
+
+                                  TargetItemFile.INIT;
+                                  TargetItemFile.TRANSFERFIELDS(WebshopItemFile);
+                                  TargetItemFile."Shop Code" := TargetShopCode;
+                                  TargetItemFile.INSERT;
+                                END;
+
+               DataItemLink=Item No.=FIELD(Item No.),
+                            Shop Code=FIELD(Shop Code) }
+
+    { 1000000003;1;DataItem;WebshopAttributeLink;
+               DataItemTable=Table5447321;
+               DataItemTableView=WHERE(Type=CONST(Item));
+               OnPreDataItem=BEGIN
+                               IF NOT CopyItemAttributes THEN
+                                 CurrReport.BREAK;
+                             END;
+
+               OnAfterGetRecord=BEGIN
+                                  IF NOT CopyItemAttributes THEN
+                                    CurrReport.BREAK;
+
+                                  TargetItemAttribute.INIT;
+                                  TargetItemAttribute.TRANSFERFIELDS(WebshopAttributeLink);
+                                  TargetItemAttribute."Shop Code" := TargetShopCode;
+                                  TargetItemAttribute.INSERT;
+                                END;
+
+               DataItemLink=No.=FIELD(Item No.),
+                            Shop Code=FIELD(Shop Code) }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+      { 1000000000;;Container;
+                  Name=Configuration;
+                  CaptionML=[DEU=Konfiguration;
+                             ENU=Configuration];
+                  ContainerType=ContentArea }
+
+      { 1000000005;1;Group  ;
+                  CaptionML=[DEU=Basiskonfiguration;
+                             ENU=Basic Configuraiton];
+                  GroupType=Group }
+
+      { 1000000001;2;Field  ;
+                  Name=Source Shop Code;
+                  Lookup=Yes;
+                  CaptionML=[DEU=Von Shop;
+                             ENU=From Shop];
+                  SourceExpr=SourceShopCode;
+                  TableRelation="Webshop Shop".Code;
+                  LookupPageID=Webshop Shop List;
+                  OnLookup=BEGIN
+                             Shop.RESET;
+                             Shop.SETRANGE("Use Items from Shop Code",'');
+                             ShopList.SETTABLEVIEW(Shop);
+                             IF ShopList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                               ShopList.GETRECORD(Shop);
+                               SourceShopCode := Shop.Code;
+                             END;
+                           END;
+                            }
+
+      { 1000000002;2;Field  ;
+                  Name=Language Code;
+                  Lookup=Yes;
+                  CaptionML=[DEU=Sprachcode;
+                             ENU=Sprachcode];
+                  SourceExpr=GlobalShopLanguageCode;
+                  TableRelation="Webshop Language".Code;
+                  LookupPageID=Webshop Language List;
+                  OnLookup=BEGIN
+                             ShopLanguage.RESET;
+                             ShopLanguage.SETRANGE("Shop Code",SourceShopCode);
+                             IF PAGE.RUNMODAL(0,ShopLanguage) = ACTION::LookupOK THEN
+                               GlobalShopLanguageCode := ShopLanguage.Code;
+                           END;
+                            }
+
+      { 1000000003;2;Field  ;
+                  Name=Target Shop Code;
+                  Lookup=Yes;
+                  CaptionML=[DEU=Nach Shop;
+                             ENU=To Shop];
+                  SourceExpr=TargetShopCode;
+                  TableRelation="Webshop Shop".Code;
+                  LookupPageID=Webshop Shop List;
+                  OnLookup=VAR
+                             LookupShopLanguage@1000000000 : Record 5447302;
+                             Error001@1000000001 : TextConst 'DEU=F�r den ausgew�hlten Ziel-Shop muss es eine Webshop Sprache mit dem Code ''%1'' geben.;ENU=There has to be a Webshop Language with Code ''%1'' for the selected target-Shop.';
+                           BEGIN
+                             Shop.RESET;
+                             Shop.SETFILTER(Code,'<>%1',SourceShopCode);
+                             Shop.SETRANGE("Use Items from Shop Code",'');
+                             IF PAGE.RUNMODAL(0,Shop) = ACTION::LookupOK THEN BEGIN
+                               LookupShopLanguage.RESET;
+                               IF NOT LookupShopLanguage.GET(Shop.Code,GlobalShopLanguageCode) THEN
+                                 ERROR(Error001,GlobalShopLanguageCode);
+                               TargetShopCode := Shop.Code;
+                             END;
+                           END;
+                            }
+
+      { 1000000004;1;Group  ;
+                  CaptionML=[DEU=Verkn�pfte Daten;
+                             ENU=Linked Data];
+                  GroupType=Group }
+
+      { 1000000007;2;Field  ;
+                  CaptionML=[DEU=Beschreibungen kopieren;
+                             ENU=Copy Descriptions];
+                  SourceExpr=CopyItemDescriptions }
+
+      { 1000000009;2;Field  ;
+                  CaptionML=[DEU=Datei-Verkn�pfungen kopieren;
+                             ENU=Copy File-Links];
+                  SourceExpr=CopyItemFiles }
+
+      { 1000000006;2;Field  ;
+                  CaptionML=[DEU=Artikelverkn�pfungen kopieren;
+                             ENU=Copy Item Links];
+                  SourceExpr=CopyItemLinks }
+
+      { 1000000008;2;Field  ;
+                  CaptionML=[DEU=Merkmalverkn�pfungen kopieren;
+                             ENU=Copy Attribute Links];
+                  SourceExpr=CopyItemAttributes }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      CopyItemLinks@1000000000 : Boolean;
+      CopyItemDescriptions@1000000001 : Boolean;
+      CopyItemAttributes@1000000002 : Boolean;
+      CopyItemFiles@1000000003 : Boolean;
+      Shop@1000000005 : Record 5447301;
+      ShopLanguage@1000000006 : Record 5447302;
+      SourceShopCode@1000000007 : Code[20];
+      GlobalShopLanguageCode@1000000008 : Code[10];
+      TargetShopCode@1000000009 : Code[20];
+      ShopList@1000000010 : Page 5447302;
+      LanguageList@1000000011 : Page 5447304;
+      TargetWebshopItem@1000000012 : Record 5447304;
+      Error001@1000000013 : TextConst 'DEU="""Von Shop"", ""Sprachcode"" und ""Nach Shop"" m�ssen gesetzt sein, bevor dieser Bericht ausgef�hrt werden kann.";ENU="""From Shop"",""Language Code"" and ""To Shop"" have to be set before this report can be executed."';
+      TargetItemLink@1000000014 : Record 5447308;
+      TargetItemLinked@1000000004 : Record 5447308;
+      TargetItemFile@1000000019 : Record 5447307;
+      TargetItemDescription@1000000015 : Record 5447306;
+      TargetItemAttribute@1000000016 : Record 5447321;
+      ItemNoFilter@1000000018 : Text;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

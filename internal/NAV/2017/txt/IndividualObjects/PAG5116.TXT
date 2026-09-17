@@ -1,0 +1,517 @@
+OBJECT Page 5116 Salesperson/Purchaser Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17.07.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Verk�ufer-/Eink�uferkarte;
+               ENU=Salesperson/Purchaser Card];
+    SourceTable=Table13;
+    PageType=Card;
+    OnInit=BEGIN
+             //--- dynamic commerce ---
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+             //+++ dynamic commerce +++
+           END;
+
+    OnOpenPage=VAR
+                 CRMIntegrationManagement@1000 : Codeunit 5330;
+               BEGIN
+                 CRMIntegrationEnabled := CRMIntegrationManagement.IsCRMIntegrationEnabled;
+               END;
+
+    OnInsertRecord=BEGIN
+                     IF xRec.Code = '' THEN
+                       RESET;
+                   END;
+
+    OnAfterGetCurrRecord=VAR
+                           CRMCouplingManagement@1001 : Codeunit 5331;
+                         BEGIN
+                           IF CRMIntegrationEnabled THEN
+                             CRMIsCoupledToRecord := CRMCouplingManagement.IsRecordCoupledToCRM(RECORDID);
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 19      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Verk�ufer;
+                                 ENU=&Salesperson];
+                      Image=SalesPerson }
+      { 28      ;2   ;Action    ;
+                      CaptionML=[DEU=&Teams;
+                                 ENU=Tea&ms];
+                      RunObject=Page 5107;
+                      RunPageView=SORTING(Salesperson Code);
+                      RunPageLink=Salesperson Code=FIELD(Code);
+                      Image=TeamSales }
+      { 25      ;2   ;Action    ;
+                      CaptionML=[DEU=Ko&ntakte;
+                                 ENU=Con&tacts];
+                      ToolTipML=[DEU=Zeigen Sie eine Liste der Kontakte an, die dem Verk�ufer/Eink�ufer zugeordnet sind.;
+                                 ENU=View a list of contacts that are associated with the salesperson/purchaser.];
+                      ApplicationArea=#RelationshipMgmt;
+                      RunObject=Page 5052;
+                      RunPageView=SORTING(Salesperson Code);
+                      RunPageLink=Salesperson Code=FIELD(Code);
+                      Image=CustomerContact }
+      { 23      ;2   ;Action    ;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DEU=Dimensionen;
+                                 ENU=Dimensions];
+                      ToolTipML=[DEU=Zeigt Dimensionen an oder bearbeitet sie, wie etwa einen Bereich, ein Projekt oder eine Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen k�nnen, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.;
+                                 ENU=View or edits dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 540;
+                      RunPageLink=Table ID=CONST(13),
+                                  No.=FIELD(Code);
+                      Image=Dimensions }
+      { 21      ;2   ;Action    ;
+                      ShortCutKey=F7;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      ToolTipML=[DEU=Zeigt statistische Informationen f�r den Datensatz an, wie etwa den Wert der gebuchten Posten.;
+                                 ENU=View statistical information, such as the value of posted entries, for the record.];
+                      ApplicationArea=#RelationshipMgmt;
+                      RunObject=Page 5117;
+                      RunPageLink=Code=FIELD(Code);
+                      Promoted=Yes;
+                      Image=Statistics;
+                      PromotedCategory=Process }
+      { 26      ;2   ;Action    ;
+                      CaptionML=[DEU=Ka&mpagnen;
+                                 ENU=C&ampaigns];
+                      RunObject=Page 5087;
+                      RunPageView=SORTING(Salesperson Code);
+                      RunPageLink=Salesperson Code=FIELD(Code);
+                      Image=Campaign }
+      { 27      ;2   ;Action    ;
+                      CaptionML=[DEU=Se&gmente;
+                                 ENU=S&egments];
+                      ToolTipML=[DEU=Zeigt eine Liste aller Segmente an.;
+                                 ENU=View a list of all segments.];
+                      ApplicationArea=#RelationshipMgmt;
+                      RunObject=Page 5093;
+                      RunPageView=SORTING(Salesperson Code);
+                      RunPageLink=Salesperson Code=FIELD(Code);
+                      Image=Segment }
+      { 33      ;2   ;Separator ;
+                      CaptionML= }
+      { 32      ;2   ;Action    ;
+                      ShortCutKey=Ctrl+F7;
+                      CaptionML=[DEU=Aktivit&�tenprotokollposten;
+                                 ENU=Interaction Log E&ntries];
+                      ToolTipML=[DEU=Zeigt Aktivit�tenprotokollposten f�r den Verk�ufer/Eink�ufer an.;
+                                 ENU=View interaction log entries for the salesperson/purchaser.];
+                      ApplicationArea=#RelationshipMgmt;
+                      RunObject=Page 5076;
+                      RunPageView=SORTING(Salesperson Code);
+                      RunPageLink=Salesperson Code=FIELD(Code);
+                      Image=InteractionLog }
+      { 76      ;2   ;Action    ;
+                      CaptionML=[DEU=Zur�ckgestellte &Aktivit�ten;
+                                 ENU=Postponed &Interactions];
+                      ToolTipML=[DEU=Zeigt zur�ckgestellte Aktivit�ten f�r den Verk�ufer/Eink�ufer an.;
+                                 ENU=View postponed interactions for the salesperson/purchaser.];
+                      ApplicationArea=#RelationshipMgmt;
+                      RunObject=Page 5082;
+                      RunPageView=SORTING(Salesperson Code);
+                      RunPageLink=Salesperson Code=FIELD(Code);
+                      Image=PostponedInteractions }
+      { 35      ;2   ;Action    ;
+                      CaptionML=[DEU=Aufga&ben;
+                                 ENU=T&o-dos];
+                      RunObject=Page 5096;
+                      RunPageView=SORTING(Salesperson Code);
+                      RunPageLink=Salesperson Code=FIELD(Code),
+                                  System To-do Type=FILTER(Organizer|Salesperson Attendee);
+                      Image=TaskList }
+      { 78      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Verkaufs&chancen;
+                                 ENU=Oppo&rtunities];
+                      Image=OpportunityList }
+      { 34      ;3   ;Action    ;
+                      CaptionML=[DEU=�bersicht;
+                                 ENU=List];
+                      ToolTipML=[DEU=Zeigt eine Liste aller Verk�ufer/Eink�ufer an.;
+                                 ENU=View a list of all salespeople/purchasers.];
+                      ApplicationArea=#RelationshipMgmt;
+                      RunObject=Page 5123;
+                      RunPageView=SORTING(Salesperson Code);
+                      RunPageLink=Salesperson Code=FIELD(Code);
+                      Image=OpportunitiesList }
+      { 13      ;1   ;ActionGroup;
+                      Name=ActionGroupCRM;
+                      CaptionML=[DEU=Dynamics CRM;
+                                 ENU=Dynamics CRM];
+                      Visible=CRMIntegrationEnabled }
+      { 11      ;2   ;Action    ;
+                      Name=CRMGotoSystemUser;
+                      CaptionML=[DEU=Benutzer;
+                                 ENU=User];
+                      ToolTipML=[DEU=�ffnet den gekoppelten Microsoft Dynamics CRM-Systembenutzer.;
+                                 ENU=Open the coupled Microsoft Dynamics CRM system user.];
+                      ApplicationArea=#Suite,#RelationshipMgmt;
+                      Image=CoupledUser;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.ShowCRMEntityFromRecordID(RECORDID);
+                               END;
+                                }
+      { 20      ;2   ;Action    ;
+                      Name=CRMSynchronizeNow;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Jetzt synchronisieren;
+                                 ENU=Synchronize Now];
+                      ToolTipML=[DEU=Sendet aktualisierte Daten an Microsoft Dynamics CRM oder ruft diese ab.;
+                                 ENU=Send or get updated data to or from Microsoft Dynamics CRM.];
+                      Image=Refresh;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1001 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.UpdateOneNow(RECORDID);
+                               END;
+                                }
+      { 18      ;2   ;ActionGroup;
+                      Name=Coupling;
+                      CaptionML=[@@@=Coupling is a noun;
+                                 DEU=Kopplung;
+                                 ENU=Coupling];
+                      ToolTipML=[DEU=Erstellt, �ndert oder l�scht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Microsoft Dynamics CRM-Datensatz.;
+                                 ENU=Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Microsoft Dynamics CRM record.];
+                      Image=LinkAccount }
+      { 9       ;3   ;Action    ;
+                      Name=ManageCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Kopplung einrichten;
+                                 ENU=Set Up Coupling];
+                      ToolTipML=[DEU=Erstellt oder �ndert die Kopplung mit einem Microsoft Dynamics CRM-Benutzer.;
+                                 ENU=Create or modify the coupling to a Microsoft Dynamics CRM user.];
+                      ApplicationArea=#Suite,#RelationshipMgmt;
+                      Image=LinkAccount;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.DefineCoupling(RECORDID);
+                               END;
+                                }
+      { 7       ;3   ;Action    ;
+                      Name=DeleteCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Kopplung l�schen;
+                                 ENU=Delete Coupling];
+                      ToolTipML=[DEU=L�scht die Kopplung mit einem Microsoft Dynamics CRM-Benutzer.;
+                                 ENU=Delete the coupling to a Microsoft Dynamics CRM user.];
+                      ApplicationArea=#Suite,#RelationshipMgmt;
+                      Enabled=CRMIsCoupledToRecord;
+                      Image=UnLinkAccount;
+                      OnAction=VAR
+                                 CRMCouplingManagement@1000 : Codeunit 5331;
+                               BEGIN
+                                 CRMCouplingManagement.RemoveCoupling(RECORDID);
+                               END;
+                                }
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 36      ;1   ;Action    ;
+                      AccessByPermission=TableData 5062=R;
+                      CaptionML=[DEU=Aktivit�t &erst.;
+                                 ENU=Create &Interact];
+                      ToolTipML=[DEU=Erstellt eine Aktivit�t mit einem bestimmten Kontakt.;
+                                 ENU=Create an interaction with a specified contact.];
+                      ApplicationArea=#RelationshipMgmt;
+                      Promoted=Yes;
+                      Image=CreateInteraction;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 CreateInteraction;
+                               END;
+                                }
+      { 1000000010;1 ;ActionGroup;
+                      Name=E-Commerce;
+                      Description=Webshop;
+                      ActionContainerType=NewDocumentItems }
+      { 1000000009;2 ;Action    ;
+                      Name=Webshop Send Login Data;
+                      CaptionML=[DEU=Zugangsdaten versenden;
+                                 ENU=Send login data];
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=SendMail;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text001@1000000000 : TextConst 'DEU=Die Zugangsdaten wurden an den Verk�ufer versendet.;ENU=Login data has been sent to salesperson.';
+                               BEGIN
+                                 // dynamic commerce ---
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.SendSalespersonLogin(Rec);
+                                   CurrPage.UPDATE(FALSE);
+                                   MESSAGE(Text001);
+                                 END;
+                                 // dynamic commerce +++
+                               END;
+                                }
+      { 1000000008;2 ;Action    ;
+                      Name=Webshop Update Salesperson;
+                      CaptionML=[DEU=Verk�ufer aktualisieren;
+                                 ENU=Update salesperson];
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text001@1000000000 : TextConst 'DEU=Verk�ufer wurde aktualisiert.;ENU=Salesperson has been updated.';
+                               BEGIN
+                                 // dynamic commerce ---
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   WebshopUpdateManagement.UpdateSalesperson(Rec);
+                                   MESSAGE(Text001);
+                                 END;
+                                 // dynamic commerce +++
+                               END;
+                                }
+      { 1000000013;2 ;Action    ;
+                      Name=Upload Salesperson Image;
+                      CaptionML=[DEU=Verk�uferbild hochladen;
+                                 ENU=Upload Salesperson Image];
+                      Promoted=Yes;
+                      Image=Picture;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopManagement@1000000001 : Codeunit 5447300;
+                                 WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+                               BEGIN
+                                 EditContent();
+                               END;
+                                }
+      { 1000000011;2 ;Action    ;
+                      Name=Delete Salesperson Image;
+                      CaptionML=[DEU=Verk�uferbild l�schen;
+                                 ENU=Delete Salesperson Image];
+                      Promoted=Yes;
+                      Image=VoidElectronicDocument;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopManagement@1000000001 : Codeunit 5447300;
+                                 WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+                               BEGIN
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   CurrPage.UPDATE(TRUE);
+                                   WebshopUpdateManagement.DeleteSalespersonImage(Rec);
+                                   MESSAGE(Text001);
+                                   CurrPage.UPDATE(FALSE);
+                                 END;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General] }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Code f�r den Verk�ufer oder Eink�ufer an.;
+                           ENU=Specifies a code for the salesperson or purchaser.];
+                ApplicationArea=#All;
+                SourceExpr=Code }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Namen des Verk�ufers oder Eink�ufers an.;
+                           ENU=Specifies the name of the salesperson or purchaser.];
+                ApplicationArea=#All;
+                SourceExpr=Name }
+
+    { 22  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Titel des Verk�ufers an.;
+                           ENU=Specifies the salesperson's job title.];
+                ApplicationArea=#RelationshipMgmt;
+                SourceExpr="Job Title" }
+
+    { 6   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Prozentsatz an, der verwendet werden soll, um die Verk�uferprovision zu berechnen.;
+                           ENU=Specifies the percentage to use to calculate the salesperson's commission.];
+                ApplicationArea=#RelationshipMgmt;
+                SourceExpr="Commission %" }
+
+    { 10  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Telefonnummer des Verk�ufers an.;
+                           ENU=Specifies the salesperson's telephone number.];
+                ApplicationArea=#RelationshipMgmt;
+                SourceExpr="Phone No." }
+
+    { 8   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die E-Mail-Adresse des Verk�ufers an.;
+                           ENU=Specifies the salesperson's email address.];
+                ApplicationArea=#RelationshipMgmt;
+                SourceExpr="E-Mail" }
+
+    { 12  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum der n�chsten dem Verk�ufer zugewiesenen Aufgabe an.;
+                           ENU=Specifies the date of the next to-do assigned to the salesperson.];
+                SourceExpr="Next To-do Date" }
+
+    { 1905885101;1;Group  ;
+                CaptionML=[DEU=Fakturierung;
+                           ENU=Invoicing] }
+
+    { 14  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Dimensionswertcode f�r die globale Dimension 1 an, die Sie der Kampagne zugeordnet haben.;
+                           ENU=Specifies the dimension value code for the global dimension 1 you have assigned to the campaign.];
+                ApplicationArea=#Suite;
+                SourceExpr="Global Dimension 1 Code" }
+
+    { 16  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Dimensionswertcode f�r die globale Dimension 2 an, die Sie der Kampagne zugeordnet haben.;
+                           ENU=Specifies the dimension value code for the global dimension 2 you have assigned to the campaign.];
+                ApplicationArea=#Suite;
+                SourceExpr="Global Dimension 2 Code" }
+
+    { 1000000006;1;Group  ;
+                Name=E-Commerce;
+                GroupType=Group }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Has Webshop Login" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Webshop Shop Code" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Webshop Language Code" }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Webshop Login E-Mail Addr." }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Date Webshop Login Sent" }
+
+    { 1000000000;2;Field  ;
+                SourceExpr="Last Date Modified (Webshop)" }
+
+    { 1000000001;2;Field  ;
+                SourceExpr="Last Date Updated (Webshop)" }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 3   ;1   ;Part      ;
+                SubPageLink=Code=FIELD(Code);
+                PagePartID=Page5108;
+                PartType=Page }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      CRMIntegrationEnabled@1001 : Boolean;
+      CRMIsCoupledToRecord@1000 : Boolean;
+      "--- dynamic commerce ---"@1000000002 : Integer;
+      WebshopManagement@1000000001 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+      ClientAddInType@1000000006 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000005 : Codeunit 5447320;
+      WebshopWebform@1000000004 : Page 5447366;
+      WebformType@1000000003 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection,ShippingOption,PaymentOption,ShippingOptionIcon,PaymentOptionIcon,Marketplace,SalesPerson';
+      Text007@1000000008 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+      Text001@1000000007 : TextConst 'DEU=Verk�uferbild gel�scht;ENU=Salesperson image deleted';
+
+    PROCEDURE EditContent@1000000000();
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD(Code);
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateSalesperson(Rec);
+      GET(Code);
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        CLEAR(WebshopWebform);
+        //DynamicCommerceAddIn
+        WebshopWebform.SetWebformType(WebformType::SalesPerson);
+        WebshopWebform.SetRecordCode(Code);
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END;
+
+      GET(Code);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (8):
+
+          TYPE            SUBTYPE         SOURCEEXPR                      NAME                            CAPTION
+
+          Group           Group                                           E-Commerce                      <E-Commerce>
+          Field                           "Webshop Active"                <Webshop Active>                <Zugang aktiv>
+          Field                           "Webshop Shop Code"             <Webshop Shop Code>             <Webshop Code>
+          Field                           "Webshop Language Code"         <Webshop Language Code>         <Webshop Sprachcode>
+          Field                           "Webshop Login E-Mail"          <Webshop Login E-Mail>          <E-Mail Zugangsdaten>
+          Field                           "Webshop Login Sent"            <Webshop Login Sent>            <Zugangsdaten gesendet>
+          Field                           "Webshop Last Date Modified"    <Webshop Last Date Modified>    <Korrigiert am>
+          Field                           "Webshop Last Date Updated"     <Webshop Last Date Updated>     <Online Aktualisiert am>
+
+
+        PAGE ACTIONS (5):
+
+          NAME                            CAPTION                         TYPE                 SUBTYPE
+
+          E-Commerce                      <E-Commerce>                    ActionGroup
+          Webshop Send Login Data         Zugangsdaten versenden          Action
+          Webshop Update Salesperson      Verk�ufer Aktualisieren         Action
+          Upload Salesperson Image        Verk�uferbild hochladen         Action
+          Delete Salesperson Image        Verk�uferbild l�schen           Action
+
+
+        TRIGGERS (0):
+        GLOBAL VARIABLES (6):
+
+          NAME                          DATATYPE        SUBTYPE                       LENGTH
+
+          WebshopManagement             Codeunit        "Webshop Management"
+          WebshopUpdateManagement       Codeunit        "Webshop Update Management"
+          ClientAddInType              Option
+          WebshopAssemblyResolver      Codeunit      Webshop Assembly Resolver
+          WebshopWebform              Page          Webshop Webform
+          WebformType                  Option
+
+
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

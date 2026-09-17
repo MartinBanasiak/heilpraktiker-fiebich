@@ -1,0 +1,282 @@
+OBJECT Page 5447380 Webshop Campaign Header List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop Kampagnen;
+               ENU=Webshop Campaigns];
+    SourceTable=Table5447345;
+    PageType=List;
+    CardPageID=Webshop Campaign Header Card;
+    ActionList=ACTIONS
+    {
+      { 1000000021;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000030;1 ;Action    ;
+                      Name=Synchronize;
+                      CaptionML=[DEU=Kampagne aktualisieren;
+                                 ENU=Synchronize Campaign];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text001@1000000000 : TextConst 'DEU=Die Kampagne wurde mit allen verkn?pften Daten aktualisiert.;ENU=The campaign was synchronized with all linked data.';
+                               BEGIN
+                                 WebshopUpdateManagement.UpdateCampaignByCode(Code);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000029;1 ;ActionGroup;
+                      Name=Images;
+                      CaptionML=[DEU=Bilder;
+                                 ENU=Images] }
+      { 1000000031;2 ;ActionGroup;
+                      Name=Bilder;
+                      CaptionML=[DEU=Bilder;
+                                 ENU=Images];
+                      Image=Picture }
+      { 1000000028;3 ;Action    ;
+                      Name=EditIconCondItems;
+                      CaptionML=[DEU=Icon Konditionsartikel bearbeiten;
+                                 ENU=Edit Icon Condition Items];
+                      Image=TransmitElectronicDoc;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 EditImage(ParamField::IconCondItems);
+                               END;
+                                }
+      { 1000000027;3 ;Action    ;
+                      Name=DeleteIconCondItems;
+                      CaptionML=[DEU=Icon Konditionsartikel l�schen;
+                                 ENU=Delete Icon Condition Items];
+                      Image=VoidElectronicDocument;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 DeleteImage(ParamField::IconCondItems);
+                               END;
+                                }
+      { 1000000026;3 ;Action    ;
+                      Name=EditBannerCondItems;
+                      CaptionML=[DEU=Banner Konditionsartikel bearbeiten;
+                                 ENU=Edit BannerCondition Items];
+                      Image=TransmitElectronicDoc;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 EditImage(ParamField::BannerCondItems);
+                               END;
+                                }
+      { 1000000025;3 ;Action    ;
+                      Name=DeleteBannerCondItems;
+                      CaptionML=[DEU=Banner Konditionsartikel l�schen;
+                                 ENU=Delete Banner Condition Items];
+                      Image=VoidElectronicDocument;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 DeleteImage(ParamField::BannerCondItems);
+                               END;
+                                }
+      { 1000000024;3 ;Action    ;
+                      Name=EditIconActItems;
+                      CaptionML=[DEU=Icon Aktionsartikel bearbeiten;
+                                 ENU=Edit Icon Action Items];
+                      Image=TransmitElectronicDoc;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 EditImage(ParamField::IconActItems);
+                               END;
+                                }
+      { 1000000023;3 ;Action    ;
+                      Name=DeleteIconActItems;
+                      CaptionML=[DEU=Icon Aktionsartikel l�schen;
+                                 ENU=Delete Icon Action Items];
+                      Image=VoidElectronicDocument;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 DeleteImage(ParamField::IconActItems);
+                               END;
+                                }
+      { 1000000022;3 ;Action    ;
+                      Name=EditBannerActItems;
+                      CaptionML=[DEU=Banner Aktionsartikel bearbeiten;
+                                 ENU=Edit Banner Action Items];
+                      Image=TransmitElectronicDoc;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 EditImage(ParamField::BannerActItems);
+                               END;
+                                }
+      { 1000000020;3 ;Action    ;
+                      Name=DeleteBannerActItems;
+                      CaptionML=[DEU=Banner Aktionsartikel l�schen;
+                                 ENU=Delete Banner Action Items];
+                      Image=VoidElectronicDocument;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 DeleteImage(ParamField::BannerActItems);
+                               END;
+                                }
+      { 1000000019;3 ;Action    ;
+                      Name=EditBannerBasket;
+                      CaptionML=[DEU=Banner Warenkorb bearbeiten;
+                                 ENU=Edit Banner Basket];
+                      Image=TransmitElectronicDoc }
+      { 1000000018;3 ;Action    ;
+                      Name=DeleteBannerBasket;
+                      CaptionML=[DEU=Banner Warenkorb l�schen;
+                                 ENU=Delete Banner Basket];
+                      Image=VoidElectronicDocument }
+      { 1000000017;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000016;1 ;Action    ;
+                      Name=ConditionElements;
+                      CaptionML=[DEU=Konditions-Elemente;
+                                 ENU=Condition Elements];
+                      Image=ListPage;
+                      OnAction=BEGIN
+                                 WebshopCampaignElementList.SetFilters(Code,0);
+                                 WebshopCampaignElementList.RUN;
+                               END;
+                                }
+      { 1000000015;1 ;Action    ;
+                      Name=ActionElements;
+                      CaptionML=[DEU=Aktions-Elemente;
+                                 ENU=Action Elements];
+                      Image=ListPage;
+                      OnAction=BEGIN
+                                 WebshopCampaignElementList.SetFilters(Code,1);
+                                 WebshopCampaignElementList.RUN;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Code }
+
+    { 1000000003;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Shop Code" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Language Code" }
+
+    { 1000000009;2;Field  ;
+                SourceExpr=Priority }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Active }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Active from Date" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Active to Date" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Active from Time" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Active to Time" }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+      WebshopCampaignElementList@1000000001 : Page 5447382;
+
+    LOCAL PROCEDURE EditImage@1000000000(ParamField@1000000004 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems');
+    VAR
+      TMPCampaignHeader@1000000001 : TEMPORARY Record 5447345;
+      EditCampaignImage@1000000002 : Page 5447384;
+      WebshopManagement@1000000003 : Codeunit 5447300;
+      ThisRecRef@1000000000 : RecordRef;
+      ThisFieldRef@1000000005 : FieldRef;
+    BEGIN
+
+      ThisRecRef.GETTABLE(Rec);
+
+      CASE ParamField OF
+        ParamField::IconCondItems:    ThisFieldRef := ThisRecRef.FIELD(60);
+        ParamField::BannerCondItems:  ThisFieldRef := ThisRecRef.FIELD(61);
+        ParamField::IconActItems:     ThisFieldRef := ThisRecRef.FIELD(63);
+        ParamField::BannerActItems:   ThisFieldRef := ThisRecRef.FIELD(64);
+      END;
+
+      TESTFIELD(Code);
+      CLEAR(EditCampaignImage);
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopManagement.ConnectionTest();
+      CurrPage.UPDATE;
+      WebshopUpdateManagement.UpdateCampaignByCode(Code);
+      CurrPage.UPDATE;
+      COMMIT;
+      TMPCampaignHeader.SETRANGE(Code,Code);
+      EditCampaignImage.SETTABLEVIEW(TMPCampaignHeader);
+      EditCampaignImage.SetField(ParamField);
+      //EditCampaignImage.LOOKUPMODE(TRUE);
+      EditCampaignImage.RUNMODAL();
+      WebshopUpdateManagement.CheckCampaignImage(Rec,ThisFieldRef);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      CurrPage.UPDATE;
+    END;
+
+    LOCAL PROCEDURE DeleteImage@1000000001(ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems');
+    VAR
+      ThisRecRef@1000000002 : RecordRef;
+      ThisFieldRef@1000000001 : FieldRef;
+      WebshopManagement@1000000003 : Codeunit 5447300;
+    BEGIN
+      ThisRecRef.GETTABLE(Rec);
+
+      CASE ParamField OF
+        ParamField::IconCondItems:    ThisFieldRef := ThisRecRef.FIELD(60);
+        ParamField::BannerCondItems:  ThisFieldRef := ThisRecRef.FIELD(61);
+        ParamField::IconActItems:     ThisFieldRef := ThisRecRef.FIELD(63);
+        ParamField::BannerActItems:   ThisFieldRef := ThisRecRef.FIELD(64);
+      END;
+
+      TESTFIELD(Code);
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopManagement.ConnectionTest();
+      CurrPage.UPDATE;
+      WebshopUpdateManagement.UpdateCampaignByCode(Code);
+      CurrPage.UPDATE;
+      COMMIT;
+      WebshopUpdateManagement.DeleteCampaignImage(Rec,ThisFieldRef);
+      CurrPage.UPDATE;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

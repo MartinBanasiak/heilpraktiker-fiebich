@@ -1,0 +1,403 @@
+OBJECT Report 5447320 Webshop Set Item Attributes
+{
+  OBJECT-PROPERTIES
+  {
+    Date=28.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelmerkmale vergeben;
+               ENU=Webshop Set Item Attributes];
+    ProcessingOnly=Yes;
+    OnPreReport=BEGIN
+                  Counter := 0;
+                END;
+
+    OnPostReport=BEGIN
+
+                   IF NOT RemoveAttribute THEN
+                     MESSAGE(STRSUBSTNO(Text001,Counter))
+                   ELSE
+                     MESSAGE(STRSUBSTNO(Text002,Counter));
+                 END;
+
+  }
+  DATASET
+  {
+    { 1000000001;0;DataItem;                 ;
+               DataItemTable=Table5447303;
+               OnPreDataItem=BEGIN
+                               COPYFILTERS(WebshopCategory);
+                               CurrReport.BREAK;
+                             END;
+
+               ReqFilterFields=Shop Code,Language Code,Line No. }
+
+    { 1000000000;0;DataItem;                 ;
+               DataItemTable=Table5447304;
+               OnAfterGetRecord=BEGIN
+
+                                  IF WebshopCategory.GETFILTERS <> '' THEN BEGIN
+                                    IF WebshopCategory.FINDSET THEN REPEAT
+                                      WebshopItemCategory.RESET;
+                                      WebshopItemCategory.SETRANGE(WebshopItemCategory."Item Shop Code","Shop Code");
+                                      WebshopItemCategory.SETRANGE(WebshopItemCategory."Item Language Code","Language Code");
+                                      WebshopItemCategory.SETRANGE(WebshopItemCategory."Item No.","Item No.");
+                                      WebshopItemCategory.SETRANGE(WebshopItemCategory."Category Shop Code",WebshopCategory."Shop Code");
+                                      WebshopItemCategory.SETRANGE(WebshopItemCategory."Category Language Code",WebshopCategory."Language Code");
+                                      IF WebshopItemCategory.ISEMPTY THEN
+                                        CurrReport.SKIP;
+                                    UNTIL WebshopCategory.NEXT = 0 ELSE
+                                      CurrReport.SKIP;
+                                  END;
+
+                                  AttributeLink.RESET;
+                                  AttributeLink.SETRANGE(Type,AttributeLink.Type::Item);
+                                  AttributeLink.SETRANGE("Shop Code","Shop Code");
+                                  AttributeLink.SETRANGE("Language Code","Language Code");
+                                  AttributeLink.SETRANGE("No.","Item No.");
+                                  AttributeLink.SETRANGE("Attribute Code",AttributeCode);
+                                  IF AttributeLink.ISEMPTY THEN BEGIN
+                                    AttributeLink.INIT;
+                                    AttributeLink.Type := AttributeLink.Type::Item;
+                                    AttributeLink."Shop Code" := "Shop Code";
+                                    AttributeLink."Language Code" := "Language Code";
+                                    AttributeLink."No." := "Item No.";
+                                    AttributeLink."Attribute Code" := AttributeCode;
+                                    CASE AttributeDataType OF
+                                      AttributeDataType::Integer:
+                                        BEGIN
+                                          AttributeLink."Value Integer" := AttributeValueInt;
+                                        END;
+                                      AttributeDataType::Decimal:
+                                        BEGIN
+                                          AttributeLink."Value Decimal" := AttributeValueDec;
+                                        END;
+                                      AttributeDataType::Text:
+                                        BEGIN
+                                          AttributeLink."Value Text" := AttributeValueText;
+                                        END;
+                                      AttributeDataType::Option:
+                                        BEGIN
+                                          AttributeLink."Value Option" := AttributeValueOption;
+                                        END;
+                                      AttributeDataType::Boolean:
+                                        BEGIN
+                                          AttributeLink."Value Boolean" := AttributeValueBool;
+                                        END;
+                                    END;
+                                    AttributeLink.INSERT(TRUE);
+                                    Counter += 1;
+                                  END ELSE BEGIN
+                                    IF OverwriteExisting THEN BEGIN
+                                      AttributeLink.FINDFIRST;
+                                      CASE AttributeDataType OF
+                                        AttributeDataType::Integer:
+                                          BEGIN
+                                            AttributeLink."Value Integer" := AttributeValueInt;
+                                            MODIFY(TRUE);
+                                          END;
+                                        AttributeDataType::Decimal:
+                                          BEGIN
+                                            AttributeLink."Value Decimal" := AttributeValueDec;
+                                            MODIFY(TRUE);
+                                          END;
+                                        AttributeDataType::Text:
+                                          BEGIN
+                                            AttributeLink."Value Text" := AttributeValueText;
+                                            MODIFY(TRUE);
+                                          END;
+                                        AttributeDataType::Option:
+                                          BEGIN
+                                            AttributeLink."Value Option" := AttributeValueOption;
+                                            RENAME(TRUE);
+                                          END;
+                                        AttributeDataType::Boolean:
+                                          BEGIN
+                                            AttributeLink."Value Boolean" := AttributeValueBool;
+                                            MODIFY(TRUE);
+                                          END;
+                                      END;
+                                      Counter += 1;
+                                    END ELSE IF RemoveAttribute THEN BEGIN
+                                      AttributeLink.FINDFIRST;
+                                      AttributeLink.DELETE(TRUE);
+                                      Counter += 1;
+                                    END;
+                                  END;
+                                END;
+
+               ReqFilterFields=Shop Code,Language Code,Item No. }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+      { 1000000010;;Container;
+                  Name=Container;
+                  ContainerType=ContentArea }
+
+      { 1000000009;1;Group  ;
+                  Name=Optionen;
+                  CaptionML=[DEU=Optionen;
+                             ENU=Options];
+                  GroupType=Group }
+
+      { 1000000008;2;Field  ;
+                  Name=Merkmal;
+                  CaptionML=[DEU=Merkmal;
+                             ENU=Attribute];
+                  SourceExpr=AttributeCode;
+                  TableRelation="Webshop Attribute".Code;
+                  OnValidate=BEGIN
+                               WebshopAttribute.GET(AttributeCode);
+                               AttributeDataType := WebshopAttribute."Data Type";
+                               CASE AttributeDataType OF
+                                 AttributeDataType::Option:
+                                   BEGIN
+                                     CLEAR(AttributeValueInt);
+                                     CLEAR(AttributeValueDec);
+                                     CLEAR(AttributeValueText);
+                                     CLEAR(AttributeValueBool);
+                                     IntVisible;
+                                     DecVisible;
+                                     BoolVisible;
+                                     TextVisible;
+                                     OptVisible;
+                                   END;
+                                 AttributeDataType::Decimal:
+                                   BEGIN
+                                     CLEAR(AttributeValueInt);
+                                     CLEAR(AttributeValueText);
+                                     CLEAR(AttributeValueBool);
+                                     CLEAR(AttributeValueOption);
+                                     IntVisible;
+                                     DecVisible;
+                                     BoolVisible;
+                                     TextVisible;
+                                     OptVisible;
+                                   END;
+                                 AttributeDataType::Integer:
+                                   BEGIN
+                                     CLEAR(AttributeValueText);
+                                     CLEAR(AttributeValueOption);
+                                     CLEAR(AttributeValueBool);
+                                     CLEAR(AttributeValueDec);
+                                     IntVisible;
+                                     DecVisible;
+                                     BoolVisible;
+                                     TextVisible;
+                                     OptVisible;
+                                   END;
+                                 AttributeDataType::Text:
+                                   BEGIN
+                                     CLEAR(AttributeValueOption);
+                                     CLEAR(AttributeValueDec);
+                                     CLEAR(AttributeValueBool);
+                                     CLEAR(AttributeValueInt);
+                                     IntVisible;
+                                     DecVisible;
+                                     BoolVisible;
+                                     TextVisible;
+                                     OptVisible;
+                                   END;
+                                 AttributeDataType::Boolean:
+                                   BEGIN
+                                     CLEAR(AttributeValueOption);
+                                     CLEAR(AttributeValueDec);
+                                     CLEAR(AttributeValueText);
+                                     CLEAR(AttributeValueInt);
+                                     IntVisible;
+                                     DecVisible;
+                                     BoolVisible;
+                                     TextVisible;
+                                     OptVisible;
+                                   END;
+                               END;
+                             END;
+                              }
+
+      { 1000000007;2;Field  ;
+                  Name=Merkmaltyp;
+                  SourceExpr=AttributeDataType;
+                  Visible=FALSE }
+
+      { 1000000005;2;Field  ;
+                  Name=ValIntControl;
+                  CaptionML=[DEU=Merkmalwert Ganzzahl;
+                             ENU=Attribute value integer];
+                  SourceExpr=AttributeValueInt;
+                  Visible=TRUE;
+                  Enabled=IntIsVisible;
+                  Editable=IntIsVisible;
+                  OnAssistEdit=BEGIN
+                                 IF AttributeDataType=AttributeDataType::Option THEN BEGIN
+                                   IF ISSERVICETIER AND GUIALLOWED THEN BEGIN
+                                     AttributeOptionsPage.LOOKUPMODE(TRUE);
+                                     AttributeOptionsPage.RUNMODAL();
+                                   END ELSE IF GUIALLOWED THEN BEGIN
+                                     AttributeOptionsForm.LOOKUPMODE(TRUE);
+                                     AttributeOptionsPage.RUNMODAL();
+                                   END;
+                                 END;
+                               END;
+                                }
+
+      { 1000000006;2;Field  ;
+                  Name=ValDecControl;
+                  CaptionML=[DEU=Merkmalwert Dezimalzahl;
+                             ENU=Attribute value decimal];
+                  SourceExpr=AttributeValueDec;
+                  Enabled=DecIsVisible;
+                  Editable=DecIsVisible }
+
+      { 1000000004;2;Field  ;
+                  Name=ValBoolControl;
+                  CaptionML=[DEU=Merkmalwert Ja/Nein;
+                             ENU=Attribute value yes/no];
+                  SourceExpr=AttributeValueBool;
+                  Enabled=BoolIsVisible;
+                  Editable=BoolIsVisible }
+
+      { 1000000003;2;Field  ;
+                  Name=ValTextControl;
+                  CaptionML=[DEU=Merkmalwert Text;
+                             ENU=Attribute Value Text];
+                  SourceExpr=AttributeValueText;
+                  Enabled=TextIsVisible;
+                  Editable=TextIsVisible }
+
+      { 1000000002;2;Field  ;
+                  Name=ValOptControl;
+                  AssistEdit=Yes;
+                  CaptionML=[DEU=Merkmalwert Option;
+                             ENU=Attribute value option];
+                  SourceExpr=AttributeValueOption;
+                  Enabled=OptIsVisible;
+                  Editable=OptIsVisible;
+                  OnAssistEdit=BEGIN
+                                 WebshopAttributeOption.SETRANGE("Attribute Code",AttributeCode);
+                                 AttributeOptionsPage.SETTABLEVIEW(WebshopAttributeOption);
+                                 AttributeOptionsPage.LOOKUPMODE(TRUE);
+                                 IF AttributeOptionsPage.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                                   AttributeOptionsPage.GETRECORD(WebshopAttributeOption);
+                                   AttributeValueOption := FORMAT(WebshopAttributeOption.Code);
+                                 END;
+                               END;
+                                }
+
+      { 1000000001;2;Field  ;
+                  Name=Bestehende Werte �berschreiben?;
+                  CaptionML=[DEU=Bestehende Werte �berschreiben?;
+                             ENU=Overwrite existing values?];
+                  SourceExpr=OverwriteExisting }
+
+      { 1000000000;2;Field  ;
+                  Name=Merkmal entfernen?;
+                  CaptionML=[DEU=Merkmal entfernen?;
+                             ENU=Remove attribute?];
+                  SourceExpr=RemoveAttribute;
+                  OnValidate=BEGIN
+                               CLEAR(AttributeValueBool);
+                               CLEAR(AttributeValueInt);
+                               CLEAR(AttributeValueDec);
+                               CLEAR(AttributeValueText);
+                               CLEAR(AttributeValueOption);
+                               BoolVisible;
+                               IntVisible;
+                               DecVisible;
+                               TextVisible;
+                               OptVisible;
+                             END;
+                              }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      AttributeCode@1000000024 : Code[20];
+      AttributeDataType@1000000023 : 'Option,Integer,Decimal,Boolean,Text';
+      AttributeOptionsPage@1000000022 : Page 5447326;
+      AttributeOptionsForm@1000000021 : Page 5447326;
+      AttributeValueOption@1000000020 : Text[30];
+      WebshopAttribute@1000000019 : Record 5447320;
+      WebshopAttributeOption@1000000018 : Record 5447322;
+      AssistEditVisible@1000000017 : Boolean;
+      AttributeValueInt@1000000016 : Integer;
+      AttributeValueDec@1000000015 : Decimal;
+      AttributeValueText@1000000014 : Text[120];
+      AttributeValueBool@1000000013 : Boolean;
+      AttrValTextVisible@1000000012 : Boolean;
+      AttrValDecVisible@1000000011 : Boolean;
+      AttrValIntVisible@1000000010 : Boolean;
+      AttrValOptionVisible@1000000009 : Boolean;
+      AttributeLink@1000000008 : Record 5447321;
+      OverwriteExisting@1000000007 : Boolean;
+      Counter@1000000006 : Integer;
+      RemoveAttribute@1000000005 : Boolean;
+      IntIsVisible@1000000004 : Boolean INDATASET;
+      DecIsVisible@1000000003 : Boolean INDATASET;
+      BoolIsVisible@1000000002 : Boolean INDATASET;
+      TextIsVisible@1000000001 : Boolean INDATASET;
+      OptIsVisible@1000000000 : Boolean INDATASET;
+      Text001@1000000026 : TextConst 'DEU=Das Merkmal wurde %1 Webshop-Artikeln zugewiesen.;ENU=The attribute was assigned to %1 webshop items.';
+      Text002@1000000025 : TextConst 'DEU=Das Merkmal wurde bei %1 Webshop-Artikeln entfernt.;ENU=The attribute was removed from %1 webshop-items.';
+      CatShopCode@1000000027 : Code[20];
+      CatLangCode@1000000028 : Code[20];
+      CatLineNo@1000000029 : Integer;
+      CatName@1000000030 : Text[120];
+      WebshopCategory@1000000031 : Record 5447303;
+      ItemShopCode@1000000032 : Code[20];
+      ItemLanguageCode@1000000033 : Code[20];
+      WebshopCategoryList@1000000034 : Page 5447307;
+      WebshopLanguage@1000000035 : Record 5447302;
+      WebshopLanguageList@1000000036 : Page 5447304;
+      WebshopShop@1000000037 : Record 5447301;
+      WebshopItemCategory@1000000038 : Record 5447305;
+
+    PROCEDURE IntVisible@1000000000();
+    BEGIN
+      IntIsVisible := (AttributeDataType = AttributeDataType::Integer) AND (NOT RemoveAttribute);
+    END;
+
+    PROCEDURE DecVisible@1000000001();
+    BEGIN
+      DecIsVisible := (AttributeDataType = AttributeDataType::Decimal) AND (NOT RemoveAttribute);
+    END;
+
+    PROCEDURE BoolVisible@1000000002();
+    BEGIN
+      BoolIsVisible := (AttributeDataType = AttributeDataType::Boolean) AND (NOT RemoveAttribute);
+    END;
+
+    PROCEDURE TextVisible@1000000003();
+    BEGIN
+      TextIsVisible := (AttributeDataType = AttributeDataType::Text) AND (NOT RemoveAttribute);
+    END;
+
+    PROCEDURE OptVisible@1000000004();
+    BEGIN
+      OptIsVisible := (AttributeDataType = AttributeDataType::Option) AND (NOT RemoveAttribute);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

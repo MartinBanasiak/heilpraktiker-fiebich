@@ -1,0 +1,30 @@
+OBJECT Codeunit 5447305 Webshop E-Mail Marketing
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            WebshopSetup.GET;
+            WebshopSetup.TESTFIELD("Newsletter System URL");
+            HYPERLINK(WebshopSetup."Newsletter System URL");
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000000 : Record 5447300;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

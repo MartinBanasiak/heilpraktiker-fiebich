@@ -1,0 +1,103 @@
+OBJECT Page 5447338 Webshop Marketplace Errors
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.09.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Marktplatz Fehler;
+               ENU=Marketplace Errors];
+    SourceTable=Table5447318;
+    PageType=List;
+    ActionList=ACTIONS
+    {
+      { 1000000013;  ;ActionContainer;
+                      Name=<Action1000000010>;
+                      ActionContainerType=ActionItems }
+      { 1000000012;1 ;Action    ;
+                      Name=MarkAsRead;
+                      CaptionML=[DEU=Als gelesen markieren;
+                                 ENU=Mark as Read];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Approve;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 Rec.Read := TRUE;
+                                 Rec.NotRead := FALSE;
+                                 Rec.MODIFY(FALSE);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000011;2;Field  ;
+                SourceExpr=Read }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Error Type";
+                Style=Strong;
+                StyleExpr=NotRead }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Marketplace Type";
+                Style=Strong;
+                StyleExpr=NotRead }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Shop Code";
+                Style=Strong;
+                StyleExpr=NotRead }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Language Code";
+                Style=Strong;
+                StyleExpr=NotRead }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Item No.";
+                Style=Strong;
+                StyleExpr=NotRead }
+
+    { 1000000007;2;Field  ;
+                SourceExpr=Operation;
+                Style=Strong;
+                StyleExpr=NotRead }
+
+    { 1000000008;2;Field  ;
+                SourceExpr=Errorcode;
+                Style=Strong;
+                StyleExpr=NotRead }
+
+    { 1000000009;2;Field  ;
+                SourceExpr=Errortext;
+                Style=Strong;
+                StyleExpr=NotRead }
+
+    { 1000000010;2;Field  ;
+                SourceExpr=Parameter;
+                Style=Strong;
+                StyleExpr=NotRead }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

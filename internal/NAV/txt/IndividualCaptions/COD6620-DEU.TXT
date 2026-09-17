@@ -1,0 +1,29 @@
+C6620-Q1007-P26171-A1031-L999:HINWEIS: Es wurde Skonto auf %1 %2 gewährt.
+C6620-Q1008-P26171-A1031-L999:Es gibt keine negativen Einkaufszeilen zu übertragen.
+C6620-Q1010-P26171-A1031-L999:Es gibt keine negativen Verkaufszeilen zu übertragen.
+C6620-Q1012-P26171-A1031-L999:Bitte geben Sie eine Kreditorennr. ein.
+C6620-Q1014-P26171-A1031-L999:Es gibt keine Verkaufszeilen zu kopieren.
+C6620-Q1018-P26171-A1031-L999:Lieferungsnr.,Rechnungsnr.,Rücksendungsnr.,Gutschriftsnr.
+C6620-Q1019-P26171-A1031-L999:%1 %2:
+C6620-Q1022-P26171-A1031-L999:Wareneingangsnr.,Rechnungsnr.,Rücksendungsnr.,Gutschriftsnr.
+C6620-Q1025-P26171-A1031-L999:Mindestens eine Retourenbelegzeile wurde nicht kopiert. Dies ist der Fall, weil Mengen in der gebuchten Belegzeile vollständig oder teilweise angewendet wurden. Daher konnte der Link "Exakte Einstandspreisstornierung" nicht erstellt werden.
+C6620-Q1026-P26171-A1031-L999:Re.-Nr. ,Lief.-Nr. ,Gutschrift-Nr.  ,Rücksendungs-Nr.
+C6620-Q1027-P26171-A1031-L999:Angebot,Rahmenauftrag,Auftrag,Rechnung,Gutschrift,Geb. Lieferung,Geb. Rechnung,Geb. Gutschrift,Geb. Rücksendung
+C6620-Q1028-P26171-A1031-L999:HINWEIS: Es wurde Skonto auf %1 %2 gewährt.
+C6620-Q1029-P26171-A1031-L999:%1 - %2:
+C6620-Q1030-P26171-A1031-L999:Die Belegzeile(n) mit einem Sachkonto, das nicht direkt bebuchbar ist, wurde(n) durch die Stapelverarbeitung Beleg kopieren nicht in den neuen Beleg übertragen.
+C6620-Q1032-P26171-A1031-L999:Die vorhandenen Zeilen für %1 %2 werden gelöscht.\\Möchten Sie fortfahren?
+C6620-Q1033-P26171-A1031-L999:%1 %2 kann nicht in sich selbst kopiert werden.
+C6620-Q1034-P26171-A1031-L999:Bitte geben Sie eine Belegnr. ein.
+C6620-Q1035-P26171-A1031-L999:Re.-Nr. ,Wareneing.-Nr. ,Gutschrift-Nr.  ,Rücksendungs-Nr.
+C6620-Q1036-P26171-A1031-L999:\
+C6620-Q1037-P26171-A1031-L999:Die Verknüpfung mit der exakten Einstandspreisstornierung wurde nicht für alle kopierten Belegzeilen erstellt.
+C6620-Q1038-P26171-A1031-L999:Retourenbelegzeile enthält nur die ursprüngliche Menge der Belegzeile, die noch nicht manuell ausgeglichen wurde.
+C6620-Q1039-P26171-A1031-L999:Belegzeilen werden kopiert...\
+C6620-Q1040-P26171-A1031-L999:Neue Zeilen werden erstellt             #2######
+C6620-Q1041-P26171-A1031-L999:Herkunftszeilen werden verarbeitet      #1######\
+C6620-Q1046-P26171-A1031-L999:Für mindestens eine der Retourenbelegzeilen wurde die Rückgabe der ursprünglichen Menge festgelegt, die bereits vollständig ausgeglichen wurde. Daher werden beim Buchen des Retourenbelegs die relevanten Posten erneut ausgeglichen. Beachten Sie, dass hierdurch die Kosten vorhandener Posten geändert werden können. Um dies zu vermeiden, löschen Sie vor der Buchung die entsprechenden Zeilen des Retourenbelegs.
+C6620-Q1048-P26171-A1031-L999:Mindestens eine Retourenbelegzeile wurde nicht eingefügt oder enthält nur die Restmenge der ursprünglichen Belegzeile. Der Grund hierfür ist, dass die Mengen in der gebuchten Belegzeile bereits teilweise oder vollständig ausgeglichen wurden. Wenn Sie die ursprüngliche Menge zurückbuchen möchten, wählen Sie vor dem Abrufen der gebuchten Belegzeilen 'Ursprüngliche Menge zurückgeben' aus.
+C6620-Q1054-P26171-A1031-L999:Die gebuchte Verkaufsrechnung %1 deckt mehrere Warenausgänge für verknüpfte Montageaufträge ab, die unter Umständen unterschiedliche Montagekomponenten besitzen. Wählen Sie als Dokumenttyp die Option 'Geb. Warenausgang' und anschließend einen bestimmten Warenausgang von montierten Artikeln aus.
+C6620-Q1065-P26171-A1031-L999:Das Buchungsdatum des kopierten Belegs stimmt nicht mit dem Buchungsdatum des Originalbelegs überein. Die Buchungsnummer des Originalbelegs basiert auf einer chronologischen Nummernfolge. Wenn Sie den kopierten Beleg buchen, wird möglicherweise das falsche Datum in den gebuchten Belegen aufgeführt.\Möchten Sie fortfahren?
+C6620-Q1067-P26171-A1031-L999:Stornierung der Gutschrift %1.

@@ -1,0 +1,9 @@
+T5447311-F10-P8629-A1033-L999:Webshop Coupon Code
+T5447311-F1-P8629-A1033-L999:Shop Code
+T5447311-F2-P4962-Q1000000001-P26171-A1033-L999:The country code of the shipping option and the associated zone do not match.
+T5447311-F2-P8629-A1033-L999:Shipping Group Code
+T5447311-F3-P8629-A1033-L999:Line No.
+T5447311-F5-P8629-A1033-L999:Webshop Campaign Code
+T5447311-F8-P8629-A1033-L999:Mail Shipping Notice
+T5447311-F9-P8629-A1033-L999:No. of Permissions
+T5447311-P8629-A1033-L999:Webshop Shipping Option Link

@@ -1,0 +1,2754 @@
+OBJECT Report 5447311 Webshop Data Export
+{
+  OBJECT-PROPERTIES
+  {
+    Date=04.10.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    ProcessingOnly=Yes;
+    OnPreReport=VAR
+                  X@1102153000 : Integer;
+                  CurrRec@5447301 : Text;
+                  GetRec@5447302 : Text;
+                  Delimiter@5447303 : Text;
+                  InsertValue@5447319 : Text;
+                  SavedRow@5447304 : Integer;
+                  SavedCol@5447305 : Integer;
+                  AttributeValue@5447306 : Text;
+                  AttributeValueType@5447312 : 'Number,Text,Date,Time';
+                  Template@5447307 : Text;
+                  AttributeCol@5447308 : Integer;
+                  AttributeId@5447309 : Integer;
+                  AttributeMap@5447310 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+                  OutValue@5447311 : Variant;
+                  DescriptionCol@5447313 : Integer;
+                  DescriptionMap@5447314 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+                  DescriptionId@5447315 : Integer;
+                  FileCol@5447316 : Integer;
+                  FileMap@5447317 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+                  FileId@5447318 : Integer;
+                BEGIN
+                  WebshopSetup.GET;
+                  IF WebshopManagement.ConnectionTest THEN BEGIN
+                    ExcelBuf.DELETEALL(TRUE);
+
+                    Template := GetExcelTemplate;
+                    Bytes := Convert.FromBase64String(Template);
+                    MemoryStream := MemoryStream.MemoryStream(Bytes);
+                    TempFile.CREATE(TEMPORARYPATH + Text015);
+                    TempFile.CREATEOUTSTREAM(OStream);
+                    MemoryStream.WriteTo(OStream);
+                    TempFile.CLOSE;
+
+                    XlWrkBkWriter := XlWrkBkWriter.Open(TEMPORARYPATH + Text015);
+
+                    WebshopManagement.StateIndicatorOpen('Export');
+
+                    IF ExportCategories THEN BEGIN
+                      IF ShopCode <> '' THEN
+                        WebshopCategory.SETRANGE("Shop Code",ShopCode);
+                      IF LanguageCode <> '' THEN
+                        WebshopCategory.SETRANGE("Language Code",LanguageCode);
+
+                      WebshopManagement.StateIndicatorRegisterTable(WebshopCategory.TABLECAPTION,WebshopCategory.COUNT);
+                    END ELSE
+                      XlWrkBkWriter.DeleteWorksheet('Webshop Kategorie');
+
+
+                    IF ExportItems THEN BEGIN
+                      IF ShopCode <> '' THEN
+                        WebshopItem.SETRANGE("Shop Code",ShopCode);
+                      IF LanguageCode <> '' THEN
+                        WebshopItem.SETRANGE("Language Code",LanguageCode);
+
+                      WebshopManagement.StateIndicatorRegisterTable(WebshopItem.TABLECAPTION,WebshopItem.COUNT);
+                    END ELSE
+                      XlWrkBkWriter.DeleteWorksheet('Webshop Artikel');
+
+                    XlWrkBkWriter.Close;
+                    ExcelBuf.OpenBookToWrite(TEMPORARYPATH + Text015);
+
+                    IF ExportCategories THEN BEGIN
+
+                      ExcelBuf.SelectSheet('Webshop Kategorie');
+                      ExcelBuf.SetCurrentRow(2);
+                      ExcelBuf.SetCurrentCol(0);
+
+                      WebshopManagement.StateIndicatorNewTable(WebshopCategory.TABLECAPTION,WebshopCategory.COUNT);
+
+                      IF WebshopCategory.FINDSET(FALSE,FALSE) THEN REPEAT
+
+                        Delimiter := '-|-';
+                        CLEAR(CurrRec);
+                        WebshopUpdateManagement.AddVar(CurrRec,'table','shop_category');
+                        WebshopUpdateManagement.AddVar(CurrRec,'delimiter',Delimiter);
+                        WebshopUpdateManagement.AddVar(CurrRec,'fields','category_picture,category_icon,category_description,category_description_2,category_description_excerpt');
+                        WebshopUpdateManagement.AddVar(CurrRec,'filter[company]',COMPANYNAME);
+                        WebshopUpdateManagement.AddVar(CurrRec,'filter[shop_code]',WebshopCategory."Shop Code");
+                        WebshopUpdateManagement.AddVar(CurrRec,'filter[language_code]',WebshopCategory."Language Code");
+                        WebshopUpdateManagement.AddVar(CurrRec,'filter[line_no]',WebshopCategory."Line No.");
+                        GetRec := WebshopManagement.GetRequest('get_content',CurrRec);
+                        IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+
+                          ExcelBuf.NewRow;
+
+                          ExcelBuf.AddColumn(WebshopCategory.Name,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory.Level,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Number);
+                          ExcelBuf.AddColumn(WebshopCategory."Search Code",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Show Campain Items",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."No of Campain Items",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Number);
+                          ExcelBuf.AddColumn(WebshopCategory."Show All Items",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Show Sub Categorys",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopManagement.Explode(GetRec,Delimiter),FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopManagement.Explode(GetRec,Delimiter),FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopManagement.Explode(GetRec,Delimiter),FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Sort Items",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."User Sorting",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory.Active,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Validity from",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Date);
+                          ExcelBuf.AddColumn(WebshopCategory."Validity to",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Date);
+                          ExcelBuf.AddColumn(WebshopCategory."Promtion Active",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Promtion Validity from",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Date);
+                          ExcelBuf.AddColumn(WebshopCategory."Promtion Validity to",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Date);
+                          ExcelBuf.AddColumn(WebshopCategory."Promotion Label",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Promotion Description",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Meta Keywords",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Meta Description",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Site Title",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Search Query",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopManagement.Explode(GetRec,Delimiter),FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopManagement.Explode(GetRec,Delimiter),FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopCategory."Google Product Category",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        END;
+
+                        WebshopManagement.StateIndicatorUpdate;
+                      UNTIL WebshopCategory.NEXT = 0;
+                      ExcelBuf.WriteSheet('',COMPANYNAME,USERID);
+                      ExcelBuf.DELETEALL(TRUE);
+                    END;
+
+                    IF ExportItems THEN BEGIN
+                      ExcelBuf.SelectSheet('Webshop Artikel');
+                      ExcelBuf.SetCurrentRow(2);
+                      ExcelBuf.SetCurrentCol(0);
+                      AttributeId := 1;
+
+                      AttributeMap := AttributeMap.Dictionary;
+                      DescriptionMap := DescriptionMap.Dictionary;
+                      FileMap := FileMap.Dictionary;
+                      ItemMap := ItemMap.Dictionary;
+
+                      IF ShopCode <> '' THEN
+                        WebshopItem.SETRANGE("Shop Code",ShopCode);
+                      IF LanguageCode <> '' THEN
+                        WebshopItem.SETRANGE("Language Code",LanguageCode);
+
+                      WebshopManagement.StateIndicatorNewTable(WebshopItem.TABLECAPTION,WebshopItem.COUNT);
+
+                      LoopCount := 0;
+                      IF WebshopItem.FINDSET(FALSE,FALSE) THEN REPEAT
+                        Item.GET(WebshopItem."Item No.");
+                        WebshopItem.CALCFIELDS("Parent Item No.");
+                        ExcelBuf.NewRow;
+                        ExcelBuf.AddColumn(WebshopItem."Item No.",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem.Description,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Is Active",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Starting Date",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Date);
+                        ExcelBuf.AddColumn(WebshopItem."Ending Date",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Date);
+                        ExcelBuf.AddColumn(WebshopItem."Parent Item No.",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(Item."Base Unit of Measure",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(Item."Gen. Prod. Posting Group",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(Item."VAT Prod. Posting Group",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(Item."Inventory Posting Group",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem.Summary,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem.WebshopBasePrice(),FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem.WebshopRetailPrice(),FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Insufficient Inventory Limit",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Search Query",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Minimum Order Quantity",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Quantity Packing Unit",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Order per Packing Unit only",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Allows Gift Packaging",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Is Gift Package",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Meta Keywords",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Meta Description",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Site Title",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem.Customizability,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Shipping Category",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Item Availability Calculation",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Google Product Category",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        ExcelBuf.AddColumn(WebshopItem."Is Greeting Card",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+
+                        SavedRow := ExcelBuf.GetCurrentRow;
+                        SavedCol := ExcelBuf.GetCurrentCol;
+
+                        ItemMap.Add(WebshopItem."Item No.",SavedRow);
+
+                      LoopCount += 1;
+                        IF LoopCount = 5 THEN BEGIN
+                          WebshopManagement.StateIndicatorUpdate;
+                          LoopCount := 0;
+                        END;
+                      UNTIL WebshopItem.NEXT = 0;
+
+                      LoopCount := 0;
+                      IF WebshopItem.FINDSET(FALSE,FALSE) THEN REPEAT
+
+                        CLEAR(OutValue);
+                        ItemMap.TryGetValue(WebshopItem."Item No.",OutValue);
+                        SavedRow := OutValue;
+                        ExcelBuf.SetCurrentRow(SavedRow);
+
+                        DescriptionId := 0;
+                        WebshopItemDescription.SETRANGE("Shop Code",WebshopItem."Shop Code");
+                        WebshopItemDescription.SETRANGE("Language Code",WebshopItem."Language Code");
+                        WebshopItemDescription.SETRANGE("Item No.",WebshopItem."Item No.");
+                        IF WebshopItemDescription.FINDSET(FALSE,FALSE) THEN REPEAT
+                          DescriptionId += 1;
+                          CLEAR(OutValue);
+                          IF DescriptionMap.TryGetValue('Beschreibung ' + FORMAT(DescriptionId),OutValue) THEN BEGIN
+                            DescriptionCol := OutValue;
+                            ExcelBuf.SetCurrentCol(DescriptionCol);
+                          END ELSE BEGIN
+                            DescriptionCol := ExcelBuf.GetLastCol;
+                            ExcelBuf.SetCurrentCol(DescriptionCol);
+                            ExcelBuf.SetCurrentRow(1);
+                            ExcelBuf.AddColumn('Beschreibung ' + FORMAT(DescriptionId),FALSE,'',TRUE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            DescriptionMap.Add('Beschreibung ' + FORMAT(DescriptionId),ExcelBuf.GetCurrentCol-1);
+                            ExcelBuf.AddColumn('Beschreibung ' + FORMAT(DescriptionId) + ' �berschrift',FALSE,'',TRUE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.AddColumn('Beschreibung ' + FORMAT(DescriptionId) + ' Kopfbeschreibung',FALSE,'',TRUE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.SetCurrentRow(2);
+                            ExcelBuf.SetCurrentCol(DescriptionCol);
+                            ExcelBuf.AddColumn('description#' + FORMAT(DescriptionId) + '#',FALSE,'',FALSE,TRUE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.AddColumn('description_headline#' + FORMAT(DescriptionId) + '#',FALSE,'',FALSE,TRUE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.AddColumn('description_headdescription#' + FORMAT(DescriptionId) + '#',FALSE,'',FALSE,TRUE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.SetCurrentRow(SavedRow);
+                            ExcelBuf.SetCurrentCol(DescriptionCol);
+                          END;
+
+                          Delimiter := '-|-';
+                          CLEAR(CurrRec);
+                          WebshopUpdateManagement.AddVar(CurrRec,'table','shop_item_description');
+                          WebshopUpdateManagement.AddVar(CurrRec,'delimiter',Delimiter);
+                          WebshopUpdateManagement.AddVar(CurrRec,'fields','content');
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[company]',COMPANYNAME);
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[shop_code]',WebshopItemDescription."Shop Code");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[language_code]',WebshopItemDescription."Language Code");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[item_no]',WebshopItem."Item No.");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[line_no]',WebshopItemDescription."Line No.");
+                          GetRec := WebshopManagement.GetRequest('get_content',CurrRec);
+
+                          InsertValue := '';
+                          IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+                            InsertValue := WebshopManagement.Explode(GetRec,Delimiter);
+                          END;
+                          ExcelBuf.AddColumn(InsertValue,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopItemDescription.Description,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopItemDescription."Show in Header",FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        UNTIL WebshopItemDescription.NEXT = 0;
+
+                        LoopCount += 1;
+                        IF LoopCount = 5 THEN BEGIN
+                          WebshopManagement.StateIndicatorUpdate;
+                          LoopCount := 0;
+                        END;
+                      UNTIL WebshopItem.NEXT = 0;
+
+                      LoopCount := 0;
+                      IF WebshopItem.FINDSET(FALSE,FALSE) THEN REPEAT
+
+                        CLEAR(OutValue);
+                        ItemMap.TryGetValue(WebshopItem."Item No.",OutValue);
+                        SavedRow := OutValue;
+                        ExcelBuf.SetCurrentRow(SavedRow);
+
+                        FileId := 0;
+                        WebshopItemFile.SETRANGE("Shop Code",WebshopItem."Shop Code");
+                        WebshopItemFile.SETRANGE("Language Code",WebshopItem."Language Code");
+                        WebshopItemFile.SETRANGE("Item No.",WebshopItem."Item No.");
+                        WebshopItemFile.SETRANGE(Type,WebshopItemFile.Type::Picture);
+                        WebshopItemFile.SETRANGE("Variant Code",'');
+                        IF WebshopItemFile.FINDSET(FALSE,FALSE) THEN REPEAT
+                          FileId += 1;
+                          CLEAR(OutValue);
+                          IF FileMap.TryGetValue('Bildname ' + FORMAT(FileId),OutValue) THEN BEGIN
+                            FileCol := OutValue;
+                            ExcelBuf.SetCurrentCol(FileCol);
+                          END ELSE BEGIN
+                            FileCol := ExcelBuf.GetLastCol;
+                            ExcelBuf.SetCurrentCol(FileCol);
+                            ExcelBuf.SetCurrentRow(1);
+                            FileMap.Add('Bildname ' + FORMAT(FileId),ExcelBuf.GetCurrentCol);
+                            ExcelBuf.AddColumn('Bildname ' + FORMAT(FileId),FALSE,'',TRUE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.AddColumn('Bildname ' + FORMAT(FileId) + ' SEO',FALSE,'',TRUE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.SetCurrentRow(2);
+                            ExcelBuf.SetCurrentCol(FileCol);
+                            ExcelBuf.AddColumn('image#' + FORMAT(FileId) + '#',FALSE,'',FALSE,TRUE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.AddColumn('image_seo#' + FORMAT(FileId) + '#',FALSE,'',FALSE,TRUE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.SetCurrentRow(SavedRow);
+                            ExcelBuf.SetCurrentCol(FileCol);
+                          END;
+
+                          Delimiter := '-|-';
+                          CLEAR(CurrRec);
+                          WebshopUpdateManagement.AddVar(CurrRec,'table','shop_item_file');
+                          WebshopUpdateManagement.AddVar(CurrRec,'delimiter',Delimiter);
+                          WebshopUpdateManagement.AddVar(CurrRec,'fields','filename');
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[company]',COMPANYNAME);
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[shop_code]',WebshopItemFile."Shop Code");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[language_code]',WebshopItemFile."Language Code");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[item_no]',WebshopItem."Item No.");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[type]',WebshopItemFile.Type);
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[variant_code]',WebshopItemFile."Variant Code");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[line_no]',WebshopItemFile."Line No.");
+                          GetRec := WebshopManagement.GetRequest('get_content',CurrRec);
+
+                          InsertValue := '';
+                          IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+                            InsertValue := WebshopManagement.Explode(GetRec,Delimiter);
+                          END;
+                          ExcelBuf.AddColumn(InsertValue,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopItemFile.Description,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        UNTIL WebshopItemFile.NEXT = 0;
+
+                        LoopCount += 1;
+                        IF LoopCount = 5 THEN BEGIN
+                          WebshopManagement.StateIndicatorUpdate;
+                          LoopCount := 0;
+                        END;
+                      UNTIL WebshopItem.NEXT = 0;
+
+                      LoopCount := 0;
+                      IF WebshopItem.FINDSET(FALSE,FALSE) THEN REPEAT
+
+                        CLEAR(OutValue);
+                        ItemMap.TryGetValue(WebshopItem."Item No.",OutValue);
+                        SavedRow := OutValue;
+                        ExcelBuf.SetCurrentRow(SavedRow);
+
+                        FileId := 0;
+                        WebshopItemFile.SETRANGE("Shop Code",WebshopItem."Shop Code");
+                        WebshopItemFile.SETRANGE("Language Code",WebshopItem."Language Code");
+                        WebshopItemFile.SETRANGE("Item No.",WebshopItem."Item No.");
+                        WebshopItemFile.SETRANGE(Type,WebshopItemFile.Type::Document);
+                        WebshopItemFile.SETRANGE("Variant Code",'');
+                        IF WebshopItemFile.FINDSET(FALSE,FALSE) THEN REPEAT
+                          FileId += 1;
+                          CLEAR(OutValue);
+                          IF FileMap.TryGetValue('Dokument ' + FORMAT(FileId),OutValue) THEN BEGIN
+                            FileCol := OutValue;
+                            ExcelBuf.SetCurrentCol(FileCol);
+                          END ELSE BEGIN
+                            FileCol := ExcelBuf.GetLastCol;
+                            ExcelBuf.SetCurrentCol(FileCol);
+                            ExcelBuf.SetCurrentRow(1);
+                            FileMap.Add('Dokument ' + FORMAT(FileId),ExcelBuf.GetCurrentCol);
+                            ExcelBuf.AddColumn('Dokument ' + FORMAT(FileId),FALSE,'',TRUE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.AddColumn('Dokument ' + FORMAT(FileId) + ' SEO',FALSE,'',TRUE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.SetCurrentRow(2);
+                            ExcelBuf.SetCurrentCol(FileCol);
+                            ExcelBuf.AddColumn('document#' + FORMAT(FileId) + '#',FALSE,'',FALSE,TRUE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.AddColumn('document_seo#' + FORMAT(FileId) + '#',FALSE,'',FALSE,TRUE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.SetCurrentRow(SavedRow);
+                            ExcelBuf.SetCurrentCol(FileCol);
+                          END;
+
+                          Delimiter := '-|-';
+                          CLEAR(CurrRec);
+                          WebshopUpdateManagement.AddVar(CurrRec,'table','shop_item_file');
+                          WebshopUpdateManagement.AddVar(CurrRec,'delimiter',Delimiter);
+                          WebshopUpdateManagement.AddVar(CurrRec,'fields','filename');
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[company]',COMPANYNAME);
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[shop_code]',WebshopItemFile."Shop Code");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[language_code]',WebshopItemFile."Language Code");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[item_no]',WebshopItem."Item No.");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[type]',WebshopItemFile.Type);
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[variant_code]',WebshopItemFile."Variant Code");
+                          WebshopUpdateManagement.AddVar(CurrRec,'filter[line_no]',WebshopItemFile."Line No.");
+                          GetRec := WebshopManagement.GetRequest('get_content',CurrRec);
+
+                          InsertValue := '';
+                          IF STRPOS(GetRec,Delimiter) <> 0 THEN BEGIN
+                            InsertValue := WebshopManagement.Explode(GetRec,Delimiter);
+                          END;
+                          ExcelBuf.AddColumn(InsertValue,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                          ExcelBuf.AddColumn(WebshopItemFile.Description,FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                        UNTIL WebshopItemFile.NEXT = 0;
+
+                        LoopCount += 1;
+                        IF LoopCount = 5 THEN BEGIN
+                          WebshopManagement.StateIndicatorUpdate;
+                          LoopCount := 0;
+                        END;
+                      UNTIL WebshopItem.NEXT = 0;
+
+                      LoopCount := 0;
+                      IF WebshopItem.FINDSET(FALSE,FALSE) THEN REPEAT
+
+                        CLEAR(OutValue);
+                        ItemMap.TryGetValue(WebshopItem."Item No.",OutValue);
+                        SavedRow := OutValue;
+                        ExcelBuf.SetCurrentRow(SavedRow);
+
+                        WebshopAttributeLink.SETRANGE(Type,WebshopAttributeLink.Type::Item);
+                        WebshopAttributeLink.SETRANGE("No.",WebshopItem."Item No.");
+                        WebshopAttributeLink.SETRANGE("Shop Code",WebshopItem."Shop Code");
+                        WebshopAttributeLink.SETRANGE("Language Code",WebshopItem."Language Code");
+                        IF WebshopAttributeLink.FINDSET(FALSE,FALSE) THEN REPEAT
+                          WebshopAttribute.GET(WebshopAttributeLink."Attribute Code");
+                          AttributeValue := '';
+                          AttributeValueType := AttributeValueType::Text;
+                          CASE WebshopAttribute."Data Type" OF
+                            WebshopAttribute."Data Type"::Boolean:
+                              BEGIN
+                                IF WebshopAttributeLink."Value Boolean" THEN
+                                  AttributeValue := 'Ja'
+                                ELSE
+                                  AttributeValue := 'Nein';
+                                AttributeValueType := AttributeValueType::Text;
+                              END;
+                            WebshopAttribute."Data Type"::Decimal:
+                              BEGIN
+                                AttributeValue := FORMAT(WebshopAttributeLink."Value Decimal");
+                                AttributeValueType := AttributeValueType::Number;
+                              END;
+                            WebshopAttribute."Data Type"::Integer:
+                              BEGIN
+                                AttributeValue := FORMAT(WebshopAttributeLink."Value Integer");
+                                AttributeValueType := AttributeValueType::Number;
+                              END;
+                            WebshopAttribute."Data Type"::Text:
+                              BEGIN
+                                AttributeValue := FORMAT(WebshopAttributeLink."Value Text");
+                                AttributeValueType := AttributeValueType::Text;
+                              END;
+                            WebshopAttribute."Data Type"::Option:
+                              BEGIN
+                                IF WebshopAttributeOption.GET(WebshopAttribute.Code,WebshopAttributeLink."Value Option") THEN
+                                  AttributeValue := WebshopAttributeOption.Description
+                                ELSE
+                                  AttributeValue := '';
+                                AttributeValueType := AttributeValueType::Text;
+                              END;
+                          END;
+
+                          CLEAR(OutValue);
+                          IF AttributeMap.TryGetValue('Attribute ' + WebshopAttribute.Description,OutValue) THEN BEGIN
+                            AttributeCol := OutValue;
+                            ExcelBuf.SetCurrentCol(AttributeCol);
+                          END ELSE BEGIN
+                            AttributeCol := ExcelBuf.GetLastCol;
+                            ExcelBuf.SetCurrentCol(AttributeCol);
+                            ExcelBuf.SetCurrentRow(1);
+                            ExcelBuf.AddColumn('Attribute ' + WebshopAttribute.Description,FALSE,'',TRUE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            AttributeMap.Add('Attribute ' + WebshopAttribute.Description,ExcelBuf.GetCurrentCol-1);
+                            ExcelBuf.SetCurrentRow(2);
+                            ExcelBuf.SetCurrentCol(AttributeCol);
+                            ExcelBuf.AddColumn('attribute#' + FORMAT(WebshopAttribute."Data Type") + '#' + WebshopAttribute.Description,FALSE,'',FALSE,TRUE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                            ExcelBuf.SetCurrentRow(SavedRow);
+                            ExcelBuf.SetCurrentCol(AttributeCol);
+                            AttributeId += 1;
+                          END;
+                          ExcelBuf.AddColumn(AttributeValue,FALSE,'',FALSE,FALSE,FALSE,'',AttributeValueType);
+
+                        UNTIL WebshopAttributeLink.NEXT = 0;
+
+                        LoopCount += 1;
+                        IF LoopCount = 5 THEN BEGIN
+                          WebshopManagement.StateIndicatorUpdate;
+                          LoopCount := 0;
+                        END;
+                      UNTIL WebshopItem.NEXT = 0;
+
+                      ExcelBuf.WriteSheet('',COMPANYNAME,USERID);
+                      //ExcelBuf.DELETEALL(TRUE);
+                    END;
+
+                    WebshopManagement.StateIndicatorClose;
+
+                    ExcelBuf.CloseBook;
+                    ToFile := Text013;
+                    TempFile.OPEN(TEMPORARYPATH + Text015);
+                    TempFile.CREATEINSTREAM(NewStream);
+                    DOWNLOADFROMSTREAM(
+                      NewStream,
+                      Text012,
+                      '',
+                      Text014,
+                      ToFile);
+                    TempFile.CLOSE;
+
+                    MESSAGE('Export abgeschlossen');
+                  END;
+
+                  {
+                  ExcelBuf.DELETEALL(TRUE);
+
+                  IF (ExportCategories) AND (ExportItems) THEN
+                    ExcelBuf.CreateBook('','Sheet ABC');
+
+
+                  ExcelBuf.NewRow;
+                  ExcelBuf.AddColumn('testval1',FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                  ExcelBuf.WriteSheet('',COMPANYNAME,USERID);
+
+                  ExcelBuf.DELETEALL(TRUE);
+                  ExcelBuf.ClearNewRow;
+
+                  ExcelBuf.NewSheet('TestSheet');
+                  ExcelBuf.NewRow;
+                  ExcelBuf.AddColumn('testval2',FALSE,'',FALSE,FALSE,FALSE,'',ExcelBuf."Cell Type"::Text);
+                  ExcelBuf.WriteSheet('',COMPANYNAME,USERID);
+                  ExcelBuf.CloseBook;
+                  }
+
+                  {
+                  ExcelBuf.LOCKTABLE;
+                  ExcelBuf.OpenBook(ServerFileName,SheetName);
+                  ExcelBuf.ReadSheet;
+                  GetLastRowandColumn;
+
+                  IF (AddNavItems) AND (NavItemNoSeries = '') THEN
+                    IF HasLinesWithoutItemNo THEN
+                      ERROR(Text008);
+
+                  WebshopManagement.StateIndicatorOpen(Text009);
+                  WebshopManagement.StateIndicatorRegisterTable(SheetName,TotalRows-2);
+                  WebshopManagement.StateIndicatorNewTable(SheetName,TotalRows-2);
+
+                  IF ImportType = ImportType::category THEN BEGIN
+                    CategoryInitialised := FALSE;
+                    FOR X := 3 TO TotalRows DO BEGIN
+                      InsertCategoryData(X);
+                      WebshopManagement.StateIndicatorUpdate;
+                    END;
+                  END;
+
+                  IF ImportType = ImportType::item THEN BEGIN
+                    FOR X := 3 TO TotalRows DO BEGIN
+                      InsertItemData(X);
+                      WebshopManagement.StateIndicatorUpdate;
+                    END;
+                  END;
+
+                  WebshopManagement.StateIndicatorClose();
+
+                  ExcelBuf.RESET;
+                  ExcelBuf.SETRANGE("Import failed",TRUE);
+                  IF ExcelBuf.FINDSET THEN REPEAT
+                    IF FaildImportRows = '' THEN
+                      FaildImportRows := ''
+                    ELSE
+                      FaildImportRows := ', ' + FORMAT(ExcelBuf."Row No.");
+                  UNTIL ExcelBuf.NEXT = 0;
+
+                  IF FaildImportRows = '' THEN
+                    MESSAGE(Text007)
+                  ELSE
+                    MESSAGE(Text011);
+
+                  ExcelBuf.RESET;
+                  //ExcelBuf.DELETEALL;
+                  }
+                END;
+
+  }
+  DATASET
+  {
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+      OnQueryClosePage=BEGIN
+                         IF CloseAction = ACTION::OK THEN BEGIN
+                          IF (NOT ExportItems) AND (NOT ExportCategories) THEN
+                            EXIT;
+                         END;
+                       END;
+
+    }
+    CONTROLS
+    {
+      { 5447300; ;Container ;
+                  Name=Content;
+                  ContainerType=ContentArea }
+
+      { 5447301;1;Group     ;
+                  CaptionML=[DEU=Optionen;
+                             ENU=Options];
+                  GroupType=Group }
+
+      { 5447302;2;Field     ;
+                  CaptionML=[DEU=Shopcode;
+                             ENU=Shop Code];
+                  SourceExpr=ShopCode;
+                  TableRelation="Webshop Shop".Code;
+                  OnLookup=VAR
+                             WebshopShopList@5447300 : Page 5447302;
+                           BEGIN
+                           END;
+                            }
+
+      { 5447303;2;Field     ;
+                  CaptionML=[DEU=Sprachcode;
+                             ENU=Language Code];
+                  SourceExpr=LanguageCode;
+                  TableRelation="Webshop Language".Code;
+                  OnLookup=VAR
+                             WebshopLanguageList@5447300 : Page 5447304;
+                           BEGIN
+                           END;
+                            }
+
+      { 5447304;2;Field     ;
+                  CaptionML=[DEU=Artikel exportieren;
+                             ENU=Export Items];
+                  SourceExpr=ExportItems }
+
+      { 5447305;2;Field     ;
+                  CaptionML=[DEU=Kategorien exportieren;
+                             ENU=Export Categories];
+                  SourceExpr=ExportCategories }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      Text005@1102153003 : TextConst 'ENU="Imported from Excel "';
+      WebshopSetup@5447302 : Record 5447300;
+      WebshopShop@5447303 : Record 5447301;
+      WebshopLanguage@5447304 : Record 5447302;
+      WebshopCategory@5447317 : Record 5447303;
+      ExcelBuf@5447306 : Record 5447338;
+      ExcelLines@5447300 : Record 5447339;
+      ExcelBuf2@5447338 : Record 5447338;
+      Item@5447330 : Record 27;
+      WebshopItem@5447331 : Record 5447304;
+      WebshopItem2@5447339 : Record 5447304;
+      WebshopItemFile@5447332 : Record 5447307;
+      WebshopItemDescription@5447333 : Record 5447306;
+      WebshopAttribute@5447348 : Record 5447320;
+      WebshopAttributeLink@5447347 : Record 5447321;
+      WebshopAttributeOption@5447346 : Record 5447322;
+      WebshopAttributeOption2@5447345 : Record 5447322;
+      WebshopAttributeLink2@5447344 : Record 5447321;
+      WebshopItemLink@5447357 : Record 5447308;
+      SalesPrice@5447352 : Record 7002;
+      InvtSetup@5447354 : Record 313;
+      FileMgt@5447305 : Codeunit 419;
+      WebshopManagement@5447307 : Codeunit 5447300;
+      WebshopUpdateManagement@5447308 : Codeunit 5447301;
+      NoSeriesMgt@5447356 : Codeunit 396;
+      gSendNow@5447309 : Boolean;
+      CategoryInitialised@5447318 : Boolean;
+      ItemInitialised@5447326 : Boolean;
+      WebshopItemInitialised@5447327 : Boolean;
+      WebshopItemFileInitialised@5447328 : Boolean;
+      WebshopItemDescriptionInitialised@5447329 : Boolean;
+      NavItemExists@5447334 : Boolean;
+      WebshopItemExists@5447335 : Boolean;
+      IsVariant@5447336 : Boolean;
+      ParentItemExists@5447337 : Boolean;
+      HasData@5447351 : Boolean;
+      HasInvtSetup@5447355 : Boolean;
+      EnableAddNavItemsField@5447324 : Boolean INDATASET;
+      EnableNavItemNoSeriesField@5447322 : Boolean INDATASET;
+      DataAdded@5447321 : Boolean INDATASET;
+      ExportItems@5447358 : Boolean INDATASET;
+      ExportCategories@5447359 : Boolean INDATASET;
+      ExcelAlreadyOpen@5447361 : Boolean;
+      ShopCode@5447311 : Code[20];
+      LanguageCode@5447310 : Code[20];
+      UnitOfMeasureCode@5447353 : Code[20];
+      ImportType@5447301 : 'category,item';
+      AddNavItems@5447319 : Boolean INDATASET;
+      NavItemNoSeries@5447320 : Code[10];
+      Window@5447312 : Dialog;
+      CategoryLineNo@5447316 : Integer;
+      I@5447315 : Integer;
+      TotalColumns@5447314 : Integer;
+      TotalRows@5447313 : Integer;
+      ImageFileLineNo@5447343 : Integer;
+      DocumentFileLineNo@5447342 : Integer;
+      DescLineNo@5447341 : Integer;
+      ServerFileName@1102153005 : Text;
+      SheetName@1102153004 : Text[250];
+      Text006@1102153007 : TextConst 'ENU=Import Excel File';
+      ExcelExtensionTok@1102153008 : TextConst '@@@={Locked};ENU=.xlsx';
+      Text010@1102153011 : TextConst 'ENU=Add entries,Replace entries';
+      Text001@1102153017 : TextConst 'ENU=Do you want to create %1 %2.';
+      Text003@1102153018 : TextConst 'ENU=Are you sure you want to %1 for %2 %3.';
+      FaildImportRows@5447349 : Text;
+      XlWrkBkWriter@1000000034 : DotNet "'Microsoft.Dynamics.Nav.OpenXml, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.OpenXml.Spreadsheet.WorkbookWriter";
+      XlWrkBkReader@1000000033 : DotNet "'Microsoft.Dynamics.Nav.OpenXml, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.OpenXml.Spreadsheet.WorkbookReader";
+      XlWrkShtWriter@1000000032 : DotNet "'Microsoft.Dynamics.Nav.OpenXml, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.OpenXml.Spreadsheet.WorksheetWriter";
+      XlWrkShtReader@1000000031 : DotNet "'Microsoft.Dynamics.Nav.OpenXml, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.OpenXml.Spreadsheet.WorksheetReader";
+      XlApp@1000000030 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ApplicationClass" RUNONCLIENT;
+      XlWrkBk@1000000029 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook" RUNONCLIENT;
+      XlWrkSht@1000000028 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Worksheet" RUNONCLIENT;
+      XlHelper@1000000027 : DotNet "'Microsoft.Dynamics.Nav.Integration.Office, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.Integration.Office.Excel.ExcelHelper" RUNONCLIENT;
+      Text002@1000000045 : TextConst 'DEU=Bitte w�hlen Sie einen Shop.;ENU=Please choose a Shop.';
+      Text004@1000000046 : TextConst 'DEU=Bitte w�hlen Sie eine Sprache.;ENU=Please choose a language.';
+      Text007@1000000049 : TextConst 'DEU=Import abgeschlossen.;ENU=Import completed.';
+      Text008@5447323 : TextConst 'DEU=Es wurden Zeilen ohne Artikelnummer gefunden und keine Nummernserie ausgew�hlt.\\Der Import kann nicht durchgef�hrt werden.;ENU=Lines without item no. found and no no. series selected.\\The import got canceled.';
+      Text009@5447325 : TextConst 'DEU=Import wird ausgef�hrt;ENU=Import is running';
+      VariantsMap@5447340 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      Text011@5447350 : TextConst 'DEU=Der Import konnte f�r folgende Zeilen nicht durchgef�hrt werden: \\ %1;ENU=The import of the following rows failed: \\ %1';
+      Text012@5447363 : TextConst 'DEU=Download;ENU=Download';
+      Text013@5447364 : TextConst 'DEU=WebshopExport.xlsx;ENU=WebshopExport.xlsx';
+      Text014@5447365 : TextConst 'DEU=Excel Dateien (*.xlsx)| *.xlsx;ENU=Excel Files (*.xlsx)| *.xlsx';
+      Convert@5447370 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      MemoryStream@5447371 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      Bytes@5447372 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array";
+      ItemMap@5447360 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      XlWrkBkWriterVar@5447374 : Variant;
+      TempFile@5447366 : File;
+      NewStream@5447367 : InStream;
+      ToFile@5447368 : Variant;
+      Text015@5447369 : TextConst 'DEU=ImportTemplate.xlsx;ENU=ImportTemplate.xlsx';
+      OStream@5447373 : OutStream;
+      LoopCount@5447362 : Integer;
+
+    LOCAL PROCEDURE ImportWebshopSetup@1000000043();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ImportWebshopShop@1000000044();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ImportWebshopLanguage@1000000045();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ImportWebshopCategory@1000000046();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ImportWebshopItem@1000000047();
+    BEGIN
+    END;
+
+    PROCEDURE GetLastRowandColumn@1102153009();
+    BEGIN
+      ExcelBuf.SETRANGE("Row No.",1);
+      TotalColumns := ExcelBuf.COUNT;
+
+      ExcelBuf.RESET;
+      IF ExcelBuf.FINDLAST THEN
+        TotalRows := ExcelBuf."Row No.";
+    END;
+
+    PROCEDURE InsertCategoryData@1102153010(RowNo@1102153002 : Integer);
+    VAR
+      CheckCategoryFilesDescription@5447306 : Boolean;
+      CheckCategoryFilesDescription2@5447307 : Boolean;
+      CheckCategoryFilesPromotionDescription@5447308 : Boolean;
+      CheckCategoryFilesExcerpt@5447309 : Boolean;
+      CheckCategoryFilesCategoryImage@5447310 : Boolean;
+      CheckCategoryFilesCategoryIcon@5447311 : Boolean;
+      TmpRowDesc@1000000001 : Text;
+      RowType@1000000002 : Text;
+      RowCount@1000000003 : Text;
+      RowName@1000000004 : Text;
+      SendMap@5447300 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      PrimaryMap@5447303 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      DataMap@5447304 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      Key@5447301 : Variant;
+      Value@5447302 : Variant;
+      LineValue@5447305 : Text;
+    BEGIN
+      I := 1;
+      DataAdded := FALSE;
+      CLEAR(ExcelBuf);
+      ExcelBuf.RESET;
+      ExcelBuf.SETRANGE("Row No.",RowNo);
+      IF ExcelBuf.FINDSET THEN REPEAT
+
+        TmpRowDesc := GetRowType(2,I);
+        RowType := WebshopManagement.Explode(TmpRowDesc,'#');
+        RowCount := WebshopManagement.Explode(TmpRowDesc,'#');
+        RowName := WebshopManagement.Explode(TmpRowDesc,'#');
+        LineValue := '';
+        IF RowType <> '' THEN BEGIN
+          IF NOT CategoryInitialised THEN BEGIN
+
+            CLEAR(WebshopCategory);
+            WebshopCategory.RESET;
+
+            CategoryLineNo := 10000;
+            WebshopCategory.SETRANGE(WebshopCategory."Shop Code",ShopCode);
+            WebshopCategory.SETRANGE(WebshopCategory."Language Code",LanguageCode);
+            IF WebshopCategory.FINDLAST THEN
+              CategoryLineNo := WebshopCategory."Line No." + CategoryLineNo;
+
+            CLEAR(WebshopCategory);
+            WebshopCategory.RESET;
+
+            WebshopCategory.INIT;
+            WebshopCategory.VALIDATE("Shop Code",ShopCode);
+            WebshopCategory.VALIDATE("Language Code",LanguageCode);
+            WebshopCategory.VALIDATE("Line No.",CategoryLineNo);
+
+            CheckCategoryFilesDescription := FALSE;
+            CheckCategoryFilesDescription2 := FALSE;
+            CheckCategoryFilesPromotionDescription := FALSE;
+            CheckCategoryFilesExcerpt := FALSE;
+            CheckCategoryFilesCategoryImage := FALSE;
+            CheckCategoryFilesCategoryIcon := FALSE;
+            CategoryInitialised := TRUE;
+          END;
+
+          IF RowType = 'name' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory.Name,GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'level' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory.Level,GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'search_code' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Search Code",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'show_campaign_items' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Nicht anzeigen') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Campain Items",WebshopCategory."Show Campain Items"::None);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Kachelansicht') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Campain Items",WebshopCategory."Show Campain Items"::List2);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Listenansicht') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Campain Items",WebshopCategory."Show Campain Items"::List1);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'no_of_campaign_items' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."No of Campain Items",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'show_all_items' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Nicht anzeigen') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show All Items",WebshopCategory."Show All Items"::None);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Kachelansicht') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show All Items",WebshopCategory."Show All Items"::List2);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Listenansicht') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show All Items",WebshopCategory."Show All Items"::List1);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'show_sub_categories' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Ja') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Sub Categorys",WebshopCategory."Show Sub Categorys"::Yes);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Nein') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Sub Categorys",WebshopCategory."Show Sub Categorys"::No);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Artikelvorschau') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Sub Categorys",WebshopCategory."Show Sub Categorys"::"Item Preview");
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'category_image' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              AddKeyValueToMap(DataMap,'category_picture',GetValueAtCell(RowNo,I,FALSE));
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesCategoryImage := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'category_symbol' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              AddKeyValueToMap(DataMap,'category_icon',GetValueAtCell(RowNo,I,FALSE));
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesCategoryIcon := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'category_description' THEN BEGIN
+            IF (GetValueAtCell(RowNo,I,FALSE) <> '') OR (ExcelBuf.Lines) THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              IF ExcelBuf.Lines THEN BEGIN
+                ExcelLines.RESET;
+                ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                IF ExcelLines.FINDSET THEN REPEAT
+                  LineValue += ExcelLines.Value;
+                UNTIL ExcelLines.NEXT = 0;
+              END ELSE BEGIN
+                LineValue := GetValueAtCell(RowNo,I,FALSE);
+              END;
+
+              AddKeyValueToMap(DataMap,'category_description',LineValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesDescription := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'sorting' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Beliebtheit') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::OrderRanking);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Artikelnummer') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::ItemNo);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Artikelbezeichnung') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::Name);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Neueste Artikel') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::"Creation Date");
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Manuelle Empfehlung') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::Sorting);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Preis aufsteigend') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::PriceAsc);
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Preis absteigend') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::PriceDec);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'user_sorting' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Ja') THEN
+                WebshopCategory."User Sorting" := TRUE;
+              IF (GetValueAtCell(RowNo,I,FALSE) = 'Nein') THEN
+                WebshopCategory."User Sorting" := FALSE;
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'active' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory.Active,GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'validity_from' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Validity from",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'validity_to' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Validity to",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_active' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Promtion Active",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_validity_from' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Promtion Validity from",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_validity_to' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Promtion Validity to",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_label' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Promotion Label",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_description' THEN BEGIN
+            IF (GetValueAtCell(RowNo,I,FALSE) <> '') OR (ExcelBuf.Lines) THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              IF ExcelBuf.Lines THEN BEGIN
+                ExcelLines.RESET;
+                ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                IF ExcelLines.FINDSET THEN REPEAT
+                  LineValue += ExcelLines.Value;
+                UNTIL ExcelLines.NEXT = 0;
+              END ELSE BEGIN
+                LineValue := GetValueAtCell(RowNo,I,FALSE);
+              END;
+
+              AddKeyValueToMap(DataMap,'promotion_description',LineValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesPromotionDescription := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'meta_keywords' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Meta Keywords",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'meta_description' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Meta Description",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'site_title' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Site Title",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'search_query' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Search Query",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'category_description_2' THEN BEGIN
+            IF (GetValueAtCell(RowNo,I,FALSE) <> '') OR (ExcelBuf.Lines) THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              IF ExcelBuf.Lines THEN BEGIN
+                ExcelLines.RESET;
+                ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                IF ExcelLines.FINDSET THEN REPEAT
+                  LineValue += ExcelLines.Value;
+                UNTIL ExcelLines.NEXT = 0;
+              END ELSE BEGIN
+                LineValue := GetValueAtCell(RowNo,I,FALSE);
+              END;
+
+              AddKeyValueToMap(DataMap,'category_description_2',LineValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesDescription2 := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'category_excerpt' THEN BEGIN
+            IF (GetValueAtCell(RowNo,I,FALSE) <> '') OR (ExcelBuf.Lines) THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              IF ExcelBuf.Lines THEN BEGIN
+                ExcelLines.RESET;
+                ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                IF ExcelLines.FINDSET THEN REPEAT
+                  LineValue += ExcelLines.Value;
+                UNTIL ExcelLines.NEXT = 0;
+              END ELSE BEGIN
+                LineValue := GetValueAtCell(RowNo,I,FALSE);
+              END;
+
+              AddKeyValueToMap(DataMap,'category_description_excerpt',LineValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesExcerpt := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'google_product_category' THEN BEGIN
+            IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Google Product Category",GetValueAtCell(RowNo,I,FALSE));
+              DataAdded := TRUE;
+            END;
+          END;
+
+        END;
+
+        I += 1;
+
+      UNTIL ExcelBuf.NEXT = 0;
+
+      IF (CategoryInitialised) AND (DataAdded) THEN BEGIN
+        WebshopCategory.INSERT;
+        IF CheckCategoryFilesCategoryImage THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,0);
+        IF CheckCategoryFilesCategoryIcon THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,1);
+        IF CheckCategoryFilesDescription THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,2);
+        IF CheckCategoryFilesPromotionDescription THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,3);
+        IF CheckCategoryFilesDescription2 THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,4);
+        IF CheckCategoryFilesExcerpt THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,5);
+        CategoryInitialised := FALSE;
+      END;
+    END;
+
+    PROCEDURE InsertItemData@5447364(RowNo@1102153002 : Integer);
+    VAR
+      CheckCategoryFilesDescription@5447306 : Boolean;
+      CheckCategoryFilesDescription2@5447307 : Boolean;
+      CheckCategoryFilesPromotionDescription@5447308 : Boolean;
+      CheckCategoryFilesExcerpt@5447309 : Boolean;
+      CheckCategoryFilesCategoryImage@5447310 : Boolean;
+      CheckCategoryFilesCategoryIcon@5447311 : Boolean;
+      TmpRowDesc@1000000001 : Text;
+      RowType@1000000002 : Text;
+      RowCount@1000000003 : Text;
+      RowName@1000000004 : Text;
+      SendMap@5447300 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      PrimaryMap@5447303 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      DataMap@5447304 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      Key@5447301 : Variant;
+      Value@5447302 : Variant;
+      LineValue@5447305 : Text;
+    BEGIN
+      ItemInitialised := FALSE;
+      WebshopItemInitialised := FALSE;
+      WebshopItemFileInitialised := FALSE;
+      WebshopItemDescriptionInitialised := FALSE;
+      DataAdded := FALSE;
+      NavItemExists := FALSE;
+      IsVariant := FALSE;
+      ParentItemExists := FALSE;
+      ImageFileLineNo := 10000;
+      DocumentFileLineNo := 10000;
+      DescLineNo := 10000;
+
+
+      IsVariant := IsVariantItem(RowNo,GetColumnNoByName('parent_item_no'));
+      ParentItemExists := IsParentItemExisting(GetValueAtCell(RowNo,GetColumnNoByName('parent_item_no'),FALSE));
+      HasData := LineHasData(RowNo);
+      UnitOfMeasureCode := '';
+
+      //I := 1;
+      //CLEAR(ExcelBuf);
+      //ExcelBuf.RESET;
+      //ExcelBuf.SETRANGE("Row No.",RowNo);
+      //IF (ExcelBuf.FINDSET) THEN REPEAT
+
+      IF (((IsVariant) AND (ParentItemExists)) OR (NOT IsVariant)) AND (HasData) THEN BEGIN
+        FOR I := 1 TO TotalColumns DO BEGIN
+
+          TmpRowDesc := GetRowType(2,I);
+          RowType := WebshopManagement.Explode(TmpRowDesc,'#');
+          RowCount := WebshopManagement.Explode(TmpRowDesc,'#');
+          RowName := WebshopManagement.Explode(TmpRowDesc,'#');
+          LineValue := '';
+          IF RowType <> '' THEN BEGIN
+
+            IF RowType = 'item_no' THEN BEGIN
+              IF ItemInitialised THEN BEGIN
+                Item.MODIFY(TRUE);
+                ItemInitialised := FALSE;
+              END;
+
+              IF WebshopItemInitialised THEN BEGIN
+                WebshopItem.MODIFY(TRUE);
+                WebshopItemInitialised := FALSE;
+              END;
+
+              CLEAR(Item);
+
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF (NOT Item.GET(GetValueAtCell(RowNo,I,FALSE))) AND (AddNavItems) THEN BEGIN
+                  Item.INIT;
+                  Item."No." := GetValueAtCell(RowNo,I,FALSE);
+                  Item.INSERT(TRUE);
+                  ItemInitialised := TRUE;
+                  NavItemExists := TRUE;
+                END;
+              END ELSE BEGIN
+                IF (AddNavItems) AND (NavItemNoSeries <> '') THEN BEGIN
+                  Item.INIT;
+                  Item."No. Series" := NavItemNoSeries;
+                  Item."No." := '';
+                  Item.INSERT(TRUE);
+                  Item."No. Series" := '';
+                  ItemInitialised := TRUE;
+                  NavItemExists := TRUE;
+                END;
+              END;
+
+              IF Item.GET(Item."No.") THEN BEGIN
+                NavItemExists := TRUE;
+                IF NOT WebshopItem.GET(ShopCode,LanguageCode,Item."No.") THEN BEGIN
+                  WebshopItem.INIT;
+                  WebshopItem."Shop Code" := ShopCode;
+                  WebshopItem."Language Code" := LanguageCode;
+                  EVALUATE(WebshopItem."Item No.",Item."No.");
+                  WebshopItem.INSERT(TRUE);
+                  WebshopItemInitialised := TRUE;
+                END ELSE BEGIN
+                  //Prefil line nos if item exists
+                  WebshopItemFile.RESET;
+                  WebshopItemFile.SETRANGE("Shop Code",ShopCode);
+                  WebshopItemFile.SETRANGE("Language Code",LanguageCode);
+                  WebshopItemFile.SETRANGE("Item No.",Item."No.");
+                  WebshopItemFile.SETRANGE("Variant Code",'');
+
+                  WebshopItemFile.SETRANGE(Type,WebshopItemFile.Type::Document);
+                  IF WebshopItemFile.FINDLAST THEN
+                    DocumentFileLineNo := WebshopItemFile."Line No." + 10000;
+
+                  WebshopItemFile.SETRANGE(Type,WebshopItemFile.Type::Picture);
+                  IF WebshopItemFile.FINDLAST THEN
+                    ImageFileLineNo := WebshopItemFile."Line No." + 10000;
+
+                  //Shop Code,Language Code,Item No.,Line No.
+                  WebshopItemDescription.RESET;
+                  WebshopItemDescription.SETRANGE("Shop Code",ShopCode);
+                  WebshopItemDescription.SETRANGE("Language Code",LanguageCode);
+                  WebshopItemDescription.SETRANGE("Item No.",Item."No.");
+
+                  IF WebshopItemDescription.FINDLAST THEN
+                    DescLineNo := WebshopItemDescription."Line No." + 10000;
+                END;
+              END;
+            END;
+
+            IF RowType = 'name' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                Item.VALIDATE(Description,COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(Item.Description)));
+                WebshopItem.Description := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItem.Description));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'active' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF GetValueAtCell(RowNo,I,FALSE) = 'Ja' THEN
+                  WebshopItem.VALIDATE("Is Active",TRUE)
+                ELSE
+                  WebshopItem.VALIDATE("Is Active",FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'parent_item_no' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF NOT WebshopItemLink.GET(WebshopItemLink.Type::Variant,ShopCode,GetValueAtCell(RowNo,I,FALSE),Item."No.") THEN BEGIN
+                  WebshopItemLink.INIT;
+                  WebshopItemLink.Type := WebshopItemLink.Type::Variant;
+                  WebshopItemLink."Shop Code" := ShopCode;
+                  WebshopItemLink."Item No." := GetValueAtCell(RowNo,I,FALSE);
+                  WebshopItemLink."Linked Item No." := Item."No.";
+                  WebshopItemLink.INSERT;
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'validity_from' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Starting Date",GetValueAtCell(RowNo,I,FALSE));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'validity_to' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Ending Date",GetValueAtCell(RowNo,I,FALSE));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'unit_of_measure' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                Item.VALIDATE("Base Unit of Measure",GetValueAtCell(RowNo,I,FALSE));
+                UnitOfMeasureCode := GetValueAtCell(RowNo,I,FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'gen_prod_posting_group' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                Item.VALIDATE("Gen. Prod. Posting Group",GetValueAtCell(RowNo,I,FALSE));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'vat_prod_posting_group' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                Item.VALIDATE("VAT Prod. Posting Group",GetValueAtCell(RowNo,I,FALSE));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'inventory_posting_group' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                Item.VALIDATE("Inventory Posting Group",GetValueAtCell(RowNo,I,FALSE));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'summary' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopItem.Summary := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItem.Summary));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'price' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF RowName = 'Retailprice' THEN BEGIN
+                  WebshopShop.GET(ShopCode);
+                  CASE WebshopShop."Retail Price Type" OF
+                    WebshopShop."Retail Price Type"::"All Customer Price":
+                      BEGIN
+                        SalesPrice.RESET;
+                        CLEAR(SalesPrice);
+                        IF NOT SalesPrice.GET(Item."No.",SalesPrice."Sales Type"::"All Customers",'',0D,'','',UnitOfMeasureCode,0) THEN BEGIN
+                          SalesPrice.INIT;
+                          SalesPrice."Item No." := Item."No.";
+                          SalesPrice."Sales Type" := SalesPrice."Sales Type"::"All Customers";
+                          SalesPrice."Sales Code" := '';
+                          SalesPrice."Starting Date" := 0D;
+                          SalesPrice."Currency Code" := '';
+                          SalesPrice."Variant Code" := '';
+                          SalesPrice."Unit of Measure Code" := UnitOfMeasureCode;
+                          SalesPrice."Minimum Quantity" := 0;
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                          SalesPrice.INSERT;
+                        END ELSE BEGIN
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                          SalesPrice.MODIFY(TRUE);
+                        END;
+                      END;
+                    WebshopShop."Retail Price Type"::"Customer Price Group":
+                      BEGIN
+                        SalesPrice.RESET;
+                        CLEAR(SalesPrice);
+                        IF NOT SalesPrice.GET(Item."No.",SalesPrice."Sales Type"::"Customer Price Group",WebshopShop."Cust. Price Group Retail Price",0D,'','',UnitOfMeasureCode,0) THEN BEGIN
+                          SalesPrice.INIT;
+                          SalesPrice."Item No." := Item."No.";
+                          SalesPrice."Sales Type" := SalesPrice."Sales Type"::"Customer Price Group";
+                          SalesPrice."Sales Code" := WebshopShop."Cust. Price Group Retail Price";
+                          SalesPrice."Starting Date" := 0D;
+                          SalesPrice."Currency Code" := '';
+                          SalesPrice."Variant Code" := '';
+                          SalesPrice."Unit of Measure Code" := UnitOfMeasureCode;
+                          SalesPrice."Minimum Quantity" := 0;
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                          SalesPrice.INSERT;
+                        END ELSE BEGIN
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                          SalesPrice.MODIFY(TRUE);
+                        END;
+                      END;
+                    WebshopShop."Retail Price Type"::"Sales Price":
+                      BEGIN
+                        Item.VALIDATE("Price Includes VAT",WebshopShop."Display Prices Incl. VAT");
+                        EVALUATE(Item."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                      END;
+                  END;
+                  DataAdded := TRUE;
+                END;
+                IF RowName = 'Baseprice' THEN BEGIN
+                  WebshopShop.GET(ShopCode);
+                  CASE WebshopShop."Base Price Type" OF
+                    WebshopShop."Base Price Type"::"All Customer Price":
+                      BEGIN
+                        SalesPrice.RESET;
+                        CLEAR(SalesPrice);
+                        IF NOT SalesPrice.GET(Item."No.",SalesPrice."Sales Type"::"All Customers",'',0D,'','',UnitOfMeasureCode,0) THEN BEGIN
+                          SalesPrice.INIT;
+                          SalesPrice."Item No." := Item."No.";
+                          SalesPrice."Sales Type" := SalesPrice."Sales Type"::"All Customers";
+                          SalesPrice."Sales Code" := '';
+                          SalesPrice."Starting Date" := 0D;
+                          SalesPrice."Currency Code" := '';
+                          SalesPrice."Variant Code" := '';
+                          SalesPrice."Unit of Measure Code" := UnitOfMeasureCode;
+                          SalesPrice."Minimum Quantity" := 0;
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                          SalesPrice.INSERT;
+                        END ELSE BEGIN
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                          SalesPrice.MODIFY(TRUE);
+                        END;
+                      END;
+                    WebshopShop."Base Price Type"::"Customer Price Group":
+                      BEGIN
+                        SalesPrice.RESET;
+                        CLEAR(SalesPrice);
+                        IF NOT SalesPrice.GET(Item."No.",SalesPrice."Sales Type"::"Customer Price Group",WebshopShop."Cust. Price Group Base Price",0D,'','',UnitOfMeasureCode,0) THEN BEGIN
+                          SalesPrice.INIT;
+                          SalesPrice."Item No." := Item."No.";
+                          SalesPrice."Sales Type" := SalesPrice."Sales Type"::"Customer Price Group";
+                          SalesPrice."Sales Code" := WebshopShop."Cust. Price Group Base Price";
+                          SalesPrice."Starting Date" := 0D;
+                          SalesPrice."Currency Code" := '';
+                          SalesPrice."Variant Code" := '';
+                          SalesPrice."Unit of Measure Code" := UnitOfMeasureCode;
+                          SalesPrice."Minimum Quantity" := 0;
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                          SalesPrice.INSERT;
+                        END ELSE BEGIN
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                          SalesPrice.MODIFY(TRUE);
+                        END;
+                      END;
+                    WebshopShop."Retail Price Type"::"Sales Price":
+                      BEGIN
+                        Item.VALIDATE("Price Includes VAT",WebshopShop."Display Prices Incl. VAT");
+                        EVALUATE(Item."Unit Price",GetValueAtCell(RowNo,I,FALSE));
+                      END;
+                  END;
+                  DataAdded := TRUE;
+                END;
+              END;
+            END;
+
+            IF RowType = 'inventory_limit' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Insufficient Inventory Limit",GetValueAtCell(RowNo,I,FALSE));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'search_query' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopItem."Search Query" := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItem."Search Query"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'minimum_order_quantity' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Minimum Order Quantity",GetValueAtCell(RowNo,I,FALSE));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'quantity_packing_unit' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Quantity Packing Unit",GetValueAtCell(RowNo,I,FALSE));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'order_per_packing_unit' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF GetValueAtCell(RowNo,I,FALSE) = 'Ja' THEN
+                  WebshopItem.VALIDATE("Order per Packing Unit only",TRUE)
+                ELSE
+                  WebshopItem.VALIDATE("Order per Packing Unit only",FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'allow_gift_package' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF GetValueAtCell(RowNo,I,FALSE) = 'Ja' THEN
+                  WebshopItem.VALIDATE("Allows Gift Packaging",TRUE)
+                ELSE
+                  WebshopItem.VALIDATE("Allows Gift Packaging",FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'is_gift_package' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF GetValueAtCell(RowNo,I,FALSE) = 'Ja' THEN
+                  WebshopItem.VALIDATE("Is Gift Package",TRUE)
+                ELSE
+                  WebshopItem.VALIDATE("Is Gift Package",FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'meta_keywords' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopItem."Meta Keywords" := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItem."Meta Keywords"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'meta_description' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopItem."Meta Description" := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItem."Meta Description"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'site_title' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopItem."Site Title" := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItem."Site Title"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'customizable' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                CASE GetValueAtCell(RowNo,I,FALSE) OF
+                  'nein':
+                    WebshopItem.VALIDATE(Customizability,0);
+                  'zus�tzlich':
+                    WebshopItem.VALIDATE(Customizability,1);
+                  'ausschlie�lich':
+                    WebshopItem.VALIDATE(Customizability,2);
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'shipping_category' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                CASE GetValueAtCell(RowNo,I,FALSE) OF
+                  'Keine Kategorie':
+                    WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"0";
+                  'Kategorie 1':
+                    WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"1";
+                  'Kategorie 2':
+                    WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"2";
+                  'Kategorie 3':
+                    WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"3";
+                  'Kategorie 4':
+                    WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"4";
+                  'Kategorie 5':
+                    WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"5";
+                  'Kategorie 6':
+                    WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"6";
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'item_orderable' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                CASE GetValueAtCell(RowNo,I,FALSE) OF
+                  'Standard':
+                    WebshopItem."Item Availability Calculation" := WebshopItem."Item Availability Calculation"::ByShopSetting;
+                  'nach Verf�gbarkeit':
+                    WebshopItem."Item Availability Calculation" := WebshopItem."Item Availability Calculation"::ByInventory;
+                  'Nein':
+                    WebshopItem."Item Availability Calculation" := WebshopItem."Item Availability Calculation"::No;
+                  'Ja':
+                    WebshopItem."Item Availability Calculation" := WebshopItem."Item Availability Calculation"::Yes;
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'google_product_category' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopItem."Google Product Category" := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItem."Google Product Category"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'is_greeding_card' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF GetValueAtCell(RowNo,I,FALSE) = 'Ja' THEN
+                  WebshopItem."Is Greeting Card" := TRUE
+                ELSE
+                  WebshopItem."Is Greeting Card" := FALSE;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'image' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF WebshopItemFileInitialised THEN BEGIN
+                  WebshopItemFile.INSERT;
+                  ImageFileLineNo := ImageFileLineNo + 10000;
+                  WebshopItemFile.RESET;
+                  WebshopItemFileInitialised := FALSE;
+                END;
+                WebshopItemFileInitialised := TRUE;
+                WebshopItemFile.INIT;
+                WebshopItemFile."Shop Code" := ShopCode;
+                WebshopItemFile."Language Code" := LanguageCode;
+                WebshopItemFile."Line No." := ImageFileLineNo;
+                WebshopItemFile."Temp Filename" := GetValueAtCell(RowNo,I,FALSE);
+                WebshopItemFile.Type := WebshopItemFile.Type::Picture;
+                WebshopItemFile."Item No." := Item."No.";
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'image_seo' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopItemFile.Description := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItemFile.Description));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'document' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                IF WebshopItemFileInitialised THEN BEGIN
+                  WebshopItemFile.INSERT;
+                  DocumentFileLineNo := DocumentFileLineNo + 10000;
+                  WebshopItemFile.RESET;
+                  WebshopItemFileInitialised := FALSE;
+                END;
+
+                WebshopItemFileInitialised := TRUE;
+                WebshopItemFile.INIT;
+                WebshopItemFile."Shop Code" := ShopCode;
+                WebshopItemFile."Language Code" := LanguageCode;
+                WebshopItemFile."Line No." := DocumentFileLineNo;
+                WebshopItemFile."Temp Filename" := GetValueAtCell(RowNo,I,FALSE);
+                WebshopItemFile.Type := WebshopItemFile.Type::Document;
+                WebshopItemFile."Item No." := Item."No.";
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'document_seo' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopItemFile.Description := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopItemFile.Description));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'headdescription' THEN BEGIN
+              IF (GetValueAtCell(RowNo,I,FALSE) <> '') OR ((ExcelBuf.GET(RowNo,I)) AND (ExcelBuf.Lines)) THEN BEGIN
+                CLEAR(WebshopItemDescription);
+                WebshopItemDescription.INIT;
+                WebshopItemDescription."Shop Code" := ShopCode;
+                WebshopItemDescription."Language Code" := LanguageCode;
+                WebshopItemDescription."Line No." := DescLineNo;
+                WebshopItemDescription."Item No." := Item."No.";
+                WebshopItemDescription."Show in Header" := WebshopItemDescription."Show in Header"::Yes;
+                WebshopItemDescription.Description := RowName;
+
+                PrimaryMap := PrimaryMap.Dictionary;
+                DataMap := DataMap.Dictionary;
+
+                AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+                AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+                AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+                AddKeyValueToMap(PrimaryMap,'item_no',Item."No.");
+                AddKeyValueToMap(PrimaryMap,'line_no',DescLineNo);
+
+                IF ExcelBuf.Lines THEN BEGIN
+                  ExcelLines.RESET;
+                  ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                  ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                  IF ExcelLines.FINDSET THEN REPEAT
+                    LineValue += ExcelLines.Value;
+                  UNTIL ExcelLines.NEXT = 0;
+                END ELSE BEGIN
+                  LineValue := GetValueAtCell(RowNo,I,FALSE);
+                END;
+
+                AddKeyValueToMap(DataMap,'content',LineValue);
+
+                IF SendDataToWeb('shop_item_description',PrimaryMap,DataMap) THEN BEGIN
+                  DataAdded := TRUE;
+                  DescLineNo := DescLineNo + 10000;
+                  WebshopItemDescription.INSERT;
+                  WebshopUpdateManagement.CheckWebshopItemDescription(WebshopItemDescription);
+                END;
+              END;
+            END;
+
+            IF RowType = 'description' THEN BEGIN
+              IF (GetValueAtCell(RowNo,I,FALSE) <> '') OR ((ExcelBuf.GET(RowNo,I)) AND (ExcelBuf.Lines)) THEN BEGIN
+                CLEAR(WebshopItemDescription);
+                WebshopItemDescription.INIT;
+                WebshopItemDescription."Shop Code" := ShopCode;
+                WebshopItemDescription."Language Code" := LanguageCode;
+                WebshopItemDescription."Line No." := DescLineNo;
+                WebshopItemDescription."Item No." := Item."No.";
+                WebshopItemDescription.Description := RowName;
+
+                PrimaryMap := PrimaryMap.Dictionary;
+                DataMap := DataMap.Dictionary;
+
+                AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+                AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+                AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+                AddKeyValueToMap(PrimaryMap,'item_no',Item."No.");
+                AddKeyValueToMap(PrimaryMap,'line_no',DescLineNo);
+
+                IF ExcelBuf.Lines THEN BEGIN
+                  ExcelLines.RESET;
+                  ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                  ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                  IF ExcelLines.FINDSET THEN REPEAT
+                    LineValue += ExcelLines.Value;
+                  UNTIL ExcelLines.NEXT = 0;
+                END ELSE BEGIN
+                  LineValue := GetValueAtCell(RowNo,I,FALSE);
+                END;
+
+                AddKeyValueToMap(DataMap,'content',LineValue);
+
+                IF SendDataToWeb('shop_item_description',PrimaryMap,DataMap) THEN BEGIN
+                  DataAdded := TRUE;
+                  DescLineNo := DescLineNo + 10000;
+                  WebshopItemDescription.INSERT;
+                  WebshopUpdateManagement.CheckWebshopItemDescription(WebshopItemDescription);
+                END;
+              END;
+            END;
+
+            IF RowType = 'attribute' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                WebshopAttribute.RESET;
+                IF NOT WebshopAttribute.GET(COPYSTR(RowName,1,MAXSTRLEN(WebshopAttribute.Code))) THEN BEGIN
+                  WebshopAttribute.INIT;
+                  WebshopAttribute.Code := COPYSTR(RowName,1,MAXSTRLEN(WebshopAttribute.Code));
+                  WebshopAttribute.Description := RowName;
+                  WebshopAttribute."Display Type" := WebshopAttribute."Display Type"::"Drop-Down";
+                  WebshopAttribute."Data Type" := WebshopAttribute."Data Type"::Option;
+                  WebshopAttribute.INSERT;
+                END;
+                IF NOT WebshopAttributeOption.GET(WebshopAttribute.Code,COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopAttributeOption.Code))) THEN BEGIN
+                  WebshopAttributeOption.INIT;
+                  WebshopAttributeOption."Attribute Code" := WebshopAttribute.Code;
+                  WebshopAttributeOption.Code := COPYSTR(GetValueAtCell(RowNo,I,FALSE),1,MAXSTRLEN(WebshopAttribute.Code));
+                  WebshopAttributeOption.Description := GetValueAtCell(RowNo,I,FALSE);
+
+                  WebshopAttributeOption2.RESET;
+                  WebshopAttributeOption2.SETCURRENTKEY("Attribute Code",Sorting);
+                  WebshopAttributeOption2.SETRANGE(WebshopAttributeOption2."Attribute Code",WebshopAttribute.Code);
+                  IF WebshopAttributeOption2.FINDLAST THEN
+                    WebshopAttributeOption.Sorting := WebshopAttributeOption2.Sorting + 1
+                  ELSE
+                    WebshopAttributeOption.Sorting := 0;
+                  WebshopAttributeOption.INSERT;
+                END;
+                IF NOT WebshopAttributeLink.GET(WebshopAttributeLink.Type::Item,Item."No.",ShopCode,LanguageCode,0,WebshopAttribute.Code,WebshopAttributeOption.Code) THEN BEGIN
+                  WebshopAttributeLink.INIT;
+                  WebshopAttributeLink.Type := WebshopAttributeLink.Type::Item;
+                  WebshopAttributeLink."No." := Item."No.";
+                  WebshopAttributeLink."Shop Code" := ShopCode;
+                  WebshopAttributeLink."Language Code" := LanguageCode;
+                  WebshopAttributeLink."Attribute Code" := WebshopAttribute.Code;
+                  WebshopAttributeLink."Value Option" := WebshopAttributeOption.Code;
+
+                  WebshopAttributeLink2.RESET;
+                  WebshopAttributeLink2.SETCURRENTKEY(Type,"No.",Sorting);
+                  WebshopAttributeLink2.SETRANGE(WebshopAttributeLink2.Type,WebshopAttributeLink2.Type::Item);
+                  WebshopAttributeLink2.SETRANGE(WebshopAttributeLink2."Shop Code",ShopCode);
+                  WebshopAttributeLink2.SETRANGE(WebshopAttributeLink2."Language Code",LanguageCode);
+                  WebshopAttributeLink2.SETRANGE(WebshopAttributeLink2."No.",Item."No.");
+                  IF WebshopAttributeLink2.FINDLAST THEN
+                    WebshopAttributeLink.Sorting := WebshopAttributeLink2.Sorting + 1
+                  ELSE
+                    WebshopAttributeLink.Sorting := 0;
+                  WebshopAttributeLink.INSERT;
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'item_link' THEN BEGIN
+              IF GetValueAtCell(RowNo,I,FALSE) <> '' THEN BEGIN
+                CASE RowName OF
+                  'acc_item': BEGIN
+                        IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Acc. Item",ShopCode,Item."No.",GetValueAtCell(RowNo,I,FALSE)) THEN BEGIN
+                          WebshopItemLink.INIT;
+                          WebshopItemLink.Type := WebshopItemLink.Type::"Acc. Item";
+                          WebshopItemLink."Shop Code" := ShopCode;
+                          WebshopItemLink."Item No." := Item."No.";
+                          WebshopItemLink."Linked Item No." := GetValueAtCell(RowNo,I,FALSE);
+                          WebshopItemLink.INSERT;
+                        END;
+                      END;
+                  'spare_part': BEGIN
+                        IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Spare Part",ShopCode,Item."No.",GetValueAtCell(RowNo,I,FALSE)) THEN BEGIN
+                          WebshopItemLink.INIT;
+                          WebshopItemLink.Type := WebshopItemLink.Type::"Spare Part";
+                          WebshopItemLink."Shop Code" := ShopCode;
+                          WebshopItemLink."Item No." := Item."No.";
+                          WebshopItemLink."Linked Item No." := GetValueAtCell(RowNo,I,FALSE);
+                          WebshopItemLink.INSERT;
+                        END;
+                      END;
+                  'alt_item': BEGIN
+                        IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Alt. Item",ShopCode,Item."No.",GetValueAtCell(RowNo,I,FALSE)) THEN BEGIN
+                          WebshopItemLink.INIT;
+                          WebshopItemLink.Type := WebshopItemLink.Type::"Alt. Item";
+                          WebshopItemLink."Shop Code" := ShopCode;
+                          WebshopItemLink."Item No." := Item."No.";
+                          WebshopItemLink."Linked Item No." := GetValueAtCell(RowNo,I,FALSE);
+                          WebshopItemLink.INSERT;
+                        END;
+                      END;
+                  'fit_item': BEGIN
+                        IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Fit. Item",ShopCode,Item."No.",GetValueAtCell(RowNo,I,FALSE)) THEN BEGIN
+                          WebshopItemLink.INIT;
+                          WebshopItemLink.Type := WebshopItemLink.Type::"Fit. Item";
+                          WebshopItemLink."Shop Code" := ShopCode;
+                          WebshopItemLink."Item No." := Item."No.";
+                          WebshopItemLink."Linked Item No." := GetValueAtCell(RowNo,I,FALSE);
+                          WebshopItemLink.INSERT;
+                        END;
+                      END;
+                  END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+          END;
+        END;
+      END ELSE BEGIN
+        IF ExcelBuf.GET(RowNo,I) THEN BEGIN
+          ExcelBuf."Import failed" := TRUE;
+          ExcelBuf.MODIFY(FALSE);
+        END;
+      END;
+      //UNTIL ExcelBuf.NEXT = 0;
+
+      IF ItemInitialised THEN BEGIN
+        Item.MODIFY(TRUE);
+        ItemInitialised := FALSE;
+      END;
+
+      IF WebshopItemInitialised THEN BEGIN
+        WebshopItem.MODIFY(TRUE);
+        WebshopItemInitialised := FALSE;
+      END;
+
+      IF WebshopItemFileInitialised THEN BEGIN
+        WebshopItemFile.INSERT(TRUE);
+        WebshopItemFileInitialised := FALSE;
+      END;
+    END;
+
+    PROCEDURE GetValueAtCell@1102153002(RowNo@1102153000 : Integer;ColNo@1102153001 : Integer;Lines@1000000000 : Boolean) : Text;
+    VAR
+      ExcelBuf1@1102153002 : Record 5447338;
+    BEGIN
+      IF ExcelBuf1.GET(RowNo,ColNo) THEN
+        EXIT(ExcelBuf1."Cell Value as Text")
+      ELSE
+        EXIT('');
+    END;
+
+    PROCEDURE GetRowType@1000000014(RowNo@1102153000 : Integer;ColNo@1102153001 : Integer) : Text;
+    VAR
+      ExcelBuf1@1102153002 : Record 5447338;
+    BEGIN
+      IF ExcelBuf1.GET(RowNo,ColNo) THEN
+        EXIT(ExcelBuf1."Cell Value as Text");
+    END;
+
+    LOCAL PROCEDURE SendDataToWeb@5447369(Table@5447306 : Text;PrimaryMap@5447300 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";DataMap@5447305 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") Ok : Boolean;
+    VAR
+      CurrRec@1000000000 : Text;
+      TextValue@5447301 : Text;
+      Element@5447304 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.KeyValuePair`2";
+    BEGIN
+      WebshopSetup.GET;
+      CLEAR(CurrRec);
+
+      WebshopManagement.AddVar(CurrRec,'table',Table);
+
+      FOREACH Element IN PrimaryMap DO BEGIN
+        WebshopManagement.AddVar(CurrRec,'primary[' + FORMAT(Element.Key) + ']',FORMAT(Element.Value));
+      END;
+
+      FOREACH Element IN DataMap DO BEGIN
+        WebshopManagement.AddVar(CurrRec,'data[' + FORMAT(Element.Key) + ']',FORMAT(Element.Value));
+      END;
+
+      Ok := WebshopManagement.SendRequest('update',CurrRec);
+    END;
+
+    PROCEDURE SelectSheetsName@6(FileName@1000 : Text) : Text[250];
+    VAR
+      TempNameValueBuffer@1009 : TEMPORARY Record 823;
+      SheetNames@1008 : DotNet "'mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.ArrayList";
+      SheetName@1002 : Text[250];
+      SelectedSheetName@1007 : Text[250];
+      i@1001 : Integer;
+      OptionString@1000000000 : Text;
+      SelectedOption@1000000001 : Integer;
+      Text001@1000000003 : TextConst 'DEU=Sie m�ssen einen Dateinamen angeben.;ENU=You must enter a file name.';
+      Text002@1000000002 : TextConst 'DEU=Tabellenblatt ausw�hlen;ENU=Select Table Sheet';
+    BEGIN
+      IF FileName = '' THEN
+        ERROR(Text001);
+
+      XlWrkBkReader := XlWrkBkReader.Open(FileName);
+
+      SelectedSheetName := '';
+      SheetNames := SheetNames.ArrayList(XlWrkBkReader.SheetNames);
+      IF NOT ISNULL(SheetNames) THEN BEGIN
+        IF SheetNames.Count > 1 THEN BEGIN
+          FOR i := 0 TO SheetNames.Count - 1 DO BEGIN
+            IF FORMAT(SheetNames.Item(i)) <> 'Werte' THEN BEGIN
+              IF i <> 0 THEN
+                OptionString += ',';
+              OptionString += FORMAT(SheetNames.Item(i));
+            END;
+          END;
+          SelectedOption := DIALOG.STRMENU(OptionString,1,Text002);
+        END ELSE BEGIN
+          SelectedOption := 1;
+        END;
+        IF SelectedOption > 0 THEN BEGIN
+          SelectedSheetName := FORMAT(SheetNames.Item(SelectedOption - 1));
+        END;
+      END;
+      QuitExcel;
+      EXIT(SelectedSheetName);
+    END;
+
+    PROCEDURE QuitExcel@29();
+    BEGIN
+      // Close and clear the OpenXml book
+      CloseBook;
+
+      // Clear the worksheet automation
+      IF NOT ISNULL(XlWrkSht) THEN
+        CLEAR(XlWrkSht);
+
+      // Clear the workbook automation
+      IF NOT ISNULL(XlWrkBk) THEN
+        CLEAR(XlWrkBk);
+
+      // Clear and quit the Excel application automation
+      IF NOT ISNULL(XlApp) THEN BEGIN
+        XlHelper.CallQuit(XlApp);
+        CLEAR(XlApp);
+      END;
+    END;
+
+    PROCEDURE CloseBook@30();
+    BEGIN
+      IF NOT ISNULL(XlWrkBkWriter) THEN BEGIN
+        XlWrkBkWriter.ClearFormulaCalculations;
+        XlWrkBkWriter.ValidateDocument;
+        XlWrkBkWriter.Close;
+        CLEAR(XlWrkShtWriter);
+        CLEAR(XlWrkBkWriter);
+      END;
+
+      IF NOT ISNULL(XlWrkBkReader) THEN BEGIN
+        CLEAR(XlWrkShtReader);
+        CLEAR(XlWrkBkReader);
+      END;
+    END;
+
+    LOCAL PROCEDURE AddKeyValueToMap@5447372(VAR Map@5447301 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";Key@5447300 : Variant;Value@5447302 : Variant);
+    BEGIN
+      Map.Add(Key,Value);
+    END;
+
+    LOCAL PROCEDURE GetColumnNoByName@5447380(Name@5447300 : Text) "ColumnNo." : Integer;
+    BEGIN
+      ExcelBuf2.SETRANGE("Row No.",2);
+      ExcelBuf2.SETRANGE("Cell Value as Text",Name);
+      IF ExcelBuf2.FINDFIRST THEN
+        "ColumnNo." := ExcelBuf2."Column No.";
+    END;
+
+    LOCAL PROCEDURE IsVariantItem@5447381("RowNo."@5447300 : Integer;"ColumnNo."@5447301 : Integer) Ok : Boolean;
+    BEGIN
+      IF ("RowNo." <> 0) AND ("ColumnNo." <> 0) THEN BEGIN
+        IF GetValueAtCell("RowNo.","ColumnNo.",FALSE) <> '' THEN
+          Ok := TRUE
+        ELSE
+          Ok := FALSE;
+      END ELSE
+        Ok := FALSE;
+    END;
+
+    LOCAL PROCEDURE IsParentItemExisting@5447382("ParentItemNo."@5447300 : Code[10]) Ok : Boolean;
+    BEGIN
+      IF WebshopItem2.GET(ShopCode,LanguageCode,"ParentItemNo.") THEN
+        Ok := TRUE
+      ELSE
+        Ok := FALSE;
+    END;
+
+    LOCAL PROCEDURE LineHasData@5447325("RowNo."@5447300 : Integer) Ok : Boolean;
+    VAR
+      WebshopImportExportBuffer@5447301 : Record 5447338;
+    BEGIN
+      WebshopImportExportBuffer.SETRANGE("Row No.","RowNo.");
+      WebshopImportExportBuffer.SETFILTER("Cell Value as Text",'<>%1','');
+      IF WebshopImportExportBuffer.COUNT = 0 THEN
+        Ok := FALSE
+      ELSE
+        Ok := TRUE;
+    END;
+
+    LOCAL PROCEDURE GetInvtSetup@14();
+    BEGIN
+      IF NOT HasInvtSetup THEN BEGIN
+        InvtSetup.GET;
+        HasInvtSetup := TRUE;
+      END;
+    END;
+
+    PROCEDURE AssistEdit@2() : Boolean;
+    BEGIN
+      GetInvtSetup;
+      InvtSetup.TESTFIELD("Item Nos.");
+      IF NoSeriesMgt.SelectSeries(InvtSetup."Item Nos.",NavItemNoSeries,NavItemNoSeries) THEN BEGIN
+        EXIT(TRUE);
+      END;
+    END;
+
+    LOCAL PROCEDURE HasLinesWithoutItemNo@5447332() Ok : Boolean;
+    VAR
+      EmptyLineFound@5447300 : Boolean;
+    BEGIN
+      Ok := FALSE;
+      ExcelBuf2.RESET;
+      ExcelBuf2.SETRANGE("Column No.",GetColumnNoByName('item_no'));
+      ExcelBuf2.SETFILTER("Row No.",'>%1',2);
+      ExcelBuf2.SETFILTER("Cell Value as Text",'%1','');
+      IF ExcelBuf2.FINDFIRST THEN
+        Ok := TRUE;
+    END;
+
+    LOCAL PROCEDURE GetExcelTemplate@5447306() Template : Text;
+    BEGIN
+      Template := 'UEsDBBQABgAIAAAAIQDfhdIUpAEAAJQJAAATAAgCW0NvbnRlbnRfVHlwZXNdLnhtbCCiBAIooAAC' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADM' +
+      'lstOwzAQRfdI/EPkLWpcXgWhpix4LKES5QPceNpYTWzLMy3t3zNxaYVQoYqIKJtYiTP33LHH8vRv' +
+      'l1WZLCCgcTYTp2lXJGBzp42dZuJ19Ni5FgmSslqVzkImVoDidnB81B+tPGDC0RYzURD5GykxL6BS' +
+      'mDoPlmcmLlSK+DVMpVf5TE1BnnW7PZk7S2CpQ7WGGPTvYaLmJSUPS/68djI2ViR36/9qVCaU96XJ' +
+      'FbFRubD6C6TjJhOTg3b5vGLpFH0ApbEAoKpMfTBMDC9AxImhkDuZAUpsBv3IKuXIaAwL4/GEU/+G' +
+      'UM98n9VH3DNvRzAakqEK9KQqzl0uS/nmwmzs3Cz9WaTp0sQlSitl7Mb3D/z4M8o4nLZspM4vCjf0' +
+      'cfZPfJwfyAfxmQMZn7/fkiizZwOQViVg22UYRfeRCxVAvxCf5mnrBj5r7/FBaswrIOPQ9jGIog34' +
+      'bZd/U37bZd+Uf9FyITblXx6Y3zsw/+qv+XzFD4PzyF1EgObwzZVdR3c8C0EgA9tLe9fltyVyC/Lr' +
+      'bKHucTToHWwZe6rBOwAAAP//AwBQSwMEFAAGAAgAAAAhALVVMCP0AAAATAIAAAsACAJfcmVscy8u' +
+      'cmVscyCiBAIooAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+      'AAAAAAAAAAAAAACskk1PwzAMhu9I/IfI99XdkBBCS3dBSLshVH6ASdwPtY2jJBvdvyccEFQagwNH' +
+      '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' +
+      'bezck+GmFXmtxnO8M8rhphF5rbryHdMj56L1gOS16srTRY83b5bX6s3DXUWLOi3LTIJqIN3dZ7cb' +
+      'yrVYyZt63d877O4f93cokm5Vr0VQNXP8Hd2parb7ULTDvd7RoDvYpd66VdEWQWXc+47uVIVbnACq' +
+      'dvZ3X83dqnSL4KHsdh9XVb1dlG9/5zXQrcq3CELxPPnc1K0KuAgeam/3c1xVw72tGt619npVCRfB' +
+      'Qwnv3p1wzn2oYTlh7jxJvaqGi6AqmoOdJ6lX1XAR/IkaLk7T5VcJzr797xhWVcM9nH+H3/HNVtVw' +
+      'b6uGnzjrnfLbdv3Vrsf5+OwkS+9bcsEmc7+SawS5/OuOegPpYhG1W+VXbPllvz7Q/DUu399FI8+K' +
+      'Vk7b0jH5fl/JdcyXs95J54tcP0w2GdHjjP52hnqccbCdoR9nDLYzzOOM4XaGfZxxuJ3hHmccbWf4' +
+      'htHWUuKGlOPtVn5qENnfTnn+OKXWyIvHGd1aIy8bUrrbn/OqIaU2f68bUmoTeN6QUpvBN2VK8e0S' +
+      'CmVQy3nblFOb54umnNpMF1fLRS1vfVZtrt835dSm8kNTTm0afm7IGdbm4ZemnNpE/NqUU5uJ35py' +
+      'alPxbLMgtwY/rEE/kzVZXIavF7CsvhDLOguxrKgQy9oJsaySEMt6CLEUfoilwkMspRxiKdoQS3WG' +
+      'WMowxFJvIZbCCrFUUIilUkIsFRFimfkQywyHWGYyxDJjIZaZCbHMQIhFuoojAQ0x3CK4RXCL4BbB' +
+      'LYJbBLcIbhHcIrhFcIvgFsEtglsEtwhuEdwiuEVwi+AWwS2CWwS3CG4R3BTcFNwU3BTcFNwU3BTc' +
+      'FNwU3BTcFNwU3BTcFNwU3BTcFNwU3BTcFNwU3BTcFNwU3BTcFNw03DTcNNw03DTcNNw03DTcNNw0' +
+      '3DTcNNw03DTcNNw03DTcNNw03DTcNNw03DTcNNw03DTcDNwM3AzcDNwM3AzcDNwM3AzcDNwM3Azc' +
+      'DNwM3AzcDNwM3AzcDNwM3AzcDNwM3AzcDNwM3CzcLNws3CzcLNws3CzcLNws3CzcLNws3CzcLNws' +
+      '3CzcLNws3CzcLNws3CzcLNws3CzcLNwc3BzcHNwc3BzcHNwc3BzcHNwc3BzcHNwc3BzcHNwc3Bzc' +
+      'HNwc3BzcHNwc3BzcHNwc3BzcPNw83DzcPNw83DzcPNw83DzcPNw83DzcPNw83DzcPNw83DzcPNw8' +
+      '3DzcPNw83DzcPNw83GK4xXCL4RbDLYZbDLcYbjHcYrjFcIvhFsMthlsMtxhuMdxiuMVwi+EWwy2G' +
+      'W1y6deTGNdy9Fn/Art+9yrFHd6+306urpPwj8x/fyBYNyk2DXGM/3MnWLtKjppzaRbpqyqldpMtf' +
+      '2x9/Vu0a3TTl1G6GbFNO7WbINeXUboZ8Q06/Nva4Kac29p+acmpjf96UUxv7i6ac2thfNuXUxv6q' +
+      'Kac29tdNObUbwfOmnNqN4JtNjvwFK9TPsNbnt005tT5fNOXU+vyuKafW5/dNObU+yzOrdR2yz4e1' +
+      'm9efm3JqtfFLU06tNn5tyqnVxm9NOfV71/WjK1moW52uQT+TlRpu5mRFhrh8zlXe+MoKC8dlJYVY' +
+      'VkyIZWWEWFZAiKXSQywVHWKp3BBLhYZYKjHEUnEhlsoKsVRQiKVSQiwVEWKZ+RDLDIe4fPpYjktm' +
+      'LByXmQmxzECIRbqKIwENMdwiuEVwi+AWwS2CWwS3CG4R3CK4RXCL4BbBLYJbBLcIbhHcIrhFcIvg' +
+      'FsEtglsEtwhuEdwU3BTcFNwU3BTcFNwU3BTcFNwU3BTcFNwU3BTcFNwU3BTcFNwU3BTcFNwU3BTc' +
+      'FNwU3BTcNNw03DTcNNw03DTcNNw03DTcNNw03DTcNNw03DTcNNw03DTcNNw03DTcNNw03DTcNNw0' +
+      '3AzcDNwM3AzcDNwM3AzcDNwM3AzcDNwM3AzcDNwM3AzcDNwM3AzcDNwM3AzcDNwM3AzcDNws3Czc' +
+      'LNw2+x/W508LNws3CzcLNws3CzcLNws3CzcLNws3CzcLNws3CzcLNws3CzcLNws3CzcLNwc3BzcH' +
+      'N4d6c3BzcHNwc3BzcHNwc3BzcHNwc3BzcHNwc3BzcHNwc3BzcHNwc3BzcHNwc3DzcPNw83DzcPNw' +
+      '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' +
+      'L3RoZW1lL3RoZW1lMS54bWxQSwECLQAUAAYACAAAACEAjO6RIokXAABvnAAAGAAAAAAAAAAAAAAA' +
+      'AAAVEwAAeGwvd29ya3NoZWV0cy9zaGVldDIueG1sUEsBAi0AFAAGAAgAAAAhADttMkvBAAAAQgEA' +
+      'ACMAAAAAAAAAAAAAAAAA1CoAAHhsL3dvcmtzaGVldHMvX3JlbHMvc2hlZXQxLnhtbC5yZWxzUEsB' +
+      'Ai0AFAAGAAgAAAAhABPELBPCAAAAQgEAACMAAAAAAAAAAAAAAAAA1isAAHhsL3dvcmtzaGVldHMv' +
+      'X3JlbHMvc2hlZXQyLnhtbC5yZWxzUEsBAi0AFAAGAAgAAAAhAL2XTPoFAQAA+gQAACMAAAAAAAAA' +
+      'AAAAAAAA2SwAAHhsL3dvcmtzaGVldHMvX3JlbHMvc2hlZXQzLnhtbC5yZWxzUEsBAi0AFAAGAAgA' +
+      'AAAhADxo/XknBAAAXREAABgAAAAAAAAAAAAAAAAAHy4AAHhsL3dvcmtzaGVldHMvc2hlZXQzLnht' +
+      'bFBLAQItABQABgAIAAAAIQBEev92yAoAAEItAAAYAAAAAAAAAAAAAAAAAHwyAAB4bC93b3Jrc2hl' +
+      'ZXRzL3NoZWV0MS54bWxQSwECLQAUAAYACAAAACEAQP7+pLgDAABnDgAADQAAAAAAAAAAAAAAAAB6' +
+      'PQAAeGwvc3R5bGVzLnhtbFBLAQItABQABgAIAAAAIQAZAVAsugUAACQUAAAUAAAAAAAAAAAAAAAA' +
+      'AF1BAAB4bC9zaGFyZWRTdHJpbmdzLnhtbFBLAQItABQABgAIAAAAIQC6brO4HgEAAMMBAAAUAAAA' +
+      'AAAAAAAAAAAAAElHAAB4bC90YWJsZXMvdGFibGUyLnhtbFBLAQItABQABgAIAAAAIQDLIX6mvQIA' +
+      'ACghAAAnAAAAAAAAAAAAAAAAAJlIAAB4bC9wcmludGVyU2V0dGluZ3MvcHJpbnRlclNldHRpbmdz' +
+      'My5iaW5QSwECLQAUAAYACAAAACEAXJuys7wCAAAoIQAAJwAAAAAAAAAAAAAAAACbSwAAeGwvcHJp' +
+      'bnRlclNldHRpbmdzL3ByaW50ZXJTZXR0aW5nczEuYmluUEsBAi0AFAAGAAgAAAAhAHJ34XT/AQAA' +
+      'ewQAABAAAAAAAAAAAAAAAAAAnE4AAGRvY1Byb3BzL2FwcC54bWxQSwECLQAUAAYACAAAACEAcdRg' +
+      'y7wCAAAoIQAAJwAAAAAAAAAAAAAAAADRUQAAeGwvcHJpbnRlclNldHRpbmdzL3ByaW50ZXJTZXR0' +
+      'aW5nczIuYmluUEsBAi0AFAAGAAgAAAAhANUDHqZOAQAAcQIAABEAAAAAAAAAAAAAAAAA0lQAAGRv' +
+      'Y1Byb3BzL2NvcmUueG1sUEsBAi0AFAAGAAgAAAAhAHGltUsqAQAA2gEAABQAAAAAAAAAAAAAAAAA' +
+      'V1cAAHhsL3RhYmxlcy90YWJsZTcueG1sUEsBAi0AFAAGAAgAAAAhAKZB5j4eAQAAyAEAABQAAAAA' +
+      'AAAAAAAAAAAAs1gAAHhsL3RhYmxlcy90YWJsZTMueG1sUEsBAi0AFAAGAAgAAAAhALF17EkmAQAA' +
+      '2wEAABQAAAAAAAAAAAAAAAAAA1oAAHhsL3RhYmxlcy90YWJsZTQueG1sUEsBAi0AFAAGAAgAAAAh' +
+      'AG8jKAkmAQAA4gEAABQAAAAAAAAAAAAAAAAAW1sAAHhsL3RhYmxlcy90YWJsZTUueG1sUEsBAi0A' +
+      'FAAGAAgAAAAhAGJQ5j8sAQAA2gEAABQAAAAAAAAAAAAAAAAAs1wAAHhsL3RhYmxlcy90YWJsZTYu' +
+      'eG1sUEsBAi0AFAAGAAgAAAAhACpq81AwAQAA4wEAABQAAAAAAAAAAAAAAAAAEV4AAHhsL3RhYmxl' +
+      'cy90YWJsZTEueG1sUEsFBgAAAAAZABkAzAYAAHNfAAAAAA==';
+    END;
+
+    EVENT XlApp@1000000030::AppEvents_Event_NewWorkbook@424(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetSelectionChange@425(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetBeforeDoubleClick@426(Sh@1000000002 : Variant;Target@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetBeforeRightClick@427(Sh@1000000002 : Variant;Target@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetActivate@428(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetDeactivate@429(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetCalculate@430(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetChange@431(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookOpen@432(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookActivate@433(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookDeactivate@434(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforeClose@435(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforeSave@436(Wb@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";SaveAsUI@1000000001 : Boolean;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforePrint@437(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookNewSheet@438(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAddinInstall@439(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAddinUninstall@440(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WindowResize@441(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Wn@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Window");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WindowActivate@442(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Wn@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Window");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WindowDeactivate@443(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Wn@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Window");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetFollowHyperlink@444(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Hyperlink");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableUpdate@445(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookPivotTableCloseConnection@446(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookPivotTableOpenConnection@447(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookSync@448(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";SyncEventType@1000000000 : DotNet "'office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Core.MsoSyncEventType");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforeXmlImport@449(Wb@1000000004 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Map@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XmlMap";Url@1000000002 : Text;IsRefresh@1000000001 : Boolean;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAfterXmlImport@450(Wb@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Map@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XmlMap";IsRefresh@1000000001 : Boolean;Result@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XlXmlImportResult");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforeXmlExport@451(Wb@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Map@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XmlMap";Url@1000000001 : Text;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAfterXmlExport@452(Wb@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Map@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XmlMap";Url@1000000001 : Text;Result@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XlXmlExportResult");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookRowsetComplete@453(Wb@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Description@1000000002 : Text;Sheet@1000000001 : Text;Success@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::AfterCalculate@454();
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableAfterValueChange@455(Sh@1000000002 : Variant;TargetPivotTable@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable";TargetRange@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableBeforeAllocateChanges@456(Sh@1000000004 : Variant;TargetPivotTable@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable";ValueChangeStart@1000000002 : Integer;ValueChangeEnd@1000000001 : Integer;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableBeforeCommitChanges@457(Sh@1000000004 : Variant;TargetPivotTable@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable";ValueChangeStart@1000000002 : Integer;ValueChangeEnd@1000000001 : Integer;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableBeforeDiscardChanges@458(Sh@1000000003 : Variant;TargetPivotTable@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable";ValueChangeStart@1000000001 : Integer;ValueChangeEnd@1000000000 : Integer);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowOpen@459(Pvw@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowBeforeEdit@460(Pvw@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowBeforeClose@461(Pvw@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow";Reason@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XlProtectedViewCloseReason";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowResize@462(Pvw@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowActivate@463(Pvw@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowDeactivate@464(Pvw@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAfterSave@465(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Success@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookNewChart@466(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Ch@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Chart");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetLensGalleryRenderComplete@467(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetTableUpdate@468(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.TableObject");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookModelChange@469(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Changes@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ModelChanges");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetBeforeDelete@470(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    BEGIN
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

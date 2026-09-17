@@ -1,0 +1,83 @@
+N130-C1000000007-P8629-A1033-L999:Subscription
+N130-C1000000010-P8629-A1033-L999:Return Order
+N130-C111-P8631-A1033-L999:Specifies the number of the sales quote document if a quote was used to start the sales process.
+N130-C112-P8629-A1033-L999:Contact No.
+N130-C112-P8631-A1033-L999:Specifies the contact number.
+N130-C114-P8629-A1033-L999:Contact No.
+N130-C114-P8631-A1033-L999:Specifies the number of the contact at the customer's bill-to address.
+N130-C12-P8631-A1033-L999:Specifies a code for the salesperson who normally handles this customer's account.
+N130-C14-P8631-A1033-L999:Specifies the posting date for the entry.
+N130-C18-P8629-A1033-L999:Customer No.
+N130-C18-P8631-A1033-L999:Specifies the number of the customer at the billing address.
+N130-C1905885101-P8629-A1033-L999:Billing
+N130-C1906801201-P8629-A1033-L999:Shipping
+N130-C1-P8629-A1033-L999:General
+N130-C20-P8629-A1033-L999:Name
+N130-C20-P8631-A1033-L999:Specifies the name of the customer that you sent the invoice to.
+N130-C22-P8629-A1033-L999:Address
+N130-C22-P8631-A1033-L999:Specifies the address that you sent the invoice to.
+N130-C24-P8629-A1033-L999:Address 2
+N130-C24-P8631-A1033-L999:Specifies the extended address that you sent the invoice to.
+N130-C26-P8629-A1033-L999:City
+N130-C26-P8631-A1033-L999:Specifies the city of the customer's bill-to address.
+N130-C27-P8631-A1033-L999:Specifies the posting date of the document.
+N130-C28-P8629-A1033-L999:Contact
+N130-C28-P8631-A1033-L999:Specifies the name of the person you regularly contact at the customer to whom you sent the invoice.
+N130-C2-P8631-A1033-L999:Specifies the number of the record.
+N130-C30-P8629-A1033-L999:Address Code
+N130-C30-P8631-A1033-L999:Specifies the code for the customer's additional shipment address.
+N130-C32-P8629-A1033-L999:Name
+N130-C32-P8631-A1033-L999:Specifies the name of the customer that you delivered the items to.
+N130-C34-P8629-A1033-L999:Address
+N130-C34-P8631-A1033-L999:Specifies the address that you delivered the items to.
+N130-C36-P8629-A1033-L999:Address 2
+N130-C36-P8631-A1033-L999:Specifies the extended address that you delivered the items to.
+N130-C38-P8629-A1033-L999:City
+N130-C38-P8631-A1033-L999:Specifies the city of the customer's ship-to address.
+N130-C40-P8629-A1033-L999:Contact
+N130-C40-P8631-A1033-L999:Specifies the name of the person you regularly contact at the address that the items were shipped to.
+N130-C42-P8629-A1033-L999:Code
+N130-C42-P8631-A1033-L999:Specifies the shipment method for the shipment.
+N130-C44-P8631-A1033-L999:Specifies the date when the sales shipment was posted.
+N130-C4-P8631-A1033-L999:Specifies the number of the sales order that this invoice was posted from.
+N130-C52-P8629-A1033-L999:Customer
+N130-C52-P8631-A1033-L999:Specifies the name of customer at the sell-to address.
+N130-C54-P8629-A1033-L999:Address
+N130-C54-P8631-A1033-L999:Specifies the customer's sell-to address.
+N130-C56-P8629-A1033-L999:Address 2
+N130-C56-P8631-A1033-L999:Specifies the customer's extended sell-to address.
+N130-C58-P8629-A1033-L999:City
+N130-C58-P8631-A1033-L999:Specifies the city of the customer's sell-to address.
+N130-C60-P8629-A1033-L999:Contact
+N130-C60-P8631-A1033-L999:Specifies the name of the contact at the customer's sell-to address.
+N130-C62-P8629-A1033-L999:Agent
+N130-C62-P8631-A1033-L999:Specifies which shipping agent is used to transport the items on the sales document to the customer.
+N130-C63-P8631-A1033-L999:Specifies the code for Shortcut Dimension 2.
+N130-C67-P8629-A1033-L999:Post Code
+N130-C67-P8631-A1033-L999:Specifies the post code of the customer's bill-to address.
+N130-C69-P8629-A1033-L999:Post Code
+N130-C69-P8631-A1033-L999:Specifies the post code of the customer's ship-to address.
+N130-C6-P8629-A1033-L999:Sell-to
+N130-C72-P8631-A1033-L999:Specifies the shipping agent's package number.
+N130-C7-P8629-A1033-L999:Shipment Method
+N130-C84-P8631-A1033-L999:Specifies the date that the customer has asked for the order to be delivered.
+N130-C89-P8631-A1033-L999:Specifies the number that the customer uses in their own system to refer to this sales document.
+N130-C8-P8629-A1033-L999:Post Code
+N130-C8-P8631-A1033-L999:Specifies the post code of the customer's sell-to address.
+N130-C93-P8629-A1033-L999:Agent Service
+N130-C93-P8631-A1033-L999:Specifies which shipping agent service is used to transport the items on the sales document to the customer.
+N130-C9-P8631-A1033-L999:Specifies the code for Shortcut Dimension 1.
+N130-P55242-G107-P8629-A1033-L999:Approvals
+N130-P55242-G107-P8631-A1033-L999:View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.
+N130-P55242-G10-P8629-A1033-L999:Statistics
+N130-P55242-G3-P8629-A1033-L999:Certificate of Supply Details
+N130-P55242-G47-P8629-A1033-L999:&Shipment
+N130-P55242-G49-P8629-A1033-L999:&Print
+N130-P55242-G50-P8629-A1033-L999:&Navigate
+N130-P55242-G5-P8629-A1033-L999:Print Certificate of Supply
+N130-P55242-G74-P8629-A1033-L999:F&unctions
+N130-P55242-G78-P8629-A1033-L999:Co&mments
+N130-P55242-G79-P8629-A1033-L999:&Track Package
+N130-P55242-G80-P8629-A1033-L999:Dimensions
+N130-P55242-G80-P8631-A1033-L999:View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.
+N130-P8629-A1033-L999:Posted Sales Shipment

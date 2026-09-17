@@ -1,0 +1,72 @@
+OBJECT Table 5447336 Webshop Permission Group
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Berechtigungsgruppe;
+               ENU=Webshop Permission Group];
+    LookupPageID=Page5447336;
+    DrillDownPageID=Page5447336;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code20        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 10  ;   ;No. of Item Permissions;Integer    ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(ItemGroup),
+                                                                                                      Permission Group Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Artikel-Berecht.;
+                                                              ENU=No. of Item Permissions];
+                                                   Editable=No }
+    { 11  ;   ;No. of Customer Permissions;Integer;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(CustomerGroup),
+                                                                                                      Permission Group Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Debitor-Berecht.;
+                                                              ENU=No. of Customer Permissions];
+                                                   Editable=No }
+    { 12  ;   ;No. of Category Permissions;Integer;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(CategoryGroup),
+                                                                                                      Permission Group Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Kategorie-Berecht.;
+                                                              ENU=No. of Category Permissions];
+                                                   Editable=No }
+    { 13  ;   ;No. of Shipping Permissions;Integer;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(ShippingGroup),
+                                                                                                      Permission Group Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Versand-Berecht.;
+                                                              ENU=No. of Shipping Permissions];
+                                                   Editable=No }
+    { 14  ;   ;No. of Pay. Opt. Permissions;Integer;
+                                                   FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(PaymentGroup),
+                                                                                                      Permission Group Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Zahlungsart-Berechtigungen;
+                                                              ENU=No. of Pay. Opt. Permissions];
+                                                   Editable=No }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

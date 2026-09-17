@@ -1,0 +1,456 @@
+OBJECT Page 5447309 Webshop Item List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.09.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop-Artikel�bersicht;
+               ENU=Webshop Item list];
+    SourceTable=Table5447304;
+    PageType=List;
+    CardPageID=Webshop Item Card;
+    PromotedActionCategoriesML=[DEU=Neu,Vorgang,Berichte,Aktualisierung,Zuordnung,Artikel;
+                                ENU=New,Process,Report,Update,Link,Item];
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+                 SetWebshopFilter();
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       IF "Item No." = LastItemNo THEN
+                         EXIT;
+                       LastItemNo := "Item No.";
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000053;  ;ActionContainer;
+                      Name=<Action1000000010>;
+                      ActionContainerType=ActionItems }
+      { 1000000052;1 ;Action    ;
+                      Name=OnlinePreview;
+                      CaptionML=[DEU=Online Vorschau;
+                                 ENU=Online Preview];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=LaunchWeb;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 HYPERLINK(WebshopManagement.GetItemLink(Rec));
+                               END;
+                                }
+      { 1000000051;1 ;Action    ;
+                      Name=UpdateItem;
+                      CaptionML=[DEU=Webshopartikel Aktualisieren;
+                                 ENU=Update Webshop Item];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.UpdateWebshopItemManually(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text001,"Item No.");
+                               END;
+                                }
+      { 1000000050;1 ;Action    ;
+                      Name=CopyItemAttributes;
+                      CaptionML=[DEU=Artikelmerkmale kopieren;
+                                 ENU=Copy Webshop Attributes];
+                      Image=CopyDimensions;
+                      OnAction=VAR
+                                 TempWebshopItem@1000000000 : Record 5447304;
+                               BEGIN
+                                 TempWebshopItem.SETRANGE("Shop Code","Shop Code");
+                                 TempWebshopItem.SETRANGE("Language Code","Language Code");
+                                 TempWebshopItem.SETRANGE("Item No.","Item No.");
+                                 REPORT.RUN(REPORT::"Webshop Copy Attributes",TRUE,FALSE,TempWebshopItem);
+                               END;
+                                }
+      { 1000000038;  ;ActionContainer;
+                      Name=<Action1900000003>;
+                      ActionContainerType=RelatedInformation }
+      { 1000000037;1 ;ActionGroup;
+                      Name=<Action1000000012>;
+                      CaptionML=[DEU=Masterdaten;
+                                 ENU=Item] }
+      { 1000000034;2 ;Action    ;
+                      Name=BaseItem;
+                      CaptionML=[DEU=Artikelkarte;
+                                 ENU=Item Card];
+                      RunObject=Page 30;
+                      RunPageLink=No.=FIELD(Item No.);
+                      Image=Item }
+      { 1000000033;2 ;Action    ;
+                      Name=NavVariants;
+                      CaptionML=[DEU=Varianten;
+                                 ENU=Variants];
+                      RunObject=Page 5401;
+                      RunPageLink=Item No.=FIELD(Item No.);
+                      Image=ItemVariant }
+      { 1000000032;2 ;Action    ;
+                      Name=SalesPrices;
+                      CaptionML=[DEU=Verkaufspreise;
+                                 ENU=Sales Prices];
+                      RunObject=Page 7002;
+                      RunPageLink=Item No.=FIELD(Item No.);
+                      Image=SalesPrices }
+      { 1000000031;2 ;Action    ;
+                      Name=LineDiscounts;
+                      CaptionML=[DEU=Zeilenrabatte;
+                                 ENU=Line Discounts];
+                      RunObject=Page 7004;
+                      RunPageLink=Type=CONST(Item),
+                                  Code=FIELD(Item No.);
+                      Image=SalesLineDisc }
+      { 1000000030;1 ;ActionGroup;
+                      CaptionML=[DEU=Webshopdaten;
+                                 ENU=Masterdata] }
+      { 1000000029;2 ;Action    ;
+                      Name=Categories;
+                      CaptionML=[DEU=Webshop Kategorien;
+                                 ENU=Categories];
+                      RunObject=Page 5447310;
+                      RunPageLink=Item Shop Code=FIELD(Shop Code),
+                                  Item Language Code=FIELD(Language Code),
+                                  Item No.=FIELD(Item No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Hierarchy;
+                      PromotedCategory=Process }
+      { 1000000028;2 ;Action    ;
+                      Name=Attributes;
+                      CaptionML=[DEU=Artikelmerkmale;
+                                 ENU=Attributes];
+                      RunObject=Page 5447325;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(Item No.),
+                                  Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code);
+                      Image=Dimensions }
+      { 1000000027;2 ;Action    ;
+                      Name=Ratings;
+                      CaptionML=[DEU=Artikelbewertungen;
+                                 ENU=Ratings];
+                      RunObject=Page 5447335;
+                      RunPageView=SORTING(Shop Code,Language Code,Item No.,Line No.)
+                                  ORDER(Ascending);
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Item No.=FIELD(Item No.);
+                      Image=CreateRating }
+      { 1000000026;2 ;Action    ;
+                      Name=WebshopVariants;
+                      CaptionML=[DEU=Webshop Varianten;
+                                 ENU=Webshop Variants];
+                      RunObject=Page 5447315;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Item No.=FIELD(Item No.),
+                                  Type=CONST(Variant);
+                      Image=ItemVariant }
+      { 1000000025;1 ;ActionGroup;
+                      CaptionML=[DEU=Pr�sentation;
+                                 ENU=Presentation] }
+      { 1000000024;2 ;Action    ;
+                      Name=Descriptions;
+                      CaptionML=[DEU=Beschreibungen;
+                                 ENU=Descriptions];
+                      RunObject=Page 5447311;
+                      RunPageView=SORTING(Shop Code,Language Code,Item No.,Line No.)
+                                  ORDER(Ascending)
+                                  WHERE(Type=CONST(Description));
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Item No.=FIELD(Item No.);
+                      Image=Text }
+      { 1000000023;2 ;Action    ;
+                      Name=Images;
+                      CaptionML=[DEU=Bilder;
+                                 ENU=Images];
+                      RunObject=Page 5447313;
+                      RunPageView=SORTING(Shop Code,Language Code,Item No.,Type,Line No.)
+                                  ORDER(Ascending);
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Item No.=FIELD(Item No.),
+                                  Type=CONST(Picture);
+                      Image=Picture }
+      { 1000000022;2 ;Action    ;
+                      Name=Videos;
+                      CaptionML=[DEU=Videos;
+                                 ENU=Videos];
+                      RunObject=Page 5447313;
+                      RunPageView=SORTING(Shop Code,Language Code,Item No.,Type,Line No.)
+                                  ORDER(Ascending);
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Item No.=FIELD(Item No.),
+                                  Type=CONST(Videoclip);
+                      Image=Start }
+      { 1000000021;2 ;Action    ;
+                      Name=Documents;
+                      CaptionML=[DEU=Dokumente;
+                                 ENU=Documents];
+                      RunObject=Page 5447313;
+                      RunPageView=SORTING(Shop Code,Language Code,Item No.,Type,Line No.)
+                                  ORDER(Ascending);
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Item No.=FIELD(Item No.),
+                                  Type=CONST(Document);
+                      Image=Attachments }
+      { 1000000018;1 ;ActionGroup;
+                      CaptionML=[DEU=Cross-Selling;
+                                 ENU=Cross-Selling] }
+      { 1000000017;2 ;Action    ;
+                      Name=FittingItems;
+                      CaptionML=[DEU=Passende Artikel;
+                                 ENU=Fitting Items];
+                      RunObject=Page 5447315;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Item No.=FIELD(Item No.),
+                                  Type=CONST(Fit. Item);
+                      Image=ItemSubstitution }
+      { 1000000016;2 ;Action    ;
+                      Name=AlternativeItems;
+                      CaptionML=[DEU=Alternative Artikel;
+                                 ENU=Alternative Items];
+                      RunObject=Page 5447315;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Item No.=FIELD(Item No.),
+                                  Type=CONST(Alt. Item);
+                      Image=ItemSubstitution }
+      { 1000000015;2 ;Action    ;
+                      Name=Accessories;
+                      CaptionML=[DEU=Zubeh�rartikel;
+                                 ENU=Accessories];
+                      RunObject=Page 5447315;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Item No.=FIELD(Item No.),
+                                  Type=CONST(Acc. Item);
+                      Image=ItemSubstitution }
+      { 1000000014;2 ;Action    ;
+                      Name=SpareParts;
+                      CaptionML=[DEU=Ersatzteile;
+                                 ENU=Spare Parts];
+                      RunObject=Page 5447315;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Item No.=FIELD(Item No.),
+                                  Type=CONST(Spare Part);
+                      Image=ItemSubstitution }
+      { 1000000013;1 ;ActionGroup;
+                      CaptionML=[DEU=Zus�tzliche Funktionen;
+                                 ENU=Additional Features] }
+      { 1000000012;2 ;Action    ;
+                      Name=GroupPermissions;
+                      CaptionML=[DEU=Gruppenberechtigungen;
+                                 ENU=Group permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(ItemGroup),
+                                  Item No.=FIELD(Item No.);
+                      Image=Permission }
+      { 1000000011;2 ;Action    ;
+                      Name=CustomerPermissions;
+                      CaptionML=[DEU=Debitorberechtigungen;
+                                 ENU=Customer permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(CustomerItem),
+                                  Item No.=FIELD(Item No.);
+                      Image=Permission }
+      { 1000000010;2 ;Action    ;
+                      Name=Subscriptions;
+                      CaptionML=[DEU=Abonnements;
+                                 ENU=Subscriptions];
+                      Image=CalendarWorkcenter;
+                      OnAction=VAR
+                                 ItemSubscriptionsList@1000000000 : Page 5447370;
+                               BEGIN
+                                 ItemSubscriptionsList.SetWebshopItem(Rec);
+                                 ItemSubscriptionsList.RUN;
+                               END;
+                                }
+      { 1000000006;2 ;Action    ;
+                      Name=Customizations;
+                      CaptionML=[DEU=Individualisierungen;
+                                 ENU=Customizations];
+                      RunObject=Page 5447375;
+                      RunPageView=SORTING(Item No.,Item Shop Code,Item Language Code,Field Name,Line No.)
+                                  ORDER(Ascending);
+                      RunPageLink=Item No.=FIELD(Item No.),
+                                  Item Shop Code=FIELD(Shop Code),
+                                  Item Language Code=FIELD(Language Code);
+                      Image=AdjustItemCost }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Item No." }
+
+    { 1000000005;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000041;2;Field  ;
+                SourceExpr=Summary;
+                Visible=FALSE }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Is Active" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Starting Date";
+                Visible=FALSE }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Ending Date";
+                Visible=FALSE }
+
+    { 1000000042;2;Field  ;
+                SourceExpr="No. of Descriptions" }
+
+    { 1000000043;2;Field  ;
+                SourceExpr="No. of Pictures" }
+
+    { 1000000044;2;Field  ;
+                SourceExpr="No. of Videoclips";
+                Visible=FALSE }
+
+    { 1000000045;2;Field  ;
+                SourceExpr="No. of Documents";
+                Visible=FALSE }
+
+    { 1000000046;2;Field  ;
+                SourceExpr="No. of Fit. Items" }
+
+    { 1000000047;2;Field  ;
+                SourceExpr="No. of Alt. Item" }
+
+    { 1000000048;2;Field  ;
+                SourceExpr="No. of Acc. Items";
+                Visible=FALSE }
+
+    { 1000000049;2;Field  ;
+                SourceExpr="No. of Spare Parts";
+                Visible=FALSE }
+
+    { 1000000035;2;Field  ;
+                SourceExpr="No. of Attributes" }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Is Variant" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Has Variants" }
+
+    { 1000000040;2;Field  ;
+                SourceExpr="Date Last Modified" }
+
+    { 1000000039;2;Field  ;
+                SourceExpr="Date Last Updated";
+                Visible=FALSE }
+
+    { 1000000036;2;Field  ;
+                CaptionML=[DEU=Kanonische Artikel-Kategorie-URL;
+                           ENU=Canonical Item-Category-URL];
+                SourceExpr=GetCanonicalItemCategoryURL;
+                Editable=FALSE }
+
+    { 1000000019;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 1000000020;1;Part   ;
+                SubPageLink=Shop Code=FIELD(Shop Code);
+                PagePartID=Page5447354;
+                Visible=FALSE;
+                Enabled=FALSE;
+                PartType=Page }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      Text001@1000000001 : TextConst 'DEU=Artikel %1 Online aktualisiert;ENU=Item %1 has been updated';
+      WebshopUpdateManagement@1000000009 : Codeunit 5447301;
+      WebshopItemLink@1000000002 : Record 5447308;
+      WebshopItemFile@1000000003 : Record 5447307;
+      ShopFilter@1000000008 : Code[10];
+      LanguageFilter@1000000007 : Code[10];
+      WebshopSetup@1000000006 : Record 5447300;
+      Shop@1000000005 : Record 5447301;
+      Language@1000000004 : Record 5447302;
+      LastItemNo@1000000010 : Code[20];
+      DoFilter@1000000011 : Boolean;
+
+    PROCEDURE SetWebshopFilter@1000000002();
+    VAR
+      ItemNo@1000000000 : Code[20];
+    BEGIN
+      // Shop ermitteln
+      IF DoFilter THEN BEGIN
+        IF NOT Shop.GET(ShopFilter) THEN BEGIN
+          ShopFilter := '';
+          IF GETFILTER("Shop Code") <> '' THEN
+            IF Shop.GET(GETFILTER("Shop Code")) THEN
+              ShopFilter := Shop.Code;
+          IF (ShopFilter = '') AND (WebshopSetup."Default Shop Code" <> '') THEN
+            IF Shop.GET(WebshopSetup."Default Shop Code") THEN
+              ShopFilter := Shop.Code;
+          IF ShopFilter = '' THEN
+            IF Shop.FINDFIRST THEN
+              ShopFilter := Shop.Code;
+        END;
+
+        // Sprache ermitteln
+        IF ShopFilter <> '' THEN BEGIN
+          IF NOT Language.GET(ShopFilter,LanguageFilter) THEN BEGIN
+            LanguageFilter := '';
+            Language.SETRANGE("Shop Code",ShopFilter);
+            IF GETFILTER("Language Code") <> '' THEN
+              IF Language.GET(ShopFilter,GETFILTER("Language Code")) THEN
+                LanguageFilter := Language.Code;
+            IF (LanguageFilter = '') AND (Shop."Default Language Code" <> '') THEN
+              IF Language.GET(ShopFilter,Shop."Default Language Code") THEN
+                LanguageFilter := Language.Code;
+            IF LanguageFilter = '' THEN
+              IF Language.FINDFIRST THEN
+                LanguageFilter := Language.Code;
+          END;
+
+          // Filter f�r Shop und Sprache setzten
+          IF LanguageFilter <> '' THEN BEGIN
+            FILTERGROUP(4);
+            SETRANGE("Shop Code",ShopFilter);
+            SETRANGE("Language Code",LanguageFilter);
+            FILTERGROUP(0);
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE SetDoFilter@1000000000(SetTo@1000000000 : Boolean);
+    BEGIN
+      DoFilter := SetTo;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

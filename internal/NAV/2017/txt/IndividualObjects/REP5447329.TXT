@@ -1,0 +1,286 @@
+OBJECT Report 5447329 Webshop Create Coupon Codes
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Gutscheincodes erzeugen;
+               ENU=Webshop Create Coupon Codes];
+    ProcessingOnly=Yes;
+    OnInitReport=BEGIN
+                   CharArray[1] :=  '0';
+                   CharArray[2] :=  '1';
+                   CharArray[3] :=  '2';
+                   CharArray[4] :=  '3';
+                   CharArray[5] :=  '4';
+                   CharArray[6] :=  '5';
+                   CharArray[7] :=  '6';
+                   CharArray[8] :=  '7';
+                   CharArray[9] :=  '8';
+                   CharArray[10] :=  '9';
+
+                   CharArray[11] := 'a';
+                   CharArray[12] := 'b';
+                   CharArray[13] := 'c';
+                   CharArray[14] := 'd';
+                   CharArray[15] := 'e';
+                   CharArray[16] := 'f';
+                   CharArray[17] := 'g';
+                   CharArray[18] := 'h';
+                   CharArray[19] := 'i';
+                   CharArray[20] := 'j';
+                   CharArray[21] := 'k';
+                   CharArray[22] := 'l';
+                   CharArray[23] := 'm';
+                   CharArray[24] := 'n';
+                   CharArray[25] := 'o';
+                   CharArray[26] := 'p';
+                   CharArray[27] := 'q';
+                   CharArray[28] := 'r';
+                   CharArray[29] := 's';
+                   CharArray[30] := 't';
+                   CharArray[31] := 'u';
+                   CharArray[32] := 'v';
+                   CharArray[33] := 'w';
+                   CharArray[34] := 'x';
+                   CharArray[35] := 'y';
+                   CharArray[36] := 'z';
+
+                   CharArray[37] := 'A';
+                   CharArray[38] := 'B';
+                   CharArray[39] := 'C';
+                   CharArray[40] := 'D';
+                   CharArray[41] := 'E';
+                   CharArray[42] := 'F';
+                   CharArray[43] := 'G';
+                   CharArray[44] := 'H';
+                   CharArray[45] := 'I';
+                   CharArray[46] := 'J';
+                   CharArray[47] := 'K';
+                   CharArray[48] := 'L';
+                   CharArray[49] := 'M';
+                   CharArray[50] := 'N';
+                   CharArray[51] := 'O';
+                   CharArray[52] := 'P';
+                   CharArray[53] := 'Q';
+                   CharArray[54] := 'R';
+                   CharArray[55] := 'S';
+                   CharArray[56] := 'T';
+                   CharArray[57] := 'U';
+                   CharArray[58] := 'V';
+                   CharArray[59] := 'W';
+                   CharArray[60] := 'X';
+                   CharArray[61] := 'Y';
+                   CharArray[62] := 'Z';
+
+                   CharArray[63] := '!';
+                   CharArray[64] := '�';
+                   CharArray[65] := '$';
+                   CharArray[66] := '%';
+                   CharArray[67] := '&';
+                   CharArray[68] := '(';
+                   CharArray[69] := ')';
+                   CharArray[70] := '-';
+                   CharArray[71] := '_';
+                   CharArray[72] := '#';
+
+                   CharArray1[1] :=  '0';
+                   CharArray1[2] :=  '1';
+                   CharArray1[3] :=  '2';
+                   CharArray1[4] :=  '3';
+                   CharArray1[5] :=  '4';
+                   CharArray1[6] :=  '5';
+                   CharArray1[7] :=  '6';
+                   CharArray1[8] :=  '7';
+                   CharArray1[9] :=  '8';
+                   CharArray1[10] :=  '9';
+
+                   CharArray1[11] := 'A';
+                   CharArray1[12] := 'B';
+                   CharArray1[13] := 'C';
+                   CharArray1[14] := 'D';
+                   CharArray1[15] := 'E';
+                   CharArray1[16] := 'F';
+                   CharArray1[17] := 'G';
+                   CharArray1[18] := 'H';
+                   CharArray1[19] := 'I';
+                   CharArray1[20] := 'J';
+                   CharArray1[21] := 'K';
+                   CharArray1[22] := 'L';
+                   CharArray1[23] := 'M';
+                   CharArray1[24] := 'N';
+                   CharArray1[25] := 'O';
+                   CharArray1[26] := 'P';
+                   CharArray1[27] := 'Q';
+                   CharArray1[28] := 'R';
+                   CharArray1[29] := 'S';
+                   CharArray1[30] := 'T';
+                   CharArray1[31] := 'U';
+                   CharArray1[32] := 'V';
+                   CharArray1[33] := 'W';
+                   CharArray1[34] := 'X';
+                   CharArray1[35] := 'Y';
+                   CharArray1[36] := 'Z';
+
+                   CharArray1[37] := '!';
+                   CharArray1[38] := '&';
+                   CharArray1[39] := '.';
+                   CharArray1[40] := '#';
+                   CharArray1[41] := '+';
+                 END;
+
+    OnPostReport=BEGIN
+                   IF TempCouponLine.FINDSET THEN REPEAT
+                     CouponLine.RESET;
+                     IF NOT CouponLine.GET(TempCouponLine.Code,TempCouponLine."Coupon Code",TempCouponLine."Shop Code",TempCouponLine."Language Code") THEN BEGIN
+                       CouponLine.INIT;
+                       CouponLine.Code := TempCouponLine.Code;
+                       CouponLine."Coupon Code" := TempCouponLine."Coupon Code";
+                       CouponLine."Shop Code" :=  TempCouponLine."Shop Code";
+                       CouponLine."Language Code" :=  TempCouponLine."Language Code";
+                       CouponLine.Amount := TempCouponLine.Amount;
+                       CouponLine."Amount Left" := TempCouponLine."Amount Left";
+                       CouponLine.INSERT(TRUE);
+                     END;
+                   UNTIL TempCouponLine.NEXT = 0;
+                   TempCouponLine.DELETEALL;
+                 END;
+
+  }
+  DATASET
+  {
+    { 9594;    ;DataItem;                    ;
+               DataItemTable=Table5447330;
+               DataItemTableView=SORTING(Code)
+                                 ORDER(Ascending) }
+
+    { 5444;1   ;DataItem;                    ;
+               DataItemTable=Table2000000026;
+               DataItemTableView=SORTING(Number)
+                                 ORDER(Ascending);
+               OnPreDataItem=BEGIN
+                               SETRANGE(Number,1,NoOfCoupon);
+                             END;
+
+               OnAfterGetRecord=VAR
+                                  RandomSeed@1000 : Integer;
+                                  CodeExists@1001 : Boolean;
+                                  TimeText@1002 : Code[10];
+                                  Milliseconds@1003 : Integer;
+                                  WebshopManagement@1000000000 : Codeunit 5447300;
+                                BEGIN
+                                  RandomStr  := '';
+                                  RandomText := '';
+                                  CodeExists := FALSE;
+                                  //Wenn Gesamtl�nge inkl. Pr�fix und Suffix kleiner gleich Feldl�nge und gen�gend unterschiedliche Codes f�r alle
+                                  //zu erzeugenden Gutscheinzeilen erstellt werden k�nnen
+                                  IF (STRLEN(PrefixCode)+RandomStrLen+STRLEN(SuffixCode) <= 20) AND (POWER(41,RandomStrLen)>=(20*NoOfCoupon)) THEN BEGIN
+
+                                    //Erzeugung von Pseudo-Zufallszahl als Seed f�r Randomize-Funktion
+                                    RANDOMIZE();
+
+                                    WHILE (STRLEN(RandomText)<RandomStrLen) DO BEGIN
+                                      IF (STRLEN(RandomText)<RandomStrLen) THEN
+                                        RandomText := RandomText+FORMAT(CharArray1[RANDOM(41)]);
+                                      IF EVALUATE(RandomStr,RandomText) THEN BEGIN
+                                        TempCouponLine.RESET;
+                                        TempCouponLine.SETRANGE("Coupon Code",PrefixCode+RandomStr+SuffixCode);
+                                        IF (STRLEN(RandomText)=RandomStrLen) AND (NOT TempCouponLine.ISEMPTY) THEN BEGIN
+                                          RandomStr := '';
+                                          RandomText := '';
+                                        END;
+                                      END;
+                                      //Wichtig f�r Erzeugung von Pseudo-Zufallszahlen
+                                      SLEEP(1);
+                                    END;
+                                    TempCouponLine.RESET;
+                                    TempCouponLine.INIT;
+                                    TempCouponLine.Code := "Webshop Coupon Header".Code;
+                                    TempCouponLine."Shop Code" := "Webshop Coupon Header"."Shop Code";
+                                    TempCouponLine."Language Code" := "Webshop Coupon Header"."Language Code";
+                                    TempCouponLine."Coupon Code" := PrefixCode+RandomStr+SuffixCode;
+                                    TempCouponLine.Amount := "Webshop Coupon Header".Amount;
+                                    IF ("Webshop Coupon Header"."Value Type" = "Webshop Coupon Header"."Value Type"::Betrag ) OR ("Webshop Coupon Header"."Value Type" = "Webshop Coupon Header"."Value Type"::Individualbetrag) THEN
+                                      TempCouponLine."Amount Left" := "Webshop Coupon Header".Amount;
+                                    TempCouponLine.INSERT(FALSE);
+                                    TempCounter := TempCouponLine.COUNT;
+                                  END ELSE BEGIN
+                                    IF (POWER(41,RandomStrLen)>=(20*NoOfCoupon)) THEN
+                                      ERROR(Error001)
+                                    ELSE
+                                      ERROR(Error002);
+                                  END;
+                                END;
+                                 }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+      { 3   ;    ;Container ;
+                  CaptionML=[DEU=Konfiguration;
+                             ENU=Configuration];
+                  ContainerType=ContentArea }
+
+      { 1   ;1   ;Field     ;
+                  CaptionML=[DEU=Pr�fix;
+                             ENU=Prefix];
+                  SourceExpr=PrefixCode }
+
+      { 4   ;1   ;Field     ;
+                  CaptionML=[DEU=Suffix;
+                             ENU=Suffix];
+                  SourceExpr=SuffixCode }
+
+      { 5   ;1   ;Field     ;
+                  CaptionML=[DEU=Anzahl Zuf�llige Zeichen;
+                             ENU=No. of random characters];
+                  SourceExpr=RandomStrLen }
+
+      { 2   ;1   ;Field     ;
+                  CaptionML=[DEU=Anzahl Gutscheinzeilen;
+                             ENU=No. of Coupon Lines];
+                  SourceExpr=NoOfCoupon }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      StartCouponCode@1000000000 : Code[20];
+      NoOfCoupon@1000000001 : Integer;
+      CouponLine@1000000002 : Record 5447329;
+      CharArray@1000 : ARRAY [72] OF Char;
+      RandomStrLen@1001 : Integer;
+      RandomStr@1002 : Code[20];
+      PrefixCode@1003 : Code[20];
+      SuffixCode@1004 : Code[20];
+      CharArray1@1005 : ARRAY [41] OF Char;
+      TempCouponLine@1006 : TEMPORARY Record 5447329;
+      Error001@1007 : TextConst 'DEU=Die Gesamtzeichenl�nge ist gr��er als erlaubt. Pr�fix + zuf�llige Zeichen + Suffix darf maximal 20 Zeichen lang sein.;ENU=The total character length is larger than allowed. Prefix + random characters + suffix must not exceed a length of 20 characters.';
+      RandomText@1008 : Text;
+      Error002@1009 : TextConst 'DEU=Die aktuell angegebene Anzahl zuf�lliger Zeichen ist unzureichend um genug ausreichend zuf�llige Codes zu erzeugen. Bitte erh�hen Sie die Anzahl zuf�lliger Zeichen oder verringern Sie die Anzahl  der zu generierenden Gutscheinzeilen;ENU=The currently given number of random characters is insufficient to generate enough sufficiently random codes. Please increase the number of random characters or decrease the number of coupon lines to be generated.';
+      TempCounter@1010 : Integer;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

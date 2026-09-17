@@ -1,0 +1,152 @@
+OBJECT Table 5447350 Webshop Assembly Resolver
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    DataPerCompany=No;
+    OnDelete=VAR
+               AddInTable@1000000000 : Record 2000000069;
+             BEGIN
+               IF AddInTable.GET(AddInName,AddInToken,AddInVersion) THEN
+                 AddInTable.DELETE();
+             END;
+
+  }
+  FIELDS
+  {
+    { 1   ;   ;Assembly Name       ;Text250       ;CaptionML=[DEU=Steuerelement Name;
+                                                              ENU=Assembly Name] }
+    { 2   ;   ;User ID             ;Code50        ;TableRelation=User."User Name";
+                                                   OnValidate=VAR
+                                                                UserMgt@1000 : Codeunit 418;
+                                                              BEGIN
+                                                                UserMgt.ValidateUserID("User ID");
+                                                              END;
+
+                                                   OnLookup=VAR
+                                                              UserMgt@1000 : Codeunit 418;
+                                                            BEGIN
+                                                              UserMgt.LookupUserID("User ID");
+                                                            END;
+
+                                                   CaptionML=[DEU=User ID;
+                                                              ENU=User ID] }
+    { 3   ;   ;Tier                ;Option        ;CaptionML=[DEU=Tier;
+                                                              ENU=Tier];
+                                                   OptionCaptionML=[DEU=Beides,Server,Client;
+                                                                    ENU=Both,Server,Client];
+                                                   OptionString=Both,Server,Client }
+    { 10  ;   ;Assembly            ;BLOB          ;CaptionML=[DEU=Steuerelement;
+                                                              ENU=Assembly] }
+    { 11  ;   ;AddInName           ;Text250       ;CaptionML=[DEU=AddInName;
+                                                              ENU=AddInName] }
+    { 12  ;   ;AddInToken          ;Text250       ;CaptionML=[DEU=AddInToken;
+                                                              ENU=AddInToken] }
+    { 13  ;   ;AddInVersion        ;Text250       ;CaptionML=[DEU=AddInVersion;
+                                                              ENU=AddInVersion] }
+  }
+  KEYS
+  {
+    {    ;Assembly Name,User ID,Tier              ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    PROCEDURE InstallAssembly@3(VAR InStr@1000 : InStream;VAR Asm@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Reflection.Assembly";Name@1004 : Text;InstallAddIn@1000000009 : Boolean);
+    VAR
+      Asmbl@1005 : Record 5447350;
+      MemStream@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      OutStr@1003 : OutStream;
+      AsmblName@1000000000 : Text;
+      Values@1000000001 : Text;
+      Seperator@1000000002 : Text;
+      HelperName@1000000003 : Text;
+      HelperValues@1000000004 : Text;
+      AddInTable@1000000005 : Record 2000000069;
+      AddInNameVar@1000000006 : Text[250];
+      AddInVersionVar@1000000007 : Text[250];
+      AddInTokenVar@1000000008 : Text[250];
+      AddInNameTmp@1000000010 : Text[250];
+    BEGIN
+      WITH Asmbl DO BEGIN
+        MemStream := MemStream.MemoryStream();
+        COPYSTREAM(MemStream,InStr);
+        Asm := Asm.Load(MemStream.ToArray());
+
+        IF Name = '' THEN BEGIN
+          "Assembly Name" := Asm.FullName;
+        END ELSE
+          "Assembly Name" := Name;
+
+        //SL Save Assembly Details
+        AddInNameTmp := Asm.FullName;
+        Seperator := ',';
+        AddInNameVar := Token(AddInNameTmp,Seperator);
+        HelperName := Token(AddInNameTmp,Seperator);
+        Seperator := '=';
+        AddInVersionVar := Token(HelperName,Seperator);
+        AddInVersionVar := Token(HelperName,Seperator);
+
+        Seperator := ',';
+        HelperName := Token(AddInNameTmp,Seperator);
+        HelperName := Token(AddInNameTmp,Seperator);
+        Seperator := '=';
+        AddInTokenVar := Token(HelperName,Seperator);
+        AddInTokenVar := Token(HelperName,Seperator);
+
+        IF InstallAddIn THEN BEGIN
+          IF NOT AddInTable.GET(AddInNameVar,AddInTokenVar,AddInVersionVar) THEN BEGIN
+            AddInTable.INIT;
+            AddInTable."Add-in Name" := AddInNameVar;
+            AddInTable."Public Key Token" := AddInTokenVar;
+            AddInTable.Version := AddInVersionVar;
+            AddInTable.INSERT;
+          END;
+        END;
+
+        AddInName := AddInNameVar;
+        AddInToken := AddInTokenVar;
+        AddInVersion := AddInVersionVar;
+
+        Assembly.CREATEOUTSTREAM(OutStr);
+        MemStream.Seek(0,0);
+        COPYSTREAM(OutStr,MemStream);
+
+        IF INSERT() THEN
+          MODIFY();
+      END;
+    END;
+
+    LOCAL PROCEDURE Token@1000000002(VAR Text@1000000000 : Text[1024];Separator@1000000001 : Text[1]) Token : Text[1024];
+    VAR
+      Pos@1000000003 : Integer;
+    BEGIN
+      Pos := STRPOS(Text,Separator);
+      IF Pos > 0 THEN BEGIN
+      Token := COPYSTR(Text,1,Pos-1);
+      IF Pos+1 <= STRLEN(Text) THEN
+      Text := COPYSTR(Text,Pos+1)
+      ELSE
+      Text := '';
+      END ELSE BEGIN
+      Token := Text;
+      Text := '';
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,72 @@
+T5447345-F1-P8629-A1031-L999:Code
+T5447345-F20-P8629-A1031-L999:Gesamtsumme Artikel mind.
+T5447345-F21-P8629-A1031-L999:Gesamtsumme einzelnes Artikels mind.
+T5447345-F22-P8629-A1031-L999:Anzahl versch. Artikel mind.
+T5447345-F23-P8629-A1031-L999:Gesamtmenge Artikel mind.
+T5447345-F24-P8629-A1031-L999:Menge einzelnes Artikels mind.
+T5447345-F25-P8629-A1031-L999:Summe Warenkorb mind.
+T5447345-F26-P8629-A1031-L999:Gesamtsumme jedes Artikels mind.
+T5447345-F27-P8629-A1031-L999:Menge jedes Artikels mind.
+T5447345-F2-P8629-A1031-L999:Beschreibung
+T5447345-F3-P8629-A1031-L999:Aktiv
+T5447345-F40-P8629-A1031-L999:Rabatt Betrag
+T5447345-F41-P8629-A1031-L999:Rabatt Betrag gültig für
+T5447345-F41-P8632-A1031-L999: ,Aktuellen Konditions-Artikel,Alle Konditions-Artikel,Alle Aktions-Artikel,Warenkorb
+T5447345-F42-P8629-A1031-L999:Rabatt Prozent
+T5447345-F43-P8629-A1031-L999:Rabatt Prozenz gültig für
+T5447345-F43-P8632-A1031-L999: ,Aktuellen Konditions-Artikel,Alle Konditions-Artikel,Günstigster Konditions-Artikel,Alle Aktions-Artikel,Warenkorb
+T5447345-F44-P8629-A1031-L999:Menge kostenloser Artikel
+T5447345-F45-P8629-A1031-L999:Kostenloser Artikel Typ
+T5447345-F45-P8632-A1031-L999: ,Aktueller Konditions-Artikel,Günstigster Konditions-Artikel,Alle Aktions-Artikel
+T5447345-F46-P8629-A1031-L999:Abweichende Versandoption
+T5447345-F47-P8629-A1031-L999:Rabatt gültig für Menge (max.)
+T5447345-F4-P8629-A1031-L999:Aktiv ab Datum
+T5447345-F5-P8629-A1031-L999:Aktiv bis Datum
+T5447345-F60-P8629-A1031-L999:Icon Konditions-Artikel
+T5447345-F61-P8629-A1031-L999:Banner Konditions-Artikel
+T5447345-F62-P8629-A1031-L999:Text Konditions-Artikel
+T5447345-F63-P8629-A1031-L999:Icon Aktions-Artikel
+T5447345-F64-P8629-A1031-L999:Banner Aktions-Artikel
+T5447345-F65-P8629-A1031-L999:Text Aktions-Artikel
+T5447345-F66-P8629-A1031-L999:Banner Warenkorb
+T5447345-F67-P8629-A1031-L999:Text Warenkorb
+T5447345-F68-P8629-A1031-L999:Webshop Code
+T5447345-F69-P8629-A1031-L999:Webshop Sprachcode
+T5447345-F6-P8629-A1031-L999:Aktiv ab Uhrzeit
+T5447345-F72-P8629-A1031-L999:Datum letzte Änderung
+T5447345-F73-P8629-A1031-L999:Datum letzte Aktualisierung
+T5447345-F7-P8629-A1031-L999:Aktiv bis Uhrzeit
+T5447345-F8-P8629-A1031-L999:Mehrfach anwendbar
+T5447345-F9-P8629-A1031-L999:Priorität
+T5447345-F9-P8632-A1031-L999:1,2,3,4,5,6,7,8,9,10
+T5447345-P8629-A1031-L999:Webshop Kampagnenkopf
+T5447345-Q1000000000-P26171-A1031-L999:Es kann nur ein Konditionsfeld pro Kampagne gefüllt sein.
+T5447345-Q1000000001-P26171-A1031-L999:Es kann nur eine Aktion pro Kampagne ausgewählt werden.
+T5447345-U1000000000-Q1000000010-P26171-A1031-L999:Die anwendbare Kampagne mit dem Code %1 wurde bereits auf diese Verkaufsbestellung angewandt.\Wie soll mit der Kampagne verfahren werden?
+T5447345-U1000000000-Q1000000011-P26171-A1031-L999:Überspringen,Ein weiteres Mal anwenden,Rückgängig machen und neu anwenden
+T5447345-U1000000000-Q1000000015-P26171-A1031-L999:Die folgenden Kampagnen sind nun auf die Verkaufsbestellung angewandt:\%1
+T5447345-U1000000001-Q1000000001-P26171-A1031-L999:Es muss extakt ein Webshop Kampagnen Kopf als Parameter an die Funktion\DoesCampaignHeaderApplyToSalesOrder übergeben werden!
+T5447345-U1000000001-Q1000000003-P26171-A1031-L999:Es muss exakt ein Verkaufskopf an die Funktion\DoesCampaignApplyToSalesOrder übergeben werden!
+T5447345-U1000000001-Q1000000005-P26171-A1031-L999:Der SalesLineCondItemsTmp Parameter muss temporär sein!
+T5447345-U1000000006-Q1000000005-P26171-A1031-L999:SalesHeader muss ein eindeutiger Verkaufskopf sein.
+T5447345-U1000000006-Q1000000006-P26171-A1031-L999:SalesHeader muss ein Verkaufsauftrag sein.
+T5447345-U1000000006-Q1000000009-P26171-A1031-L999:Verkaufsauftrag darf nicht den Status "Freigegeben" haben.
+T5447345-U1000000009-Q1000000004-P26171-A1031-L999:Der Verkaufsauftragszeilen-Parameter, welche an die Funktion\FilterSalesorderLinesForConditems übergeben wird muss temporär sein!
+T5447345-U1000000009-Q1000000005-P26171-A1031-L999:Es muss exat ein Webshop Kampagnen Kopf an die Funktion\FilterSalesOrderLinesForConditems übergeben werden!
+T5447345-U1000000012-Q1000000004-P26171-A1031-L999:Es muss exat ein Webshop Kampagnen Kopf an die Funktion\FilterSalesOrderLinesForConditems übergeben werden!
+T5447345-U1000000012-Q1000000005-P26171-A1031-L999:Der Vorgang wird beendet - Grund:\kein Shop Code in Webshop Kampagne gesetzt trotz Kategorie-Konditionen.
+T5447345-U1000000012-Q1000000027-P26171-A1031-L999:Bitte wählen Sie den zu verwendenden Shop aus.
+T5447345-U1000000015-Q1000000011-P26171-A1031-L999:SalesHeader muss ein Verkaufsauftrag sein.
+T5447345-U1000000015-Q1000000012-P26171-A1031-L999:SalesHeader muss ein eindeutiger Verkaufskopf sein.
+T5447345-U1000000015-Q1000000013-P26171-A1031-L999:Die Kampagne muss vom Typ kostenloser Artikel sein.
+T5447345-U1000000015-Q1000000014-P26171-A1031-L999:WebshopCampaign muss ein eindeutiger Kampagnen-Kopf sein.
+T5447345-U1000000015-Q1000000023-P26171-A1031-L999:Verkaufsauftrag darf nicht den Status "Freigegeben" haben.
+T5447345-U1000000016-Q1000000003-P26171-A1031-L999:Shop Code und Sprache müssen an der Kampagne hinterlegt sein, um Lieferoptionen zu beziehen.
+T5447345-U1000000016-Q1000000004-P26171-A1031-L999:Welche Lieferoption soll hinzugefügt werden?
+T5447345-U1000000016-Q1000000018-P26171-A1031-L999:Bitte wählen Sie die zu verwendende Versandoption.
+T5447345-U1000000016-Q1000000019-P26171-A1031-L999:Land: %1 |  Versanddienstleister: %2 | Versandart: %3 | Freibetrag: %4 | Kosten: %5
+T5447345-U1000000017-Q1000000013-P26171-A1031-L999:Verkaufsauftrag darf nicht den Status "Freigegeben" haben.
+T5447345-U1000000017-Q1000000014-P26171-A1031-L999:SalesHeader muss ein Verkaufsauftrag sein.
+T5447345-U1000000017-Q1000000015-P26171-A1031-L999:SalesHeader muss ein eindeutiger Verkaufskopf sein.
+T5447345-U1000000017-Q1000000016-P26171-A1031-L999:Die Kampagne muss Betrags- oder Prozentrabatt als Aktion haben.
+T5447345-U1000000017-Q1000000017-P26171-A1031-L999:WebshopCampaign muss ein eindeutiger Kampagnen-Kopf sein.

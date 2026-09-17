@@ -1,0 +1,14 @@
+R5447318-N2-C1000000000-P8629-A1033-L999:Link webshop items purchased together
+R5447318-N2-C1000000001-P8629-A1033-L999:Webshop Code Filter
+R5447318-N2-C1000000002-P8629-A1033-L999:Link Type
+R5447318-N2-C1000000002-P8632-A1033-L999:Acc. Items,Spare Parts,Alternative Items,Fitting Items
+R5447318-N2-C1000000003-P8629-A1033-L999:Max. No. of links per item
+R5447318-N2-C1000000004-P8629-A1033-L999:Calculation Starting Date Formula
+R5447318-N2-C1000000005-P8629-A1033-L999:Delete existing item links
+R5447318-N2-C1000000006-P8629-A1033-L999:Group sum calculation by Shop
+R5447318-N2-C1000000007-P8629-A1033-L999:Settings
+R5447318-P8629-A1033-L999:Webshop link jointly purchased items
+R5447318-Q1000000005-P26171-A1033-L999:The max. no of links per item has to be greater than or equal to one (1).
+R5447318-Q1000000006-P26171-A1033-L999:The starting date for the calculation must lie before the current workdate [%1].
+R5447318-Q1000000007-P26171-A1033-L999:-6M
+R5447318-Q1000000016-P26171-A1033-L999:[%1] links were deleted and [%2] links created.

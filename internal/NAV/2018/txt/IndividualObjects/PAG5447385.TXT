@@ -1,0 +1,199 @@
+OBJECT Page 5447385 Webshop Assembly Resolver
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.09.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Steuerelement Add-Ins;
+               ENU=Webshop Assembly Resolver];
+    SourceTable=Table5447350;
+    PageType=List;
+    PromotedActionCategoriesML=[DEU=Neu,Vorgang,Bericht,Steuerelement-Add-in-Ressource;
+                                ENU=New,Process,Report,Control Add-in Resource];
+    OnOpenPage=VAR
+                 Version@1000000000 : Text[120];
+                 Version2@1000000001 : Text[120];
+               BEGIN
+                 Version := ApplicationManagement.ApplicationVersion;
+
+                 REPEAT
+                   Version2 := WebshopManagement.Explode(Version,' ');
+                 UNTIL Version = '';
+
+                 Version2 := WebshopManagement.Explode(Version2,'.');
+
+                 IF (Version2 = '7') THEN
+                   ShowRessource := FALSE
+                 ELSE
+                   ShowRessource := TRUE;
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 7       ;    ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000000;1 ;ActionGroup;
+                      CaptionML=[DEU=Steuerelement;
+                                 ENU=Assembly] }
+      { 8       ;2   ;Action    ;
+                      Name=ImportAssembly;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Steuerelement importieren;
+                                 ENU=Import Assembly];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=ImportDatabase;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 ImportAssembly();
+                               END;
+                                }
+      { 1000000001;1 ;ActionGroup;
+                      CaptionML=[DEU=Add-In-Ressource f�r Steuerelement;
+                                 ENU=Control Add-in Resource];
+                      Visible=ShowRessource }
+      { 1000000004;2 ;Action    ;
+                      Name=Import;
+                      CaptionML=[DEU=Importieren;
+                                 ENU=Import];
+                      Promoted=Yes;
+                      Visible=ShowRessource;
+                      PromotedIsBig=Yes;
+                      Image=Import;
+                      PromotedCategory=Category4;
+                      OnAction=VAR
+                                 TempBlob@1002 : Record 99008535;
+                                 FileManagement@1000 : Codeunit 419;
+                                 ResourceName@1001 : Text;
+                               BEGIN
+                                 IF AddInTable.GET(AddInName,AddInToken,AddInVersion) THEN BEGIN
+                                   IF AddInTable.Resource.HASVALUE THEN
+                                     IF NOT CONFIRM(ImportQst) THEN
+                                       EXIT;
+
+                                   ResourceName := FileManagement.BLOBImportWithFilter(
+                                     TempBlob,ImportTitleTxt,'',
+                                     ImportFileTxt + ' (*.zip)|*.zip|' + AllFilesTxt + ' (*.*)|*.*','*.*');
+
+                                   IF ResourceName <> '' THEN BEGIN
+                                     AddInTable.Resource := TempBlob.Blob;
+                                     AddInTable.MODIFY();
+
+                                     MESSAGE(ImportDoneMsg);
+                                   END;
+                                 END;
+                               END;
+                                }
+      { 1000000003;2 ;Action    ;
+                      Name=Export;
+                      CaptionML=[DEU=Exportieren;
+                                 ENU=Export];
+                      Promoted=Yes;
+                      Visible=ShowRessource;
+                      Image=Export;
+                      PromotedCategory=Category4;
+                      OnAction=VAR
+                                 TempBlob@1001 : Record 99008535;
+                                 FileManagement@1000 : Codeunit 419;
+                               BEGIN
+                                 IF AddInTable.GET(AddInName,AddInToken,AddInVersion) THEN BEGIN
+                                   IF NOT AddInTable.Resource.HASVALUE THEN BEGIN
+                                     MESSAGE(NoResourceMsg);
+                                     EXIT;
+                                   END;
+
+                                   TempBlob.Blob := AddInTable.Resource;
+                                   FileManagement.BLOBExport(TempBlob,AddInTable."Add-in Name" + '.zip',TRUE);
+                                 END;
+                               END;
+                                }
+      { 1000000002;2 ;Action    ;
+                      Name=Remove;
+                      CaptionML=[DEU=L�schen;
+                                 ENU=Remove];
+                      Promoted=Yes;
+                      Visible=ShowRessource;
+                      Image=Cancel;
+                      PromotedCategory=Category4;
+                      OnAction=BEGIN
+                                 IF AddInTable.GET(AddInName,AddInToken,AddInVersion) THEN BEGIN
+                                   IF NOT AddInTable.Resource.HASVALUE THEN
+                                     EXIT;
+
+                                   CLEAR(AddInTable.Resource);
+                                   AddInTable.MODIFY;
+
+                                   MESSAGE(RemoveDoneMsg);
+                                 END;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1   ;0   ;Container ;
+                ContainerType=ContentArea }
+
+    { 2   ;1   ;Group     ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="Assembly Name" }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="User ID" }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr=Tier }
+
+  }
+  CODE
+  {
+    VAR
+      AddInTable@1000000000 : Record 2000000069;
+      AllFilesTxt@1000000007 : TextConst 'DEU=Alle Dateien;ENU=All Files';
+      ImportFileTxt@1000000006 : TextConst 'DEU=Add-In-Ressource f�r Steuerelement;ENU=Control Add-in Resource';
+      ImportDoneMsg@1000000005 : TextConst 'DEU=Die Add-in-Ressource f�r Steuerelemente wurde importiert.;ENU=The control add-in resource has been imported.';
+      ImportQst@1000000004 : TextConst 'DEU=Die Add-In-Ressource f�r Steuerelement ist bereits festgelegt.\M�chten Sie sie �berschreiben?;ENU=The control add-in resource is already specified.\Do you want to overwrite it?';
+      ImportTitleTxt@1000000003 : TextConst 'DEU=Add-In-Ressource f�r Steuerelement importieren;ENU=Import Control Add-in Resource';
+      NoResourceMsg@1000000002 : TextConst 'DEU=F�r das Add-in des Steuerelements gibt es keine Ressource.;ENU=There is no resource for the control add-in.';
+      RemoveDoneMsg@1000000001 : TextConst 'DEU=Die Add-in-Ressource f�r Steuerelemente wurde entfernt.;ENU=The control add-in resource has been removed.';
+      ShowRessource@1000000008 : Boolean;
+      ApplicationManagement@1000000009 : Codeunit 1;
+      WebshopManagement@1000000010 : Codeunit 5447300;
+
+    PROCEDURE ImportAssembly@2();
+    VAR
+      TempBlob@1002 : Record 99008535;
+      FileManagement@1001 : Codeunit 419;
+      Asm@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Reflection.Assembly";
+      InStr@1006 : InStream;
+      FileName@1000 : Text;
+      AllFilesTxt@1009 : TextConst 'DEU=Alle Dateien;ENU=All Files';
+      ImportFileTxt@1008 : TextConst 'DEU=.NET Assembly;ENU=.NET Assembly';
+      ImportTitleTxt@1005 : TextConst 'DEU=Import .NET Assembly;ENU=Import .NET Assembly';
+    BEGIN
+      FileName := FileManagement.BLOBImportWithFilter(
+        TempBlob,ImportTitleTxt,'',
+        ImportFileTxt + ' (*.dll)|*.dll|' + AllFilesTxt + ' (*.*)|*.*','*.*');
+
+      IF FileName <> '' THEN BEGIN
+        TempBlob.Blob.CREATEINSTREAM(InStr);
+        InstallAssembly(InStr,Asm,'',TRUE);
+        CurrPage.UPDATE(FALSE);
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,808 @@
+OBJECT Codeunit 5447311 Webshop Event Management
+{
+  OBJECT-PROPERTIES
+  {
+    Date=25.06.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopMgmt@1000000000 : Codeunit 5447300;
+      WebshopUpdtMgmt@1000000001 : Codeunit 5447301;
+      WebshopItem@1000000002 : Record 5447304;
+      Item@1000000003 : Record 27;
+
+    [EventSubscriber(Codeunit,1,OnAfterCompanyOpen,"",Skip,Skip)]
+    PROCEDURE OnCompanyOpen@1000000050();
+    VAR
+      Object@1000000001 : Record 2000000001;
+      RecRef@1000000000 : RecordRef;
+      FieldRef@1000000002 : FieldRef;
+      Boolean@1000000003 : Boolean;
+    BEGIN
+       Object.SETRANGE(Type,Object.Type::Table);
+       Object.SETRANGE(ID,5447450);
+       IF Object.FINDFIRST THEN BEGIN
+        RecRef.OPEN(5447450,FALSE);
+        IF RecRef.FINDFIRST THEN BEGIN
+          FieldRef := RecRef.FIELD(7);
+          EVALUATE(Boolean,FORMAT(FieldRef));
+          IF NOT Boolean THEN BEGIN
+            FieldRef.VALUE(TRUE);
+            RecRef.MODIFY;
+          END;
+        END;
+       END;
+       RecRef.CLOSE;
+
+       Object.SETRANGE(Type,Object.Type::Table);
+       Object.SETRANGE(ID,5447470);
+       IF Object.FINDFIRST THEN BEGIN
+        RecRef.OPEN(5447470,FALSE);
+        IF RecRef.FINDFIRST THEN BEGIN
+          FieldRef := RecRef.FIELD(10);
+          EVALUATE(Boolean,FORMAT(FieldRef));
+          IF NOT Boolean THEN BEGIN
+            FieldRef.VALUE(TRUE);
+            RecRef.MODIFY;
+          END;
+        END;
+       END;
+       RecRef.CLOSE;
+    END;
+
+    [EventSubscriber(Table,13,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnSalespersonModify@1000000000(VAR Rec@1000000000 : Record 13;VAR xRec@1000000001 : Record 13;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      Rec."Last Date Modified (Webshop)" := CURRENTDATETIME;
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,18,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnCustomerInsert@1000000005(VAR Rec@1000000000 : Record 18;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      Rec."Date Last Modified (Webshop)" := CURRENTDATETIME;
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,18,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnCustomerModify@1000000006(VAR Rec@1000000000 : Record 18;VAR xRec@1000000001 : Record 18;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      Rec."Date Last Modified (Webshop)" := CURRENTDATETIME;
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,18,OnBeforeDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnCustomerDelete@1000000007(VAR Rec@1000000000 : Record 18;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Date Last Updated (Webshop)" <> 0DT THEN
+        IF WebshopMgmt.ConnectionTest THEN
+          WebshopUpdtMgmt.DeleteCustomer(Rec);
+    END;
+
+    [EventSubscriber(Table,18,OnAfterRenameEvent,"",Skip,Skip)]
+    PROCEDURE OnCustomerRename@1000000008(VAR Rec@1000000000 : Record 18;VAR xRec@1000000001 : Record 18;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Date Last Updated (Webshop)" <> 0DT THEN
+        IF WebshopMgmt.ConnectionTest THEN
+          WebshopUpdtMgmt.DeleteCustomer(xRec);
+      Rec."Has Webshop Login" := FALSE;
+      Rec."Date Webshop Login Sent" := 0DT;
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,27,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnItemModify@1000000010(VAR Rec@1000000000 : Record 27;VAR xRec@1000000001 : Record 27;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      Rec.CALCFIELDS("Is Webshop Item");
+      IF Rec."Is Webshop Item" THEN
+        WebshopMgmt.SetWebshopItemModified(Rec."No.",TRUE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,27,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnItemDelete@1000000011(VAR Rec@1000000000 : Record 27;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopItem.SETRANGE("Item No.",Rec."No.");
+      IF WebshopItem.FINDSET THEN REPEAT
+        WebshopItem.DELETE(TRUE);
+      UNTIL WebshopItem.NEXT = 0;
+    END;
+
+    [EventSubscriber(Table,27,OnAfterRenameEvent,"",Skip,Skip)]
+    PROCEDURE OnItemRename@1000000012(VAR Rec@1000000000 : Record 27;VAR xRec@1000000001 : Record 27;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."No." <> xRec."No." THEN BEGIN
+        xRec.CALCFIELDS("Is Webshop Item");
+        IF xRec."Is Webshop Item" THEN BEGIN
+          WebshopUpdtMgmt.RenameWebshopItem(xRec."No.",Rec."No.");
+        END;
+      END;
+    END;
+
+    [EventSubscriber(Table,27,OnAfterValidateEvent,Description,Skip,Skip)]
+    PROCEDURE OnItemDescriptionValidate@1000000013(VAR Rec@1000000000 : Record 27;VAR xRec@1000000001 : Record 27;CurrFieldNo@1000000002 : Integer);
+    BEGIN
+      IF Rec.Description <> xRec.Description THEN BEGIN
+        WebshopItem.SETRANGE("Item No.",Rec."No.");
+        IF WebshopItem.FINDSET THEN REPEAT
+          IF WebshopItem.Description = xRec.Description THEN BEGIN
+            WebshopItem.VALIDATE(Description, Rec.Description);
+            WebshopItem.MODIFY(TRUE);
+          END;
+        UNTIL WebshopItem.NEXT = 0;
+      END;
+    END;
+
+    [EventSubscriber(Table,27,OnAfterValidateEvent,"Description 2",Skip,Skip)]
+    PROCEDURE OnItemDescription2Validate@1000000014(VAR Rec@1000000000 : Record 27;VAR xRec@1000000001 : Record 27;CurrFieldNo@1000000002 : Integer);
+    BEGIN
+      IF Rec."Description 2" <> xRec."Description 2" THEN BEGIN
+        WebshopItem.SETRANGE("Item No.",Rec."No.");
+        IF WebshopItem.FINDSET THEN REPEAT
+          IF WebshopItem.Summary = xRec."Description 2" THEN BEGIN
+            WebshopItem.VALIDATE(Summary, Rec."Description 2");
+            WebshopItem.MODIFY(TRUE);
+          END;
+        UNTIL WebshopItem.NEXT = 0;
+      END;
+    END;
+
+    [EventSubscriber(Table,30,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnItemTranslationInsert@1000000019(VAR Rec@1000000000 : Record 30;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Variant Code" <> '' THEN
+        WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,30,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnItemTranslationModify@1000000020(VAR Rec@1000000000 : Record 30;VAR xRec@1000000001 : Record 30;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Variant Code" <> '' THEN
+        WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,30,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnItemTranslationDelete@1000000021(VAR Rec@1000000000 : Record 30;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Variant Code" <> '' THEN
+        WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,30,OnAfterRenameEvent,"",Skip,Skip)]
+    PROCEDURE OnItemTranslationRename@1000000022(VAR Rec@1000000000 : Record 30;VAR xRec@1000000001 : Record 30;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Variant Code" <> '' THEN BEGIN
+        WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+        WebshopMgmt.SetWebshopItemModified(xRec."Item No.",FALSE,FALSE,FALSE);
+      END;
+    END;
+
+    [EventSubscriber(Table,30,OnAfterValidateEvent,Description,Skip,Skip)]
+    PROCEDURE OnItemTranslationDescriptionValidate@1000000023(VAR Rec@1000000000 : Record 30;VAR xRec@1000000001 : Record 30;CurrFieldNo@1000000002 : Integer);
+    BEGIN
+      IF (Rec.Description <> xRec.Description) AND (Rec."Variant Code" = '') THEN BEGIN
+        WebshopItem.SETRANGE("Language Code",Rec."Language Code");
+        WebshopItem.SETRANGE("Item No.",Rec."Item No.");
+        IF WebshopItem.FINDSET THEN REPEAT
+          Item.GET(Rec."Item No.");
+          IF (WebshopItem.Description = xRec.Description) OR (WebshopItem.Description = Item.Description) THEN BEGIN
+            WebshopItem.VALIDATE(Description,Rec.Description);
+            WebshopItem.MODIFY(TRUE);
+          END;
+        UNTIL WebshopItem.NEXT = 0;
+      END;
+    END;
+
+    [EventSubscriber(Table,30,OnAfterValidateEvent,"Description 2",Skip,Skip)]
+    PROCEDURE OnItemTranslationDescription2Validate@1000000024(VAR Rec@1000000000 : Record 30;VAR xRec@1000000001 : Record 30;CurrFieldNo@1000000002 : Integer);
+    BEGIN
+      IF (Rec."Description 2" <> xRec."Description 2") AND (Rec."Variant Code" = '') THEN BEGIN
+        WebshopItem.SETRANGE("Language Code",Rec."Language Code");
+        WebshopItem.SETRANGE("Item No.",Rec."Item No.");
+        IF WebshopItem.FINDSET THEN REPEAT
+          Item.GET(Rec."Item No.");
+          IF (WebshopItem.Summary = xRec."Description 2") OR (WebshopItem.Summary = Item."Description 2") THEN BEGIN
+            WebshopItem.VALIDATE(Summary,Rec."Description 2");
+            WebshopItem.MODIFY(TRUE);
+          END;
+        UNTIL WebshopItem.NEXT = 0;
+      END;
+    END;
+
+    [EventSubscriber(Table,36,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesHeaderModify@1000000028(VAR Rec@1000000000 : Record 36;VAR xRec@1000000001 : Record 36;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      Rec."Date Last Modified (Webshop)" := CURRENTDATETIME;
+    END;
+
+    [EventSubscriber(Table,36,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesHeaderDelete@1000000029(VAR Rec@1000000000 : Record 36;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF (Rec."Document Type" = Rec."Document Type"::Order) AND Rec."Send Webshop Order Confirm." AND
+        (Rec."Date Web. Order Confirm. Sent" = 0DT) THEN BEGIN
+        WebshopUpdtMgmt.SendOrderConfirmMail(Rec,Rec."Webshop Shop Code",Rec."Webshop Language Code",'');
+        Rec."Send Webshop Order Confirm." := FALSE;
+        Rec."Date Web. Order Confirm. Sent" := CURRENTDATETIME;
+      END;
+      IF Rec."Date Last Updated (Webshop)" > 0DT THEN
+         WebshopUpdtMgmt.DeleteSalesOrder(Rec);
+    END;
+
+    [EventSubscriber(Table,110,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesShipmentHeaderInsert@1000000036(VAR Rec@1000000000 : Record 110;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      Rec."Date Last Updated (Webshop)" := 0DT;
+      Rec."Date Last Modified (Webshop)" := 0DT;
+      WebshopUpdtMgmt.SetOrderShipMailSendTime(Rec);
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,110,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesShipmentHeaderDelete@1000000037(VAR Rec@1000000000 : Record 110;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Date Last Updated (Webshop)" <> 0DT THEN
+        WebshopUpdtMgmt.DeleteSalesShipment(Rec);
+    END;
+
+    [EventSubscriber(Table,110,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesShipmentHeaderModify@1000000038(VAR Rec@1000000000 : Record 110;VAR xRec@1000000001 : Record 110;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Date Last Updated (Webshop)" <> 0DT THEN
+        Rec."Date Last Modified (Webshop)" := CURRENTDATETIME;
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,112,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesInvoiceHeaderInsert@1000000003(VAR Rec@1000000000 : Record 112;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      Rec."Date Last Updated (Webshop)" := 0DT;
+      Rec."Date Last Modified (Webshop)" := 0DT;
+      WebshopUpdtMgmt.SetOrderInvMailSendTime(Rec);
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,112,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesInvoiceHeaderDelete@1000000002(VAR Rec@1000000000 : Record 112;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Date Last Updated (Webshop)" <> 0DT THEN
+        WebshopUpdtMgmt.DeleteSalesInvoice(Rec);
+    END;
+
+    [EventSubscriber(Table,112,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesInvoiceHeaderModify@1000000001(VAR Rec@1000000000 : Record 112;VAR xRec@1000000001 : Record 112;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Date Last Updated (Webshop)" <> 0DT THEN
+        Rec."Date Last Modified (Webshop)" := CURRENTDATETIME;
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,114,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesCrMemoHeaderInsert@1000000016(VAR Rec@1000000000 : Record 114;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      Rec."Date Last Updated (Webshop)" := 0DT;
+      Rec."Date Last Modified (Webshop)" := 0DT;
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,114,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesCrMemoHeaderDelete@1000000015(VAR Rec@1000000000 : Record 114;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Date Last Updated (Webshop)" <> 0DT THEN
+        WebshopUpdtMgmt.DeleteSalesMemo(Rec);
+    END;
+
+    [EventSubscriber(Table,114,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesCrMemoHeaderModify@1000000009(VAR Rec@1000000000 : Record 114;VAR xRec@1000000001 : Record 114;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF Rec."Date Last Updated (Webshop)" <> 0DT THEN
+        Rec."Date Last Modified (Webshop)" := CURRENTDATETIME;
+      Rec.MODIFY(FALSE);
+    END;
+
+    [EventSubscriber(Table,5401,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnItemVariantInsert@1000000025(VAR Rec@1000000000 : Record 5401;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,5401,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnItemVariantModify@1000000018(VAR Rec@1000000000 : Record 5401;VAR xRec@1000000001 : Record 5401;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,5401,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnItemVariantDelete@1000000017(VAR Rec@1000000000 : Record 5401;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,5401,OnAfterRenameEvent,"",Skip,Skip)]
+    PROCEDURE OnItemVariantRename@1000000004(VAR Rec@1000000000 : Record 5401;VAR xRec@1000000001 : Record 5401;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(xRec."Item No.",FALSE,FALSE,FALSE);
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,5717,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnItemCrossReferenceInsert@1000000032(VAR Rec@1000000000 : Record 5717;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,5717,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnItemCrossReferenceModify@1000000031(VAR Rec@1000000000 : Record 5717;VAR xRec@1000000001 : Record 5717;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,5717,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnItemCrossReferenceDelete@1000000030(VAR Rec@1000000000 : Record 5717;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,5717,OnAfterRenameEvent,"",Skip,Skip)]
+    PROCEDURE OnItemCrossReferenceRename@1000000027(VAR Rec@1000000000 : Record 5717;VAR xRec@1000000001 : Record 5717;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(xRec."Item No.",FALSE,FALSE,FALSE);
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,7002,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesPriceInsert@1000000041(VAR Rec@1000000000 : Record 7002;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,7002,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesPriceModify@1000000040(VAR Rec@1000000000 : Record 7002;VAR xRec@1000000001 : Record 7002;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,7002,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesPriceDelete@1000000039(VAR Rec@1000000000 : Record 7002;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,7002,OnAfterRenameEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesPriceRename@1000000035(VAR Rec@1000000000 : Record 7002;VAR xRec@1000000001 : Record 7002;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopMgmt.SetWebshopItemModified(xRec."Item No.",FALSE,FALSE,FALSE);
+      WebshopMgmt.SetWebshopItemModified(Rec."Item No.",FALSE,FALSE,FALSE);
+    END;
+
+    [EventSubscriber(Table,7004,OnAfterInsertEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesLineDiscountInsert@1000000045(VAR Rec@1000000000 : Record 7004;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      CASE Rec.Type OF
+        Rec.Type::Item: WebshopMgmt.SetWebshopItemModified(Rec.Code,TRUE,TRUE,TRUE);
+        Rec.Type::"Item Disc. Group": BEGIN
+          Rec."Date Last Modified (Webshop)" := CURRENTDATETIME;
+        END;
+      END;
+    END;
+
+    [EventSubscriber(Table,7004,OnAfterModifyEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesLineDiscountModify@1000000044(VAR Rec@1000000000 : Record 7004;VAR xRec@1000000001 : Record 7004;RunTrigger@1000000002 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      CASE Rec.Type OF
+        Rec.Type::Item: BEGIN
+          WebshopMgmt.SetWebshopItemModified(Rec.Code,TRUE,TRUE,TRUE);
+        END;
+        Rec.Type::"Item Disc. Group": BEGIN
+          Rec."Date Last Modified (Webshop)" := CURRENTDATETIME;
+        END;
+      END;
+    END;
+
+    [EventSubscriber(Table,7004,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnSalesLineDiscountDelete@1000000043(VAR Rec@1000000000 : Record 7004;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      CASE Rec.Type OF
+        Rec.Type::Item: WebshopMgmt.SetWebshopItemModified(Rec.Code,TRUE,TRUE,TRUE);
+        Rec.Type::"Item Disc. Group": BEGIN
+          WebshopUpdtMgmt.DeleteSalesLineDiscount(Rec);
+        END;
+      END;
+    END;
+
+    LOCAL PROCEDURE "--- Shipping Options ---"@1000000026();
+    BEGIN
+    END;
+
+    [EventSubscriber(Table,5447451,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnShippingGroupDelete@1000000033(VAR Rec@1000000000 : Record 5447451;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+    END;
+
+    [EventSubscriber(Table,5447452,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnShippingClassDelete@1000000042(VAR Rec@1000000000 : Record 5447452;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopUpdtMgmt.DeleteShippingClass(Rec);
+    END;
+
+    [EventSubscriber(Table,5447453,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnShippingOptionDelete@1000000046(VAR Rec@1000000000 : Record 5447453;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      //WebshopUpdtMgmt.DeleteShippingOptionTranslationDescription(Rec);
+    END;
+
+    [EventSubscriber(Table,5447454,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnShippingZoneDelete@1000000047(VAR Rec@1000000000 : Record 5447454;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopUpdtMgmt.DeleteShippingZone(Rec);
+    END;
+
+    [EventSubscriber(Table,5447455,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnShippingZoneLineDelete@1000000048(VAR Rec@1000000000 : Record 5447455;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopUpdtMgmt.DeleteShippingZoneLine(Rec);
+    END;
+
+    [EventSubscriber(Table,5447456,OnAfterDeleteEvent,"",Skip,Skip)]
+    PROCEDURE OnShippingOptionTranslationDelete@1000000049(VAR Rec@1000000000 : Record 5447456;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopUpdtMgmt.DeleteShippingOptionTranslation(Rec);
+    END;
+
+    LOCAL PROCEDURE "--- Coupons ---"@1000000051();
+    BEGIN
+    END;
+
+    [EventSubscriber(Table,5447472,OnAfterDeleteEvent,"",Skip,Skip)]
+    LOCAL PROCEDURE OnAfterDeleteCouponLine@1000000052(VAR Rec@1000000000 : Record 5447472;RunTrigger@1000000001 : Boolean);
+    VAR
+      WebshopCouponLine@1000000002 : Record 5447329;
+      WebshopCouponShippingLine@1000000003 : Record 5447330;
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      WebshopCouponLine.SETRANGE(Code,Rec.Code);
+      WebshopCouponLine.SETRANGE("Coupon Code",Rec."Coupon Code");
+      WebshopCouponLine.DELETEALL(TRUE);
+
+      WebshopCouponShippingLine.SETRANGE(Code,Rec.Code);
+      WebshopCouponShippingLine.SETRANGE("Coupon Code",Rec."Coupon Code");
+      WebshopCouponShippingLine.DELETEALL(TRUE);
+
+      IF WebshopMgmt.ConnectionTest THEN
+        WebshopUpdtMgmt.DeleteCouponLine(Rec);
+    END;
+
+    [EventSubscriber(Table,5447471,OnAfterDeleteEvent,"",Skip,Skip)]
+    LOCAL PROCEDURE OnAfterDeleteCouponHeader@1000000053(VAR Rec@1000000000 : Record 5447471;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      IF NOT RunTrigger THEN
+        EXIT;
+
+      IF WebshopMgmt.ConnectionTest THEN
+        WebshopUpdtMgmt.DeleteCouponHeader(Rec);
+    END;
+
+    [EventSubscriber(Page,5447473,OnBeforeActionEvent,ActivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeActivateCoupon@1000000055(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447473,OnAfterActionEvent,ActivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnAfterActivateCoupon@1000000056(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(Rec);
+    END;
+
+    [EventSubscriber(Page,5447473,OnBeforeActionEvent,DeactivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeDeActivateCoupon@1000000059(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447473,OnAfterActionEvent,DeactivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnAfterDeActivateCoupon@1000000058(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(Rec);
+    END;
+
+    [EventSubscriber(Page,5447473,OnBeforeActionEvent,AdjustCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeAdjustCoupon@1000000064(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447330,OnBeforeActionEvent,ActivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeActivateCouponWebshop@1000000063(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447330,OnAfterActionEvent,ActivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnAfterActivateCouponWebshop@1000000062(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(Rec);
+    END;
+
+    [EventSubscriber(Page,5447330,OnBeforeActionEvent,DeactivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeDeActivateCouponWebshop@1000000061(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447330,OnAfterActionEvent,DeactivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnAfterDeActivateCouponWebshop@1000000060(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(Rec);
+    END;
+
+    [EventSubscriber(Page,5447330,OnBeforeActionEvent,AdjustCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeAdjustCouponWebshop@1000000065(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447474,OnBeforeActionEvent,ActivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeActivateCouponLine@1000000072(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447474,OnAfterActionEvent,ActivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnAfterActivateCouponLine@1000000071(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(Rec);
+    END;
+
+    [EventSubscriber(Page,5447474,OnBeforeActionEvent,DeactivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeDeActivateCouponLine@1000000070(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447474,OnAfterActionEvent,DeactivateCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnAfterDeActivateCouponLine@1000000069(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(Rec);
+    END;
+
+    [EventSubscriber(Page,5447474,OnBeforeActionEvent,AdjustCoupon,Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeAdjustCouponLine@1000000068(VAR Rec@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(Rec."Coupon Code");
+    END;
+
+    [EventSubscriber(Page,5447477,OnBeforeFinishAction,"",Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeFinishAction@1000000034(CouponLine@1000000000 : Record 5447472;VAR SalesHeader@1000000001 : Record 36;VAR SalesLine@1000000002 : Record 37;CouponDiscountAmount@1000000003 : Decimal;VAR IsHandled@1000000004 : Boolean);
+    VAR
+      SalesLineAmount@1000000005 : Decimal;
+      ShippingOptionsManagement@1000000006 : Codeunit 5447450;
+      ShippingOption@1000000007 : Record 5447453;
+      WebshopShippingOptionLink@1000000008 : Record 5447311;
+      TempShippingOption@1000000009 : TEMPORARY Record 5447453;
+      WebshopCouponShippingLine@1000000010 : Record 5447330;
+      NewShippingCost@1000000011 : Decimal;
+    BEGIN
+      IF NOT IsHandled THEN BEGIN
+        IF CouponLine."Value Type Shop" = CouponLine."Value Type Shop"::Sonderversand THEN BEGIN
+          SalesLineAmount := ShippingOptionsManagement.SetShippingOptionsForSalesHeader(ShippingOption,SalesHeader);
+          IF ShippingOption.FINDSET THEN REPEAT
+            TempShippingOption.INIT;
+            TempShippingOption.TRANSFERFIELDS(ShippingOption);
+            TempShippingOption.INSERT;
+
+            IF WebshopCouponShippingLine.GET(CouponLine.Code,CouponLine."Coupon Code") THEN BEGIN
+              IF (WebshopCouponShippingLine."Shipping Coupon Type" = WebshopCouponShippingLine."Shipping Coupon Type"::amount) AND (WebshopCouponShippingLine."Shipping Coupon Value" > 0) THEN BEGIN
+                TempShippingOption."Shipping Cost" := WebshopCouponShippingLine."Shipping Coupon Value";
+                TempShippingOption.MODIFY;
+              END;
+              IF (WebshopCouponShippingLine."Shipping Coupon Type" = WebshopCouponShippingLine."Shipping Coupon Type"::percent) AND (WebshopCouponShippingLine."Shipping Coupon Value" > 0) THEN BEGIN
+                NewShippingCost := TempShippingOption."Shipping Cost" - (TempShippingOption."Shipping Cost" / 100 * WebshopCouponShippingLine."Shipping Coupon Value");
+                TempShippingOption."Shipping Cost" := NewShippingCost;
+                TempShippingOption.MODIFY;
+              END;
+            END;
+          UNTIL ShippingOption.NEXT = 0;
+          IF ShippingOptionsManagement.SelectShippingOptionFromShippingOptions(TempShippingOption,SalesLineAmount) THEN BEGIN
+            ShippingOptionsManagement.AddShippingOptionLineToSalesHeader(SalesHeader,TempShippingOption,SalesLine,SalesLineAmount);
+          END;
+          IsHandled := TRUE;
+        END;
+      END;
+    END;
+
+    [EventSubscriber(Codeunit,5447470,OnBeforeCheckCouponIsvalid,"",Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeCheckCouponIsValid@1000000054(VAR CouponLine@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.CheckCouponOrders(CouponLine."Coupon Code");
+    END;
+
+    [EventSubscriber(Codeunit,5447470,OnBeforeAddCouponToSalesHeader,"",Skip,Skip)]
+    LOCAL PROCEDURE OnBeforeAddCouponToSalesHeader@1000000057(VAR CouponLine@1000000000 : Record 5447472;VAR SalesHeader@1000000001 : Record 36;VAR SalesLine@1000000002 : Record 37;VAR NewValue@1000000003 : Decimal);
+    VAR
+      WebshopCouponLine@1000000004 : Record 5447329;
+    BEGIN
+      WebshopMgmt.SetNewCouponValueByCategory(CouponLine,SalesHeader,SalesLine,NewValue);
+    END;
+
+    [EventSubscriber(Codeunit,5447470,OnAfterPostCouponLine,"",Skip,Skip)]
+    LOCAL PROCEDURE OnAfterPostCouponLine@1000000066(VAR CouponLine@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(CouponLine);
+    END;
+
+    [EventSubscriber(Codeunit,5447470,OnAfterBalanceCouponIfExistsFromDeleteSalesHeader,"",Skip,Skip)]
+    LOCAL PROCEDURE OnAfterBalanceCouponIfExistsFromDeleteSalesHeader@1000000067(VAR CouponLine@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(CouponLine);
+    END;
+
+    [EventSubscriber(Codeunit,5447470,OnAfterBalanceCouponIfExistsFromDeleteSalesLine,"",Skip,Skip)]
+    LOCAL PROCEDURE OnAfterBalanceCouponIfExistsFromDeleteSalesLine@1000000073(VAR CouponLine@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(CouponLine);
+    END;
+
+    [EventSubscriber(Codeunit,5447470,OnAfterBalanceCouponIfExistsFromPost,"",Skip,Skip)]
+    LOCAL PROCEDURE OnAfterBalanceCouponIfExistsFromPost@1000000074(VAR CouponLine@1000000000 : Record 5447472);
+    BEGIN
+      WebshopUpdtMgmt.UpdateCouponLine(CouponLine);
+    END;
+
+    [EventSubscriber(Codeunit,5447470,OnAfterCheckMarketingCoupon,"",Skip,Skip)]
+    LOCAL PROCEDURE OnAfterCheckMarketingCoupon@1000000075(VAR CouponLine@1000000000 : Record 5447472;VAR SalesHeader@1000000001 : Record 36;VAR CouponIsValid@1000000002 : Boolean);
+    BEGIN
+      WebshopMgmt.SetCouponValidByCategory(CouponLine,SalesHeader,CouponIsValid);
+    END;
+
+    [EventSubscriber(Table,5447474,OnAfterDeleteEvent,"",Skip,Skip)]
+    LOCAL PROCEDURE OnAfterCouponGroupDelete@1000000079(VAR Rec@1000000000 : Record 5447474;RunTrigger@1000000001 : Boolean);
+    BEGIN
+      WebshopUpdtMgmt.DeleteShopCouponGroup(Rec);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

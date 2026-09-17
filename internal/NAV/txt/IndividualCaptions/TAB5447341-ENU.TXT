@@ -1,0 +1,9 @@
+T5447341-F1-P8629-A1033-L999:Subscription Code
+T5447341-F2-P8629-A1033-L999:Line No.
+T5447341-F3-P8629-A1033-L999:Start date fix
+T5447341-F4-P8629-A1033-L999:Date Interval
+T5447341-F5-P8629-A1033-L999:No.of Items
+T5447341-F6-P8629-A1033-L999:Date Last Modified
+T5447341-F7-P8629-A1033-L999:Date Last Updated
+T5447341-P4958-Q1000000000-P26171-A1033-L999:It is not possible to set a fix date in a sequence-step for a subscription with start type "Start new sequence"
+T5447341-P8629-A1033-L999:Webshop Subscription Sequence Step

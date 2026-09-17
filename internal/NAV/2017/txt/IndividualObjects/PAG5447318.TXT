@@ -1,0 +1,281 @@
+OBJECT Page 5447318 Webshop Text Modules
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Text-Module;
+               ENU=Webshop Text-Module];
+    SourceTable=Table5447309;
+    PopulateAllFields=Yes;
+    PageType=List;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       IF Content THEN
+                         ContentText := YesText
+                       ELSE
+                         ContentText := NoText;
+
+                       IF "Attachment 1" THEN
+                         FileText1 := YesText
+                       ELSE
+                         FileText1 := NoText;
+
+                       IF "Attachment 2" THEN
+                         FileText2 := YesText
+                       ELSE
+                         FileText2 := NoText;
+                     END;
+
+    OnNewRecord=BEGIN
+                  FileText1 := NoText;
+                  FileText2 := NoText;
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000008;1 ;ActionGroup;
+                      CaptionML=[DEU=Text-Module;
+                                 ENU=Text-Modules];
+                      ActionContainerType=NewDocumentItems }
+      { 1000000010;2 ;Action    ;
+                      Name=<Action1000000010>;
+                      CaptionML=[DEU=Text-Modul bearbeiten;
+                                 ENU=Edit text-module];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=DocumentEdit;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopManagement@1000000001 : Codeunit 5447300;
+                                 WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+                               BEGIN
+                                 EditContent();
+                               END;
+                                }
+      { 1000000012;2 ;ActionGroup;
+                      CaptionML=[DEU=Text-Modul Anh�nge;
+                                 ENU=Text-module attachments];
+                      Image=XMLFile }
+      { 1000000009;3 ;Action    ;
+                      CaptionML=[DEU=Text-Modul Anhang 1 bearbeiten;
+                                 ENU=Edit text-module attachment 1];
+                      Image=CreateXMLFile;
+                      OnAction=BEGIN
+                                 EditAttContent(1);
+                               END;
+                                }
+      { 1000000006;3 ;Action    ;
+                      CaptionML=[DEU=Text-Modul Anhang 1 entfernen;
+                                 ENU=Delete text-module attachment 1];
+                      Image=DeleteXML;
+                      OnAction=BEGIN
+                                 DeleteAttContent(1);
+                               END;
+                                }
+      { 1000000011;3 ;Action    ;
+                      CaptionML=[DEU=Text-Modul Anhang 2 bearbeiten;
+                                 ENU=Edit text-module attachment 2];
+                      Image=CreateXMLFile;
+                      OnAction=BEGIN
+                                 EditAttContent(2);
+                               END;
+                                }
+      { 1000000007;3 ;Action    ;
+                      CaptionML=[DEU=Text-Modul Anhang 2 entfernen;
+                                 ENU=Delete text-module attachment 2];
+                      Image=DeleteXML;
+                      OnAction=BEGIN
+                                 DeleteAttContent(2);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000001;2;Field  ;
+                CaptionML=[DEU=Code;
+                           ENU=Code];
+                SourceExpr=Code }
+
+    { 1000000005;2;Field  ;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description;
+                OnValidate=BEGIN
+                             IF Content THEN
+                               ContentText := YesText
+                             ELSE
+                               ContentText := NoText;
+                           END;
+                            }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Inhalt;
+                           ENU=Content];
+                SourceExpr=ContentText;
+                Editable=FALSE;
+                OnAssistEdit=BEGIN
+                               EditContent();
+                             END;
+                              }
+
+    { 1000000003;2;Field  ;
+                Name=FileText1;
+                CaptionML=[DEU=Dateianhang 1;
+                           ENU=File];
+                SourceExpr=FileText1;
+                Editable=FALSE;
+                OnAssistEdit=BEGIN
+                               EditAttContent(1);
+                             END;
+                              }
+
+    { 1000000004;2;Field  ;
+                Name=FileText2;
+                CaptionML=[DEU=Dateianhang 2;
+                           ENU=File Attachment 2];
+                SourceExpr=FileText2;
+                Editable=FALSE;
+                OnAssistEdit=BEGIN
+                               EditAttContent(2);
+                             END;
+                              }
+
+  }
+  CODE
+  {
+    VAR
+      ContentText@1000000001 : Text[30];
+      YesText@1000000002 : TextConst 'DEU=Ja;ENU=Yes';
+      NoText@1000000003 : TextConst 'DEU=Nein;ENU=No';
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      TempTextModule@1000000004 : Record 5447309;
+      EditTextModule@1000000005 : Page 5447363;
+      WebshopUpdateManagement@1000000006 : Codeunit 5447301;
+      EditTextModuleAtt@1000000008 : Page 5447365;
+      FileText1@1000000009 : Text[30];
+      FileText2@1000000007 : Text[30];
+      ClientAddInType@1000000014 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000013 : Codeunit 5447320;
+      WebshopWebform@1000000012 : Page 5447366;
+      Type@1000000011 : 'Description1,Promotion,Description2';
+      WebformType@1000000010 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection';
+      Text007@1000000015 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+
+    PROCEDURE EditContent@1000000000();
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD(Code);
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateTextModule(Rec);
+      GET(Code);
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        CLEAR(WebshopWebform);
+        //DynamicCommerceAddIn
+        WebshopWebform.SetWebformType(WebformType::TextModul);
+        WebshopWebform.SetRecordCode(Code);
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+        CLEAR(EditTextModule);
+        TempTextModule.SETRANGE(Code,Code);
+        EditTextModule.SETTABLEVIEW(TempTextModule);
+        EditTextModule.LOOKUPMODE(TRUE);
+        EditTextModule.RUNMODAL();
+      END;
+
+      GET(Code);
+      WebshopUpdateManagement.CheckTextModule(Rec);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      GET(Code);
+
+      IF Content THEN
+        ContentText := YesText
+      ELSE
+        ContentText := NoText;
+    END;
+
+    PROCEDURE EditAttContent@1000000001(AttachmentNo@1000000000 : Integer);
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateTextModule(Rec);
+      GET(Code);
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        //DynamicCommerceAddIn
+        CLEAR(WebshopWebform);
+        WebshopWebform.SetWebformType(WebformType::TxtModAttac);
+        WebshopWebform.SetRecordCode(Code);
+        WebshopWebform.SetAttachmentNo(AttachmentNo);
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+        CLEAR(EditTextModuleAtt);
+        TempTextModule.SETRANGE(Code,Code);
+        EditTextModuleAtt.SETTABLEVIEW(TempTextModule);
+        EditTextModuleAtt.LOOKUPMODE(TRUE);
+        EditTextModuleAtt.SetAttachmentNo(AttachmentNo);
+        EditTextModuleAtt.RUNMODAL();
+      END;
+
+      GET(Code);
+      WebshopUpdateManagement.CheckTextModuleAttachment(Rec,AttachmentNo);
+      GET(Code);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+
+      IF "Attachment 1"  THEN
+        FileText1 := YesText
+      ELSE
+        FileText1 := NoText;
+
+      IF "Attachment 2"  THEN
+        FileText2 := YesText
+      ELSE
+        FileText2 := NoText;
+    END;
+
+    LOCAL PROCEDURE DeleteAttContent@1000000007(AttachmentNo@1000000000 : Integer);
+    BEGIN
+      TESTFIELD(Code);
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateTextModule(Rec);
+      WebshopUpdateManagement.DeleteTextModuleAttachment(Rec,1);
+      GET(Code);
+      WebshopUpdateManagement.CheckTextModuleAttachment(Rec,1);
+      GET(Code);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

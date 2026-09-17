@@ -1,0 +1,69 @@
+OBJECT Table 5447329 Webshop Coupon Line
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnDelete=BEGIN
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.DeleteCouponLine(Rec);
+             END;
+
+    CaptionML=[DEU=Webshop Gutscheinzeile;
+               ENU=Webshop Coupon Line];
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code20        ;CaptionML=[DEU=Code;
+                                                              ENU=Code] }
+    { 2   ;   ;Coupon Code         ;Code20        ;CaptionML=[DEU=Gutscheincode;
+                                                              ENU=Coupon Code] }
+    { 3   ;   ;Customer No.        ;Code20        ;TableRelation=Customer.No.;
+                                                   CaptionML=[DEU=Debitorennr.;
+                                                              ENU=Customer No.] }
+    { 4   ;   ;Times Used          ;Integer       ;CaptionML=[DEU=Anzahl verwendet;
+                                                              ENU=Times Used] }
+    { 5   ;   ;Max No. of Uses     ;Integer       ;CaptionML=[DEU=Max. Anzahl Verwendungen;
+                                                              ENU=Max No of Uses] }
+    { 6   ;   ;Amount              ;Decimal       ;OnValidate=BEGIN
+                                                                "Amount Left" := Amount;
+                                                              END;
+
+                                                   CaptionML=[DEU=Betrag;
+                                                              ENU=Amount] }
+    { 7   ;   ;Amount Left         ;Decimal       ;CaptionML=[DEU=Restbetrag;
+                                                              ENU=Amount Left] }
+    { 8   ;   ;Date Last Used      ;Date          ;CaptionML=[DEU=Letztes Verwendungsdatum;
+                                                              ENU=Date Last Used] }
+    { 9   ;   ;Is Posted           ;Boolean       ;CaptionML=[DEU=Ist Gebucht;
+                                                              ENU=Is Posted] }
+    { 10  ;   ;Shop Code           ;Code10        ;CaptionML=[DEU=Shop Code;
+                                                              ENU=Shop Code] }
+    { 11  ;   ;Language Code       ;Code10        ;CaptionML=[DEU=Sprach Code;
+                                                              ENU=Language Code] }
+  }
+  KEYS
+  {
+    {    ;Code,Coupon Code,Shop Code,Language Code;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000001 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

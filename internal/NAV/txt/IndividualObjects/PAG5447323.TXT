@@ -1,0 +1,67 @@
+OBJECT Page 5447323 Webshop Attr. Template List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.09.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelmerkmalvorlagen;
+               ENU=Webshop Attribute Template List];
+    SourceTable=Table5447324;
+    PageType=List;
+    ActionList=ACTIONS
+    {
+      { 1000000005;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000006;1 ;Action    ;
+                      Name=AttributeOptions;
+                      CaptionML=[DEU=Merkmaloptionen;
+                                 ENU=Attribute Options];
+                      RunObject=Page 5447325;
+                      RunPageLink=Type=CONST(Template),
+                                  No.=FIELD(Code);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=SelectField;
+                      PromotedCategory=Process }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Code;
+                           ENU=Code];
+                SourceExpr=Code }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description }
+
+    { 1000000004;2;Field  ;
+                CaptionML=[DEU=Anzahl Merkmale;
+                           ENU=No. of Attributes];
+                SourceExpr="No. of Attributes" }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,668 @@
+OBJECT Table 5447303 Webshop Category
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               IF ("Line No." <> 0) AND ("Search Code" = '') THEN
+                 VALIDATE("Search Code",FORMAT("Line No.",0,1));
+               VALIDATE(Level);
+
+               "Last Date Modified" := CURRENTDATETIME;
+             END;
+
+    OnModify=BEGIN
+               "Last Date Modified" := CURRENTDATETIME;
+             END;
+
+    OnDelete=VAR
+               WebshopItemCategory@1000000000 : Record 5447305;
+             BEGIN
+               // Zugeh�rige Artikelverkn�pfungen l�schen
+               WebshopItemCategory.SETRANGE("Category Shop Code","Shop Code");
+               WebshopItemCategory.SETRANGE("Category Language Code","Language Code");
+               WebshopItemCategory.SETRANGE("Category Line No.","Line No.");
+               IF WebshopItemCategory.FINDSET THEN REPEAT
+                 WebshopItemCategory.DELETE(TRUE);
+               UNTIL WebshopItemCategory.NEXT = 0;
+
+               // Web-Datensatz l�schen
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.DeleteCategory(Rec);
+             END;
+
+    OnRename=BEGIN
+               //ERROR(Text50000);
+               SwapCategoryTable(Rec,xRec);
+             END;
+
+    CaptionML=[DEU=Webshop Kategorie;
+               ENU=Webshop Category];
+    LookupPageID=Page5447307;
+    DrillDownPageID=Page5447307;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Line No.            ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Name                ;Text45        ;OnValidate=BEGIN
+                                                                // Leerzeichen vor Name entfernen
+                                                                WHILE COPYSTR(Name,1,1) = ' ' DO BEGIN
+                                                                  Name := COPYSTR(Name,2);
+                                                                END;
+
+                                                                // Pr�fen ob Name leer ist
+                                                                IF Name = '' THEN
+                                                                  FIELDERROR(Name);
+
+                                                                // Suchcode mit Zeilennr. f�llen wenn dieser leer ist
+                                                                IF ("Search Code" = '') AND ("Line No." <> 0) THEN
+                                                                  VALIDATE("Search Code",FORMAT("Line No."));
+                                                              END;
+
+                                                   CaptionML=[DEU=Name;
+                                                              ENU=Name] }
+    { 4   ;   ;Level               ;Integer       ;InitValue=1;
+                                                   OnValidate=BEGIN
+                                                                // Vorbelegung f�r Kategorien <= Level 2
+                                                                IF ("Show Random Items" = 0) AND ("No of Random Items" = 0) AND ("Show Campain Items" = 0)
+                                                                   AND ("No of Campain Items" = 0) AND ("Show All Items" = 0) AND (Level <= 2) THEN BEGIN
+                                                                  "Show Random Items" := 2;
+                                                                  "No of Random Items" := 8;
+                                                                  "Show Campain Items" := 2;
+                                                                  "No of Campain Items" := 8;
+                                                                  "Show All Items" := 0;
+                                                                END;
+
+                                                                // Vorbelegung f�r Kategorien > Level 2
+                                                                IF ("Show Random Items" = 2) AND ("No of Random Items" = 8) AND ("Show Campain Items" = 2)
+                                                                   AND ("No of Campain Items" = 8) AND ("Show All Items" = 0) AND (Level > 2) THEN BEGIN
+                                                                  "Show Random Items" := 0;
+                                                                  "No of Random Items" := 0;
+                                                                  "Show Campain Items" := 0;
+                                                                  "No of Campain Items" := 0;
+                                                                  "Show All Items" := 1;
+                                                                END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Ebene;
+                                                              ENU=Level];
+                                                   MinValue=1;
+                                                   MaxValue=5 }
+    { 5   ;   ;Search Code         ;Text20        ;OnValidate=VAR
+                                                                ShopCategory@1000000000 : Record 5447303;
+                                                              BEGIN
+                                                                "Search Code" := CheckSearchCode("Search Code");
+                                                              END;
+
+                                                   CaptionML=[DEU=Suchcode;
+                                                              ENU=Search Code] }
+    { 6   ;   ;Show Random Items   ;Option        ;CaptionML=[DEU=Zuf�llige Artikel anzeigen;
+                                                              ENU=Show Random Items];
+                                                   OptionCaptionML=[DEU=Nicht anzeigen,Listenansicht,Kachelansicht;
+                                                                    ENU=Don't Display,List-View,Tile-View];
+                                                   OptionString=None,List1,List2 }
+    { 7   ;   ;No of Random Items  ;Integer       ;CaptionML=[DEU=Max. Anz. zuf�llige Artikel;
+                                                              ENU=No of Random Items] }
+    { 8   ;   ;Show Campain Items  ;Option        ;CaptionML=[DEU=Aktionsartikel anzeigen;
+                                                              ENU=Show Campain Items];
+                                                   OptionCaptionML=[DEU=Nicht anzeigen,Listenansicht,Kachelansicht;
+                                                                    ENU=Don't Display,List-View,Tile-View];
+                                                   OptionString=None,List1,List2 }
+    { 9   ;   ;No of Campain Items ;Integer       ;CaptionML=[DEU=Max. Anz. Aktionsartikel;
+                                                              ENU=No of Campain Items] }
+    { 10  ;   ;Show All Items      ;Option        ;CaptionML=[DEU=Alle Artikel anzeigen;
+                                                              ENU=Show All Items];
+                                                   OptionCaptionML=[DEU=Nicht anzeigen,Listenansicht,Kachelansicht;
+                                                                    ENU=Don't Display,List-View,Tile-View];
+                                                   OptionString=None,List1,List2 }
+    { 11  ;   ;Show Sub Categorys  ;Option        ;CaptionML=[DEU=Unterkategorien anzeigen;
+                                                              ENU=Show Sub Categorys];
+                                                   OptionCaptionML=[DEU=Nicht anzeigen,Kacheln,Artikelvorschau;
+                                                                    ENU=None,Tiles,Item Preview];
+                                                   OptionString=None,Tiles,ItemPreview }
+    { 12  ;   ;Category Picture    ;Boolean       ;CaptionML=[DEU=Bild;
+                                                              ENU=Image];
+                                                   Editable=No }
+    { 13  ;   ;Category Icon       ;Boolean       ;CaptionML=[DEU=Vorschaubild;
+                                                              ENU=Preview Image];
+                                                   Editable=No }
+    { 14  ;   ;Category Description;Boolean       ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description];
+                                                   Editable=No }
+    { 15  ;   ;No of Items         ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Item Category" WHERE (Category Shop Code=FIELD(Shop Code),
+                                                                                                    Category Language Code=FIELD(Language Code),
+                                                                                                    Category Line No.=FIELD(Line No.)));
+                                                   CaptionML=[DEU=Anzahl Artikel;
+                                                              ENU=No of Items];
+                                                   Editable=No }
+    { 16  ;   ;Sort Items          ;Option        ;CaptionML=[DEU=Artikelsortierung;
+                                                              ENU=Sort Items];
+                                                   OptionCaptionML=[DEU=Beliebtheit,Artikelnummer,Artikelbezeichnung,Neueste Artikel,Manuelle Empfehlung,Preis aufsteigend,Preis absteigend;
+                                                                    ENU=Popularity,Item No.,Item Description,Most Recent Item,Manual Selection,Price ascending,Price descending];
+                                                   OptionString=OrderRanking,ItemNo,Name,Creation Date,Sorting,PriceAsc,PriceDec }
+    { 17  ;   ;User Sorting        ;Boolean       ;InitValue=Yes;
+                                                   CaptionML=[DEU=Benutzer darf Sortierung �ndern;
+                                                              ENU=User Sorting] }
+    { 20  ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code];
+                                                   NotBlank=Yes }
+    { 21  ;   ;Active              ;Boolean       ;InitValue=Yes;
+                                                   CaptionML=[DEU=Aktiv;
+                                                              ENU=Active] }
+    { 22  ;   ;Validity from       ;Date          ;CaptionML=[DEU=G�ltig von;
+                                                              ENU=Validity from] }
+    { 23  ;   ;Validity to         ;Date          ;CaptionML=[DEU=G�ltig bis;
+                                                              ENU=Validity to] }
+    { 30  ;   ;Promtion Active     ;Boolean       ;CaptionML=[DEU=Aktionskennzeichen Aktiv;
+                                                              ENU=Promotion Active] }
+    { 31  ;   ;Promtion Validity from;Date        ;CaptionML=[DEU=Aktion G�ltig von;
+                                                              ENU=Promotion Validity from] }
+    { 32  ;   ;Promtion Validity to;Date          ;CaptionML=[DEU=Aktion G�ltig bis;
+                                                              ENU=Promotion Validity to] }
+    { 33  ;   ;Promotion Label     ;Option        ;CaptionML=[DEU=Aktionskennzeichnung;
+                                                              ENU=Promotion Label];
+                                                   OptionCaptionML=[DEU=" ,Aktion,Reduziert,Neuheit,SSV,WSV,Frei 1,Frei 2,Frei 3";
+                                                                    ENU=" ,Sale,Discount,New,Summer Sale,Winter Sale,Free 1,Free 2,Free 3"];
+                                                   OptionString=[ ,label1,label2,label3,label4,label5,label6,label7,label8] }
+    { 34  ;   ;Promotion Description;Boolean      ;CaptionML=[DEU=Aktionsbeschreibung;
+                                                              ENU=Promotion Description];
+                                                   Editable=No }
+    { 40  ;   ;Meta Keywords       ;Text250       ;CaptionML=[DEU=Meta Schl�sselw�rter;
+                                                              ENU=Meta Keywords] }
+    { 41  ;   ;Meta Description    ;Text250       ;CaptionML=[DEU=Meta Beschreibung;
+                                                              ENU=Meta Description] }
+    { 42  ;   ;Site Title          ;Text100       ;CaptionML=[DEU=Webseitentitel;
+                                                              ENU=Site Title] }
+    { 70  ;   ;No. of Group Permission;Integer    ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(CategoryGroup),
+                                                                                                      Shop Code=FIELD(Shop Code),
+                                                                                                      Language Code=FIELD(Language Code),
+                                                                                                      Line No.=FIELD(Line No.)));
+                                                   CaptionML=[DEU=Gruppenberechtigungen;
+                                                              ENU=No. of Group Permission];
+                                                   Editable=No }
+    { 71  ;   ;No. of Customer Permission;Integer ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=CONST(CustomerCategory),
+                                                                                                      Shop Code=FIELD(Shop Code),
+                                                                                                      Language Code=FIELD(Language Code),
+                                                                                                      Line No.=FIELD(Line No.)));
+                                                   CaptionML=[DEU=Debitorberechtigungen;
+                                                              ENU=No. of Customer Permission];
+                                                   Editable=No }
+    { 80  ;   ;No. Of Attribute Filter;Integer    ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Attribute Link" WHERE (Type=CONST(Category),
+                                                                                                     Shop Code=FIELD(Shop Code),
+                                                                                                     Language Code=FIELD(Language Code),
+                                                                                                     Category Line No.=FIELD(Line No.)));
+                                                   CaptionML=[DEU=Anzahl Artikelmerkmalfilter;
+                                                              ENU=No. Of Attribute Filter];
+                                                   Editable=No }
+    { 81  ;   ;Search Query        ;Text250       ;CaptionML=[DEU=Suchbegriffe;
+                                                              ENU=Search Query] }
+    { 82  ;   ;Last Date Modified  ;DateTime      ;CaptionML=[DEU=Ge�ndert am;
+                                                              ENU=Modified on] }
+    { 83  ;   ;Last Date Updated   ;DateTime      ;CaptionML=[DEU=Aktualisiert am;
+                                                              ENU=Updated on] }
+    { 84  ;   ;Category Description 2;Boolean     ;CaptionML=[DEU=Kategoriebeschreibung 2;
+                                                              ENU=Category Description 2];
+                                                   Editable=No }
+    { 85  ;   ;Category Excerpt    ;Boolean       ;CaptionML=[DEU=Kategorieauszug;
+                                                              ENU=Category Excerpt];
+                                                   Editable=No }
+    { 90  ;   ;Marketplace Category ID;Text50     ;CaptionML=[DEU=Marketplace Kategorie-ID;
+                                                              ENU=Marketplace Category ID] }
+    { 91  ;   ;Marketplace in use  ;Boolean       ;CaptionML=[DEU=Marketplace in Benutzung;
+                                                              ENU=Marketplace in use] }
+    { 92  ;   ;Marketplace subcat. fetched;Boolean;CaptionML=ENU=Google Product Category }
+    { 93  ;   ;Marketplace Root Category Code;Text100 }
+    { 100 ;   ;Google Product Category;Text250    ;CaptionML=[DEU=Google Produktkategorie;
+                                                              ENU=Google Product Category] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Line No.        ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      Text50000@1000000000 : TextConst 'DEU=Datensatz darf nich umbenannt werden;ENU=Row cannot be renamed';
+      WebshopManagement@1000000001 : Codeunit 5447300;
+      Text50001@1000000002 : TextConst 'DEU=Der Suchcode darf nicht leer sein, keine Umlaute und keine Sonderzeichen enthalten;ENU=Search code must not be empty, duplicate or contain non-ascii characters';
+      Text50002@1000000003 : TextConst 'DEU=Der Suchcode muss eindeutig sein;ENU=Search code must be unique';
+      WebshopUpdateManagement@1000000004 : Codeunit 5447301;
+
+    PROCEDURE GetCategoryPath@1000000001() CategoryPath : Text[1024];
+    VAR
+      i@1000000000 : Integer;
+      Category@1000000001 : Record 5447303;
+    BEGIN
+      // Gibt den Pfad (Breadcrumb) der Kategorie zur�ck
+      CategoryPath := Name;
+      IF Level > 1 THEN BEGIN
+        FOR i := 1 TO Level-1 DO BEGIN
+          Category.SETRANGE("Shop Code","Shop Code");
+          Category.SETRANGE("Language Code","Language Code");
+          Category.SETRANGE("Line No.",0,"Line No.");
+          Category.SETRANGE(Level,Level-i);
+          IF Category.FINDLAST THEN BEGIN
+            CategoryPath := Category.Name + ' > ' + CategoryPath;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE CheckSearchCode@1000000000(SearchCode@1000000000 : Text[20]) NewSearchCode : Text[20];
+    VAR
+      ShopCategory@1000000001 : Record 5447303;
+    BEGIN
+      // Pr�fen ob Suchcode g�ltig ist (Eindeutig, keine Sonderzeichen)
+      IF WebshopManagement.CodeHasSpecialChars(SearchCode) THEN
+        ERROR(Text50001);
+      ShopCategory.SETRANGE("Shop Code","Shop Code");
+      ShopCategory.SETRANGE("Language Code","Language Code");
+      ShopCategory.SETFILTER("Line No.",'<>%1',"Line No.");
+      IF ShopCategory.FINDSET THEN REPEAT
+        IF UPPERCASE(ShopCategory."Search Code") = UPPERCASE(SearchCode) THEN BEGIN
+          SearchCode := INCSTR(SearchCode);
+          ShopCategory.FINDSET;
+        END;
+      UNTIL ShopCategory.NEXT = 0;
+      NewSearchCode := SearchCode;
+      IF SearchCode = '' THEN
+        ERROR(Text50001);
+    END;
+
+    PROCEDURE GetCategoryURL@1000000003() CategoryPath : Text[1024];
+    VAR
+      i@1000000000 : Integer;
+      Category@1000000001 : Record 5447303;
+      WebshopManagement@1000000002 : Codeunit 5447300;
+    BEGIN
+      // Gibt den Pfad (Breadcrumb) der Kategorie zur�ck
+      CategoryPath := '/' + WebshopManagement.URLEncodeReadable("Search Code") + '/';
+      IF Level > 1 THEN BEGIN
+        FOR i := 1 TO Level-1 DO BEGIN
+          Category.SETRANGE("Shop Code","Shop Code");
+          Category.SETRANGE("Language Code","Language Code");
+          Category.SETRANGE("Line No.",0,"Line No.");
+          Category.SETRANGE(Level,Level-i);
+          IF Category.FINDLAST THEN BEGIN
+            CategoryPath := '/' + WebshopManagement.URLEncodeReadable(Category."Search Code") + CategoryPath;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE HasChildren@1000000002() HasChildren : Boolean;
+    VAR
+      TempWebshopCategory@1000000000 : Record 5447303;
+    BEGIN
+      HasChildren := FALSE;
+      TempWebshopCategory.SETFILTER("Line No.",'>%1',"Line No.");
+      TempWebshopCategory.SETRANGE("Shop Code","Shop Code");
+      TempWebshopCategory.SETRANGE("Language Code","Language Code");
+      IF TempWebshopCategory.FINDFIRST THEN
+        IF TempWebshopCategory.Level > Level THEN
+          HasChildren := TRUE;
+    END;
+
+    PROCEDURE ModifyChildren@1000000005();
+    VAR
+      TempWebshopCategory@1000000000 : Record 5447303;
+    BEGIN
+
+      TempWebshopCategory.SETFILTER("Line No.",'>%1',"Line No.");
+      TempWebshopCategory.SETRANGE("Shop Code","Shop Code");
+      TempWebshopCategory.SETRANGE("Language Code","Language Code");
+      IF TempWebshopCategory.FINDFIRST THEN REPEAT
+        IF TempWebshopCategory.Level > Level THEN BEGIN
+          TempWebshopCategory."Last Date Modified" := CURRENTDATETIME;
+          TempWebshopCategory.MODIFY(FALSE);
+        END ELSE
+          EXIT;
+      UNTIL TempWebshopCategory.NEXT = 0;
+    END;
+
+    PROCEDURE GetLastChild@1000000015() LineNo : Integer;
+    VAR
+      TempWebshopCategory@1000000000 : Record 5447303;
+    BEGIN
+      LineNo := 0;
+      TempWebshopCategory.SETFILTER("Line No.",'>%1',"Line No.");
+      TempWebshopCategory.SETRANGE("Shop Code","Shop Code");
+      TempWebshopCategory.SETRANGE("Language Code","Language Code");
+      IF TempWebshopCategory.FINDFIRST THEN REPEAT
+        IF TempWebshopCategory.Level > Level THEN
+          LineNo := TempWebshopCategory."Line No."
+        ELSE
+          EXIT;
+      UNTIL TempWebshopCategory.NEXT = 0;
+    END;
+
+    PROCEDURE GetFirstChild@1000000016() LineNo : Integer;
+    VAR
+      TempWebshopCategory@1000000000 : Record 5447303;
+    BEGIN
+      LineNo := 0;
+      TempWebshopCategory.SETFILTER("Line No.",'>%1',"Line No.");
+      TempWebshopCategory.SETRANGE("Shop Code","Shop Code");
+      TempWebshopCategory.SETRANGE("Language Code","Language Code");
+      IF TempWebshopCategory.FINDFIRST THEN
+        IF TempWebshopCategory.Level > Level THEN
+          LineNo := TempWebshopCategory."Line No.";
+    END;
+
+    PROCEDURE GetNextCategoryLineNo@1000000010(ShopCode@1000000000 : Code[30];ShopLanguageCode@1000000001 : Code[10];AboveCode@1000000002 : Text[20]) NewLineNo : Integer;
+    VAR
+      AboveCategory@1000000003 : Record 5447303;
+      BelowCategory@1000000004 : Record 5447303;
+      NewLineNoInterval@1000000005 : Integer;
+      NewLineNoNotRounded@1000000006 : Decimal;
+    BEGIN
+      NewLineNoInterval := 10000;
+      AboveCategory.SETRANGE("Shop Code",ShopCode);
+      AboveCategory.SETRANGE("Language Code",ShopLanguageCode);
+      IF AboveCode <> '' THEN
+        AboveCategory.SETRANGE("Search Code",AboveCode);
+      IF (AboveCategory.COUNT = 1) AND (AboveCategory.FINDFIRST) THEN
+          NewLineNo := AboveCategory."Line No." + NewLineNoInterval
+      ELSE
+        NewLineNo := NewLineNoInterval;
+    END;
+
+    PROCEDURE GetAboveCodeForParentCode@1000000009(ShopCode@1000000000 : Code[30];ShopLanguageCode@1000000001 : Code[10];ParentCode@1000000002 : Text[40]) : Text[40];
+    VAR
+      ParentCategory@1000000003 : Record 5447303;
+      LastChildCategory@1000000004 : Record 5447303;
+      NextParentSiblingCategory@1000000005 : Record 5447303;
+      Error001@1000000006 : TextConst 'DEU=Es konnte keine Kategorie zu den angegebenen Daten gefunden werden.;ENU=No Category could be found for the given Data.';
+      AboveCategory@1000000007 : Record 5447303;
+      Error002@1000000008 : TextConst 'DEU=Die letzte der angegebenen Kategorie untergeordnete Kategorie konnte nicht ausgelesen werden.;ENU=The last child element of the specified category could not be read.';
+      AboveCode@1000000009 : Text[40];
+    BEGIN
+      ParentCategory.SETRANGE("Shop Code",ShopCode);
+      ParentCategory.SETRANGE("Language Code",ShopLanguageCode);
+      ParentCategory.SETRANGE("Search Code",ParentCode);
+      IF (ParentCategory.COUNT = 1) AND (ParentCategory.FINDFIRST) THEN BEGIN
+        IF HasCategoryChildren(ParentCategory) THEN BEGIN
+          AboveCategory.SETRANGE("Shop Code",ShopCode);
+          AboveCategory.SETRANGE("Language Code",ShopLanguageCode);
+          AboveCategory.SETRANGE(Level,ParentCategory.Level + 1);
+          IF HasCategoryNextSibling(ParentCategory) THEN
+            AboveCategory.SETFILTER("Line No.",'>%1&<%2',ParentCategory."Line No.",GetNextCategorySiblingLineNo(ParentCategory));
+          IF AboveCategory.FINDLAST THEN BEGIN
+            AboveCode := AboveCategory."Search Code";
+            EXIT(AboveCode);
+          END ELSE BEGIN
+            ERROR(Error002);
+          END;
+        END ELSE BEGIN
+          AboveCode := ParentCategory."Search Code";
+          EXIT(AboveCode);
+        END;
+      END ELSE BEGIN
+        AboveCategory.SETRANGE("Shop Code",ShopCode);
+        AboveCategory.SETRANGE("Language Code",ShopLanguageCode);
+        AboveCategory.SETRANGE(Level,1);
+        IF AboveCategory.FINDLAST THEN
+          AboveCode := AboveCategory."Search Code"
+        ELSE
+          AboveCode := '';
+        EXIT(AboveCode);
+      END;
+    END;
+
+    PROCEDURE GetNextCategorySiblingLineNo@1000000008(ParamCategory@1000000000 : Record 5447303) NextSiblingCategoryLineNo : Integer;
+    VAR
+      NextSiblingCategory@1000000001 : Record 5447303;
+      Error001@1000000002 : TextConst 'DEU=Es konnte keine Kategorie zu den angegebenen Daten gefunden werden.;ENU=No Category could be found for the given Data.';
+      Error002@1000000003 : TextConst 'DEU=Die angegebene Kategorie hat kein n�chstes Geschwisterelement.;ENU=The provided Category has no next sibling element.';
+    BEGIN
+      IF ParamCategory.GET(ParamCategory."Shop Code",ParamCategory."Language Code",ParamCategory."Line No.") THEN BEGIN
+        NextSiblingCategory.SETRANGE("Shop Code",ParamCategory."Shop Code");
+        NextSiblingCategory.SETRANGE("Language Code",ParamCategory."Language Code");
+        NextSiblingCategory.SETRANGE(Level,ParamCategory.Level);
+        NextSiblingCategory.SETFILTER("Line No.",'>%1',ParamCategory."Line No.");
+        IF NextSiblingCategory.FINDFIRST THEN BEGIN
+          NextSiblingCategoryLineNo := NextSiblingCategory."Line No.";
+        END ELSE
+          ERROR(Error002);
+      END ELSE
+        ERROR(Error001);
+    END;
+
+    PROCEDURE GetParentLineNo@1000000017(ShopCode@1000000000 : Code[20];LanguageCode@1000000001 : Code[10];LineNo@1000000002 : Integer) ParentLineNo : Integer;
+    BEGIN
+      IF GET(ShopCode,LanguageCode,LineNo) AND (Level > 1) THEN BEGIN
+        SETRANGE("Shop Code",ShopCode);
+        SETRANGE("Language Code",LanguageCode);
+        SETRANGE(Level,(Rec.Level - 1));
+        SETFILTER("Line No.",'<%1',"Line No.");
+        IF FINDLAST THEN
+          ParentLineNo := "Line No.";
+      END;
+    END;
+
+    PROCEDURE HasCategoryNextSibling@1000000007(ParamCategory@1000000000 : Record 5447303) HasNextSibling : Boolean;
+    VAR
+      NextSiblingCategory@1000000001 : Record 5447303;
+      Error001@1000000002 : TextConst 'DEU=Es konnte keine Kategorie zu den angegebenen Daten gefunden werden.;ENU=No Category could be found for the given Data.';
+      Error002@1000000003 : TextConst 'DEU=Die angegebene Kategorie hat kein n�chstes Geschwisterelement.;ENU=The provided Category has no next sibling element.';
+    BEGIN
+      IF ParamCategory.GET(ParamCategory."Shop Code",ParamCategory."Language Code",ParamCategory."Line No.") THEN BEGIN
+        NextSiblingCategory.SETRANGE("Shop Code",ParamCategory."Shop Code");
+        NextSiblingCategory.SETRANGE("Language Code",ParamCategory."Language Code");
+        NextSiblingCategory.SETRANGE(Level,ParamCategory.Level);
+        NextSiblingCategory.SETFILTER("Line No.",'>%1',ParamCategory."Line No.");
+        HasNextSibling := (NOT NextSiblingCategory.ISEMPTY);
+      END ELSE
+        ERROR(Error001);
+    END;
+
+    PROCEDURE HasCategoryChildren@1000000004(ParentCategory@1000000000 : Record 5447303) HasChildren : Boolean;
+    VAR
+      Category@1000000001 : Record 5447303;
+      Error001@1000000002 : TextConst 'DEU=Es konnte keine Kategorie zu den angegebenen Daten gefunden werden.;ENU=No Category could be found for the given Data.';
+    BEGIN
+      IF ParentCategory.GET(ParentCategory."Shop Code",ParentCategory."Language Code",ParentCategory."Line No.") THEN BEGIN
+        Category.SETRANGE("Shop Code",ParentCategory."Shop Code");
+        Category.SETRANGE("Language Code",ParentCategory."Language Code");
+        Category.SETRANGE(Level,ParentCategory.Level + 1);
+        IF HasCategoryNextSibling(ParentCategory) THEN
+          Category.SETFILTER("Line No.",'>%1&<%2',ParentCategory."Line No.",GetNextCategorySiblingLineNo(ParentCategory))
+        ELSE
+          Category.SETFILTER("Line No.",'>%1',ParentCategory."Line No.");
+        HasChildren := (NOT Category.ISEMPTY);
+      END ELSE
+        ERROR(Error001);
+    END;
+
+    PROCEDURE GetLineNoForSearchCode@1000000006(ShopCode@1000000000 : Code[30];LanguageCode@1000000001 : Code[10];SearchCode@1000000003 : Text[20]) : Integer;
+    VAR
+      Category@1000000002 : Record 5447303;
+      LineNo@1000000004 : Integer;
+    BEGIN
+      Category.SETRANGE("Shop Code",ShopCode);
+      Category.SETRANGE("Language Code",LanguageCode);
+      Category.SETRANGE("Search Code",SearchCode);
+      IF (Category.COUNT = 1) AND Category.FINDFIRST THEN BEGIN
+        LineNo := Category."Line No.";
+        EXIT(Category."Line No.");
+      END ELSE BEGIN
+        EXIT(0);
+      END;
+    END;
+
+    PROCEDURE SwapCategoryTable@1000000012(ToCategory@1000000001 : Record 5447303;FromCategory@1000000017 : Record 5447303);
+    VAR
+      TempCategory@1000000008 : Record 5447303;
+      TempItemCategory@1000000006 : Record 5447305;
+      SwapToCategory@1000000005 : TEMPORARY Record 5447303;
+      SwapFromCategory@1000000004 : TEMPORARY Record 5447303;
+      SwapToItemCategory@1000000003 : TEMPORARY Record 5447305;
+      SwapFromItemCategory@1000000002 : TEMPORARY Record 5447305;
+      SwapFromWebshopItem@1000000009 : TEMPORARY Record 5447304;
+      SwapToWebshopItem@1000000010 : TEMPORARY Record 5447304;
+      WebshopItem@1000000011 : Record 5447304;
+      SwapFromAttributeLink@1000000012 : TEMPORARY Record 5447321;
+      SwapToAttributeLink@1000000013 : TEMPORARY Record 5447321;
+      AttributeLink@1000000014 : Record 5447321;
+      SwapToLineNoChildren@1000000015 : Integer;
+      SwapFromLineNoChildren@1000000007 : Integer;
+      SwapToLineNo@1000000000 : Integer;
+      SwapFromLineNo@1000000016 : Integer;
+      Shop@1000000019 : Record 5447301;
+      Language@1000000018 : Record 5447302;
+    BEGIN
+      // Kategorien nach oben oder unter verschieben
+
+      SwapFromLineNo := FromCategory."Line No.";
+      SwapToLineNo := ToCategory."Line No.";
+
+      //Artikel-Hauptkategorien �ndern
+      WebshopItem.SETRANGE("Shop Code",FromCategory."Shop Code");
+      WebshopItem.SETRANGE("Language Code",FromCategory."Language Code");
+      WebshopItem.SETRANGE("Main Category Line No.",SwapFromLineNo);
+      IF WebshopItem.FINDSET THEN REPEAT
+        SwapFromWebshopItem.INIT;
+        SwapFromWebshopItem.TRANSFERFIELDS(WebshopItem);
+        SwapFromWebshopItem."Main Category Line No." := SwapToLineNo;
+        SwapFromWebshopItem.INSERT(FALSE);
+      UNTIL WebshopItem.NEXT = 0;
+
+      WebshopItem.INIT;
+      WebshopItem.SETRANGE("Shop Code",FromCategory."Shop Code");
+      WebshopItem.SETRANGE("Language Code",FromCategory."Language Code");
+      WebshopItem.SETRANGE("Main Category Line No.",SwapToLineNo);
+      IF WebshopItem.FINDSET THEN REPEAT
+        SwapToWebshopItem.INIT;
+        SwapToWebshopItem.TRANSFERFIELDS(WebshopItem);
+        SwapToWebshopItem."Main Category Line No." := SwapFromLineNo;
+        SwapToWebshopItem.INSERT(FALSE);
+      UNTIL WebshopItem.NEXT = 0;
+
+      IF SwapFromWebshopItem.FINDSET THEN REPEAT
+      IF WebshopItem.GET(SwapFromWebshopItem."Shop Code",SwapFromWebshopItem."Language Code",SwapFromWebshopItem."Item No.") THEN BEGIN
+        WebshopItem."Main Category Line No." := SwapFromWebshopItem."Main Category Line No.";
+        WebshopItem.MODIFY(TRUE);
+      END;
+      UNTIL SwapFromWebshopItem.NEXT = 0;
+
+      IF SwapToWebshopItem.FINDSET THEN REPEAT
+      IF WebshopItem.GET(SwapToWebshopItem."Shop Code",SwapToWebshopItem."Language Code",SwapToWebshopItem."Item No.") THEN BEGIN
+        WebshopItem."Main Category Line No." := SwapToWebshopItem."Main Category Line No.";
+        WebshopItem.MODIFY(TRUE);
+      END;
+      UNTIL SwapToWebshopItem.NEXT = 0;
+
+
+      // Kateogorie-Attribute �ber temp. Tabellen verschieben
+      AttributeLink.RESET;
+      AttributeLink.SETRANGE(Type,AttributeLink.Type::Category);
+      AttributeLink.SETRANGE("Shop Code",FromCategory."Shop Code");
+      AttributeLink.SETRANGE("Language Code",FromCategory."Language Code");
+      AttributeLink.SETRANGE("Category Line No.",SwapFromLineNo);
+      IF AttributeLink.FINDSET THEN REPEAT
+        SwapFromAttributeLink.INIT;
+        SwapFromAttributeLink.TRANSFERFIELDS(AttributeLink);
+        SwapFromAttributeLink."Category Line No." := SwapToLineNo;
+        SwapFromAttributeLink.INSERT;
+      UNTIL AttributeLink.NEXT = 0;
+
+      AttributeLink.RESET;
+      AttributeLink.SETRANGE(Type,AttributeLink.Type::Category);
+      AttributeLink.SETRANGE("Shop Code",FromCategory."Shop Code");
+      AttributeLink.SETRANGE("Language Code",FromCategory."Language Code");
+      AttributeLink.SETRANGE("Category Line No.",SwapToLineNo);
+      IF AttributeLink.FINDSET THEN REPEAT
+        SwapToAttributeLink.INIT;
+        SwapToAttributeLink.TRANSFERFIELDS(AttributeLink);
+        SwapToAttributeLink."Category Line No." := SwapFromLineNo;
+        SwapToAttributeLink.INSERT;
+      UNTIL AttributeLink.NEXT = 0;
+
+      AttributeLink.RESET;
+      AttributeLink.SETRANGE(Type,AttributeLink.Type::Category);
+      AttributeLink.SETRANGE("Shop Code",FromCategory."Shop Code");
+      AttributeLink.SETRANGE("Language Code",FromCategory."Language Code");
+      AttributeLink.SETFILTER("Category Line No.",'%1|%2',SwapFromLineNo,SwapToLineNo);
+      AttributeLink.DELETEALL(FALSE);
+
+      AttributeLink.RESET;
+      IF SwapFromAttributeLink.FINDSET THEN REPEAT
+        AttributeLink.INIT;
+        AttributeLink.TRANSFERFIELDS(SwapFromAttributeLink);
+        AttributeLink.INSERT;
+      UNTIL SwapFromAttributeLink.NEXT = 0;
+
+      AttributeLink.RESET;
+      IF SwapToAttributeLink.FINDSET THEN REPEAT
+        AttributeLink.INIT;
+        AttributeLink.TRANSFERFIELDS(SwapToAttributeLink);
+        AttributeLink.INSERT;
+      UNTIL SwapToAttributeLink.NEXT = 0;
+
+      COMMIT;
+    END;
+
+    PROCEDURE SetDescendents@1000000011(ShopCode@1000000001 : Code[20];LanguageCode@1000000002 : Code[10];LineNo@1000000003 : Integer;VAR WebshopCategoryTmp@1000000000 : TEMPORARY Record 5447303);
+    VAR
+      NextSiblingLineNo@1000000004 : Integer;
+    BEGIN
+      IF Rec.GET(ShopCode,LanguageCode,LineNo) THEN BEGIN
+        NextSiblingLineNo := GetNextCategorySiblingLineNo(Rec);
+        RESET;
+        SETRANGE("Shop Code",ShopCode);
+        SETRANGE("Language Code",LanguageCode);
+        SETFILTER("Line No.",'>%1&<%2',LineNo,NextSiblingLineNo);
+        IF FINDSET(FALSE,FALSE) THEN REPEAT
+          IF NOT ("Line No." = LineNo) AND NOT ("Line No." = NextSiblingLineNo) AND NOT (WebshopCategoryTmp.GET(ShopCode,LanguageCode,"Line No.")) THEN BEGIN
+            WebshopCategoryTmp := Rec;
+            WebshopCategoryTmp.INSERT(FALSE);
+          END;
+        UNTIL NEXT = 0;
+      END;
+    END;
+
+    PROCEDURE SetAncestors@1000000013(ShopCode@1000000003 : Code[20];LanguageCode@1000000002 : Code[10];LineNo@1000000001 : Integer;VAR WebshopCategoryTmp@1000000000 : TEMPORARY Record 5447303);
+    VAR
+      ParentLineNo@1000000004 : Integer;
+    BEGIN
+      IF GET(ShopCode,LanguageCode,LineNo) AND (Level > 1) THEN BEGIN
+        ParentLineNo := GetParentLineNo(ShopCode,LanguageCode,LineNo);
+        IF ParentLineNo <> 0 THEN
+          IF GET(ShopCode,LanguageCode,ParentLineNo) THEN BEGIN
+            IF NOT WebshopCategoryTmp.GET("Shop Code",LanguageCode,ParentLineNo) THEN BEGIN
+              WebshopCategoryTmp := Rec;
+              WebshopCategoryTmp.INSERT;
+            END;
+            IF Level > 1 THEN
+              SetAncestors(ShopCode,LanguageCode,ParentLineNo,WebshopCategoryTmp)
+          END;
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

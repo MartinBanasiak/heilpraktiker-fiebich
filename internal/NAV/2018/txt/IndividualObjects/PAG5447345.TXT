@@ -1,0 +1,122 @@
+OBJECT Page 5447345 Webshop Subsc. Item Link LPart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table5447342;
+    PageType=ListPart;
+    OnInit=BEGIN
+             SetIsLinkedToSequenceStep;
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       SetIsLinkedToSequenceStep;
+                     END;
+
+    OnAfterGetCurrRecord=BEGIN
+                           SetIsLinkedToSequenceStep;
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000013;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000014;1 ;Action    ;
+                      Name=AddItems;
+                      CaptionML=[DEU=Artikel hinzuf�gen;
+                                 ENU=Add Items];
+                      Image=NewItem;
+                      OnAction=VAR
+                                 WebshopAddItemstoSubscr@1000000000 : Report 5447340;
+                               BEGIN
+                                 TESTFIELD("Subscription Code");
+                                 WebshopSubscriptionHeader.GET("Subscription Code");
+                                 WebshopAddItemstoSubscr.SetSubscriptionHeader(WebshopSubscriptionHeader);
+                                 WebshopAddItemstoSubscr.RUN;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Subscription Code";
+                Visible=FALSE }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Link to";
+                Visible=FALSE;
+                OnValidate=BEGIN
+                             SetIsLinkedToSequenceStep;
+                             CurrPage.UPDATE(FALSE);
+                           END;
+                            }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Item No." }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Variant Code";
+                Visible=IsLinkedToSequenceStep }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Subscr. Seq. Step Line No." }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Fix Price" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Discount %" }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Fix Price Includes VAT" }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Min. Quantity";
+                Visible=NOT(IsLinkedToSequenceStep) }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Max. Quantity";
+                Visible=NOT(IsLinkedToSequenceStep) }
+
+    { 1000000008;2;Field  ;
+                SourceExpr=Quantity;
+                Visible=IsLinkedToSequenceStep }
+
+  }
+  CODE
+  {
+    VAR
+      IsLinkedToSequenceStep@1000000000 : Boolean;
+      WebshopSubscriptionHeader@1000000001 : Record 5447340;
+
+    PROCEDURE SetIsLinkedToSequenceStep@1000000000();
+    BEGIN
+      IF GETFILTER("Link to") = FORMAT("Link to"::"Sequence Step") THEN BEGIN
+        IsLinkedToSequenceStep := TRUE;
+      END ELSE BEGIN
+        IsLinkedToSequenceStep := FALSE;
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

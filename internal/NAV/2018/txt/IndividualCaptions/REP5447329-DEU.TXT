@@ -1,0 +1,28 @@
+R5447329-N2-C1000000000-P8629-A1031-L999:Konfiguration
+R5447329-N2-C1000000001-P8629-A1031-L999:Enddatum
+R5447329-N2-C1000000002-P8629-A1031-L999:Startdatum
+R5447329-N2-C1000000003-P8629-A1031-L999:Max. Anzahl Verwendungen
+R5447329-N2-C1000000004-P8629-A1031-L999:Kategoriename
+R5447329-N2-C1000000005-P8629-A1031-L999:Kategoriezeilennr.
+R5447329-N2-C1000000006-P8629-A1031-L999:Ist Kategoriegutschein
+R5447329-N2-C1000000007-P8629-A1031-L999:Artikelnummer
+R5447329-N2-C1000000008-P8629-A1031-L999:Rabatt %
+R5447329-N2-C1000000009-P8629-A1031-L999:Ab Betrag
+R5447329-N2-C1000000010-P8629-A1031-L999:Betrag
+R5447329-N2-C1000000013-P8629-A1031-L999:Gutscheinart
+R5447329-N2-C1000000014-P8629-A1031-L999:Bedingungen
+R5447329-N2-C1000000015-P8629-A1031-L999:Gültigkeit
+R5447329-N2-C1000000016-P8629-A1031-L999:Erzeugte Gutscheine aktivieren
+R5447329-N2-C1000000017-P8629-A1031-L999:Gutscheine ins Web übertragen
+R5447329-N2-C1-P8629-A1031-L999:Präfix
+R5447329-N2-C2-P8629-A1031-L999:Anzahl Gutscheinzeilen
+R5447329-N2-C3-P8629-A1031-L999:Konfiguration
+R5447329-N2-C4-P8629-A1031-L999:Suffix
+R5447329-N2-C5-P8629-A1031-L999:Anzahl Zufällige Zeichen
+R5447329-P8629-A1031-L999:Webshop Gutscheincodes erzeugen
+R5447329-Q1000000026-P26171-A1031-L999:Gutscheincode ist für den Shop Code %1 und die Sprache %2 bereits vergeben (Gutscheingruppe %3).
+R5447329-Q1000000027-P26171-A1031-L999:Pro Gutscheingruppe dürfen Gutscheine nur eine Wertart besitzten.
+R5447329-Q1000000033-P26171-A1031-L999:Der Präfix darf nicht mit '%1' beginnen. '%1' ist reserviert für digitale Gutscheine.
+R5447329-Q1000000034-P26171-A1031-L999:Der Präfix darf nicht mit '%1' beginnen. '%1' ist reserviert für Newsletter Gutscheine.
+R5447329-Q1007-P26171-A1031-L999:Die Gesamtzeichenlänge ist größer als erlaubt. Präfix + zufällige Zeichen + Suffix darf maximal 20 Zeichen lang sein.
+R5447329-Q1009-P26171-A1031-L999:Die aktuell angegebene Anzahl zufälliger Zeichen ist unzureichend um genug ausreichend zufällige Codes zu erzeugen. Bitte erhöhen Sie die Anzahl zufälliger Zeichen oder verringern Sie die Anzahl  der zu generierenden Gutscheinzeilen

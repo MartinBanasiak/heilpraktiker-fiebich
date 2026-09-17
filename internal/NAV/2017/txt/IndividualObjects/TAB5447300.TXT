@@ -1,0 +1,214 @@
+OBJECT Table 5447300 Webshop Setup
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.08.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    LinkedObject=No;
+    LookupPageID=Page5447300;
+    DrillDownPageID=Page5447300;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code10        ;CaptionML=[DEU=Code;
+                                                              ENU=Code] }
+    { 2   ;   ;Server Synch. Endpoint URL;Text200 ;ExtendedDatatype=URL;
+                                                   CaptionML=[DEU=Server Synch. Endpunkt URL;
+                                                              ENU=Server Synch. Endpoint URL] }
+    { 3   ;   ;Server Synch. Password;Text20      ;ExtendedDatatype=Masked;
+                                                   CaptionML=[DEU=Passwort;
+                                                              ENU=HTTP Password] }
+    { 4   ;   ;CMS URL             ;Text80        ;ExtendedDatatype=URL;
+                                                   CaptionML=[DEU=CMS URL;
+                                                              ENU=CMS URL] }
+    { 5   ;   ;Proxy Server Address;Text80        ;CaptionML=[DEU=Proxy Server Adresse;
+                                                              ENU=Proxy Server Address] }
+    { 6   ;   ;Proxy Server Port   ;Code10        ;CaptionML=[DEU=Proxy Server Port;
+                                                              ENU=Proxy Server Port] }
+    { 7   ;   ;Classic Client Uses Proxy;Boolean  ;CaptionML=[DEU=Classic Client nutzt Proxy;
+                                                              ENU=Classic Client Uses Proxy] }
+    { 8   ;   ;NAS Uses Proxy      ;Boolean       ;CaptionML=[DEU=NAS nutzt Proxy;
+                                                              ENU=NAS Uses Proxy] }
+    { 9   ;   ;Windows Client Uses Proxy;Boolean  ;CaptionML=[DEU=Windows Client nutzt Proxy;
+                                                              ENU=Windows Client Uses Proxy] }
+    { 10  ;   ;Upd. Interv. Dyn. Data (min.);Integer;
+                                                   CaptionML=[DEU=Akt.-Intervall Bewegungsdaten (Min.);
+                                                              ENU=Upd. Interv. Dyn. Data (min.)] }
+    { 11  ;   ;Time Full Webshop Update;Time      ;CaptionML=[DEU=Uhrzeit gesamt-Aktualisierung Webshop;
+                                                              ENU=Time Full Webshop Update] }
+    { 12  ;   ;Time Last Update Dynamic Data;DateTime;
+                                                   CaptionML=[DEU=Uhrzeit letzte Aktualisierung Bewegungsdaten;
+                                                              ENU=Time Last Update Dynamic Data];
+                                                   Editable=No }
+    { 13  ;   ;Time Last Full Update;DateTime     ;CaptionML=[DEU=Uhrzeit letzte Gesamtaktualisierung;
+                                                              ENU=Time Last Full Update];
+                                                   Editable=No }
+    { 14  ;   ;Time Last Auto Upd. Dyn. Data;DateTime;
+                                                   CaptionML=[DEU=Uhrzeit letzte aut. Aktualisierung Bewegungsdaten;
+                                                              ENU=Time Last Auto Upd. Dyn. Data];
+                                                   Editable=No }
+    { 15  ;   ;Time Last Auto Full Update;DateTime;CaptionML=[DEU=Uhrzeit letzte autom. Gesamtaktualisierung;
+                                                              ENU=Time Last Auto Full Update];
+                                                   Editable=No }
+    { 20  ;   ;NAS Error E-Mail Text;Code10       ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=NAS Fehler E-Mail Text;
+                                                              ENU=NAS Fehler E-Mail Text] }
+    { 21  ;   ;NAS Error E-Mail Recipient;Text80  ;ExtendedDatatype=E-Mail;
+                                                   CaptionML=[DEU=NAS Fehler E-Mail Empf�nger;
+                                                              ENU=NAS Error E-Mail Recipient] }
+    { 22  ;   ;NAS Error E-Mail Recipient 2;Text80;ExtendedDatatype=E-Mail;
+                                                   CaptionML=[DEU=NAS Fehler E-Mail Empf�nger 2;
+                                                              ENU=NAS Error E-Mail Recipient 2] }
+    { 23  ;   ;NAS Error E-Mail Sender Addr.;Text80;
+                                                   ExtendedDatatype=E-Mail;
+                                                   CaptionML=[DEU=NAS Fehler E-Mail Absender Adr.;
+                                                              ENU=NAS Error E-Mail Sender Addr.] }
+    { 24  ;   ;NAS Error Occurred  ;Boolean       ;CaptionML=[DEU=NAS Fehler aufgetreten;
+                                                              ENU=NAS Error Occurred] }
+    { 30  ;   ;Servername          ;Text80        ;CaptionML=[DEU=Servername;
+                                                              ENU=Servername];
+                                                   Editable=No }
+    { 31  ;   ;Company Name        ;Text30        ;CaptionML=[DEU=Mandant;
+                                                              ENU=Company Name];
+                                                   Editable=No }
+    { 32  ;   ;Connection Log File Path;Text200   ;CaptionML=[DEU=Pfad Verbindungsprotoll-Datei;
+                                                              ENU=Connection Log File Path] }
+    { 33  ;   ;Is Connection Log Active;Boolean   ;CaptionML=[DEU=Ist Verbindungsprotokoll aktiv;
+                                                              ENU=Is Connection Log Active] }
+    { 40  ;   ;Default Shop Code   ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Standard Shop Code;
+                                                              ENU=Default Shop Code] }
+    { 50  ;   ;Update Items        ;Boolean       ;InitValue=Yes;
+                                                   CaptionML=[DEU=Artikel aktualisieren;
+                                                              ENU=Update Items] }
+    { 51  ;   ;Update Item Variants;Boolean       ;CaptionML=[DEU=Artikelvarianten aktualisieren;
+                                                              ENU=Update Item Variants] }
+    { 52  ;   ;Update Item Inventory;Boolean      ;InitValue=Yes;
+                                                   CaptionML=[DEU=Lagerbest�nde aktualisieren;
+                                                              ENU=Update Item Inventory] }
+    { 53  ;   ;Update Webshop Categories;Boolean  ;InitValue=Yes;
+                                                   CaptionML=[DEU=Kategorien aktualisieren;
+                                                              ENU=Update Webshop Categories] }
+    { 54  ;   ;Update Active Customers;Boolean    ;InitValue=Yes;
+                                                   CaptionML=[DEU=Aktive Kunden aktualisieren;
+                                                              ENU=Update Active Customers] }
+    { 55  ;   ;Update All Customers;Boolean       ;CaptionML=[DEU=Alle Kunden aktualisieren;
+                                                              ENU=Update All Customers] }
+    { 56  ;   ;Update Vendors      ;Boolean       ;CaptionML=[DEU=Kreditoren aktualisieren;
+                                                              ENU=Update Vendors] }
+    { 57  ;   ;Update Salespeople  ;Boolean       ;CaptionML=[DEU=Verk�ufer aktualisieren;
+                                                              ENU=Update Salespeople] }
+    { 58  ;   ;Update Invoice Discounts;Boolean   ;InitValue=Yes;
+                                                   CaptionML=[DEU=Rechnungsrabatte aktualisieren;
+                                                              ENU=Update Invoice Discounts] }
+    { 59  ;   ;Update Sales Orders ;Boolean       ;CaptionML=[DEU=Auftr�ge aktualisieren;
+                                                              ENU=Update Sales Orders] }
+    { 60  ;   ;Update Posted Sales Invoices;Boolean;
+                                                   CaptionML=[DEU=Geb. Rechnungen aktualisieren;
+                                                              ENU=Update Posted Sales Invoice] }
+    { 61  ;   ;Update Posted Sales Shipments;Boolean;
+                                                   CaptionML=[DEU=Geb. Lieferscheine aktualisieren;
+                                                              ENU=Update Posted Sales Shipments] }
+    { 62  ;   ;Update Sales Line Discounts;Boolean;InitValue=Yes;
+                                                   CaptionML=[DEU=Verkaufszeilenrabatte aktualisieren;
+                                                              ENU=Update Sales Line Discounts] }
+    { 63  ;   ;Update Item Attributes;Boolean     ;CaptionML=[DEU=Artikelmerkmale aktualisieren;
+                                                              ENU=Update Item Attributes] }
+    { 64  ;   ;Update Item Reviews ;Boolean       ;CaptionML=[DEU=Artikelbewertungen aktualisieren;
+                                                              ENU=Update Item Reviews] }
+    { 65  ;   ;Server-URL          ;Text80        ;ExtendedDatatype=URL;
+                                                   CaptionML=[DEU=Server-URL;
+                                                              ENU=Server-URL] }
+    { 66  ;   ;Update Permissions  ;Boolean       ;CaptionML=[DEU=Berechtigungen aktualisieren;
+                                                              ENU=Update Permissions] }
+    { 67  ;   ;Update Google Merchant Center;Boolean;
+                                                   CaptionML=[DEU=Google Merchant Center aktualisieren;
+                                                              ENU=Update Google Merchant Center] }
+    { 68  ;   ;Catch & Log WebRequest Errors;Boolean;
+                                                   CaptionML=[DEU=WebRequest-Fehler abfangen und loggen;
+                                                              ENU=Catch & Log WebRequest Errors] }
+    { 69  ;   ;Show Errors as Messages;Boolean    ;CaptionML=[DEU=Zeige Fehler als Meldungen;
+                                                              ENU=Show Errors as Messages] }
+    { 70  ;   ;Support URL         ;Text80        ;ExtendedDatatype=URL;
+                                                   CaptionML=[DEU=Support URL;
+                                                              ENU=Support URL] }
+    { 71  ;   ;Newsletter System URL;Text80       ;CaptionML=[DEU=Newsletter System URL;
+                                                              ENU=Newsletter System URL] }
+    { 72  ;   ;Use Update Buffer   ;Boolean       ;CaptionML=[DEU=Update-Puffer Benutzen;
+                                                              ENU=Use Update Buffer] }
+    { 73  ;   ;Send Orders to Newsl. System;Boolean;
+                                                   CaptionML=[DEU=Bestellungen an Newslettersystem senden;
+                                                              ENU=Send Order to Newsl. System] }
+    { 74  ;   ;Process Coupons     ;Boolean       ;CaptionML=[DEU=Gutscheine verarbeiten;
+                                                              ENU=Process Coupons] }
+    { 79  ;   ;Update Return Orders;Boolean       ;CaptionML=[DEU=Reklamationen aktualisieren;
+                                                              ENU=Update Return Orders] }
+    { 80  ;   ;Update Posted Sales Cr. Memos;Boolean;
+                                                   CaptionML=[DEU=Geb. Gutschriften aktualisieren;
+                                                              ENU=Update Posted Sales Cr. Memos] }
+    { 81  ;   ;Fetch Return Orders ;Boolean       ;CaptionML=[DEU=Reklamationen abholen;
+                                                              ENU=Fetch Return Orders] }
+    { 82  ;   ;Last Update Item-Search;DateTime   ;CaptionML=[DEU=Letzte Aktualisierung Artikel-Suche;
+                                                              ENU=Last Update Item-Search] }
+    { 83  ;   ;Update Sales Prices ;Boolean       ;CaptionML=[DEU=Verkaufspreise aktualisieren;
+                                                              ENU=Update Sales Prices] }
+    { 84  ;   ;Fetch Orders        ;Boolean       ;CaptionML=[DEU=Bestellungen abholen;
+                                                              ENU=Fetch Orders] }
+    { 85  ;   ;Fetch Subscription Orders;Boolean  ;CaptionML=[DEU=Abo-Bestellungen abholen;
+                                                              ENU=Fetch Subscription Orders] }
+    { 86  ;   ;Update Subscriptions;Boolean       ;CaptionML=[DEU=Abonemments aktualisieren;
+                                                              ENU=Update Subscriptions] }
+    { 87  ;   ;Update Subscr. Seq. Steps;Boolean  ;CaptionML=[DEU=Abo-Sequenz-Schritte aktualisieren;
+                                                              ENU=Update Subscr. Seq. Steps] }
+    { 88  ;   ;Update Subscr. Item Links;Boolean  ;CaptionML=[DEU=Abo-Artikelverkn�pfungen aktualisieren;
+                                                              ENU=Update Subscr. Item Links] }
+    { 89  ;   ;Update Subscr. Cust. Links;Boolean ;CaptionML=[DEU=Abo-Kunden aktualisieren;
+                                                              ENU=Update Subscr. Customers] }
+    { 90  ;   ;Create Subscription Orders;Boolean ;CaptionML=[DEU=Abo-Verkaufsauftr�ge erzeugen;
+                                                              ENU=Create Subscription Orders] }
+    { 91  ;   ;Update Item Customizations;Boolean ;CaptionML=[DEU=Artikelindividualisierungen aktualisieren;
+                                                              ENU=Update Webshop Item Customizations] }
+    { 92  ;   ;Update Marketplaces ;Boolean       ;CaptionML=[DEU=Marktpl�tze aktualisieren;
+                                                              ENU=Update Marketplaces] }
+    { 93  ;   ;Update Marketplace Prices;Boolean  ;CaptionML=[DEU=Marktplatz-Preise aktualisieren;
+                                                              ENU=Update Marketplace Prices] }
+    { 94  ;   ;Update Marketplace Inventory;Boolean;
+                                                   CaptionML=[DEU=Marktplatz Lagerbest�nde aktualisieren;
+                                                              ENU=Update Marketplace Inventory] }
+    { 95  ;   ;Update Marketplace Items;Boolean   ;CaptionML=[DEU=Marktplatz-Artikel aktualisieren;
+                                                              ENU=Update Marketplace Items] }
+    { 96  ;   ;Update Marketplace Images;Boolean  ;CaptionML=[DEU=Marktplatz-Bilder aktualisieren;
+                                                              ENU=Update Marketplace Images] }
+    { 97  ;   ;Update Marketpl. Item Rel.;Boolean ;CaptionML=[DEU=Marktplatz Artikelverkn�pfungen aktualisieren;
+                                                              ENU=Update Marketpl. Item Rel.] }
+    { 99  ;   ;Fetch Marketplace Orders;Boolean   ;CaptionML=[DEU=Marktplatz-Bestellungen abholen;
+                                                              ENU=Fetch Marketplace Orders] }
+    { 101 ;   ;Fetch Marketplace Upd. Errors;Boolean;
+                                                   CaptionML=[DEU=Marktplatz Akt.-Fehlermeldungen abholen;
+                                                              ENU=Fetch Marketplace Upd. Errors] }
+    { 102 ;   ;Confirm Marketplace Orders;Boolean ;CaptionML=[DEU=Marktplatzbestellungen best�tigen;
+                                                              ENU=Confirm Marketplace Orders] }
+    { 150 ;   ;Last Document No. Joint Purch.;Code20 }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

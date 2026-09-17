@@ -1,0 +1,90 @@
+OBJECT Page 5447354 Webshop Country Part
+{
+  OBJECT-PROPERTIES
+  {
+    Date=23.04.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop L�nder Part;
+               ENU=Webshop Country Part];
+    SourceTable=Table5447310;
+    PageType=ListPart;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=L�ndercode;
+                           ENU=Country Code];
+                SourceExpr="Country Code" }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description }
+
+    { 1000000004;2;Field  ;
+                CaptionML=[DEU=Rechnungsadresse;
+                           ENU=Invoice-To];
+                SourceExpr="Invoicing available" }
+
+    { 1000000005;2;Field  ;
+                CaptionML=[DEU=Lieferadresse;
+                           ENU=Ship-To];
+                SourceExpr="Shipping available" }
+
+    { 1000000006;2;Field  ;
+                CaptionML=[DEU=Debitor Vorlagencode;
+                           ENU=Customer Template Code];
+                SourceExpr="Customer Template Code" }
+
+    { 1000000007;2;Field  ;
+                CaptionML=[DEU=Debitor Mahnmethodencode;
+                           ENU=Customer Reminder Terms Code];
+                SourceExpr="Customer Reminder Terms Code" }
+
+    { 1000000008;2;Field  ;
+                CaptionML=[DEU=Debitor Lagerortcode;
+                           ENU=Customer Location Code];
+                SourceExpr="Customer Location Code" }
+
+    { 1000000009;2;Field  ;
+                CaptionML=[DEU=Debitor Verk�ufercode;
+                           ENU=Customer Salesperson Code];
+                SourceExpr="Customer Salesperson Code" }
+
+    { 1000000010;2;Field  ;
+                CaptionML=[DEU=Sammeldebitornr.;
+                           ENU=Pool Customer No.];
+                SourceExpr="Pool Customer No." }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Enable Reverse Charge" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Reverse Charge Cust. Tmp. Code" }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Reverse Charge Pool Cust. No." }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,169 @@
+OBJECT Page 5447321 Webshop Attribute Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.09.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelmerkmalkarte;
+               ENU=Webshop Attribute Card];
+    SourceTable=Table5447320;
+    PageType=Card;
+    PromotedActionCategoriesML=[DEU=Artikelmerkmal;
+                                ENU=Item Attribute];
+    ActionList=ACTIONS
+    {
+      { 1000000034;  ;ActionContainer;
+                      Name=<Action1000000010>;
+                      ActionContainerType=ActionItems }
+      { 1000000014;1 ;Action    ;
+                      Name=UpdateAttribute;
+                      CaptionML=[DEU=Merkmal aktualisieren;
+                                 ENU=Update attribute];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 AttributeOption@1000000000 : Record 5447322;
+                                 AttributeLink@1000000001 : Record 5447321;
+                               BEGIN
+                                 WebshopUpdateManagement.UpdateAttribute(Rec);
+
+                                 AttributeOption.SETRANGE("Attribute Code",Code);
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 IF AttributeOption.FINDSET THEN REPEAT
+                                   WebshopUpdateManagement.UpdateAttributeOption(AttributeOption);
+                                 UNTIL AttributeOption.NEXT = 0;
+
+                                 AttributeLink.SETRANGE("Attribute Code",Code);
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 IF AttributeLink.FINDSET THEN REPEAT
+                                   WebshopUpdateManagement.UpdateAttributeLink(AttributeLink);
+                                 UNTIL AttributeLink.NEXT = 0;
+
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000015;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000012;1 ;Action    ;
+                      Name=AttributeOptions;
+                      CaptionML=[DEU=Merkmal Optionen;
+                                 ENU=Attribute Options];
+                      RunObject=Page 5447326;
+                      RunPageLink=Attribute Code=FIELD(Code);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=SelectField;
+                      PromotedCategory=Process }
+      { 1000000032;1 ;Action    ;
+                      Name=AttributeTranslations;
+                      CaptionML=[DEU=Merkmal �bersetzungen;
+                                 ENU=Attribute Translations];
+                      RunObject=Page 5447324;
+                      RunPageLink=Type=CONST(Attribute),
+                                  Attribute Code=FIELD(Code);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Translations;
+                      PromotedCategory=Process }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General];
+                GroupType=Group }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Code;
+                           ENU=Code];
+                SourceExpr=Code }
+
+    { 1000000018;2;Field  ;
+                SourceExpr="Attribute Type" }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description }
+
+    { 1000000019;2;Field  ;
+                SourceExpr="Map-to Attribute Code" }
+
+    { 1000000007;2;Field  ;
+                CaptionML=[DEU=Vorhandene Daten;
+                           ENU=Existing Data];
+                SourceExpr="Existing Data" }
+
+    { 1000000008;2;Field  ;
+                CaptionML=[DEU=Ohne Verkn�pfung anzeigen;
+                           ENU=Auto Link];
+                SourceExpr="Auto-Link existing Data" }
+
+    { 1000000004;2;Field  ;
+                CaptionML=[DEU=Anzeigeart;
+                           ENU=Display Type];
+                SourceExpr="Display Type" }
+
+    { 1000000006;2;Field  ;
+                CaptionML=[DEU=Datentyp;
+                           ENU=Data Type];
+                SourceExpr="Data Type" }
+
+    { 1000000009;2;Field  ;
+                CaptionML=[DEU=Als Merkmalfilter verwenden;
+                           ENU=Attribute Filter];
+                SourceExpr="Use for Filtering" }
+
+    { 1000000011;2;Field  ;
+                CaptionML=[DEU=Auf Artikelkarte anzeigen;
+                           ENU=Attribute Info];
+                SourceExpr="Use for Item-Info" }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Show in Header" }
+
+    { 1000000005;2;Field  ;
+                CaptionML=[DEU=Mehrfachauswahl m�glich;
+                           ENU=Multiple Choice];
+                SourceExpr="Multiple Choice";
+                Visible=FALSE }
+
+    { 1000000010;2;Field  ;
+                CaptionML=[DEU=F�r Artikelvergleich verwenden;
+                           ENU=Attribute Comparision];
+                SourceExpr="Use for Item-Comparison";
+                Visible=FALSE }
+
+    { 1000000013;1;Part   ;
+                CaptionML=[DEU=Merkmal Optionen;
+                           ENU=Attribute Options];
+                SubPageLink=Attribute Code=FIELD(Code);
+                PagePartID=Page5447322;
+                PartType=Page }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+      Text001@1000000001 : TextConst 'DEU=Merkmal online aktualisiert;ENU=Item Attribute has been updated';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

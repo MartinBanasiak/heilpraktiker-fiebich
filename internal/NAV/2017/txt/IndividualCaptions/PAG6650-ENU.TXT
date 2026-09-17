@@ -1,0 +1,19 @@
+N6650-C1000000005-P8629-A1033-L999:Return Order
+N6650-C1905885101-P8629-A1033-L999:Invoicing
+N6650-C1906801201-P8629-A1033-L999:Shipping
+N6650-C1907468901-P8629-A1033-L999:Foreign Trade
+N6650-C1-P8629-A1033-L999:General
+N6650-P55242-G1140001-P8629-A1033-L999:Document &Line Tracking
+N6650-P55242-G45-P8629-A1033-L999:&Return Shpt.
+N6650-P55242-G47-P8629-A1033-L999:Co&mments
+N6650-P55242-G48-P8629-A1033-L999:&Print
+N6650-P55242-G49-P8629-A1033-L999:&Navigate
+N6650-P55242-G77-P8629-A1033-L999:&Line
+N6650-P55242-G79-P8629-A1033-L999:Dimensions
+N6650-P55242-G79-P8631-A1033-L999:View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.
+N6650-P55242-G81-P8629-A1033-L999:Certificate of Supply Details
+N6650-P55242-G82-P8629-A1033-L999:Print Certificate of Supply
+N6650-P55242-G83-P8629-A1033-L999:Approvals
+N6650-P55242-G83-P8631-A1033-L999:View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.
+N6650-P55242-G8-P8629-A1033-L999:Statistics
+N6650-P8629-A1033-L999:Posted Return Shipment

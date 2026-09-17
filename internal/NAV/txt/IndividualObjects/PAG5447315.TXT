@@ -1,0 +1,59 @@
+OBJECT Page 5447315 Webshop Item Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=15.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelverkn�pfungen;
+               ENU=Webshop Item Links];
+    SourceTable=Table5447308;
+    DataCaptionExpr=TitelText;
+    PageType=List;
+    OnOpenPage=BEGIN
+                 TitelText := STRSUBSTNO(Text50000,GETFILTER(Type),GETFILTER("Item No."));
+               END;
+
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000008;2;Field  ;
+                CaptionML=[DEU=Typ;
+                           ENU=Type];
+                SourceExpr=Type;
+                Visible=FALSE }
+
+    { 1000000001;2;Field  ;
+                CaptionML=[DEU=Artikelnr.;
+                           ENU=Linked Item No.];
+                SourceExpr="Linked Item No." }
+
+    { 1000000006;2;Field  ;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Linked Item Description];
+                SourceExpr="Linked Item Description" }
+
+  }
+  CODE
+  {
+    VAR
+      Text50000@1000000000 : TextConst 'DEU=%1 zu Artikel %2;ENU=%1 to item %2';
+      TitelText@1000000001 : Text[100];
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

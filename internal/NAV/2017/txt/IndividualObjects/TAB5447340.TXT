@@ -1,0 +1,268 @@
+OBJECT Table 5447340 Webshop Subscription Header
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnModify=BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnDelete=BEGIN
+               WebshopSubscriptionSeqStep.RESET;
+               WebshopSubscriptionSeqStep.SETFILTER("Subscription Code",Code);
+               WebshopSubscriptionSeqStep.DELETEALL(TRUE);
+
+               WebshopSubscriptionItemLink.RESET;
+               WebshopSubscriptionItemLink.SETFILTER("Subscription Code",Code);
+               WebshopSubscriptionItemLink.DELETEALL(TRUE);
+
+               WebshopSubscrCustomerLink.RESET;
+               WebshopSubscrCustomerLink.SETFILTER("Subscription Code",Code);
+               WebshopSubscrCustomerLink.DELETEALL(TRUE);
+
+               WebshopUpdateManagement.DeleteSubscriptionHeader(Rec);
+             END;
+
+    OnRename=VAR
+               Text001@1000000000 : TextConst 'DEU=Der Datensatz muss zur�ckgesetzt und alle Verkn�pftungen entfernt werden. Fortfahren?;ENU=The record has to be reset and all links removed. Continue?';
+             BEGIN
+               IF (Rec.Type <> xRec.Type) THEN
+                 IF NOT GUIALLOWED THEN BEGIN
+                   WebshopSubscriptionSeqStep.RESET;
+                   WebshopSubscriptionSeqStep.SETFILTER("Subscription Code",Code);
+                   WebshopSubscriptionSeqStep.DELETEALL(TRUE);
+
+                   WebshopSubscriptionItemLink.RESET;
+                   WebshopSubscriptionItemLink.SETFILTER("Subscription Code",Code);
+                   WebshopSubscriptionItemLink.DELETEALL(TRUE);
+
+                   WebshopSubscrCustomerLink.RESET;
+                   WebshopSubscrCustomerLink.SETFILTER("Subscription Code",Code);
+                   WebshopSubscrCustomerLink.DELETEALL(TRUE);
+
+                   CLEAR("Item No. Subscription Item");
+                   CLEAR("Payment Type");
+                   CLEAR("Start Type");
+                   CLEAR("Start Date Formula");
+                   CLEAR("Turn Interval Formula");
+                   CLEAR("Min. No. of Turns");
+                   CLEAR("Max. No. of Turns");
+                   CLEAR("Subscription Duration");
+                   CLEAR("Is Active");
+                   CLEAR("Starting Date Processing");
+                   CLEAR("Ending Date Processing");
+                   CLEAR("Cancel. Period Date Formula");
+                   CLEAR("Price per Billing Interval");
+                   CLEAR(Orderable);
+                   CLEAR("Starting Date Orderability");
+                   CLEAR("Ending Date Orderability");
+                 END;
+             END;
+
+    CaptionML=[DEU=Webshop Abonnement;
+               ENU=Webshop Subscription];
+    LookupPageID=Page5447341;
+    DrillDownPageID=Page5447341;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code30        ;CaptionML=[DEU=Code;
+                                                              ENU=Code] }
+    { 2   ;   ;Type                ;Option        ;OnValidate=VAR
+                                                                Text001@1000000000 : TextConst 'DEU=Der Datensatz muss zur�ckgesetzt und alle Verkn�pftungen entfernt werden. Fortfahren?;ENU=The record has to be reset and all links removed. Continue?';
+                                                              BEGIN
+                                                                IF (Rec.Type <> xRec.Type) THEN
+                                                                  IF NOT GUIALLOWED THEN BEGIN
+                                                                    WebshopSubscriptionSeqStep.RESET;
+                                                                    WebshopSubscriptionSeqStep.SETFILTER("Subscription Code",Code);
+                                                                    WebshopSubscriptionSeqStep.DELETEALL(TRUE);
+
+                                                                    WebshopSubscriptionItemLink.RESET;
+                                                                    WebshopSubscriptionItemLink.SETFILTER("Subscription Code",Code);
+                                                                    WebshopSubscriptionItemLink.DELETEALL(TRUE);
+
+                                                                    WebshopSubscrCustomerLink.RESET;
+                                                                    WebshopSubscrCustomerLink.SETFILTER("Subscription Code",Code);
+                                                                    WebshopSubscrCustomerLink.DELETEALL(TRUE);
+
+                                                                    CLEAR("Item No. Subscription Item");
+                                                                    CLEAR("Payment Type");
+                                                                    CLEAR("Start Type");
+                                                                    CLEAR("Start Date Formula");
+                                                                    CLEAR("Turn Interval Formula");
+                                                                    CLEAR("Min. No. of Turns");
+                                                                    CLEAR("Max. No. of Turns");
+                                                                    CLEAR("Subscription Duration");
+                                                                    CLEAR("Is Active");
+                                                                    CLEAR("Starting Date Processing");
+                                                                    CLEAR("Ending Date Processing");
+                                                                    CLEAR("Cancel. Period Date Formula");
+                                                                    CLEAR("Price per Billing Interval");
+                                                                    CLEAR(Orderable);
+                                                                    CLEAR("Starting Date Orderability");
+                                                                    CLEAR("Ending Date Orderability");
+
+                                                                  END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Abo Bestelloption,Abo Sequenz Artikel;
+                                                                    ENU=Subscription Order Option,Subscription Sequence Item];
+                                                   OptionString=SubscriptionOrderOption,SubscriptionSequenceItem }
+    { 3   ;   ;Description         ;Text80        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 4   ;   ;Item No. Subscription Item;Code30  ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Artikel-Nr. Abo-Artikel;
+                                                              ENU=Item No. Subscription Item] }
+    { 5   ;   ;Payment Type        ;Option        ;OnValidate=VAR
+                                                                Error001@1000000000 : TextConst 'DEU=Bei Abo-Typ "Bestelloption" ist Zahlung ausschlie�lich per Turnus m�glich.;ENU=Only per-turn-payment is possible for subscription type "order option".';
+                                                              BEGIN
+                                                                IF (Type = Type::SubscriptionOrderOption) AND ("Payment Type" <> "Payment Type"::PerTurn) THEN
+                                                                  ERROR(Error001);
+                                                              END;
+
+                                                   CaptionML=[DEU=Zahlungstyp;
+                                                              ENU=Payment Type];
+                                                   OptionCaptionML=[DEU=Einmalig,Pro Turnus,Monatlich,Quartalsweise,Halbj�hrlich,J�hrlich;
+                                                                    ENU=Once,Per Turn,Monthly,Quarterly,Semi-annually,Annually];
+                                                   OptionString=Once,PerTurn,Monthly,Quarterly,SemiAnnually,Annually }
+    { 6   ;   ;Start Type          ;Option        ;CaptionML=[DEU=Start-Typ;
+                                                              ENU=Start-Type];
+                                                   OptionCaptionML=[DEU=Neue Sequenz beginnen,In laufende Sequenz einsteigen;
+                                                                    ENU=Start new sequence,Join running sequence];
+                                                   OptionString=Anew,Join }
+    { 7   ;   ;Start Date Formula  ;DateFormula   ;CaptionML=[DEU=Startdatum (Formel);
+                                                              ENU=Start Date (Formula)] }
+    { 8   ;   ;Turn Interval Formula;DateFormula  ;CaptionML=[DEU=Turnus Intervall (Formel);
+                                                              ENU=Turn Interval (Formula)] }
+    { 9   ;   ;Min. No. of Turns   ;Integer       ;CaptionML=[DEU=Mind. Anzahl Turni;
+                                                              ENU=Min. No. of Turns] }
+    { 10  ;   ;Max. No. of Turns   ;Integer       ;CaptionML=[DEU=Max. Anzahl Turni;
+                                                              ENU=Max. No. of Turns] }
+    { 11  ;   ;Subscription Duration;DateFormula  ;CaptionML=[DEU=Abo-Dauer;
+                                                              ENU=Subscription Duration] }
+    { 12  ;   ;No. of Sequence Steps;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Subscription Seq. Step" WHERE (Subscription Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Sequenz-Schritte;
+                                                              ENU=No. of Sequence Steps] }
+    { 13  ;   ;No. of Items        ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Subscription Item Link" WHERE (Subscription Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Artikel;
+                                                              ENU=No. of Items] }
+    { 14  ;   ;No. of Customers    ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Subscr. Customer Link" WHERE (Subscription Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Kunden;
+                                                              ENU=No. of Customers] }
+    { 15  ;   ;Is Active           ;Boolean       ;CaptionML=[DEU=Ist Aktiv;
+                                                              ENU=Is Active] }
+    { 16  ;   ;Starting Date Processing;Date      ;CaptionML=[DEU=Startdatum Bearbeitung;
+                                                              ENU=Starting Date Processing] }
+    { 17  ;   ;Ending Date Processing;Date        ;CaptionML=[DEU=Enddatum Bearbeitung;
+                                                              ENU=Ending Date Processing] }
+    { 18  ;   ;Cancel. Period Date Formula;DateFormula;
+                                                   CaptionML=[DEU=K�ndigungsfrist (Formel);
+                                                              ENU=Cancellation Period (Formula)] }
+    { 19  ;   ;Price per Billing Interval;Decimal ;CaptionML=[DEU=Preis pro Abrechnungsintervall;
+                                                              ENU=Price per billing interval] }
+    { 21  ;   ;Orderable           ;Boolean       ;CaptionML=[DEU=Bestellbar;
+                                                              ENU=Orderable] }
+    { 22  ;   ;Starting Date Orderability;Date    ;CaptionML=[DEU=Startdatum Bestellbarkeit;
+                                                              ENU=Starting Date Orderability] }
+    { 23  ;   ;Ending Date Orderability;Date      ;CaptionML=[DEU=Enddatum Bestellbarkeit;
+                                                              ENU=Endign Date Orderability] }
+    { 24  ;   ;Shop Code           ;Code20        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shop Code;
+                                                              ENU=Shop Code] }
+    { 25  ;   ;Language Code       ;Code20        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Webshop Sprachcode;
+                                                              ENU=Shop Language Code] }
+    { 26  ;   ;All Shops           ;Boolean       ;CaptionML=[DEU=Alle Shops;
+                                                              ENU=All Shops] }
+    { 27  ;   ;All Languages       ;Boolean       ;CaptionML=[DEU=Alle Sprachen;
+                                                              ENU=All Languages] }
+    { 28  ;   ;First Order Email Text;Code50      ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Erste Bestellung;
+                                                              ENU=First Order Email Text] }
+    { 29  ;   ;Shipm. Email Text   ;Code50        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Lieferung;
+                                                              ENU=Shipment Email] }
+    { 30  ;   ;Last Shipm. Email Text;Code50      ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail letzte Lieferung;
+                                                              ENU=Last Shipment Email Text] }
+    { 31  ;   ;Shipping Option Line No.;Integer   ;TableRelation="Webshop Shipping Option"."Line No.";
+                                                   CaptionML=[DEU=Lieferart Zeilennr.;
+                                                              ENU=Shipping Option Line No.] }
+    { 32  ;   ;Ref. Pay. Date f. Start Date;DateFormula;
+                                                   CaptionML=[DEU=Referenz-Zahlungsdatum (Formel) auf Basis Startdatum;
+                                                              ENU=Reference payment-date (formula) based on starting date] }
+    { 33  ;   ;Interval Description;Text50        ;CaptionML=[DEU=Beschreibung Intervall;
+                                                              ENU=Interval Description] }
+    { 34  ;   ;Payment Type Description;Text50    ;CaptionML=[DEU=Beschreibung Zahlweise;
+                                                              ENU=Payment Type Description] }
+    { 35  ;   ;Cancel. Period Description;Text50  ;CaptionML=[DEU=Beschreibung K�ndigungsfrist;
+                                                              ENU=Cancellation Terms Description] }
+    { 36  ;   ;Date Last Modified  ;DateTime      ;CaptionML=[DEU=Datum letzte �nderung;
+                                                              ENU=Date Last Modified] }
+    { 37  ;   ;Date Last Updated   ;DateTime      ;CaptionML=[DEU=Datum letzte Aktualisierung;
+                                                              ENU=Date Last Updated] }
+    { 38  ;   ;Short Text          ;Code50        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Kurztext;
+                                                              ENU=Short Text] }
+    { 39  ;   ;Payment Email Text  ;Code50        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Zahlung;
+                                                              ENU=Email Payment] }
+    { 40  ;   ;Pay. And Ship. Email Text;Code50   ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Zahlung & Lieferung;
+                                                              ENU=Email Pay. and Ship.] }
+    { 41  ;   ;Cancellation Email Text;Code50     ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail K�ndigungsbest�tigung;
+                                                              ENU=Email cancellation confirmation] }
+    { 42  ;   ;Last Pay. Email Text;Code50        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Email lezte Zahlung;
+                                                              ENU=Email last payment] }
+    { 43  ;   ;Allow Late Entry    ;Boolean       ;OnValidate=VAR
+                                                                Error001@1000000000 : TextConst 'DEU=Nachorder (Sp�t-Einstieg) ist nur bei Abo Sequenz-Artiklen mit Zahlungstyp ''Einmalig'' m�glich.;ENU=Late Join-up is only passible for Subscr. Sequence-Items with Pay-Type ''Once''.';
+                                                              BEGIN
+                                                                IF ("Allow Late Entry" = TRUE) AND (("Start Type" <> "Start Type"::Join) OR ("Payment Type" <> "Payment Type"::Once)) THEN
+                                                                  ERROR(Error001);
+                                                              END;
+
+                                                   CaptionML=[DEU=Nachorder erlaubt;
+                                                              ENU=Allow Late Join-up] }
+    { 44  ;   ;Max. No. of Turns Per Customer;Integer;
+                                                   CaptionML=[DEU=Max. Anzahl Sequenzschritte pro Kunde;
+                                                              ENU=Max. No. of Sequence-Steps per Customer] }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopSubscriptionSeqStep@1000000000 : Record 5447341;
+      WebshopSubscriptionItemLink@1000000001 : Record 5447342;
+      WebshopSubscrCustomerLink@1000000002 : Record 5447343;
+      WebshopUpdateManagement@1000000003 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,77 @@
+OBJECT Table 5447323 Webshop Attribute Translation
+{
+  OBJECT-PROPERTIES
+  {
+    Date=22.02.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               CASE Type OF
+                 Type::"Attribute Link": BEGIN
+                   Attribute.GET("Attribute Code");
+                   IF NOT (Attribute."Data Type" = Attribute."Data Type"::Text) THEN
+                     Attribute.FIELDERROR("Data Type");
+                 END;
+                 Type::"Attribute Template": BEGIN
+                   Attribute.GET("Attribute Code");
+                   IF NOT (Attribute."Data Type" = Attribute."Data Type"::Text) THEN
+                     Attribute.FIELDERROR("Data Type");
+                 END;
+               END;
+             END;
+
+    OnDelete=BEGIN
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagment.DeleteAttributeTranslation(Rec);
+             END;
+
+    CaptionML=[DEU=Webshop Merkmal�bersetzung;
+               ENU=Webshop Attribute Translation];
+    LookupPageID=Page5447324;
+    DrillDownPageID=Page5447324;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Merkmal,Merkmalverkn�pfung,Merkmaloption,Merkmalvorlage;
+                                                                    ENU=Attribute,Attribute Link,Attribute Option,Attribute Template];
+                                                   OptionString=Attribute,Attribute Link,Attribute Option,Attribute Template }
+    { 2   ;   ;Attribute Code      ;Code30        ;CaptionML=[DEU=Merkmalcode;
+                                                              ENU=Attribute Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Attribute Link No.  ;Code30        ;CaptionML=[DEU=Verkn�pfungsnr.;
+                                                              ENU=Attribute Link No.] }
+    { 4   ;   ;Language Code       ;Code10        ;TableRelation=Language.Code;
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code];
+                                                   NotBlank=Yes }
+    { 10  ;   ;Description         ;Text100       ;CaptionML=[DEU=�bersetzung;
+                                                              ENU=Description] }
+  }
+  KEYS
+  {
+    {    ;Type,Attribute Code,Attribute Link No.,Language Code;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      Attribute@1000000000 : Record 5447320;
+      WebshopManagement@1000000002 : Codeunit 5447300;
+      WebshopUpdateManagment@1000000001 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

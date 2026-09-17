@@ -1,0 +1,12 @@
+T5717-F1-P8629-A1031-L999:Artikelnr.
+T5717-F2-P8629-A1031-L999:Variantencode
+T5717-F3-P8629-A1031-L999:Einheit
+T5717-F4-P8629-A1031-L999:Referenzart
+T5717-F4-P8632-A1031-L999: ,Debitor,Kreditor,Barcode
+T5717-F5-P8629-A1031-L999:Referenzartennr.
+T5717-F6-P8629-A1031-L999:Referenznr.
+T5717-F7-P8629-A1031-L999:Beschreibung
+T5717-F8-P8629-A1031-L999:Barcode ungültig
+T5717-P8629-A1031-L999:Artikelreferenz
+T5717-Q1000-P26171-A1031-L999:Sie können für eine leere Referenzart keine %1 eingeben.
+T5717-Q1001-P26171-A1031-L999:Diese %1 ist kein Barcode.

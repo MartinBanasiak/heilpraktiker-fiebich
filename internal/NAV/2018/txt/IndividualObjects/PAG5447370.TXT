@@ -1,0 +1,230 @@
+OBJECT Page 5447370 Webshop Item Subscr. List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop Artikel Abonnements;
+               ENU=Webshop Item Subscriptions];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    SourceTable=Table5447340;
+    DelayedInsert=No;
+    PageType=List;
+    SourceTableTemporary=Yes;
+    RefreshOnActivate=No;
+    OnAfterGetRecord=BEGIN
+                       //
+                     END;
+
+    OnAfterGetCurrRecord=BEGIN
+                           //
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000005;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000009;1 ;Action    ;
+                      Name=OpenSubscription;
+                      ShortCutKey=Return;
+                      CaptionML=[DEU=Abonemment �ffnen;
+                                 ENU=Open Subscription];
+                      Visible=FALSE;
+                      OnAction=VAR
+                                 WebshopSubscriptionHeader@1000000000 : Record 5447340;
+                                 WebshopSubscrHeaderCard@1000000001 : Page 5447341;
+                               BEGIN
+                                 CurrPage.GETRECORD(WebshopSubscriptionHeader);
+                                 WebshopSubscriptionHeader.GET(WebshopSubscriptionHeader.Code);
+                                 WebshopSubscrHeaderCard.SETRECORD(WebshopSubscriptionHeader);
+                                 WebshopSubscrHeaderCard.RUN;
+                               END;
+                                }
+      { 1000000006;1 ;Action    ;
+                      Name=AddToSubscription;
+                      CaptionML=[DEU=Zu Abo hinzuf�gen;
+                                 ENU=Add to subscription];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=AddAction;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopSubscrHeaderList@1000000000 : Page 5447340;
+                                 WebshopSubscriptionHeader@1000000001 : Record 5447340;
+                                 WebshopSubscriptionItemLink@1000000002 : Record 5447342;
+                                 Message001@1000000003 : TextConst 'DEU=Die Abonnement-Artikelverkn�pfung wurde erfolgreich angelegt.\Abonnement-Festpreis oder -Rabatt muss manuell vergeben werden.;ENU=The Subscription Item Link was successfully created.\Subscription fix-price or discount has to be set manually.';
+                                 Error001@1000000004 : TextConst 'DEU=Es besteht bereits ein Abonnement von Typ "Sequenz-Artikel" f�r diesen Artikel. Nur Artikel die nicht als Abo-Sequenz-Artikel verwendet werden, k�nnen mit Abonnements verkn�pft werden.;ENU=There exists a Subscription of type ''Sequence Item'' for this Item. Only Items not used as Subscription Sequence Items can be linked to Subscriptions.';
+                               BEGIN
+                                 IF WebshopItem.COUNT = 1 THEN BEGIN
+                                   WebshopSubscriptionHeader.RESET;
+                                   WebshopSubscriptionHeader.SETRANGE("Item No. Subscription Item",ItemNo);
+                                   IF NOT WebshopSubscriptionHeader.ISEMPTY THEN
+                                     ERROR(Error001);
+                                   WebshopSubscriptionHeader.RESET;
+                                   WebshopSubscriptionHeader.SETRANGE(Type,WebshopSubscriptionHeader.Type::SubscriptionOrderOption);
+                                   WebshopSubscrHeaderList.SETTABLEVIEW(WebshopSubscriptionHeader);
+                                   WebshopSubscrHeaderList.LOOKUPMODE(TRUE);
+                                   IF WebshopSubscrHeaderList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                                     WebshopSubscrHeaderList.GETRECORD(WebshopSubscriptionHeader);
+                                     IF NOT Rec.GET(WebshopSubscriptionHeader.Code) AND
+                                         (NOT WebshopSubscriptionItemLink.GET(WebshopSubscriptionHeader.Code,
+                                           WebshopSubscriptionItemLink."Link to"::"Subscription Header",
+                                           ItemNo,'',0)) THEN BEGIN
+                                       WebshopSubscriptionItemLink.INIT;
+                                       WebshopSubscriptionItemLink."Subscription Code" := WebshopSubscriptionHeader.Code;
+                                       WebshopSubscriptionItemLink."Link to" := WebshopSubscriptionItemLink."Link to"::"Subscription Header";
+                                       WebshopSubscriptionItemLink."Item No." := ItemNo;
+                                       WebshopSubscriptionItemLink."Fix Price" := WebshopItem.WebshopRetailPrice;
+                                       IF WebshopSubscriptionItemLink.INSERT(TRUE) THEN BEGIN
+                                         SetItemNo(ItemNo);
+                                         MESSAGE(Message001);
+                                       END;
+                                     END;
+                                   END;
+                                 END;
+                               END;
+                                }
+      { 1000000007;1 ;Action    ;
+                      Name=RemoveFromSubscription;
+                      CaptionML=[DEU=Aus Abo entfernen;
+                                 ENU=Remove from subscription];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Delete;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopSubscriptionHeader@1000000000 : Record 5447340;
+                                 WebshopSubscriptionItemLink@1000000001 : Record 5447342;
+                                 WebshopSubscriptionSeqStep@1000000002 : Record 5447341;
+                                 Confirm001@1000000003 : TextConst 'DEU=Sind Sie sicher, dass Sie den Artikel aus dem Abonnement entfernen m�chten?;ENU=Are you sure that you want to remove the item from the subscription?';
+                               BEGIN
+                                 CurrPage.GETRECORD(WebshopSubscriptionHeader);
+                                 IF (ItemNo <> '') AND (CONFIRM(Confirm001)) THEN BEGIN
+                                   CASE WebshopSubscriptionHeader.Type OF
+                                     WebshopSubscriptionHeader.Type::SubscriptionSequenceItem:
+                                       BEGIN
+                                         IF (WebshopSubscriptionHeader."Item No. Subscription Item" = ItemNo) THEN BEGIN
+                                           WebshopSubscriptionHeader."Item No. Subscription Item" := '';
+                                           WebshopSubscriptionHeader.MODIFY(TRUE);
+                                         END ELSE BEGIN
+                                           WebshopSubscriptionItemLink.SETRANGE("Subscription Code",WebshopSubscriptionHeader.Code);
+                                           WebshopSubscriptionItemLink.SETRANGE("Item No.",ItemNo);
+                                           IF NOT WebshopSubscriptionItemLink.ISEMPTY THEN
+                                             WebshopSubscriptionItemLink.DELETEALL(TRUE);
+                                         END;
+                                       END;
+                                     WebshopSubscriptionHeader.Type::SubscriptionOrderOption:
+                                       BEGIN
+                                         WebshopSubscriptionItemLink.SETRANGE("Subscription Code",WebshopSubscriptionHeader.Code);
+                                         WebshopSubscriptionItemLink.SETRANGE("Item No.",ItemNo);
+                                         IF NOT WebshopSubscriptionItemLink.ISEMPTY THEN
+                                           WebshopSubscriptionItemLink.DELETEALL(TRUE);
+                                       END;
+                                   END;
+                                   SetItemNo(ItemNo);
+                                 END;
+                               END;
+                                }
+      { 1000000008;1 ;Action    ;
+                      Name=CreateItemSubscription;
+                      CaptionML=[DEU=Sequenz-Abo f�r Artikel anlegen;
+                                 ENU=Create Subscription Sequence for Item];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=NewTimesheet;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopSubscriptionHeader@1000000000 : Record 5447340;
+                                 Error001@1000000001 : TextConst 'DEU=Es kann nur dann ein Sequenz-Abonnement f�r den Artikel angelegt werden, wenn es keine anderen mit dem Artikel verkn�pfte Abonnements gibt.;ENU=A Sequence-Subscription can only be created for the item when no other subscriptions are linked to it.';
+                                 Item@1000000002 : Record 27;
+                                 WebshopSubscrHeaderCard@1000000003 : Page 5447341;
+                               BEGIN
+                                 IF NOT Rec.ISEMPTY THEN
+                                   ERROR(Error001);
+                                 WebshopSubscriptionHeader.INIT;
+                                 WebshopSubscriptionHeader.Type := WebshopSubscriptionHeader.Type::SubscriptionSequenceItem;
+                                 WebshopSubscriptionHeader."Item No. Subscription Item" := ItemNo;
+                                 WebshopSubscriptionHeader.Description := WebshopItem.Description;
+                                 WebshopSubscriptionHeader."Shop Code" := WebshopItem."Shop Code";
+                                 WebshopSubscriptionHeader."Language Code" := WebshopItem."Language Code";
+                                 WebshopSubscriptionHeader.INSERT;
+                                 CurrPage.UPDATE(FALSE);
+                                 WebshopSubscrHeaderCard.SETRECORD(WebshopSubscriptionHeader);
+                                 WebshopSubscrHeaderCard.RUN;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Code }
+
+    { 1000000003;2;Field  ;
+                SourceExpr=Type }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Description }
+
+  }
+  CODE
+  {
+    VAR
+      ItemNo@1000000000 : Code[30];
+      WebshopItem@1000000001 : Record 5447304;
+
+    PROCEDURE SetItemNo@1000000002(ParamItemNo@1000000000 : Code[30]);
+    VAR
+      WebshopSubscriptionHeader@1000000001 : Record 5447340;
+      WebshopSubscriptionItemLink@1000000002 : Record 5447342;
+      WebshopSubscriptionSeqStep@1000000003 : Record 5447341;
+    BEGIN
+      ItemNo := ParamItemNo;
+      WebshopSubscriptionHeader.SETRANGE("Item No. Subscription Item",ParamItemNo);
+      Rec.DELETEALL(FALSE);
+      IF WebshopSubscriptionHeader.FINDFIRST THEN BEGIN
+        Rec := WebshopSubscriptionHeader;
+        Rec.INSERT(FALSE);
+        CurrPage.UPDATE(FALSE);
+      END ELSE BEGIN
+        WebshopSubscriptionHeader.RESET;
+        WebshopSubscriptionItemLink.SETRANGE("Item No.",ParamItemNo);
+        IF WebshopSubscriptionItemLink.FINDSET THEN REPEAT
+          IF WebshopSubscriptionHeader.GET(WebshopSubscriptionItemLink."Subscription Code") AND
+            (NOT Rec.GET(WebshopSubscriptionHeader.Code)) THEN BEGIN
+            Rec := WebshopSubscriptionHeader;
+            Rec.INSERT(FALSE);
+          END;
+        UNTIL WebshopSubscriptionItemLink.NEXT = 0;
+        CurrPage.UPDATE(FALSE);
+      END;
+    END;
+
+    PROCEDURE SetWebshopItem@1000000000(ParamWebshopItem@1000000000 : Record 5447304);
+    BEGIN
+      WebshopItem := ParamWebshopItem;
+      SetItemNo(WebshopItem."Item No.");
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

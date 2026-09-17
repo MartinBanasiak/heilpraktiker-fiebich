@@ -1,0 +1,247 @@
+OBJECT Report 5447318 Webshop Item Link Joint Purch.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=24.08.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop gemeinsam gekaufte Artikel verkn�pfen;
+               ENU=Webshop link jointly purchased items];
+    ProcessingOnly=Yes;
+    OnPreReport=BEGIN
+                  IF FORMAT(DateIntervalFormula) <> '' THEN
+                    StartingDate := CALCDATE(DateIntervalFormula,WORKDATE);
+                  IF StartingDate >= WORKDATE THEN
+                    ERROR(STRSUBSTNO(Error002,WORKDATE));
+
+                  //Fill Temp Shop Table once for performance
+                  IF ShopCodeFilter <> '' THEN
+                    WebshopShop.SETFILTER(Code,ShopCodeFilter);
+                  IF WebshopShop.FINDSET(FALSE,FALSE) THEN REPEAT
+                    WebshopShopTemp.COPY(WebshopShop);
+                    WebshopShopTemp.INSERT;
+                  UNTIL WebshopShop.NEXT = 0;
+                END;
+
+    OnPostReport=BEGIN
+                   //Flush temp table into physical table
+                   WebshopItemLinkTemp.RESET;
+                   IF WebshopItemLinkTemp.FINDSET(FALSE,FALSE) THEN REPEAT
+                     WebshopItemLink.COPY(WebshopItemLinkTemp);
+                     WebshopItemLink.INSERT;
+                   UNTIL WebshopItemLinkTemp.NEXT = 0;
+
+                   IF GUIALLOWED THEN BEGIN
+                     MESSAGE(STRSUBSTNO(Message001,FORMAT(LinksDeleted),FORMAT(LinksCreated)));
+                   END;
+                 END;
+
+  }
+  DATASET
+  {
+    { 1000000001;;DataItem;                  ;
+               DataItemTable=Table27;
+               DataItemTableView=WHERE(Is Webshop Item=CONST(Yes));
+               OnAfterGetRecord=BEGIN
+                                  WebshopItem.RESET;
+                                  IF ShopCodeFilter <> '' THEN
+                                    WebshopItem.SETFILTER("Shop Code",ShopCodeFilter);
+                                  WebshopItem.SETRANGE("Item No.",Item."No.");
+                                  IF WebshopItem.ISEMPTY THEN BEGIN
+                                    CurrReport.SKIP;
+                                  END ELSE BEGIN
+                                    IF ClearAllExistingLinks THEN BEGIN
+                                      WebshopItemLink.RESET;
+                                      WebshopItemLink.SETRANGE("Item No.",Item."No.");
+                                      IF ShopCodeFilter <> '' THEN
+                                        WebshopItemLink.SETFILTER("Shop Code",ShopCodeFilter);
+                                      LinksDeleted += WebshopItemLink.COUNT;
+                                      WebshopItemLink.DELETEALL(TRUE);
+                                    END;
+
+
+                                    WebshopShopTemp.RESET;
+                                    IF WebshopShopTemp.FINDSET(FALSE,FALSE) THEN REPEAT
+                                      IF (WebshopShopTemp."No. of Joint Purch. Item Links" > 0) THEN
+                                        MaxNoOfLinksPerItem := WebshopShopTemp."No. of Joint Purch. Item Links";
+                                      TopJointPurchQuery.SETRANGE(ItemNoFilter,Item."No.");
+                                      TopJointPurchQuery.SETRANGE(JointPurchDateFilter,StartingDate,WORKDATE);
+                                      IF GroupSumsJointPurchasesByShop THEN
+                                        TopJointPurchQuery.SETRANGE(ShopCode,WebshopShopTemp.Code);
+                                      TopJointPurchQuery.TOPNUMBEROFROWS(MaxNoOfLinksPerItem);
+                                      TopJointPurchQuery.OPEN;
+                                        i += 1;
+                                      WHILE TopJointPurchQuery.READ DO BEGIN
+                                        j += 1;
+                                        WebshopItemLink.RESET;
+                                        WebshopItemLink.SETRANGE("Shop Code",WebshopShopTemp.Code);
+                                        CASE LinkCategory OF
+                                          LinkCategory::"Acc. Item":
+                                            WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::"Acc. Item");
+                                          LinkCategory::"Alt. Item":
+                                            WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::"Alt. Item");
+                                          LinkCategory::"Fit. Item":
+                                            WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::"Fit. Item");
+                                          LinkCategory::"Spare Part":
+                                            WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::"Spare Part");
+                                        END;
+                                        WebshopItemLink.SETRANGE("Linked Item No.",TopJointPurchQuery.LinkedItemNo);
+                                        IF ClearAllExistingLinks OR WebshopItemLink.ISEMPTY THEN BEGIN
+                                          WebshopItemLinkTemp.INIT;
+                                          WebshopItemLinkTemp."Shop Code" := WebshopShopTemp.Code;
+                                          WebshopItemLinkTemp.Type := LinkCategory + 1;
+                                          WebshopItemLinkTemp."Item No." := Item."No.";
+                                          WebshopItemLinkTemp."Linked Item No." := TopJointPurchQuery.LinkedItemNo;
+                                          WebshopItemLinkTemp.INSERT;
+                                          LinksCreated += 1;
+                                        END;
+                                      END;
+                                      TopJointPurchQuery.CLOSE;
+                                    UNTIL WebshopShopTemp.NEXT = 0;
+                                  END;
+                                END;
+                                 }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+      CaptionML=DEU="";
+    }
+    CONTROLS
+    {
+      { 1000000000;;Container;
+                  Name=Webshop Item Link Comm. Purch;
+                  CaptionML=[DEU=Gemeinsam gekaufte Webshopartikel verkn�pfen;
+                             ENU=Link webshop items purchased together];
+                  Description=Settings;
+                  ContainerType=ContentArea }
+
+      { 1000000007;1;Group  ;
+                  Name=Settings;
+                  CaptionML=[DEU=Einstellungen;
+                             ENU=Settings];
+                  Description=Settings;
+                  GroupType=Group }
+
+      { 1000000005;2;Field  ;
+                  CaptionML=[DEU=Bestehende Artikelverkn�pfungen l�schen;
+                             ENU=Delete existing item links];
+                  SourceExpr=ClearAllExistingLinks }
+
+      { 1000000001;2;Field  ;
+                  CaptionML=[DEU=Webshop Code Filter;
+                             ENU=Webshop Code Filter];
+                  SourceExpr=ShopCodeFilter }
+
+      { 1000000006;2;Field  ;
+                  CaptionML=[DEU=Summenberechnung nach Shop gruppieren;
+                             ENU=Group sum calculation by Shop];
+                  SourceExpr=GroupSumsJointPurchasesByShop }
+
+      { 1000000002;2;Field  ;
+                  CaptionML=[DEU=Verkn�pfungstyp;
+                             ENU=Link Type];
+                  OptionCaptionML=[DEU=Zubeh�r,Ersatzteile,Alternative Artikel,Passende Artikel;
+                                   ENU=Acc. Items,Spare Parts,Alternative Items,Fitting Items];
+                  SourceExpr=LinkCategory }
+
+      { 1000000003;2;Field  ;
+                  CaptionML=[DEU=Max. Anzahl Verkn�pfungen pro Artikel;
+                             ENU=Max. No. of links per item];
+                  SourceExpr=MaxNoOfLinksPerItem;
+                  MinValue=1 }
+
+      { 1000000004;2;Field  ;
+                  CaptionML=[DEU=Datumsformel Startdatum Berechnung;
+                             ENU=Calculation Starting Date Formula];
+                  SourceExpr=DateIntervalFormula }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      ShopCodeFilter@1000000000 : Text;
+      LinkCategory@1000000001 : 'Acc. Item,Spare Part,Alt. Item,Fit. Item';
+      MaxNoOfLinksPerItem@1000000002 : Integer;
+      StartingDate@1000000003 : Date;
+      DateIntervalFormula@1000000004 : DateFormula;
+      Error001@1000000005 : TextConst 'DEU=Die max. Anzahl Verkn�pfungen pro Artikel muss gr��er oder gleich eins (1) sein.;ENU=The max. no of links per item has to be greater than or equal to one (1).';
+      Error002@1000000006 : TextConst 'DEU=Das Startdatum der Berechnung muss vor dem Arbeitsdatum [%1] liegen.;ENU=The starting date for the calculation must lie before the current workdate [%1].';
+      Message001@1000000016 : TextConst 'DEU=[%1] Verkn�pfungen wurden gel�scht und [%2] Verkn�pfungen angelegt.;ENU=[%1] links were deleted and [%2] links created.';
+      DefaultInterval@1000000007 : TextConst 'ENU=-6M';
+      WebshopItem@1000000008 : Record 5447304;
+      WebshopItemLink@1000000011 : Record 5447308;
+      WebshopItemLinkTemp@1000000019 : TEMPORARY Record 5447308;
+      TopJointPurchQuery@1000000009 : Query 5447319;
+      ClearAllExistingLinks@1000000010 : Boolean;
+      GroupSumsJointPurchasesByShop@1000000012 : Boolean;
+      WebshopShop@1000000013 : Record 5447301;
+      WebshopShopTemp@1000000020 : TEMPORARY Record 5447301;
+      LinksDeleted@1000000014 : Integer;
+      LinksCreated@1000000015 : Integer;
+      i@1000000017 : Integer;
+      j@1000000018 : Integer;
+
+    PROCEDURE SetShopCodeFilter@1000000001(NewShopCodeFilter@1000000000 : Text);
+    BEGIN
+      ShopCodeFilter := NewShopCodeFilter;
+    END;
+
+    PROCEDURE SetLinkCategory@1000000002(NewLinkCategory@1000000000 : 'Acc. Item,Spare Part,Alt. Item,Fit. Item');
+    BEGIN
+      LinkCategory := NewLinkCategory;
+    END;
+
+    PROCEDURE SetMaxNoOfLinksPerItem@1000000003(NewMaxNoOfLinksPerItem@1000000000 : Integer);
+    BEGIN
+      IF (NewMaxNoOfLinksPerItem < 1) THEN BEGIN
+        ERROR(Error001);
+      END ELSE BEGIN
+        MaxNoOfLinksPerItem := NewMaxNoOfLinksPerItem;
+      END
+    END;
+
+    PROCEDURE SetStartingDate@1000000004(NewStartingDate@1000000000 : Date);
+    BEGIN
+      IF (NewStartingDate >= WORKDATE) THEN BEGIN
+        ERROR(STRSUBSTNO(Error002,FORMAT(WORKDATE)));
+      END ELSE BEGIN
+        StartingDate := NewStartingDate;
+      END;
+    END;
+
+    PROCEDURE SetDateIntervalFormula@1000000005(NewDateIntervalFormula@1000000000 : DateFormula);
+    VAR
+      NewStartingDate@1000000001 : Date;
+    BEGIN
+      NewStartingDate := CALCDATE(NewDateIntervalFormula,WORKDATE);
+      SetStartingDate(NewStartingDate);
+    END;
+
+    PROCEDURE SetClearAllExistingLinks@1000000011(NewClearAllExistingLinks@1000000000 : Boolean);
+    BEGIN
+      ClearAllExistingLinks := NewClearAllExistingLinks;
+    END;
+
+    PROCEDURE SetGroupSumsJointPurchasesByShop@1000000006(NewGroupSumsJointPurchasesByShop@1000000000 : Boolean);
+    BEGIN
+      GroupSumsJointPurchasesByShop := NewGroupSumsJointPurchasesByShop;
+    END;
+
+    BEGIN
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

@@ -1,0 +1,11 @@
+T5447308-F1-P8629-A1033-L999:Item No.
+T5447308-F2-P8629-A1033-L999:Type
+T5447308-F2-P8632-A1033-L999:Variant,Accessory,Spare part,Alternative Item,Fitting Item
+T5447308-F3-P8629-A1033-L999:Linked Item No.
+T5447308-F4-P8629-A1033-L999:Linked Item Description
+T5447308-F5-P8629-A1033-L999:Shop Code
+T5447308-P8629-A1033-L999:Webshop Item Link
+T5447308-Q1000000001-P26171-A1033-L999:Row cannot be renamed
+T5447308-Q1000000003-P26171-A1033-L999:Item %1 has variants of its own and therefore cannot be linked as a variant
+T5447308-Q1000000004-P26171-A1033-L999:Item %1 is a variant and therefore cannot be assigned variants
+T5447308-Q1000000005-P26171-A1033-L999:Item %1 is not a Webshop Item for Language %2. Shall a webshop item for this language be created and activated?

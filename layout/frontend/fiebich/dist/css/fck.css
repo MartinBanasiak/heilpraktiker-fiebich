@@ -112,10 +112,6 @@ a:active,
 .link:active {
   color: #fe735d;
   text-decoration: none;
-  outline: 0;
-}
-*:focus {
-  outline: 0;
 }
 .text-left {
   text-align: left;
@@ -156,7 +152,7 @@ address {
   line-height: 1.42857143;
 }
 hr {
-  border-top: 1px solid #999999;
+  border-top: 1px solid #767676;
   margin-top: 40px;
   margin-bottom: 40px;
 }
@@ -192,8 +188,8 @@ label {
   display: inline-block;
   padding: 15px 20px;
   min-width: 160px;
-  border: 1px solid #999999;
-  color: #999999;
+  border: 1px solid #767676;
+  color: #767676;
   cursor: pointer;
   background-color: #ffffff;
   text-align: center;
@@ -513,7 +509,7 @@ select,
 textarea {
   padding: 10px 0;
   color: #444444;
-  border: 1px solid #999999;
+  border: 1px solid #767676;
   border-left: 0;
   border-right: 0;
   border-top: 0;
@@ -573,7 +569,7 @@ textarea {
 }
 .form-control {
   background-color: #ffffff;
-  border: 1px solid #999999;
+  border: 1px solid #767676;
   -webkit-box-shadow: none;
   box-shadow: none;
   color: #444444;
@@ -593,7 +589,7 @@ textarea {
 }
 .input-group-addon {
   background-color: #ffffff;
-  border: 1px solid #999999;
+  border: 1px solid #767676;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-radius: 0;
@@ -628,7 +624,7 @@ textarea {
 }
 .select_body select {
   color: #444444;
-  border-color: #999999;
+  border-color: #767676;
   cursor: pointer;
   padding-right: 40px;
   -o-appearance: none;
@@ -694,7 +690,7 @@ textarea {
   width: 18px;
   height: 18px;
   background-color: #ffffff;
-  border: 1px solid #999999;
+  border: 1px solid #767676;
   border-radius: 50%;
   -moz-background-clip: padding;
   -webkit-background-clip: padding-box;
@@ -773,7 +769,7 @@ textarea {
   width: 20px;
   height: 20px;
   background-color: #ffffff;
-  border: 1px solid #999999;
+  border: 1px solid #767676;
   top: 50%;
   margin-top: -10px;
   display: block;

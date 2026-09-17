@@ -1,0 +1,297 @@
+N21-C100-P8629-A1031-L999:Verkauf in diesem Jahr
+N21-C101-P8629-A1031-L999:Zusteller
+N21-C101-P8631-A1031-L999:Gibt an, welcher Zusteller verwendet wird, wenn Sie Artikel an diesen Debitor liefern.
+N21-C102-P8629-A1031-L999:Durchschnitt verspätete Zahlungen (Tage)
+N21-C102-P8631-A1031-L999:Gibt die durchschnittliche Anzahl der Tage an, für der Debitor Zahlungsüberfälligkeiten aufweist.
+N21-C103-P8629-A1031-L999:Durchschn. Zahlungsfrist (Tage)
+N21-C103-P8631-A1031-L999:Gibt an, wie lange der Debitor in der Regel braucht, um Rechnungen im laufenden Geschäftsjahr zu bezahlen.
+N21-C104-P8631-A1031-L999:Gibt die Faxnummer des Debitors an.
+N21-C105-P8629-A1031-L999:Zahlungen in diesem Jahr
+N21-C105-P8631-A1031-L999:Gibt die Summe der vom Debitor im laufenden Geschäftsjahr erhaltenen Zahlungen an.
+N21-C106-P8631-A1031-L999:Gibt die Summe ausstehender Zahlungen vom Debitor an.
+N21-C107-P8631-A1031-L999:Gibt die E-Mail-Adresse des Debitors an.
+N21-C108-P8629-A1031-L999:Zahlungen
+N21-C109-P8631-A1031-L999:Gibt die Adresse der Homepage des Debitors an.
+N21-C10-P8631-A1031-L999:Gibt den Ort des Debitors an.
+N21-C110-P8629-A1031-L999:Nutzung des Kreditlimits
+N21-C110-P8631-A1031-L999:Gibt an, welcher Anteil der Zahlungsbilanz des Debitors aus Kredit besteht.
+N21-C111-P8629-A1031-L999:Kreditlimit
+N21-C111-P8631-A1031-L999:Gibt den Höchstbetrag an, um den der Debitor die Zahlungsbilanz überschreiten darf, bevor Warnungen ausgegeben werden.
+N21-C115-P8629-A1031-L999:Geschuldeter Betrag - insgesamt
+N21-C115-P8631-A1031-L999:Gibt den Zahlungsbetrag an, den der Debitor für abgeschlossene Verkäufe plus laufende Verkäufe schuldet. Der Wert ist die Summe der Werte in den Feldern "Geschuldeter Betrag - aktuell" und "Geschuldeter Betrag - erwartet".
+N21-C116-P8629-A1031-L999:Geschuldeter Betrag - erwartet
+N21-C116-P8631-A1031-L999:Gibt den Zahlungsbetrag an, den der Debitor schuldet, wenn laufende Verkaufsrechnungen und Gutschriften abgeschlossen sind.
+N21-C117-P8629-A1031-L999:Geschuldeter Betrag - aktuell
+N21-C117-P8631-A1031-L999:Gibt den Zahlungsbetrag an, den der Debitor für abgeschlossene Verkäufe schuldet. Dieser Wert wird auch als der Saldo des Debitors bezeichnet.
+N21-C119-P8631-A1031-L999:Gibt die Zeit zwischen der Warenlieferung aus dem Lager bis zur Auslieferung an.
+N21-C11-P8631-A1031-L999:Gibt an, wie der Debitor normalerweise Zahlungen übermittelt, z. B. Banktransfer oder Scheck.
+N21-C120-P8629-A1031-L999:Saldo
+N21-C122-P8629-A1031-L999:Code des primären Kontakts
+N21-C122-P8631-A1031-L999:Gibt die primäre Kontaktnummer für den Debitor an.
+N21-C123-P8631-A1031-L999:Gibt an, ob der Debitor Teillieferungen von Aufträgen akzeptiert.
+N21-C124-P8629-A1031-L999:Statistik
+N21-C125-P8631-A1031-L999:Gibt die Adresse des Debitors auf Ihrer bevorzugten Kartenwebsite an.
+N21-C129-P8631-A1031-L999:Gibt an, ob die Felder "VK-Preis" und "Zeilenbetrag" in Belegzeilen mit oder ohne MwSt. angezeigt werden.
+N21-C12-P8631-A1031-L999:Gibt die Telefonnummer des Debitors an.
+N21-C131-P8629-A1031-L999:Zustellertransportart
+N21-C131-P8631-A1031-L999:Gibt den Code für die Zustellertransportart an, die für diesen Debitor verwendet wird.
+N21-C135-P8629-A1031-L999:Details
+N21-C141-P8631-A1031-L999:Gibt einen anpassbaren Kalender zur Lieferungsplanung an, der die Arbeitstage und die Feiertage des Debitors enthält.
+N21-C143-P8631-A1031-L999:Gibt an, dass dem Debitor keine Zahlungstoleranz gewährt wird.
+N21-C144-P8631-A1031-L999:Gibt Zahlungen des Debitors an, die nach dem heutigen Datum überfällig sind.
+N21-C145-P8629-A1031-L999:Lieferbedingung
+N21-C146-P8629-A1031-L999:Spezifischer Kalender
+N21-C146-P8631-A1031-L999:Gibt an, dass Sie eine angepasste Version eines Basiskalenders eingerichtet haben.
+N21-C154-P8631-A1031-L999:Legt den IC-Partnercode des Debitors fest.
+N21-C156-P8631-A1031-L999:Gibt an, welche Debitorenadresse in Verkaufsangeboten eingefügt wird, die Sie für den Debitor erstellen.
+N21-C158-P8631-A1031-L999:Gibt an, ob Artikel nie, automatisch (immer) oder optional für diesen Debitor reserviert werden.
+N21-C15-P8631-A1031-L999:Gibt an, wie Mahnungen zu überfälligen Zahlungen für diesen Debitor behandelt werden.
+N21-C160-P8631-A1031-L999:Legt einen Vorauszahlungsprozentsatz fest, der unabhängig von den Artikeln oder Dienstleistungen in den Auftragszeilen für alle Aufträge für diesen Debitor gilt.
+N21-C16-P8629-A1031-L999:Kontaktname
+N21-C16-P8631-A1031-L999:Gibt den Namen der Kontaktperson bei diesem Debitor an.
+N21-C170-P8629-A1031-L999:Buchungsdetails
+N21-C18-P8631-A1031-L999:Gibt einen alternativen Namen an, den Sie zur Suche nach einem bestimmten Debitor verwenden können.
+N21-C1901677601-P8629-A1031-L999:Zahlungen
+N21-C1902768601-P8629-A1031-L999:Adresse und Kontakt
+N21-C1905885101-P8629-A1031-L999:Fakturierung
+N21-C1906801201-P8629-A1031-L999:Lieferung
+N21-C1-P8629-A1031-L999:Allgemein
+N21-C20-P8631-A1031-L999:Gibt den Zahlungsbetrag an, den der Debitor für abgeschlossene Verkäufe schuldet. Dieser Wert wird auch als der Saldo des Debitors bezeichnet.
+N21-C21-P8631-A1031-L999:Gibt bei Lastschrifteinzügen an, ob der Debitor, dem die Zahlung eingezogen wird, eine Person oder ein Unternehmen ist.
+N21-C22-P8631-A1031-L999:Gibt den Höchstbetrag an, um den der Debitor die Zahlungsbilanz überschreiten darf, bevor Warnungen ausgegeben werden.
+N21-C23-P8631-A1031-L999:Gibt die bevorzugte Methode für das Senden von Belegen an diesen Debitor an, sodass Sie nicht jedes Mal eine Sendeoption auswählen müssen, wenn Sie einen Beleg buchen und an den Debitor senden. Verkaufsbelege an diesen Debitor werden mithilfe des angegebenen Sendeprofils gesendet und setzen das standardmäßige Belegsendeprofil außer Kraft.
+N21-C24-P8631-A1031-L999:Gibt einen Code für den Verkäufer an, der normalerweise das Konto dieses Debitors bearbeitet.
+N21-C25-P8631-A1031-L999:Gibt das Debitorenbankkonto an, das standardmäßig verwendet wird, wenn Sie Rückerstattungen an den Debitor und direkte Lastschrifteinzüge verarbeiten.
+N21-C26-P8631-A1031-L999:Gibt an, welche Transaktionen mit dem Debitor nicht gesperrt werden können, z. B. weil der Debitor zahlungsunfähig ist.
+N21-C28-P8631-A1031-L999:Gibt an, wann die Debitorenkarte zuletzt geändert wurde.
+N21-C29-P8631-A1031-L999:Gibt die USt-IdNr. des Debitors an, die für Geschäfte mit Debitoren aus der EU erforderlich ist.
+N21-C2-P8631-A1031-L999:Gibt die Nummer des Debitors an. Das Feld wird entweder automatisch aus einer definierten Nummernserie gefüllt, oder Sie geben die Nummer manuell ein, da Sie den manuellen Eintrag in der Einrichtung der Nummernserie aktiviert haben.
+N21-C30-P8629-A1031-L999:Code
+N21-C30-P8631-A1031-L999:Gibt an, welche Lieferform verwendet werden soll, wenn Sie Artikel an diesen Debitor liefern.
+N21-C32-P8631-A1031-L999:Gibt an, ob in einer Verkaufsrechnung mehrere Lieferungen an den Debitor zusammengefasst werden können.
+N21-C34-P8629-A1031-L999:Rech. an Debitor
+N21-C34-P8631-A1031-L999:Gibt einen anderen Debitor an, der für Produkte fakturiert wird, die Sie dem Debitor im Feld "Name" auf der Debitorenkarte verkaufen.
+N21-C36-P8631-A1031-L999:Gibt an, wie viele Kopien einer Rechnung für den Debitor jeweils gedruckt werden.
+N21-C38-P8631-A1031-L999:Gibt den Markttyp des Debitors zum Verknüpfen von Geschäftstransaktionen an.
+N21-C3-P8631-A1031-L999:Gibt eine Zahlungsbedingung an, die verwendet wird, um den Cashflow für den Debitor zu berechnen.
+N21-C40-P8631-A1031-L999:Gibt den Debitorenpreisgruppencode an, den Sie verwenden können, um spezielle Verkaufspreise im Fenster "VK-Preise" einzurichten.
+N21-C42-P8631-A1031-L999:Gibt einen Code für die Rechnungsrabattbedingungen an, die Sie für den Debitor definiert haben.
+N21-C44-P8631-A1031-L999:Gibt den Debitorrabattgruppencode an, den Sie als Kriterium verwenden können, um spezielle Rabatte im Fenster "VK-Zeilenrabatte" einzurichten.
+N21-C46-P8631-A1031-L999:Gibt an, ob ein Verkaufszeilenrabatt berechnet wird, wenn ein spezieller Verkaufspreis entsprechend den Einstellungen im Fenster "VK-Preise" angeboten wird.
+N21-C48-P8631-A1031-L999:Gibt an, wie Zahlungen von Posten für diesen Debitor ausgeglichen werden.
+N21-C4-P8631-A1031-L999:Gibt den Namen des Debitors an. Der Name wird auf allen Verkaufsbelegen für den Debitor angezeigt. Sie können bis zu 50 Zeichen, sowohl Ziffern als auch Buchstaben, eingeben.
+N21-C50-P8631-A1031-L999:Gibt einen Code an, der die Zahlungsbedingungen angibt, die Sie vom Debitor einfordern.
+N21-C52-P8631-A1031-L999:Gibt die Zinsen an, die für den Debitor berechnet werden.
+N21-C54-P8631-A1031-L999:Gibt an, ob dieser Debitor beim Ausdruck des Abrechnungsberichts berücksichtigt wird.
+N21-C58-P8631-A1031-L999:Gibt die MwSt.-Erklärung des Debitors zum Verknüpfen von Transaktionen für diesen Debitor an.
+N21-C60-P8631-A1031-L999:Gibt die Nummer des letzten Kontoauszugs an, der für diesen Debitor ausgedruckt wurde.
+N21-C61-P8631-A1031-L999:Gibt den Debitor in Verbindung mit dem Senden von elektronischen Belegen an.
+N21-C63-P8629-A1031-L999:Adresse
+N21-C64-P8631-A1031-L999:Gibt den Code für die Zuständigkeitseinheit an, die diesen Debitor standardmäßig verwaltet.
+N21-C65-P8629-A1031-L999:Kontakt
+N21-C66-P8631-A1031-L999:Gibt die Sprache an, die für Ausdrucke für diesen Debitor verwendet wird.
+N21-C67-P8631-A1031-L999:Gibt die Standardwährung für den Debitor an.
+N21-C68-P8629-A1031-L999:Preise und Rabatte
+N21-C69-P8629-A1031-L999:DB %
+N21-C69-P8631-A1031-L999:Gibt an, wie viel Gewinn Sie vom Debitor im laufenden Geschäftsjahr erreicht haben, ausgedrückt als Prozentsatz der gesamten Verkäufe des Debitors.
+N21-C6-P8631-A1031-L999:Gibt die Debitorenadresse an. Diese Adresse wird auf allen Verkaufsbelegen für den Debitor angezeigt.
+N21-C70-P8631-A1031-L999:Gibt den Handelstyp des Debitors an, um Transaktionen für diesen Debitor mit dem entsprechenden Sachkonto entsprechend der Buchungsmatrix Einrichtung zu verknüpfen.
+N21-C71-P8629-A1031-L999:DB (MW)
+N21-C71-P8631-A1031-L999:Gibt an, wie viel Deckungsbeitrag Sie vom Debitor im laufenden Geschäftsjahr erreicht haben.
+N21-C72-P8629-A1031-L999:Kosten (MW)
+N21-C72-P8631-A1031-L999:Gibt an, wie viele Kosten Ihnen vom Debitor im laufenden Geschäftsjahr angefallen sind.
+N21-C73-P8629-A1031-L999:Gesamtumsatz
+N21-C73-P8631-A1031-L999:Gibt den gesamten Vertriebsumsatz mit dem Debitor im laufenden Geschäftsjahr an. Er wird aus den Beträgen ohne MwSt. für alle abgeschlossenen und offenen Rechnungen und Gutschriften berechnet.
+N21-C75-P8629-A1031-L999:Sonderpreise und -rabatte
+N21-C88-P8629-A1031-L999:Rechnungsrabatte
+N21-C88-P8631-A1031-L999:Gibt die Summe aller Rechnungsrabatte an, die Sie dem Debitor im laufenden Geschäftsjahr gewährt haben.
+N21-C89-P8629-A1031-L999:Gesamtumsatz
+N21-C89-P8631-A1031-L999:Gibt den gesamten Vertriebsumsatz mit dem Debitor im laufenden Geschäftsjahr an. Er wird aus den Beträgen ohne MwSt. für alle abgeschlossenen und offenen Rechnungen und Gutschriften berechnet.
+N21-C8-P8631-A1031-L999:Gibt zusätzliche Adressinformationen an.
+N21-C90-P8631-A1031-L999:Gibt die Postleitzahl an.
+N21-C91-P8631-A1031-L999:Gibt das Land/die Region der Adresse an.
+N21-C92-P8631-A1031-L999:Gibt Ihre Erstattungen an den Debitor im laufenden Geschäftsjahr, basierend auf laufenden Verkaufsgutschriften, an. Die Zahl in der Klammer zeigt die Anzahl laufender Verkaufsgutschriften an.
+N21-C93-P8631-A1031-L999:Legt den Code für das Servicegebiet fest, das dem Debitor zugeordnet ist.
+N21-C95-P8631-A1031-L999:Gibt an, von welchem Lagerort aus Verkäufe an diesen Debitor standardmäßig verarbeitet werden.
+N21-C96-P8631-A1031-L999:Gibt Ihre erwarteten Verkäufe an den Debitor im laufenden Geschäftsjahr, basierend auf laufenden Verkaufsrechnungen, an. Die Zahl in der Klammer zeigt die Anzahl laufender Verkaufsrechnungen an.
+N21-C97-P8631-A1031-L999:Gibt Ihre erwarteten Erstattungen an den Debitor im laufenden Geschäftsjahr, basierend auf gebuchten Verkaufsgutschriften, an. Die Zahl in der Klammer zeigt die Anzahl gebuchter Verkaufsgutschriften an.
+N21-C98-P8631-A1031-L999:Gibt Ihre Verkäufe an den Debitor im laufenden Geschäftsjahr, basierend auf gebuchten Verkaufsrechnungen, an. Die Zahl in der Klammer gibt die Anzahl gebuchter Verkaufsrechnungen an.
+N21-P55132-A1031-L999:Neu,Verarbeiten,Bericht,Neuer Beleg,Genehmigen,Genehmigung anfordern,Preise und Rabatte,Navigieren,Debitor
+N21-P55242-G1000000008-P8629-A1031-L999:Webshopberechtigungen
+N21-P55242-G1000000009-P8629-A1031-L999:Zahlungsberechtigungen
+N21-P55242-G1000000010-P8629-A1031-L999:Versandberechtigungen
+N21-P55242-G1000000011-P8629-A1031-L999:Kategorieberechtigungen
+N21-P55242-G1000000013-P8629-A1031-L999:Artikelberechtigungen
+N21-P55242-G1000000014-P8629-A1031-L999:Gruppenberechtigungen
+N21-P55242-G1000000015-P8629-A1031-L999:Berechtigungen
+N21-P55242-G1000000016-P8629-A1031-L999:Kundenzugang öffnen
+N21-P55242-G1000000017-P55160-Q1000000000-P26171-A1031-L999:Debitor wurde aktualisiert
+N21-P55242-G1000000017-P8629-A1031-L999:Online Aktualisieren
+N21-P55242-G1000000018-P55160-Q1000000000-P26171-A1031-L999:Die Zugangsdaten wurden an den Kunden versendet
+N21-P55242-G1000000018-P8629-A1031-L999:Zugangsdaten versenden
+N21-P55242-G112-P8629-A1031-L999:Statistik nach &Währungen
+N21-P55242-G112-P8631-A1031-L999:Zeigt Statistiken für Debitoren an, die mehrere Währungen verwenden.
+N21-P55242-G113-P8629-A1031-L999:Preise
+N21-P55242-G113-P8631-A1031-L999:Zeigt oder richtet verschiedene Preise für Artikel ein, die Sie an den Debitor verkaufen. Ein Artikelpreis wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Debitor, Menge oder Enddatum.
+N21-P55242-G114-P8629-A1031-L999:Rahmenaufträge
+N21-P55242-G114-P8631-A1031-L999:Öffnet die Liste laufender Rahmenaufträge.
+N21-P55242-G118-P8629-A1031-L999:Wiederkehrende Verkaufszeilen
+N21-P55242-G118-P8631-A1031-L999:Richten Sie wiederkehrende Verkaufszeilen für den Debitor ein, z. B. einen monatlichen Ersatzauftrag, der schnell in einen Verkaufsbeleg für den Debitor eingefügt werden kann.
+N21-P55242-G121-P8629-A1031-L999:Reklamationen
+N21-P55242-G121-P8631-A1031-L999:Öffnet eine Liste laufender Reklamationen.
+N21-P55242-G126-P8629-A1031-L999:S&erviceverträge
+N21-P55242-G126-P8631-A1031-L999:Öffnet die Liste laufender Serviceverträge.
+N21-P55242-G127-P8629-A1031-L999:Service&artikel
+N21-P55242-G127-P8631-A1031-L999:Zeigt die Serviceartikel an, oder ermöglicht deren Bearbeitung, die für den Debitor registriert werden.
+N21-P55242-G128-P8629-A1031-L999:Serviceaufträge
+N21-P55242-G128-P8631-A1031-L999:Öffnet die Liste laufender Serviceaufträge.
+N21-P55242-G130-P8629-A1031-L999:Preise und Rabatte
+N21-P55242-G132-P8629-A1031-L999:Als Vorlage speichern
+N21-P55242-G132-P8631-A1031-L999:Speichern Sie die Debitorenkarte als Vorlage, die zum Erstellen neuer Debitorenkarten wiederverwendet werden kann. Debitorenvorlagen enthalten voreingestellte Informationen, mit denen Sie Felder auf Debitorenkarten ausfüllen können.
+N21-P55242-G133-P8629-A1031-L999:Kontoauszug
+N21-P55242-G133-P8631-A1031-L999:Zeigt eine Liste der Transaktionen eines Debitors in einem ausgewählten Zeitraum an, um sie beispielsweise am Ende der Buchhaltungsperiode an den Debitor zu senden. Sie können ungeachtet der angegebenen Periode alle fälligen Salden anzeigen oder einen Saldenrückblick einfügen.
+N21-P55242-G136-P8629-A1031-L999:Zeilenrabatte
+N21-P55242-G136-P8631-A1031-L999:Zeigt verschiedene Rabatte für Artikel an oder richtet diese ein, die Sie an den ausgewählten Debitor verkaufen. Ein Artikelrabatt wird automatisch in Rechnungszeilen gewährt, wenn die angegebenen Kriterien erfüllt sind, wie Debitor, Menge oder Enddatum.
+N21-P55242-G137-P8629-A1031-L999:Verkaufsgutschrift
+N21-P55242-G137-P8631-A1031-L999:Erstellt eine neue Verkaufsgutschrift, um eine gebuchte Verkaufsrechnung zurückzusetzen.
+N21-P55242-G138-P8629-A1031-L999:Genehmigungsworkflows verwalten
+N21-P55242-G138-P8631-A1031-L999:Zeigen Sie vorhandene Genehmigungsworkflows für das Erstellen oder Ändern von Debitoren an, oder bearbeiten Sie sie.
+N21-P55242-G139-P8629-A1031-L999:Vorlagen
+N21-P55242-G139-P8631-A1031-L999:Zeigen Sie Debitorenvorlagen an, oder bearbeiten Sie sie.
+N21-P55242-G13-P8629-A1031-L999:Service
+N21-P55242-G142-P8629-A1031-L999:Workflow
+N21-P55242-G147-P8629-A1031-L999:Proje&kte
+N21-P55242-G147-P8631-A1031-L999:Öffnet die Liste laufender Projekte.
+N21-P55242-G148-P8629-A1031-L999:Kommentare
+N21-P55242-G148-P8631-A1031-L999:Zeigt Kommentare für den Datensatz an oder fügt Kommentare zum Datensatz hinzu.
+N21-P55242-G14-P8629-A1031-L999:Ko&ntakt
+N21-P55242-G14-P8631-A1031-L999:Zeigt detaillierte Informationen über die Kontaktperson beim Debitor an oder bearbeitet diese.
+N21-P55242-G150-P8629-A1031-L999:Synchronisierungsprotokoll
+N21-P55242-G150-P8631-A1031-L999:Zeigt die Integrationssynchronisierungsaufträge für die Debitorentabelle an.
+N21-P55242-G151-P8629-A1031-L999:Registrierte Belege
+N21-P55242-G152-P8629-A1031-L999:Registrierte &Mahnungen
+N21-P55242-G152-P8631-A1031-L999:Zeigen Sie die Mahnungen an, die Sie an den Debitor gesendet haben.
+N21-P55242-G153-P8629-A1031-L999:Registrierte &Zinsrechnungen
+N21-P55242-G153-P8631-A1031-L999:Zeigen Sie die Zinsrechnungen an, die Sie an den Debitor gesendet haben.
+N21-P55242-G155-P8629-A1031-L999:Verkaufsauftrag
+N21-P55242-G155-P8631-A1031-L999:Legen Sie einen Verkaufsauftrag für den Debitor an.
+N21-P55242-G157-P8629-A1031-L999:Rechnungen
+N21-P55242-G157-P8631-A1031-L999:Zeigt eine Liste laufender Rechnungen für den Debitor an.
+N21-P55242-G159-P8629-A1031-L999:Verkaufsrechnung
+N21-P55242-G159-P8631-A1031-L999:Legt eine Verkaufsrechnung für den Debitor an.
+N21-P55242-G161-P8629-A1031-L999:Flow
+N21-P55242-G162-P8629-A1031-L999:&Vorauszahlungsprozentsätze
+N21-P55242-G162-P8631-A1031-L999:Zeigt die Prozentsätze des Preises an, oder ermöglicht deren Bearbeitung, die als Vorauszahlung beglichen werden können.
+N21-P55242-G163-P8629-A1031-L999:F&unktionen
+N21-P55242-G164-P8629-A1031-L999:Verkaufsangebot
+N21-P55242-G164-P8631-A1031-L999:Bietet einem Debitor Artikel oder Dienste an.
+N21-P55242-G166-P8629-A1031-L999:Meine Workflows anzeigen
+N21-P55242-G166-P8631-A1031-L999:Erstellte Workflows anzeigen und konfigurieren.
+N21-P55242-G167-P8629-A1031-L999:Vorlage anwenden
+N21-P55242-G167-P8631-A1031-L999:Wenden Sie eine Vorlage zum Aktualisieren der Einheit mit Ihren Standardeinstellungen für einen bestimmten Einheitentyp an.
+N21-P55242-G168-P8629-A1031-L999:Workflow erstellen
+N21-P55242-G168-P8631-A1031-L999:Erstellen Sie einen neuen Workflow aus einer Liste passender Workflow-Vorlagen.
+N21-P55242-G17-P8629-A1031-L999:Genehmigungsworkflow erstellen
+N21-P55242-G17-P8631-A1031-L999:Richten Sie einen Genehmigungsworkflow für das Erstellen oder Ändern von Debitoren ein, in dem Sie einige Seiten zur Anleitung durchgehen.
+N21-P55242-G1900246505-P8629-A1031-L999:Verkaufsangebot
+N21-P55242-G1900246505-P8631-A1031-L999:Bietet einem Debitor Artikel oder Dienste an.
+N21-P55242-G1900839804-P8629-A1031-L999:Zahlungseingänge buchen
+N21-P55242-G1900839804-P8631-A1031-L999:Erstellt eine Zahlungseingangs Buch.-Blattzeile für den Debitor, beispielsweise zum Buchen eines Zahlungseingangs.
+N21-P55242-G1901102005-P8629-A1031-L999:Zinsrechnung
+N21-P55242-G1901102005-P8631-A1031-L999:Erstellt eine neue Zinsrechnung.
+N21-P55242-G1901662105-P8629-A1031-L999:Servicegutschrift
+N21-P55242-G1901662105-P8631-A1031-L999:Erstellt eine neue Servicegutschrift für den Debitor.
+N21-P55242-G1902079405-P8629-A1031-L999:Servicerechnung
+N21-P55242-G1902079405-P8631-A1031-L999:Erstellt eine neue Servicerechnung für den Debitor.
+N21-P55242-G1902299006-P8629-A1031-L999:Debitorenposten per
+N21-P55242-G1902299006-P8631-A1031-L999:Zeigt eine Liste der Zahlungshistorie des Debitors bis zu einem bestimmten Datum an. Sie können den Bericht verwenden, um Ihre gesamten Einnahmen am Ende einer Buchhaltungsperiode oder eines Geschäftsjahres zu extrahieren.
+N21-P55242-G1902575205-P8629-A1031-L999:Rahmenauftrag
+N21-P55242-G1902575205-P8631-A1031-L999:Legen Sie einen Rahmenauftrag für den Debitor an.
+N21-P55242-G1902583505-P8629-A1031-L999:Verkaufsgutschrift
+N21-P55242-G1902583505-P8631-A1031-L999:Erstellt eine neue Verkaufsgutschrift, um eine gebuchte Verkaufsrechnung zurückzusetzen.
+N21-P55242-G1903839805-P8629-A1031-L999:Mahnung
+N21-P55242-G1903839805-P8631-A1031-L999:Erstellt eine neue Mahnung für den Debitor.
+N21-P55242-G1904747105-P8629-A1031-L999:Verkaufsauftrag
+N21-P55242-G1904747105-P8631-A1031-L999:Legen Sie einen Verkaufsauftrag für den Debitor an.
+N21-P55242-G1905163705-P8629-A1031-L999:Verkaufsreklamation
+N21-P55242-G1905163705-P8631-A1031-L999:Erstellt eine neue Verkaufsreklamation für Artikel oder Dienstleistungen.
+N21-P55242-G1905171704-P8629-A1031-L999:Verkaufs Buch.-Blatt
+N21-P55242-G1905171704-P8631-A1031-L999:Bucht eine beliebige Verkaufstransaktion für den Debitor.
+N21-P55242-G1905185205-P8629-A1031-L999:Serviceangebot
+N21-P55242-G1905185205-P8631-A1031-L999:Erstellt ein neues Serviceangebot für den Debitor.
+N21-P55242-G1906384905-P8629-A1031-L999:Verkaufsrechnung
+N21-P55242-G1906384905-P8631-A1031-L999:Legt eine Verkaufsrechnung für den Debitor an.
+N21-P55242-G1906813206-P8629-A1031-L999:Debitor - Fällige Posten
+N21-P55242-G1906813206-P8631-A1031-L999:Zeigt eine detaillierte Liste fälliger Zahlungen der einzelnen Debitoren an, aufgeteilt in drei Zeiträume. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, um die Kreditwürdigkeit eines Debitors einzuschätzen oder um Liquiditätsanalysen vorzubereiten.
+N21-P55242-G1907102005-P8629-A1031-L999:Serviceauftrag
+N21-P55242-G1907102005-P8631-A1031-L999:Erstellt einen neuen Serviceauftrag für den Debitor.
+N21-P55242-G1907586706-P8629-A1031-L999:Debitor - Etiketten
+N21-P55242-G1907586706-P8631-A1031-L999:Zeigt Adressetiketten mit den Namen und Adressen der Debitoren an.
+N21-P55242-G19-P8629-A1031-L999:Lastschrift-Mandate
+N21-P55242-G19-P8631-A1031-L999:Zeigen Sie die Lastschrift-Mandaten an, die Vereinbarungen mit Debitoren zum direkten Einzug der Zahlungen von ihrem Bankkonto widerspiegeln.
+N21-P55242-G243-P8629-A1031-L999:Dokumentlayouts
+N21-P55242-G243-P8631-A1031-L999:Richtet ein Layout für verschiedene Belegarten ein, z. B. Rechnungen, Angebote und Gutschriften.
+N21-P55242-G31-P8629-A1031-L999:Dynamics 365 for Sales
+N21-P55242-G33-P8629-A1031-L999:Konto
+N21-P55242-G33-P8631-A1031-L999:Öffnet das gekoppelte Dynamics 365 for Sales-Konto.
+N21-P55242-G37-P8629-A1031-L999:&Genehmigungsanforderung stornieren
+N21-P55242-G37-P8631-A1031-L999:Storniert die Genehmigungsanforderung.
+N21-P55242-G390-P8629-A1031-L999:Ablehnen
+N21-P55242-G390-P8631-A1031-L999:Verweigert die Genehmigungsanforderung.
+N21-P55242-G41-P8629-A1031-L999:Delegieren
+N21-P55242-G41-P8631-A1031-L999:Delegiert die Genehmigung an einen Ersatzgenehmiger.
+N21-P55242-G43-P8629-A1031-L999:Kontostatistik aktualisieren
+N21-P55242-G43-P8631-A1031-L999:Sendet Debitorenstatistikdaten zum Aktualisieren der Infobox "Kontostatistik" an Dynamics 365 for Sales.
+N21-P55242-G45-P8629-A1031-L999:Genehmigungsanforderung
+N21-P55242-G47-P8629-A1031-L999:Kopplung einrichten
+N21-P55242-G47-P8631-A1031-L999:Erstellt oder ändert die Kopplung mit einem Dynamics 365 for Sales-Konto.
+N21-P55242-G49-P8629-A1031-L999:Kopplung löschen
+N21-P55242-G49-P8631-A1031-L999:Löscht die Kopplung mit einem Dynamics 365 for Sales-Konto.
+N21-P55242-G51-P8629-A1031-L999:Kopplung
+N21-P55242-G51-P8631-A1031-L999:Erstellt, ändert oder löscht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Dynamics 365 for Sales-Datensatz.
+N21-P55242-G53-P8629-A1031-L999:Synchronisieren
+N21-P55242-G53-P8631-A1031-L999:Sendet aktualisierte Daten an Dynamics 365 for Sales, oder ruft diese ab.
+N21-P55242-G55-P8629-A1031-L999:&Genehmigungsanforderung senden
+N21-P55242-G55-P8631-A1031-L999:Fordert die Genehmigung zum Ändern des Datensatzes an.
+N21-P55242-G56-P8629-A1031-L999:Genehmigen
+N21-P55242-G56-P8631-A1031-L999:Genehmigen Sie die angeforderten Änderungen.
+N21-P55242-G57-P8629-A1031-L999:Genehmigung
+N21-P55242-G59-P8629-A1031-L999:Genehmigungen
+N21-P55242-G59-P8631-A1031-L999:Zeigt eine Liste der Datensätze an, die noch genehmigt werden müssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.
+N21-P55242-G5-P8629-A1031-L999:Historie
+N21-P55242-G6500-P8629-A1031-L999:Artikel&verfolgungsposten
+N21-P55242-G6500-P8631-A1031-L999:Zeigt Seriennummern oder Chargennummern an, die Artikel zugeordnet sind.
+N21-P55242-G74-P8629-A1031-L999:D&ebitor
+N21-P55242-G76-P8629-A1031-L999:Statistik
+N21-P55242-G76-P8631-A1031-L999:Zeigt statistische Informationen für den Datensatz an, wie etwa den Wert der gebuchten Posten.
+N21-P55242-G77-P8629-A1031-L999:Buchungsstatistik
+N21-P55242-G77-P8631-A1031-L999:Zeigt Postenstatistiken für den Datensatz an.
+N21-P55242-G78-P8629-A1031-L999:Be&merkungen
+N21-P55242-G78-P8631-A1031-L999:Zeigen Sie Bemerkungen an, oder fügen Sie sie dem Datensatz hinzu.
+N21-P55242-G79-P8629-A1031-L999:&Verkauf
+N21-P55242-G79-P8631-A1031-L999:Zeigt eine Zusammenfassung der Debitorenposten an. Das Zeitintervall wird im Feld "Anzeigen nach" ausgewählt. Die Spalte "Periode" links beinhaltet eine Reihe von Datumsangaben, die durch das ausgewählte Zeitintervall bestimmt werden.
+N21-P55242-G7-P8629-A1031-L999:Belege
+N21-P55242-G80-P8629-A1031-L999:&Posten
+N21-P55242-G80-P8631-A1031-L999:Zeigt die Historie der Transaktionen an, die für den ausgewählten Datensatz gebucht wurden.
+N21-P55242-G81-P8629-A1031-L999:&Lief. an Adressen
+N21-P55242-G81-P8631-A1031-L999:Zeigt die alternative Versandadresse an oder bearbeitet sie, an die der Debitor die Artikel liefern lassen möchte, falls diese von der regulären Adresse abweicht.
+N21-P55242-G82-P8629-A1031-L999:&Verkauf
+N21-P55242-G83-P8629-A1031-L999:&Rechnungsrabatte
+N21-P55242-G83-P8631-A1031-L999:Richten Sie verschiedene Rabatte ein, die auf Rechnungen für den Debitor angewendet werden. Ein Rechnungsrabatt wird dem Debitor automatisch gewährt, wenn die Summe auf einer Verkaufsrechnung einen bestimmten Betrag überschreitet.
+N21-P55242-G84-P8629-A1031-L999:Dimensionen
+N21-P55242-G84-P8631-A1031-L999:Zeigt Dimensionen an oder bearbeitet Dimensionen, wie etwa eines Bereichs, eines Projekts oder einer Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen können, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.
+N21-P55242-G85-P8629-A1031-L999:Angebote
+N21-P55242-G85-P8631-A1031-L999:Zeigt eine Liste laufender Verkaufsangebote für den Debitor an.
+N21-P55242-G86-P8629-A1031-L999:Aufträge
+N21-P55242-G86-P8631-A1031-L999:Zeigt eine Liste laufender Verkaufsaufträge für den Debitor an.
+N21-P55242-G94-P8629-A1031-L999:Re&ferenzen
+N21-P55242-G94-P8631-A1031-L999:Richtet eine eigene Benutzereinrichtung des Debitors für die Artikel ein, die Sie an den Debitor verkaufen. Querverweise auf die Artikelnummer des Debitors bedeuten, dass die Artikelnummer automatisch anstelle der von Ihnen verwendeten Nummer auf den Verkaufsbelegen angezeigt wird.
+N21-P55242-G99-P8629-A1031-L999:Bankkonten
+N21-P55242-G99-P8631-A1031-L999:Zeigt Bankkonten des Debitors an oder richtet sie ein. Sie können für jeden Kreditor eine beliebige Anzahl von Bankkonten einrichten.
+N21-P8629-A1031-L999:Debitorenkarte
+N21-Q1033-P26171-A1031-L999:Fällige Zahlungen per %1
+N21-Q1036-P26171-A1031-L999:Gebuchte Rechnungen (%1)
+N21-Q1037-P26171-A1031-L999:Gebuchte Gutschriften (%1)
+N21-Q1038-P26171-A1031-L999:Laufende Gutschriften (%1)
+N21-Q1039-P26171-A1031-L999:Laufende Rechnungen (%1)
+N21-Q1066-P26171-A1031-L999:Auf Karte anzeigen

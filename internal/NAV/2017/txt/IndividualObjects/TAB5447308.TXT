@@ -1,0 +1,150 @@
+OBJECT Table 5447308 Webshop Item Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               // Webshop-Artikel zur Aktualisierung kennzeichnen
+               WebshopManagement.SetWebshopItemModified("Item No.",TRUE,FALSE,FALSE);
+             END;
+
+    OnModify=BEGIN
+               // Webshop-Artikel zur Aktualisierung kennzeichnen
+               WebshopManagement.SetWebshopItemModified("Item No.",TRUE,FALSE,FALSE);
+             END;
+
+    OnDelete=BEGIN
+               // Webshop-Artikel zur Aktualisierung kennzeichnen
+               IF NOT DeleteItem THEN
+                 WebshopManagement.SetWebshopItemModified("Item No.",TRUE,FALSE,FALSE);
+
+               // Web-Datensatz l�schen
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.SetSendNow(TRUE);
+                 WebshopUpdateManagement.DeleteWebshopItemLink(Rec);
+                 WebshopUpdateManagement.SetSendNow(FALSE);
+             END;
+
+    OnRename=BEGIN
+               ERROR(Text50000);
+             END;
+
+    CaptionML=[DEU=Webshop Artikelverkn�pfung;
+               ENU=Webshop Item Link];
+    LookupPageID=Page5447315;
+    DrillDownPageID=Page5447315;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Item No.            ;Code20        ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Item No.];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Variante,Zubeh�rartikel,Ersatzteil,Alternativartikel,Passender Artikel;
+                                                                    ENU=Variant,Accessory,Spare part,Alternative Item,Fitting Item];
+                                                   OptionString=Variant,Acc. Item,Spare Part,Alt. Item,Fit. Item }
+    { 3   ;   ;Linked Item No.     ;Code20        ;TableRelation=Item.No.;
+                                                   OnValidate=BEGIN
+                                                                // Artikel darf nicht mit sich selbst verkn�pft werden
+                                                                IF "Linked Item No." = "Item No." THEN
+                                                                  FIELDERROR("Linked Item No.");
+
+                                                                // Auf Wunsch Web-Shopartikel anlegen falls nicht vorhanden
+                                                                Language.SETRANGE("Shop Code","Shop Code");
+                                                                IF Language.FINDSET THEN REPEAT
+                                                                  WebshopItem.SETRANGE("Shop Code","Shop Code");
+                                                                  WebshopItem.SETRANGE("Language Code",Language.Code);
+                                                                  WebshopItem.SETRANGE("Item No.","Linked Item No.");
+                                                                  IF NOT WebshopItem.FINDFIRST THEN BEGIN
+                                                                    IF CONFIRM(Text50003,TRUE,"Linked Item No.",Language.Code) THEN BEGIN
+                                                                      WebshopItem.INIT;
+                                                                      WebshopItem.VALIDATE("Shop Code","Shop Code");
+                                                                      WebshopItem.VALIDATE("Language Code",Language.Code);
+                                                                      WebshopItem.VALIDATE("Item No.","Linked Item No.");
+                                                                      WebshopItem.VALIDATE("Is Active",TRUE);
+                                                                      WebshopItem.INSERT(TRUE);
+                                                                    END;
+                                                                  END;
+                                                                UNTIL Language.NEXT = 0;
+
+                                                                // Ein Mutterartikel darf selbst keine Variante sein
+                                                                IF (Type = Type::Variant) THEN BEGIN
+                                                                  WebshopItemLink.SETRANGE("Shop Code","Shop Code");
+                                                                  WebshopItemLink.SETRANGE(Type,Type);
+                                                                  WebshopItemLink.SETRANGE("Linked Item No.","Item No.");
+                                                                  IF WebshopItemLink.FINDFIRST THEN
+                                                                    ERROR(Text50002,"Item No.");
+                                                                END;
+
+                                                                // Eine Variante darf nicht als Cross-Selling Artikel verkn�pft werden verkn�pft werden
+                                                                IF Type <> Type::Variant THEN BEGIN
+                                                                  WebshopItemLink.SETRANGE("Shop Code","Shop Code");
+                                                                  WebshopItemLink.SETRANGE(Type,Type::Variant);
+                                                                  WebshopItemLink.SETRANGE("Linked Item No.","Linked Item No.");
+                                                                  IF WebshopItemLink.FINDFIRST THEN
+                                                                    ERROR(Text50002,"Linked Item No.");
+                                                                END;
+
+                                                                // Ein als Variante verkn�pfter Artikel darf selbst keine Varianten haben
+                                                                IF Type = Type::Variant THEN BEGIN
+                                                                  WebshopItemLink.SETRANGE("Shop Code","Shop Code");
+                                                                  WebshopItemLink.SETRANGE(Type,Type::Variant);
+                                                                  WebshopItemLink.SETRANGE("Item No.","Linked Item No.");
+                                                                  IF WebshopItemLink.FINDFIRST THEN
+                                                                   ERROR(Text50001,"Linked Item No.");
+                                                                END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Linked Item No.];
+                                                   NotBlank=Yes }
+    { 4   ;   ;Linked Item Description;Text50     ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup(Item.Description WHERE (No.=FIELD(Linked Item No.)));
+                                                   CaptionML=[DEU=Beschreibung;
+                                                              ENU=Linked Item Description];
+                                                   Editable=No }
+    { 5   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code] }
+  }
+  KEYS
+  {
+    {    ;Type,Shop Code,Item No.,Linked Item No. ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopItemLink@1000000007 : Record 5447308;
+      WebshopItem@1000000008 : Record 5447304;
+      Language@1000000002 : Record 5447302;
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      Text50000@1000000001 : TextConst 'DEU=Datensatz darf nicht umbenannt werden;ENU=Row cannot be renamed';
+      WebshopUpdateManagement@1000000006 : Codeunit 5447301;
+      Text50001@1000000003 : TextConst 'DEU=Artikel %1 hat selbst Varianten und darf deshalb nicht verkn�pft werden;ENU=Item %1 has variants of its own and therefore cannot be linked as a variant';
+      Text50002@1000000004 : TextConst 'DEU=Artikel %1 ist eine Variante und darf deshalb nicht verkn�pft werden;ENU=Item %1 is a variant and therefore cannot be assigned variants';
+      Text50003@1000000005 : TextConst 'DEU=Artikel %1 ist kein Webshop-Artikel f�r Sprache %2, soll ein Webshop-Artikel angelegt und aktiv geschaltet werden?;ENU=Item %1 is not a Webshop Item for Language %2. Shall a webshop item for this language be created and activated?';
+      DeleteItem@1000000009 : Boolean;
+
+    PROCEDURE SetDeleteItem@1000000000(LocalDeleteItem@1000000000 : Boolean);
+    BEGIN
+      DeleteItem := LocalDeleteItem;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

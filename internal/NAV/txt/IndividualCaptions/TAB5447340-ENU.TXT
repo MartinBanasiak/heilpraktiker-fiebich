@@ -1,0 +1,52 @@
+T5447340-F10-P8629-A1033-L999:Max. No. of Turns
+T5447340-F11-P8629-A1033-L999:Subscription Duration
+T5447340-F12-P8629-A1033-L999:No. of Sequence Steps
+T5447340-F13-P8629-A1033-L999:No. of Items
+T5447340-F14-P8629-A1033-L999:No. of Customers
+T5447340-F15-P8629-A1033-L999:Is Active
+T5447340-F16-P8629-A1033-L999:Starting Date Processing
+T5447340-F17-P8629-A1033-L999:Ending Date Processing
+T5447340-F18-P8629-A1033-L999:Cancellation Period (Formula)
+T5447340-F19-P8629-A1033-L999:Price per billing interval
+T5447340-F1-P8629-A1033-L999:Code
+T5447340-F21-P8629-A1033-L999:Orderable
+T5447340-F22-P8629-A1033-L999:Starting Date Orderability
+T5447340-F23-P8629-A1033-L999:Endign Date Orderability
+T5447340-F24-P8629-A1033-L999:Shop Code
+T5447340-F25-P8629-A1033-L999:Shop Language Code
+T5447340-F26-P8629-A1033-L999:All Shops
+T5447340-F27-P8629-A1033-L999:All Languages
+T5447340-F28-P8629-A1033-L999:First Order Email Text
+T5447340-F29-P8629-A1033-L999:Shipment Email
+T5447340-F2-P4962-Q1000000000-P26171-A1033-L999:The record has to be reset and all links removed. Continue?
+T5447340-F2-P8629-A1033-L999:Type
+T5447340-F2-P8632-A1033-L999:Subscription Order Option,Subscription Sequence Item
+T5447340-F30-P8629-A1033-L999:Last Shipment Email Text
+T5447340-F31-P8629-A1033-L999:Shipping Option Line No.
+T5447340-F32-P8629-A1033-L999:Reference payment-date (formula) based on starting date
+T5447340-F33-P8629-A1033-L999:Interval Description
+T5447340-F34-P8629-A1033-L999:Payment Type Description
+T5447340-F35-P8629-A1033-L999:Cancellation Terms Description
+T5447340-F36-P8629-A1033-L999:Date Last Modified
+T5447340-F37-P8629-A1033-L999:Date Last Updated
+T5447340-F38-P8629-A1033-L999:Short Text
+T5447340-F39-P8629-A1033-L999:Email Payment
+T5447340-F3-P8629-A1033-L999:Description
+T5447340-F40-P8629-A1033-L999:Email Pay. and Ship.
+T5447340-F41-P8629-A1033-L999:Email cancellation confirmation
+T5447340-F42-P8629-A1033-L999:Email last payment
+T5447340-F43-P4962-Q1000000000-P26171-A1033-L999:Late Join-up is only passible for Subscr. Sequence-Items with Pay-Type 'Once'.
+T5447340-F43-P8629-A1033-L999:Allow Late Join-up
+T5447340-F44-P8629-A1033-L999:Max. No. of Sequence-Steps per Customer
+T5447340-F4-P8629-A1033-L999:Item No. Subscription Item
+T5447340-F5-P4962-Q1000000000-P26171-A1033-L999:Only per-turn-payment is possible for subscription type "order option".
+T5447340-F5-P8629-A1033-L999:Payment Type
+T5447340-F5-P8632-A1033-L999:Once,Per Turn,Monthly,Quarterly,Semi-annually,Annually
+T5447340-F6-P4962-Q1000000001-P26171-A1033-L999:There are sequence-step lines which are incompatible with the chosen start-type.\Please check the definitions of the sequence-step lines.
+T5447340-F6-P8629-A1033-L999:Start-Type
+T5447340-F6-P8632-A1033-L999:Start new sequence,Join running sequence
+T5447340-F7-P8629-A1033-L999:Start Date (Formula)
+T5447340-F8-P8629-A1033-L999:Turn Interval (Formula)
+T5447340-F9-P8629-A1033-L999:Min. No. of Turns
+T5447340-P4961-Q1000000000-P26171-A1033-L999:The record has to be reset and all links removed. Continue?
+T5447340-P8629-A1033-L999:Webshop Subscription

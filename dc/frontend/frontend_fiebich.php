@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <?= get_canonical(); ?>
         <? create_meta_tags(); ?>
+        <meta name="google-site-verification" content="googlef14c32d48347c47d" />
         <? require __DIR__ . DIRECTORY_SEPARATOR . 'frontend_fiebich_meta.inc.php'; ?>
         <?//<link href="//cloud.typenetwork.com/projects/771/fontface.css/" rel="stylesheet" type="text/css">?>
         <script>
@@ -68,7 +69,6 @@
             <div class="navigation_scrollbox">
                 <div class="navigation">
                     <? navigation_full_menu_area($site, $language, $navigation, 1); ?>
-                    <? navigation_full_menu_area($site, $language, "info", 2); ?>
                 </div>
             </div>
         </nav>
@@ -86,7 +86,7 @@
                             ?></div>
                         </div>
                         <div class="header__right">
-                            <div class="headerTrust hidden-xs"><?
+                            <div class="headerTrust hidden-xs hidden-sm"><?
                                 get_content("header_trust", TRUE,$IOCContainer);
                                 $GLOBALS['dc_bildbereich_kopf'] = false;
                             ?></div>
@@ -172,47 +172,12 @@
                         <?}?>
                     </div>
                     <? get_content("content_full", FALSE, $IOCContainer, $category, $navigation); ?>
-                    <?
-                    // Bewertungs-Widget, nur auf der Startseite.
-                    //
-                    // Das Skript laedt von cdn.trustindex.io und uebertraegt dabei
-                    // die IP-Adresse an einen Dritten. Es ist deshalb ueber das
-                    // Consent-Plugin gesperrt: type="text/plain" haelt den Browser
-                    // davon ab, es auszufuehren, die Klasse DCCookie_trustindex gibt
-                    // es erst nach Zustimmung frei. Die Container-Klasse sorgt
-                    // dafuer, dass bis dahin an dieser Stelle der Hinweis mit der
-                    // Freigabe-Schaltflaeche erscheint statt einer leeren Flaeche.
-                    //
-                    // Das Skript steht bewusst NEBEN dem Container, nicht darin:
-                    // Bei Zustimmung leert das Plugin den Container (innerHTML = "")
-                    // und wuerde ein Skript darin mit loeschen. Google Maps ist im
-                    // Standard genauso aufgebaut.
-                    if ($GLOBALS['language']['std_main_navigation_id'] == $navigation['id']) {
-                    ?>
-                        <div class="container">
-                            <section class="reviewWidget" aria-label="<?=$GLOBALS['tc']['reviews_headline']?>">
-                                <h2><?=$GLOBALS['tc']['reviews_headline']?></h2>
-                                <div class="reviewWidget__frame DCCookie_trustindex_container"></div>
-                                <script class="DCCookie_trustindex" type="text/plain"
-                                        src="https://cdn.trustindex.io/loader.js?ecf479080ed0884f508662893e7"
-                                        defer async></script>
-                            </section>
-                        </div>
-                    <? } ?>
                 </div>
             </main>
             <footer>
                 <div class="container">
                     <div class="row flexrow">
                         <div class="footernavigation col-xs-12 xs-margin sm-margin col-sm-6 col-md-4 col-lg-3">
-                            <?
-                            $active = "";
-                            if ($GLOBALS['language']['std_main_navigation_id'] == $navigation['id']) {
-                                $active = "active";
-                            }?>
-                            <a class="home <?=$active?>" title="<?=$GLOBALS['tc']['homepage']?>" href="/<?=$GLOBALS['language']['code']?>/">
-                                <i class="fa fa-home"></i> <?=$GLOBALS['tc']['homepage']?>
-                            </a>
                             <? navigation_full_menu_area($site, $language, $navigation, 1); ?>
                         </div>
                         <div class="footernavigation col-xs-12 xs-margin sm-margin col-sm-6 col-md-4 col-lg-3">

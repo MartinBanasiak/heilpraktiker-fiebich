@@ -1,0 +1,154 @@
+OBJECT Page 5447334 Webshop Item Ratings Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelbewertung;
+               ENU=Webshop Item Ratings];
+    InsertAllowed=No;
+    SourceTable=Table5447317;
+    PageType=Card;
+    OnAfterGetRecord=BEGIN
+                       IF Checked = FALSE THEN BEGIN
+                         Checked := TRUE;
+                         MODIFY(FALSE);
+                         CurrPage.UPDATE;
+                       END;
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000018;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000015;1 ;Action    ;
+                      Name=Release;
+                      CaptionML=[DEU=Freigegeben;
+                                 ENU=Release];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Approve;
+                      PromotedCategory=Process;
+                      Scope=Page;
+                      OnAction=VAR
+                                 WebshopItemComment@1000000001 : Record 5447317;
+                                 form@1000000000 : Page 5447334;
+                                 filters@1000000002 : Text[250];
+                                 IsMarked@1000000003 : Boolean;
+                               BEGIN
+                                 Rec."Is Review Released" := TRUE;
+                                 Rec.Checked := TRUE;
+                                 Rec.MODIFY(FALSE);
+                                 Rec."Date Last Modified" := CURRENTDATETIME;
+                                 WebshopUpdateManagement.UpdateWebshopItemComment(Rec);
+                               END;
+                                }
+      { 1000000014;1 ;Action    ;
+                      Name=Hide;
+                      CaptionML=[DEU=Ausblenden;
+                                 ENU=Hide];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Reject;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopItemDescription@1000000001 : Record 5447306;
+                                 WebshopItem@1000000002 : Record 5447304;
+                               BEGIN
+                                 Rec."Is Review Released" := FALSE;
+                                 Rec.Checked := TRUE;
+                                 Rec.MODIFY(FALSE);
+                                 Rec."Date Last Modified" := CURRENTDATETIME;
+                                 WebshopUpdateManagement.UpdateWebshopItemComment(Rec);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=General;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General];
+                GroupType=Group }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Shop Code";
+                Editable=false }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Language Code";
+                Editable=false }
+
+    { 1000000019;2;Field  ;
+                SourceExpr="Review Date";
+                Editable=false }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Item No.";
+                Editable=false }
+
+    { 1000000016;2;Field  ;
+                SourceExpr=Description;
+                Editable=false }
+
+    { 1000000004;1;Group  ;
+                CaptionML=[DEU=Kommentar;
+                           ENU=Comment];
+                GroupType=Group }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Review Rating";
+                Editable=false }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Review Title";
+                Editable=false }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Is Review Released";
+                Editable=false }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Review Text";
+                Editable=false;
+                MultiLine=Yes }
+
+    { 1000000017;1;Group  ;
+                CaptionML=[DEU=Autor;
+                           ENU=Author];
+                GroupType=Group }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Review User Name";
+                Editable=false }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Review User City";
+                Editable=false }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Review User E-Mail";
+                Editable=false }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

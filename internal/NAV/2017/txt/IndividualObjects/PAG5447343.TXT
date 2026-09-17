@@ -1,0 +1,78 @@
+OBJECT Page 5447343 Webshop Subsc. Seq. Step LPart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table5447341;
+    PageType=ListPart;
+    AutoSplitKey=Yes;
+    OnNewRecord=VAR
+                  StepCount@1000000001 : Integer;
+                  DistributedPrice@1000000000 : Decimal;
+                BEGIN
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000003;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000008;1 ;Action    ;
+                      Name=Show Items;
+                      CaptionML=[DEU=Verkn�pfte Artikel anzeigen;
+                                 ENU=Show linked items];
+                      OnAction=BEGIN
+                                 WebshopSubscriptionItemLink.SETRANGE("Subscription Code","Subscription Code");
+                                 WebshopSubscriptionItemLink.SETRANGE("Link to",WebshopSubscriptionItemLink."Link to"::"Sequence Step");
+                                 WebshopSubscItemLinkList.SETTABLEVIEW(WebshopSubscriptionItemLink);
+                                 WebshopSubscItemLinkList.RUN;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Subscription Code";
+                Visible=FALSE }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Fix Date" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr=Interval }
+
+    { 1000000007;2;Field  ;
+                Name=<Price>;
+                SourceExpr="No. of Items";
+                Editable=FALSE;
+                DrillDownPageID=Webshop Subsc. Item Link List }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSubscriptionItemLink@1000000001 : Record 5447342;
+      WebshopSubscItemLinkList@1000000000 : Page 5447344;
+      WebshopSubscriptionSeqStep@1000000002 : Record 5447341;
+      WebshopSubscriptionHeader@1000000003 : Record 5447340;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

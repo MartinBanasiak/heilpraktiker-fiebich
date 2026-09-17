@@ -1,0 +1,175 @@
+OBJECT Page 5447312 Webshop Item Description Part
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelbeschreibung;
+               ENU=Webshop Item description];
+    SourceTable=Table5447306;
+    PageType=ListPart;
+    AutoSplitKey=Yes;
+    ShowFilter=No;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       IF Content THEN
+                         ContentText := YesText
+                       ELSE
+                         ContentText := NoText;
+                     END;
+
+    OnInsertRecord=BEGIN
+                     ContentText := NoText;
+                   END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000005;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000003;1 ;Action    ;
+                      Name=<Action1000000008>;
+                      CaptionML=[DEU=Beschreibung bearbeiten;
+                                 ENU=Edit Description];
+                      Image=DocumentEdit;
+                      OnAction=VAR
+                                 WebshopItemDescription@1000000001 : Record 5447306;
+                                 WebshopItem@1000000002 : Record 5447304;
+                               BEGIN
+                                 EditContent();
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                AssistEdit=No;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description;
+                OnAssistEdit=VAR
+                               WebshopWebforms@1000000001 : Codeunit 5447302;
+                               WebshopItem@1000000000 : Record 5447304;
+                             BEGIN
+                             END;
+                              }
+
+    { 1000000004;2;Field  ;
+                CaptionML=[DEU=Inhalt;
+                           ENU=Content];
+                SourceExpr=ContentText;
+                Editable=FALSE;
+                OnAssistEdit=BEGIN
+                               EditContent();
+                             END;
+                              }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Description Template Code" }
+
+    { 1000000001;2;Field  ;
+                CaptionML=[DEU=Alle Sprachen;
+                           ENU=All Language Codes];
+                SourceExpr="All Language Codes" }
+
+    { 1000000007;2;Field  ;
+                CaptionML=[DEU=Im Kopf anzeigen;
+                           ENU=Show in Header];
+                SourceExpr="Show in Header" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Marketplace Only" }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000001 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000006 : Codeunit 5447301;
+      TempItemDescription@1000000002 : Record 5447306;
+      EditItemDescription@1000000000 : Page 5447361;
+      ContentText@1000000003 : Text[30];
+      YesText@1000000004 : TextConst 'DEU=Ja;ENU=Yes';
+      NoText@1000000005 : TextConst 'DEU=Nein;ENU=No';
+      ClientAddInType@1000000011 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000010 : Codeunit 5447320;
+      WebshopWebform@1000000009 : Page 5447366;
+      Type@1000000008 : 'Description1,Promotion,Description2';
+      WebformType@1000000007 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection';
+      Text007@1000000012 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+
+    PROCEDURE EditContent@1000000000();
+    VAR
+      WebshopItem@1000000000 : Record 5447304;
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD("Line No.");
+      WebshopUpdateManagement.SetSendNow(TRUE);
+
+      //Webshopartikel aktualisieren (f�r intelligente Suche)
+      WebshopItem.GET("Shop Code","Language Code","Item No.");
+      IF ((WebshopItem."Date Last Modified" > WebshopItem."Date Last Updated") OR (WebshopItem."Date Last Updated" = 0DT)) THEN
+        WebshopUpdateManagement.UpdateWebshopItemManually(WebshopItem);
+      GET("Shop Code","Language Code","Item No.","Line No.");
+
+      WebshopUpdateManagement.UpdateWebshopItemDescription(Rec);
+      GET("Shop Code","Language Code","Item No.","Line No.");
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        //DynamicCommerceAddIn
+        CLEAR(WebshopWebform);
+        WebshopWebform.SetWebformType(WebformType::ItemDesc);
+        WebshopWebform.SetShopCode("Shop Code");
+        WebshopWebform.SetLanguageCode("Language Code");
+        WebshopWebform.SetItemNo("Item No.");
+        WebshopWebform.SetLineNo("Line No.");
+        WebshopWebform.SetRecordCode(Description);
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+        CLEAR(EditItemDescription);
+        TempItemDescription.SETRANGE("Shop Code","Shop Code");
+        TempItemDescription.SETRANGE("Language Code","Language Code");
+        TempItemDescription.SETRANGE("Item No.","Item No.");
+        TempItemDescription.SETRANGE("Line No.","Line No.");
+        EditItemDescription.SETTABLEVIEW(TempItemDescription);
+        EditItemDescription.LOOKUPMODE(TRUE);
+        EditItemDescription.RUNMODAL();
+      END;
+
+      GET("Shop Code","Language Code","Item No.","Line No.");
+      WebshopUpdateManagement.CheckWebshopItemDescription(Rec);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      GET("Shop Code","Language Code","Item No.","Line No.");
+
+      IF Content THEN
+        ContentText := YesText
+      ELSE
+        ContentText := NoText;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

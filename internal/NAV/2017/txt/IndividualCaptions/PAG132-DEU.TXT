@@ -1,0 +1,132 @@
+N132-C1000000007-P8629-A1031-L999:Abonnement
+N132-C1000000010-P8629-A1031-L999:Reklamation
+N132-C102-P8631-A1031-L999:Gibt an, ob die gebuchte Verkaufsrechnung ein Korrekturbeleg ist.
+N132-C10-P8631-A1031-L999:Gibt den Code des Verkäufers an, der für die Rechnung verantwortlich ist.
+N132-C114-P8631-A1031-L999:Gibt die Nummer des Verkaufsangebots an, wenn der Verkaufsprozess mit einem Angebot begann.
+N132-C12-P8631-A1031-L999:Gibt das Datum an, an dem die Rechnung gebucht wurde.
+N132-C14-P8631-A1031-L999:Gibt an, wie häufig die Rechnung gedruckt wurde.
+N132-C16-P8629-A1031-L999:Rechnungsdetails
+N132-C18-P8629-A1031-L999:Name
+N132-C18-P8631-A1031-L999:Gibt den Namen des Debitors an, an den die Rechnung gesendet wurde.
+N132-C1905885101-P8629-A1031-L999:Lief. an
+N132-C1907468901-P8629-A1031-L999:Außenhandel
+N132-C1-P8629-A1031-L999:Allgemein
+N132-C20-P8629-A1031-L999:Adresse
+N132-C20-P8631-A1031-L999:Gibt die Adresse des Debitors an, an den die Rechnung gesendet wurde.
+N132-C22-P8629-A1031-L999:Adresse 2
+N132-C22-P8631-A1031-L999:Gibt zusätzliche Adressinformationen an.
+N132-C24-P8629-A1031-L999:Ort
+N132-C24-P8631-A1031-L999:Gibt den Ort des Debitors an, an den die Rechnung gesendet wurde.
+N132-C25-P8631-A1031-L999:Gibt das Datum an, an dem Sie den Verkaufsbeleg erstellt haben.
+N132-C26-P8629-A1031-L999:Kontakt
+N132-C26-P8631-A1031-L999:Gibt den Namen der Kontaktperson beim Debitor an, dem die Rechnung zugeschickt wurde.
+N132-C27-P8631-A1031-L999:Gibt den Status des Belegs an, wenn Sie einen Belegaustauschdienst verwenden, um den Beleg als elektronischen Beleg zu senden. Die Statuswerte werden vom Belegaustauschdienst gemeldet.
+N132-C28-P8631-A1031-L999:Gibt an, wie der Debitor für Produkte auf dem Verkaufsbeleg bezahlen muss.
+N132-C2-P8631-A1031-L999:Gibt die gebuchte Rechnungsnummer an.
+N132-C30-P8631-A1031-L999:Gibt den Währungscode der Rechnung an.
+N132-C31-P8631-A1031-L999:Gibt das Verfahren an, das in der Rechnung angegeben wurde.
+N132-C32-P8631-A1031-L999:Gibt den Dimensionswertcode an, der mit der Rechnung verknüpft ist.
+N132-C34-P8631-A1031-L999:Gibt den Skontosatz an, der gewährt wird, wenn die Zahlung am oder vor dem im Feld "Skontodatum" festgelegten Datum erfolgt.
+N132-C36-P8629-A1031-L999:Kontakt
+N132-C36-P8631-A1031-L999:Gibt den Namen der Kontaktperson an der Adresse an, an die die Artikel geliefert wurden.
+N132-C38-P8629-A1031-L999:Ort
+N132-C38-P8631-A1031-L999:Gibt den Ort an, an den die Artikel auf der Rechnung geliefert wurden.
+N132-C40-P8629-A1031-L999:PLZ-Code
+N132-C40-P8631-A1031-L999:Gibt die Postleitzahl an.
+N132-C42-P8629-A1031-L999:Adresse
+N132-C42-P8631-A1031-L999:Gibt die Adresse an, an die die Artikel auf der Rechnung geliefert wurden.
+N132-C44-P8629-A1031-L999:Adresse 2
+N132-C44-P8631-A1031-L999:Gibt zusätzliche Adressinformationen an.
+N132-C46-P8629-A1031-L999:Name
+N132-C46-P8631-A1031-L999:Gibt den Namen des Debitors an, an den die Artikel geliefert wurden.
+N132-C48-P8631-A1031-L999:Gibt den Code des Lagerorts an, von dem aus die Artikel geliefert wurden.
+N132-C4-P8629-A1031-L999:Verk. an
+N132-C50-P8631-A1031-L999:Gibt eine Formel an, die das Fälligkeitsdatum, das Skontodatum und den Skontobetrag auf dem Verkaufsbeleg berechnet.
+N132-C52-P8631-A1031-L999:Gibt an, ob die Rechnung Teil eines EU-Dreiecksgeschäfts war.
+N132-C53-P8629-A1031-L999:Lieferung und Abrechnung
+N132-C56-P8629-A1031-L999:Adresscode
+N132-C56-P8631-A1031-L999:Gibt die Adresse auf Bestellungen an, die per Direktlieferung direkt vom Kreditor an den Debitor geliefert werden.
+N132-C60-P8629-A1031-L999:Rech. an
+N132-C61-P8629-A1031-L999:Debitor
+N132-C61-P8631-A1031-L999:Gibt den Namen des Debitors an, an den Sie die Artikel in der Rechnung geliefert haben.
+N132-C62-P8631-A1031-L999:Gibt das Warenausgangsdatum an. Dieses wird aus dem Feld "Warenausg.-Datum" des Verkaufskopfs übernommen und für Planungszwecke verwendet.
+N132-C63-P8629-A1031-L999:Adresse
+N132-C63-P8631-A1031-L999:Gibt die Adresse des Debitors an, an den die Artikel in der Rechnung geliefert wurden.
+N132-C64-P8629-A1031-L999:Zahlungsverkehr
+N132-C64-P8631-A1031-L999:Gibt den Zahlungsservice an, wie etwa PayPal, mit dem die Verkaufsrechnung bezahlt werden kann.
+N132-C65-P8629-A1031-L999:Adresse 2
+N132-C65-P8631-A1031-L999:Gibt zusätzliche Adressinformationen an.
+N132-C66-P8631-A1031-L999:Gibt den Dimensionswertcode an, der mit der Rechnung verknüpft ist.
+N132-C67-P8629-A1031-L999:Ort
+N132-C67-P8631-A1031-L999:Gibt den Ort an, an den die Artikel auf der Rechnung geliefert wurden.
+N132-C68-P8631-A1031-L999:Legt das Datum fest, an dem die Rechnung zur Zahlung fällig ist.
+N132-C69-P8629-A1031-L999:Kontakt
+N132-C69-P8631-A1031-L999:Gibt den Namen der Kontaktperson bei dem Debitor an, an den Sie die Artikel geliefert haben.
+N132-C6-P8629-A1031-L999:PLZ Code
+N132-C6-P8631-A1031-L999:Gibt die Postleitzahl an.
+N132-C70-P8631-A1031-L999:Gibt das Lastschrift-Mandat an, das der Debitor unterschrieben hat, um Lastschriften von Zahlungen zu ermöglichen.
+N132-C71-P8629-A1031-L999:Methode
+N132-C71-P8631-A1031-L999:Gibt den Code zum Auffinden der Lieferbedingungen für die Rechnung an.
+N132-C72-P8631-A1031-L999:Gibt den Verkehrszweig des Verkaufskopfs an, von dem aus diese Zeile gebucht wurde.
+N132-C73-P8631-A1031-L999:Gibt die Nummer des Verkaufsbelegs an, für den die gebuchte Rechnung erstellt wurde.
+N132-C74-P8631-A1031-L999:Gibt Code des Einladehafens an, über den die Artikel aus Ihrem Land/Ihrer Region exportiert wurden.
+N132-C75-P8631-A1031-L999:Gibt den Gebietscode an, der in der Rechnung verwendet wird.
+N132-C76-P8631-A1031-L999:Gibt an, ob die gebuchte Rechnung bezahlt ist. Das Kontrollkästchen wird auch aktiviert, wenn eine Gutschrift für den Restbetrag ausgeglichen wurde.
+N132-C77-P8631-A1031-L999:Gibt an, ob die gebuchte Verkaufsrechnung entweder korrigiert oder storniert wurde.
+N132-C78-P8629-A1031-L999:PLZ Code
+N132-C78-P8631-A1031-L999:Gibt die Postleitzahl an.
+N132-C79-P8629-A1031-L999:Zusteller
+N132-C79-P8631-A1031-L999:Gibt an, welcher Zusteller verwendet wird, um die Artikel im Verkaufsbeleg zum Debitor zu transportieren.
+N132-C7-P8631-A1031-L999:Gibt das letztmögliche Zahlungsdatum für die Rechnung an, an dem noch ein Skonto gewährt wird.
+N132-C80-P8629-A1031-L999:Lieferdetails
+N132-C81-P8631-A1031-L999:Gibt die Paketnummer des Zustellers an.
+N132-C83-P8629-A1031-L999:Arbeitsbeschreibung
+N132-C86-P8631-A1031-L999:Gibt die Nummer des Verkaufsauftrags an, aus dem die Rechnung gebucht wurde.
+N132-C92-P8631-A1031-L999:Gibt den Code der Zuständigkeitseinheit an, die im Verkaufsauftrag dem Benutzer, der die Rechnung erstellt hat, Ihrer Firma oder dem Debitor zugeordnet ist.
+N132-C94-P8631-A1031-L999:Gibt die externe Belegnummer des Verkaufskopfes an, von dem aus diese Zeile gebucht wurde.
+N132-C96-P8629-A1031-L999:Kontaktnr.
+N132-C96-P8631-A1031-L999:Gibt die Nummer des Kontakts an, an den die Rechnung geschickt wurde.
+N132-C98-P8629-A1031-L999:Kontaktnr.
+N132-C98-P8631-A1031-L999:Gibt die Nummer des Kontakts an, an den die Rechnung geschickt wurde.
+N132-P55132-A1031-L999:Neu,Verarbeiten,Melden,Rechnung,Korrigieren
+N132-P55242-G112-P8629-A1031-L999:Genehmigungen
+N132-P55242-G112-P8631-A1031-L999:Zeigt eine Liste der Datensätze an, die noch genehmigt werden müssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.
+N132-P55242-G13-P8629-A1031-L999:Aktivitätsprotokoll
+N132-P55242-G13-P8631-A1031-L999:Zeigen Sie den Status sowie alle auftretenden Fehler an, wenn der Beleg als elektronisches Dokument oder OCR-Datei über den Belegaustauschdienst gesendet wurde.
+N132-P55242-G17-P8629-A1031-L999:Eingehenden Beleg aus Datei erstellen
+N132-P55242-G19-P8629-A1031-L999:Eingehenden Beleg auswählen
+N132-P55242-G21-P8629-A1031-L999:Eingehenden Beleg anzeigen
+N132-P55242-G23-P8629-A1031-L999:Eingehender Beleg
+N132-P55242-G29-P8629-A1031-L999:Rechnung in Dynamics CRM erstellen
+N132-P55242-G29-P8631-A1031-L999:Erstellt eine Verkaufsrechnung in Dynamics CRM, die mit dieser gebuchten Verkaufsrechnung verbunden ist.
+N132-P55242-G33-P8629-A1031-L999:Korrekturgutschrift erstellen
+N132-P55242-G33-P8631-A1031-L999:Erstellen Sie eine Gutschrift für diese gebuchte Rechnung, die Sie abschließen und manuell buchen, um die gebuchte Rechnung zu stornieren.
+N132-P55242-G35-P8629-A1031-L999:Zahlungsverkehr ändern
+N132-P55242-G35-P8631-A1031-L999:Ändern Sie den Zahlungsservice oder fügen Sie einen hinzu, wie etwa PayPal Standard, der auf dem Verkaufsbeleg angegeben ist, damit der Debitor die Zahlungswebsite schnell aufrufen kann.
+N132-P55242-G37-P8629-A1031-L999:Abbrechen
+N132-P55242-G37-P8631-A1031-L999:Erstellen und buchen Sie eine Verkaufsgutschrift, die diese gebuchte Verkaufsrechnung storniert. Diese gebuchte Verkaufsrechnung wird storniert.
+N132-P55242-G39-P8629-A1031-L999:Korrigieren
+N132-P55242-G39-P8631-A1031-L999:Stornieren Sie diese gebuchte Rechnung, und erstellen Sie automatisch eine neue Rechnung mit denselben Informationen, die Sie vor dem Buchen korrigieren können. Diese gebuchte Rechnung wird automatisch storniert.
+N132-P55242-G41-P8629-A1031-L999:Korrigieren
+N132-P55242-G43-P8629-A1031-L999:Rechnung
+N132-P55242-G43-P8631-A1031-L999:Öffnen Sie das gekoppelte Microsoft Dynamics CRM-Konto.
+N132-P55242-G45-P8629-A1031-L999:Dynamics CRM
+N132-P55242-G47-P8629-A1031-L999:Stornierte Gutschrift/Korrekturgutschrift anzeigen
+N132-P55242-G47-P8631-A1031-L999:Öffnet die gebuchte Verkaufsgutschrift, die erstellt wurde, als Sie die gebuchte Verkaufsrechnung stornierten. Falls die gebuchte Verkaufsrechnung das Ergebnis einer stornierten Verkaufsgutschrift ist, wird die stornierte Verkaufsgutschrift geöffnet.
+N132-P55242-G49-P8629-A1031-L999:Debitor
+N132-P55242-G49-P8631-A1031-L999:Zeigt detaillierte Informationen über den Debitor an oder bearbeitet diese.
+N132-P55242-G51-P8629-A1031-L999:Rechnung
+N132-P55242-G55-P8629-A1031-L999:R&echnung
+N132-P55242-G57-P8629-A1031-L999:Be&merkungen
+N132-P55242-G58-P8629-A1031-L999:D&rucken
+N132-P55242-G58-P8631-A1031-L999:Bereitet das Drucken des Belegs vor. Ein Berichtanforderungsfenster für den Beleg wird geöffnet, in dem Sie angeben können, was auf dem Ausdruck enthalten sein soll.
+N132-P55242-G59-P8629-A1031-L999:&Navigate
+N132-P55242-G59-P8631-A1031-L999:Sucht alle Posten und Belege, die für die Belegnummer und das Buchungsdatum auf dem ausgewählten Posten oder Beleg vorhanden sind.
+N132-P55242-G5-P8629-A1031-L999:Senden
+N132-P55242-G5-P8631-A1031-L999:Bereiten Sie sich vor, den Beleg dem Sendeprofil des Debitors entsprechend zu senden, etwa an eine E-Mail angehängt. Das Fenster "Beleg senden an" wird zuerst geöffnet, damit Sie ein Sendeprofil bestätigen oder auswählen können.
+N132-P55242-G89-P8629-A1031-L999:Dimensionen
+N132-P55242-G89-P8631-A1031-L999:Zeigt Dimensionen an oder bearbeitet sie, wie etwa einen Bereich, ein Projekt oder eine Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen können, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.
+N132-P55242-G8-P8629-A1031-L999:Statistik
+N132-P55242-G9-P8629-A1031-L999:&E-Mail
+N132-P55242-G9-P8631-A1031-L999:Bereiten Sie sich vor, den Beleg per E-Mail zu senden. Das Fenster "E-Mail senden" wird mit bereits eingetragener E-Mail-Adresse des Debitors geöffnet. Sie können die Informationen darin hinzufügen oder bearbeiten.
+N132-P8629-A1031-L999:Geb. Verkaufsrechnung

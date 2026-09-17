@@ -1,0 +1,57 @@
+N5116-C10-P8631-A1033-L999:Specifies the salesperson's telephone number.
+N5116-C12-P8631-A1033-L999:Specifies the date of the next task assigned to the salesperson.
+N5116-C14-P8631-A1033-L999:Specifies the code for the global dimension that is linked to the record or entry for analysis purposes. Two global dimensions, typically for the company's most important activities, are available on all cards, documents, reports, and lists.
+N5116-C16-P8631-A1033-L999:Specifies the code for the global dimension that is linked to the record or entry for analysis purposes. Two global dimensions, typically for the company's most important activities, are available on all cards, documents, reports, and lists.
+N5116-C1905885101-P8629-A1033-L999:Invoicing
+N5116-C1-P8629-A1033-L999:General
+N5116-C22-P8631-A1033-L999:Specifies the salesperson's job title.
+N5116-C2-P8631-A1033-L999:Specifies a code for the salesperson or purchaser.
+N5116-C4-P8631-A1033-L999:Specifies the name of the salesperson or purchaser.
+N5116-C6-P8631-A1033-L999:Specifies the percentage to use to calculate the salesperson's commission.
+N5116-C8-P8631-A1033-L999:Specifies the salesperson's email address.
+N5116-P55242-G1000000008-P8629-A1033-L999:Delete Salesperson Image
+N5116-P55242-G1000000009-P8629-A1033-L999:Upload Salesperson Image
+N5116-P55242-G1000000010-P55160-Q1000000000-P26171-A1033-L999:Salesperson has been updated.
+N5116-P55242-G1000000010-P8629-A1033-L999:Update salesperson
+N5116-P55242-G1000000011-P55160-Q1000000000-P26171-A1033-L999:Login data has been sent to salesperson.
+N5116-P55242-G1000000011-P8629-A1033-L999:Send login data
+N5116-P55242-G11-P8629-A1033-L999:User
+N5116-P55242-G11-P8631-A1033-L999:Open the coupled Dynamics 365 for Sales system user.
+N5116-P55242-G13-P8629-A1033-L999:Dynamics 365 for Sales
+N5116-P55242-G18-P8629-A1033-L999:Coupling
+N5116-P55242-G18-P8631-A1033-L999:Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Dynamics 365 for Sales record.
+N5116-P55242-G19-P8629-A1033-L999:&Salesperson
+N5116-P55242-G20-P8629-A1033-L999:Synchronize
+N5116-P55242-G20-P8631-A1033-L999:Send or get updated data to or from Dynamics 365 for Sales.
+N5116-P55242-G21-P8629-A1033-L999:Statistics
+N5116-P55242-G21-P8631-A1033-L999:View statistical information, such as the value of posted entries, for the record.
+N5116-P55242-G23-P8629-A1033-L999:Dimensions
+N5116-P55242-G23-P8631-A1033-L999:View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.
+N5116-P55242-G25-P8629-A1033-L999:Con&tacts
+N5116-P55242-G25-P8631-A1033-L999:View a list of contacts that are associated with the salesperson/purchaser.
+N5116-P55242-G26-P8629-A1033-L999:C&ampaigns
+N5116-P55242-G26-P8631-A1033-L999:View or edit any campaigns that the salesperson/purchaser is assigned to.
+N5116-P55242-G27-P8629-A1033-L999:S&egments
+N5116-P55242-G27-P8631-A1033-L999:View a list of all segments.
+N5116-P55242-G28-P8629-A1033-L999:Tea&ms
+N5116-P55242-G28-P8631-A1033-L999:View or edit any teams that the salesperson/purchaser is a member of.
+N5116-P55242-G32-P8629-A1033-L999:Interaction Log E&ntries
+N5116-P55242-G32-P8631-A1033-L999:View interaction log entries for the salesperson/purchaser.
+N5116-P55242-G33-P8629-A1033-L999:
+N5116-P55242-G34-P8629-A1033-L999:Oppo&rtunities
+N5116-P55242-G34-P8631-A1033-L999:View opportunities for the salesperson/purchaser.
+N5116-P55242-G35-P8629-A1033-L999:T&asks
+N5116-P55242-G35-P8631-A1033-L999:View tasks for the salesperson/purchaser.
+N5116-P55242-G36-P8629-A1033-L999:Create &Interaction
+N5116-P55242-G36-P8631-A1033-L999:Create an interaction with a specified contact.
+N5116-P55242-G5-P8629-A1033-L999:Synchronization Log
+N5116-P55242-G5-P8631-A1033-L999:View integration synchronization jobs for the salesperson/purchaser table.
+N5116-P55242-G76-P8629-A1033-L999:Postponed &Interactions
+N5116-P55242-G76-P8631-A1033-L999:View postponed interactions for the salesperson/purchaser.
+N5116-P55242-G7-P8629-A1033-L999:Delete Coupling
+N5116-P55242-G7-P8631-A1033-L999:Delete the coupling to a Dynamics 365 for Sales user.
+N5116-P55242-G9-P8629-A1033-L999:Set Up Coupling
+N5116-P55242-G9-P8631-A1033-L999:Create or modify the coupling to a Dynamics 365 for Sales user.
+N5116-P8629-A1033-L999:Salesperson/Purchaser Card
+N5116-Q1000000007-P26171-A1033-L999:Salesperson image deleted
+N5116-Q1000000008-P26171-A1033-L999:Please install needed Client AddIn first

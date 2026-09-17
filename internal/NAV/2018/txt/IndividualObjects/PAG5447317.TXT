@@ -1,0 +1,91 @@
+OBJECT Page 5447317 Webshop Item Update Fact Box
+{
+  OBJECT-PROPERTIES
+  {
+    Date=05.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelinformationen;
+               ENU=Webshop Item Info];
+    SourceTable=Table5447304;
+    PageType=CardPart;
+  }
+  CONTROLS
+  {
+    { 1000000029;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000006;1;Field  ;
+                CaptionML=[DEU=Einheinheitencode;
+                           ENU=Unit of Measure Code];
+                SourceExpr="Unit of Measure Code" }
+
+    { 1000000015;1;Field  ;
+                CaptionML=[DEU=Listenpreis;
+                           ENU=List Price];
+                SourceExpr=WebshopRetailPrice }
+
+    { 1000000014;1;Field  ;
+                CaptionML=[DEU=Basispreis;
+                           ENU=Base Price];
+                SourceExpr=WebshopBasePrice }
+
+    { 1000000027;1;Field  ;
+                CaptionML=[DEU=Individualisierungspreispreis;
+                           ENU=Customize Price];
+                SourceExpr=WebshopCustomizePrice }
+
+    { 1000000010;1;Field  ;
+                CaptionML=[DEU=Lagerbestand;
+                           ENU=Inventory];
+                SourceExpr=WebshopInventory('') }
+
+    { 1000000024;1;Field  ;
+                CaptionML=[DEU=Lagerbestand letztes Update;
+                           ENU=Last Updated Inventory];
+                SourceExpr="Last Updated Inventory" }
+
+    { 1000000028;1;Field  ;
+                CaptionML=[DEU=Gewicht;
+                           ENU=Weight];
+                SourceExpr=GetWeight }
+
+    { 1000000003;1;Field  ;
+                CaptionML=[DEU=Online Aktualisiert am;
+                           ENU=Last Date Updated];
+                SourceExpr="Date Last Updated" }
+
+    { 1000000001;1;Field  ;
+                CaptionML=[DEU=Korrigiert am;
+                           ENU=Last Date Modified];
+                SourceExpr="Date Last Modified" }
+
+    { 1000000002;1;Field  ;
+                CaptionML=[DEU=Korrigiert von;
+                           ENU=Last User Modified];
+                SourceExpr="User Last Modification" }
+
+  }
+  CODE
+  {
+
+    PROCEDURE GetWeight@1000000000() Weight : Decimal;
+    VAR
+      Item@1000000000 : Record 27;
+    BEGIN
+      Weight := 0;
+      IF Item.GET("Item No.") THEN
+        Weight := Item."Net Weight";
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

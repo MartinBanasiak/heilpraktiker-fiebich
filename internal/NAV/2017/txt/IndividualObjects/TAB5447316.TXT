@@ -1,0 +1,62 @@
+OBJECT Table 5447316 Webshop Customer Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               WebshopManagement.SetCustomerModified("Customer No.");
+             END;
+
+    OnModify=BEGIN
+               WebshopManagement.SetCustomerModified("Customer No.");
+             END;
+
+    OnDelete=BEGIN
+               WebshopManagement.SetCustomerModified("Customer No.");
+             END;
+
+    OnRename=BEGIN
+               WebshopManagement.SetCustomerModified("Customer No.");
+             END;
+
+    CaptionML=[DEU=Webshop Debitor Verkn�pfung;
+               ENU=Webshop Customer Link];
+    LookupPageID=Page5447328;
+    DrillDownPageID=Page5447328;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shop Code;
+                                                              ENU=Shop Code] }
+    { 2   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code] }
+    { 3   ;   ;Customer No.        ;Code20        ;TableRelation=Customer.No.;
+                                                   CaptionML=[DEU=Debitor Nr.;
+                                                              ENU=Customer No.] }
+    { 4   ;   ;Vendor Search Active;Boolean       ;CaptionML=[DEU=H�ndlersuche aktiv;
+                                                              ENU=Vendor Search Active] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Customer No.    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,236 @@
+OBJECT Page 5447326 Webshop Attribute Option List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Attribut Optionen;
+               ENU=Webshop Attribute Option List];
+    SourceTable=Table5447322;
+    SourceTableView=SORTING(Attribute Code,Sorting)
+                    ORDER(Ascending);
+    PageType=List;
+    ShowFilter=No;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       IF Icon THEN
+                         IconText := YesText
+                       ELSE
+                         IconText := NoText;
+                     END;
+
+    OnInsertRecord=BEGIN
+                     IconText := NoText;
+                   END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000008;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000009;1 ;Action    ;
+                      CaptionML=[DEU=Nach oben;
+                                 ENU=Move up];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=MoveUp;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 MoveUp();
+                               END;
+                                }
+      { 1000000010;1 ;Action    ;
+                      CaptionML=[DEU=Nach unten;
+                                 ENU=Move down];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=MoveDown;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 MoveDown();
+                               END;
+                                }
+      { 1000000013;1 ;Action    ;
+                      CaptionML=[DEU=Symbol bearbeiten;
+                                 ENU=Edit Icon];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Picture;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 EditContent();
+                               END;
+                                }
+      { 1000000011;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000012;1 ;Action    ;
+                      CaptionML=[DEU=Option �bersetzungen;
+                                 ENU=Option Translations];
+                      RunObject=Page 5447324;
+                      RunPageLink=Type=CONST(Attribute Option),
+                                  Attribute Code=FIELD(Attribute Code),
+                                  Attribute Link No.=FIELD(Code);
+                      Image=Translations }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Merkmalcode;
+                           ENU=Attribute Code];
+                SourceExpr="Attribute Code";
+                Visible=FALSE }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Code;
+                           ENU=Code];
+                SourceExpr=Code }
+
+    { 1000000004;2;Field  ;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description }
+
+    { 1000000005;2;Field  ;
+                CaptionML=[DEU=Filter;
+                           ENU=Filter];
+                SourceExpr="Filter for exist. Data" }
+
+    { 1000000014;2;Field  ;
+                CaptionML=[DEU=Symbol;
+                           ENU=Symbol];
+                SourceExpr=IconText;
+                Editable=FALSE;
+                OnAssistEdit=BEGIN
+                               EditContent();
+                             END;
+                              }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Icon Link URL" }
+
+    { 1000000007;2;Field  ;
+                CaptionML=[DEU=Reihenfolge;
+                           ENU=Sorting];
+                SourceExpr=Sorting;
+                Visible=FALSE }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Marketplace Attr. Option Code" }
+
+  }
+  CODE
+  {
+    VAR
+      IconText@1000000000 : Text[10];
+      YesText@1000000001 : TextConst 'DEU=Ja;ENU=Yes';
+      NoText@1000000002 : TextConst 'DEU=Nein;ENU=No';
+      WebshopManagement@1000000003 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000004 : Codeunit 5447301;
+      ClientAddInType@1000000009 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000008 : Codeunit 5447320;
+      WebshopWebform@1000000007 : Page 5447366;
+      Type@1000000006 : 'Description1,Promotion,Description2';
+      WebformType@1000000005 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection';
+      Text007@1000000010 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+
+    PROCEDURE MoveUp@1000000000();
+    VAR
+      ToAttributeOption@1000000002 : Record 5447322;
+      FromSorting@1000000000 : Integer;
+      ToSorting@1000000001 : Integer;
+    BEGIN
+      CurrPage.UPDATE(FALSE);
+      ToAttributeOption.SETRANGE("Attribute Code","Attribute Code");
+      ToAttributeOption.SETFILTER(Sorting,'<%1',Sorting);
+      IF ToAttributeOption.FINDLAST THEN BEGIN
+        FromSorting := Sorting;
+        ToSorting := ToAttributeOption.Sorting;
+        Sorting := ToSorting;
+        MODIFY(FALSE);
+        ToAttributeOption.Sorting := FromSorting;
+        ToAttributeOption.MODIFY(FALSE);
+      END;
+      CurrPage.UPDATE(FALSE);
+    END;
+
+    PROCEDURE MoveDown@1000000001();
+    VAR
+      ToAttributeOption@1000000002 : Record 5447322;
+      FromSorting@1000000000 : Integer;
+      ToSorting@1000000001 : Integer;
+    BEGIN
+      CurrPage.UPDATE(FALSE);
+      ToAttributeOption.SETRANGE("Attribute Code","Attribute Code");
+      ToAttributeOption.SETFILTER(Sorting,'>%1',Sorting);
+      IF ToAttributeOption.FINDFIRST THEN BEGIN
+        FromSorting := Sorting;
+        ToSorting := ToAttributeOption.Sorting;
+        Sorting := ToSorting;
+        MODIFY(FALSE);
+        ToAttributeOption.Sorting := FromSorting;
+        ToAttributeOption.MODIFY(FALSE);
+      END;
+      CurrPage.UPDATE(FALSE);
+    END;
+
+    PROCEDURE EditContent@1000000003();
+    VAR
+      EditAttributeIcon@1000000001 : Page 5447327;
+      TempAttributeOption@1000000000 : Record 5447322;
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD(Code);
+      CLEAR(EditAttributeIcon);
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopManagement.ConnectionTest();
+      CurrPage.UPDATE;
+      WebshopUpdateManagement.UpdateAttributeOption(Rec);
+      CurrPage.UPDATE;
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        CLEAR(WebshopWebform);
+        //DynamicCommerceAddIn
+        WebshopWebform.SetWebformType(WebformType::AttributeIcon);
+        WebshopWebform.SetRecordCode(Code);
+        WebshopWebform.SetAttributeCode("Attribute Code");
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+        CLEAR(EditAttributeIcon);
+        TempAttributeOption.SETRANGE("Attribute Code","Attribute Code");
+        TempAttributeOption.SETRANGE(Code,Code);
+        EditAttributeIcon.SETTABLEVIEW(TempAttributeOption);
+        EditAttributeIcon.RUNMODAL();
+      END;
+
+      WebshopUpdateManagement.CheckFilterImage(Rec);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      CurrPage.UPDATE;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -206,7 +206,9 @@ export class CookieHelper {
                 }
             }
             if(provider.scriptclass !== null){
-                let cookieScripts = document.getElementsByClassName(provider.scriptclass);
+                // Statische Kopie der Liste: getElementsByClassName liefert eine
+                // lebende Sammlung, unten fallen Elemente daraus heraus.
+                let cookieScripts = [].slice.call(document.getElementsByClassName(provider.scriptclass));
                 for (let i = 0; i < cookieScripts.length; i++){
                     if (cookieScripts[i].tagName !== "SCRIPT") continue;
 
@@ -221,6 +223,14 @@ export class CookieHelper {
                         newEle.class = cookieScripts[i].class;
                         newEle.src = cookieScripts[i].src;
                         cookieScripts[i].parentNode.insertBefore(newEle, cookieScripts[i]);
+
+                        // Der Platzhalter hat seine Aufgabe erfuellt: Die lauffaehige
+                        // Kopie steht im Dokument. Bleibt er daneben stehen, hat die
+                        // Seite zwei Skript-Tags mit derselben src - eines davon tot.
+                        // Anbieter, die ihre eigenen Tags im DOM suchen und daraus das
+                        // Widget aufbauen (Trustindex etwa), finden dann beide und
+                        // bauen es doppelt auf.
+                        cookieScripts[i].parentNode.removeChild(cookieScripts[i]);
                     }
                 }
             }

@@ -1,0 +1,1883 @@
+OBJECT Report 5447310 Webshop Data Import
+{
+  OBJECT-PROPERTIES
+  {
+    Date=26.02.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    ProcessingOnly=Yes;
+    OnPreReport=VAR
+                  X@1102153000 : Integer;
+                BEGIN
+                  ExcelBuf.LOCKTABLE;
+                  ExcelBuf.OpenBook(ServerFileName,SheetName);
+                  ExcelBuf.ReadSheet;
+                  GetLastRowandColumn;
+
+                  IF (AddNavItems) AND (NavItemNoSeries = '') THEN
+                    IF HasLinesWithoutItemNo THEN
+                      ERROR(Text008);
+
+                  WebshopManagement.StateIndicatorOpen(Text009);
+                  WebshopManagement.StateIndicatorRegisterTable(SheetName,TotalRows-2);
+                  WebshopManagement.StateIndicatorNewTable(SheetName,TotalRows-2);
+
+                  IF ImportType = ImportType::category THEN BEGIN
+                    CategoryInitialised := FALSE;
+                    FOR X := 3 TO TotalRows DO BEGIN
+                      InsertCategoryData(X);
+                      WebshopManagement.StateIndicatorUpdate;
+                    END;
+                  END;
+
+                  IF ImportType = ImportType::item THEN BEGIN
+                    FOR X := 3 TO TotalRows DO BEGIN
+                      InsertItemData(X);
+                      WebshopManagement.StateIndicatorUpdate;
+                    END;
+                  END;
+
+                  WebshopManagement.StateIndicatorClose();
+
+                  ExcelBuf.RESET;
+                  ExcelBuf.SETRANGE("Import failed",TRUE);
+                  IF ExcelBuf.FINDSET THEN REPEAT
+                    IF FaildImportRows = '' THEN
+                      FaildImportRows := ''
+                    ELSE
+                      FaildImportRows := ', ' + FORMAT(ExcelBuf."Row No.");
+                  UNTIL ExcelBuf.NEXT = 0;
+
+                  IF FaildImportRows = '' THEN
+                    MESSAGE(Text007)
+                  ELSE
+                    MESSAGE(Text011);
+
+                  ExcelBuf.RESET;
+                  //ExcelBuf.DELETEALL;
+                END;
+
+  }
+  DATASET
+  {
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+      OnOpenPage=BEGIN
+                   EnableAddNavItemsField := FALSE;
+                   EnableNavItemNoSeriesField := FALSE;
+                 END;
+
+      OnQueryClosePage=BEGIN
+                         IF CloseAction = ACTION::OK THEN BEGIN
+                           IF LanguageCode = '' THEN
+                             ERROR(Text004);
+
+                           //IF (AddNavItems) AND (NavItemNoSeries = '') THEN
+                           //  MESSAGE(Text008);
+
+                           ServerFileName := FileMgt.UploadFile(Text006,ExcelExtensionTok);
+                           IF ServerFileName = '' THEN
+                             EXIT(FALSE);
+
+                           SheetName := SelectSheetsName(ServerFileName);
+                           IF SheetName = '' THEN
+                             EXIT(FALSE);
+                         END;
+                       END;
+
+    }
+    CONTROLS
+    {
+      { 5447300; ;Container ;
+                  Name=Content;
+                  ContainerType=ContentArea }
+
+      { 5447301;1;Group     ;
+                  CaptionML=[DEU=Optionen;
+                             ENU=Options];
+                  GroupType=Group }
+
+      { 5447302;2;Field     ;
+                  CaptionML=[DEU=Shopcode;
+                             ENU=Shop Code];
+                  SourceExpr=ShopCode;
+                  TableRelation="Webshop Shop".Code;
+                  OnValidate=BEGIN
+                               IF ShopCode = '' THEN
+                                 ERROR(Text002);
+                             END;
+
+                  OnLookup=VAR
+                             WebshopShopList@5447300 : Page 5447302;
+                           BEGIN
+                             WebshopShop.RESET;
+                             WebshopShop.SETFILTER(WebshopShop."Shop Type",'<>%1',WebshopShop."Shop Type"::marketplace);
+                             WebshopShopList.SETTABLEVIEW(WebshopShop);
+                             WebshopShopList.EDITABLE(FALSE);
+                             WebshopShopList.LOOKUPMODE := TRUE;
+                             IF WebshopShopList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                               WebshopShopList.GETRECORD(WebshopShop);
+                               ShopCode := WebshopShop.Code;
+                             END;
+                           END;
+                            }
+
+      { 5447303;2;Field     ;
+                  CaptionML=[DEU=Sprachcode;
+                             ENU=Language Code];
+                  SourceExpr=LanguageCode;
+                  TableRelation="Webshop Language".Code;
+                  OnValidate=BEGIN
+                               IF ShopCode = '' THEN
+                                 ERROR(Text004);
+                             END;
+
+                  OnLookup=VAR
+                             WebshopLanguageList@5447300 : Page 5447304;
+                           BEGIN
+                             IF ShopCode = '' THEN
+                               ERROR(Text002);
+                             WebshopLanguage.RESET;
+                             WebshopLanguage.SETFILTER(WebshopLanguage."Shop Code",ShopCode);
+                             WebshopLanguageList.SETTABLEVIEW(WebshopLanguage);
+                             WebshopLanguageList.EDITABLE(FALSE);
+                             WebshopLanguageList.LOOKUPMODE := TRUE;
+                             IF WebshopLanguageList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                               WebshopLanguageList.GETRECORD(WebshopLanguage);
+                               LanguageCode := WebshopLanguage.Code;
+                             END;
+                           END;
+                            }
+
+      { 5447306;2;Field     ;
+                  CaptionML=[DEU=Import Typ;
+                             ENU=Import Typ];
+                  OptionCaptionML=[DEU=Kategorie,Artikel;
+                                   ENU=Category,Item];
+                  SourceExpr=ImportType;
+                  OnValidate=BEGIN
+                               IF ImportType = ImportType::item THEN
+                                 EnableAddNavItemsField := TRUE
+                               ELSE
+                                 EnableAddNavItemsField := FALSE;
+                             END;
+                              }
+
+      { 5447304;2;Field     ;
+                  CaptionML=[DEU=Nav-Stammartikel anlegen;
+                             ENU=Add NAV Items];
+                  SourceExpr=AddNavItems;
+                  Enabled=EnableAddNavItemsField;
+                  OnValidate=BEGIN
+                               EnableNavItemNoSeriesField := AddNavItems;
+                             END;
+                              }
+
+      { 5447305;2;Field     ;
+                  CaptionML=[DEU=Artikelnummernserie;
+                             ENU=Item No. Series];
+                  SourceExpr=NavItemNoSeries;
+                  Enabled=EnableNavItemNoSeriesField;
+                  Editable=FALSE;
+                  OnAssistEdit=BEGIN
+                                 AssistEdit;
+                               END;
+                                }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      Text005@1102153003 : TextConst 'ENU="Imported from Excel "';
+      WebshopSetup@5447302 : Record 5447300;
+      WebshopShop@5447303 : Record 5447301;
+      WebshopLanguage@5447304 : Record 5447302;
+      WebshopCategory@5447317 : Record 5447303;
+      ExcelBuf@5447306 : Record 5447338;
+      ExcelLines@5447300 : Record 5447339;
+      ExcelBuf2@5447338 : Record 5447338;
+      Item@5447330 : Record 27;
+      WebshopItem@5447331 : Record 5447304;
+      WebshopItem2@5447339 : Record 5447304;
+      WebshopItemFile@5447332 : Record 5447307;
+      WebshopItemDescription@5447333 : Record 5447306;
+      WebshopAttribute@5447348 : Record 5447320;
+      WebshopAttributeLink@5447347 : Record 5447321;
+      WebshopAttributeOption@5447346 : Record 5447322;
+      WebshopAttributeOption2@5447345 : Record 5447322;
+      WebshopAttributeLink2@5447344 : Record 5447321;
+      WebshopItemLink@5447357 : Record 5447308;
+      SalesPrice@5447352 : Record 7002;
+      InvtSetup@5447354 : Record 313;
+      FileMgt@5447305 : Codeunit 419;
+      WebshopManagement@5447307 : Codeunit 5447300;
+      WebshopUpdateManagement@5447308 : Codeunit 5447301;
+      NoSeriesMgt@5447356 : Codeunit 396;
+      gSendNow@5447309 : Boolean;
+      CategoryInitialised@5447318 : Boolean;
+      ItemInitialised@5447326 : Boolean;
+      WebshopItemInitialised@5447327 : Boolean;
+      WebshopItemFileInitialised@5447328 : Boolean;
+      WebshopItemDescriptionInitialised@5447329 : Boolean;
+      NavItemExists@5447334 : Boolean;
+      WebshopItemExists@5447335 : Boolean;
+      IsVariant@5447336 : Boolean;
+      ParentItemExists@5447337 : Boolean;
+      HasData@5447351 : Boolean;
+      HasInvtSetup@5447355 : Boolean;
+      EnableAddNavItemsField@5447324 : Boolean INDATASET;
+      EnableNavItemNoSeriesField@5447322 : Boolean INDATASET;
+      DataAdded@5447321 : Boolean INDATASET;
+      ShopCode@5447311 : Code[20];
+      LanguageCode@5447310 : Code[20];
+      UnitOfMeasureCode@5447353 : Code[20];
+      ImportType@5447301 : 'category,item';
+      AddNavItems@5447319 : Boolean INDATASET;
+      NavItemNoSeries@5447320 : Code[10];
+      Window@5447312 : Dialog;
+      CategoryLineNo@5447316 : Integer;
+      I@5447315 : Integer;
+      TotalColumns@5447314 : Integer;
+      TotalRows@5447313 : Integer;
+      ImageFileLineNo@5447343 : Integer;
+      DocumentFileLineNo@5447342 : Integer;
+      DescLineNo@5447341 : Integer;
+      ServerFileName@1102153005 : Text;
+      SheetName@1102153004 : Text[250];
+      Text006@1102153007 : TextConst 'ENU=Import Excel File';
+      ExcelExtensionTok@1102153008 : TextConst '@@@={Locked};ENU=.xlsx';
+      Text010@1102153011 : TextConst 'ENU=Add entries,Replace entries';
+      Text001@1102153017 : TextConst 'ENU=Do you want to create %1 %2.';
+      Text003@1102153018 : TextConst 'ENU=Are you sure you want to %1 for %2 %3.';
+      FaildImportRows@5447349 : Text;
+      XlWrkBkWriter@1000000034 : DotNet "'Microsoft.Dynamics.Nav.OpenXml, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.OpenXml.Spreadsheet.WorkbookWriter";
+      XlWrkBkReader@1000000033 : DotNet "'Microsoft.Dynamics.Nav.OpenXml, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.OpenXml.Spreadsheet.WorkbookWriter";
+      XlWrkShtWriter@1000000032 : DotNet "'Microsoft.Dynamics.Nav.OpenXml, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.OpenXml.Spreadsheet.WorkbookWriter";
+      XlWrkShtReader@1000000031 : DotNet "'Microsoft.Dynamics.Nav.OpenXml, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.OpenXml.Spreadsheet.WorkbookWriter";
+      XlApp@1000000030 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ApplicationClass" RUNONCLIENT;
+      XlWrkBk@1000000029 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook" RUNONCLIENT;
+      XlWrkSht@1000000028 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Worksheet" RUNONCLIENT;
+      XlHelper@1000000027 : DotNet "'Microsoft.Dynamics.Nav.Integration.Office, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.Integration.Office.Excel.ExcelHelper" RUNONCLIENT;
+      Text002@1000000045 : TextConst 'DEU=Bitte w�hlen Sie einen Shop.;ENU=Please choose a Shop.';
+      Text004@1000000046 : TextConst 'DEU=Bitte w�hlen Sie eine Sprache.;ENU=Please choose a language.';
+      Text007@1000000049 : TextConst 'DEU=Import abgeschlossen.;ENU=Import completed.';
+      Text008@5447323 : TextConst 'DEU=Es wurden Zeilen ohne Artikelnummer gefunden und keine Nummernserie ausgew�hlt.\\Der Import kann nicht durchgef�hrt werden.;ENU=Lines without item no. found and no no. series selected.\\The import got canceled.';
+      Text009@5447325 : TextConst 'DEU=Import wird ausgef�hrt;ENU=Import is running';
+      VariantsMap@5447340 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      Text011@5447350 : TextConst 'DEU=Der Import konnte f�r folgende Zeilen nicht durchgef�hrt werden: \\ %1;ENU=The import of the following rows failed: \\ %1';
+      CellValue@5447358 : Text;
+
+    LOCAL PROCEDURE ImportWebshopSetup@1000000043();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ImportWebshopShop@1000000044();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ImportWebshopLanguage@1000000045();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ImportWebshopCategory@1000000046();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ImportWebshopItem@1000000047();
+    BEGIN
+    END;
+
+    PROCEDURE GetLastRowandColumn@1102153009();
+    BEGIN
+      ExcelBuf.SETRANGE("Row No.",1);
+      TotalColumns := ExcelBuf.COUNT;
+
+      ExcelBuf.RESET;
+      IF ExcelBuf.FINDLAST THEN
+        TotalRows := ExcelBuf."Row No.";
+    END;
+
+    PROCEDURE InsertCategoryData@1102153010(RowNo@1102153002 : Integer);
+    VAR
+      CheckCategoryFilesDescription@5447306 : Boolean;
+      CheckCategoryFilesDescription2@5447307 : Boolean;
+      CheckCategoryFilesPromotionDescription@5447308 : Boolean;
+      CheckCategoryFilesExcerpt@5447309 : Boolean;
+      CheckCategoryFilesCategoryImage@5447310 : Boolean;
+      CheckCategoryFilesCategoryIcon@5447311 : Boolean;
+      TmpRowDesc@1000000001 : Text;
+      RowType@1000000002 : Text;
+      RowValueType@1000000003 : Text;
+      RowName@1000000004 : Text;
+      SendMap@5447300 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      PrimaryMap@5447303 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      DataMap@5447304 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      Key@5447301 : Variant;
+      Value@5447302 : Variant;
+      LineValue@5447305 : Text;
+    BEGIN
+      I := 1;
+      DataAdded := FALSE;
+      CLEAR(ExcelBuf);
+      ExcelBuf.RESET;
+      ExcelBuf.SETRANGE("Row No.",RowNo);
+      IF ExcelBuf.FINDSET THEN REPEAT
+
+        TmpRowDesc := GetRowType(2,I);
+        RowType := WebshopManagement.Explode(TmpRowDesc,'#');
+        RowValueType := WebshopManagement.Explode(TmpRowDesc,'#');
+        RowName := WebshopManagement.Explode(TmpRowDesc,'#');
+        LineValue := '';
+        CellValue := GetValueAtCell(RowNo,I,FALSE);
+        IF RowType <> '' THEN BEGIN
+          IF NOT CategoryInitialised THEN BEGIN
+
+            CLEAR(WebshopCategory);
+            WebshopCategory.RESET;
+
+            CategoryLineNo := 10000;
+            WebshopCategory.SETRANGE(WebshopCategory."Shop Code",ShopCode);
+            WebshopCategory.SETRANGE(WebshopCategory."Language Code",LanguageCode);
+            IF WebshopCategory.FINDLAST THEN
+              CategoryLineNo := WebshopCategory."Line No." + CategoryLineNo;
+
+            CLEAR(WebshopCategory);
+            WebshopCategory.RESET;
+
+            WebshopCategory.INIT;
+            WebshopCategory.VALIDATE("Shop Code",ShopCode);
+            WebshopCategory.VALIDATE("Language Code",LanguageCode);
+            WebshopCategory.VALIDATE("Line No.",CategoryLineNo);
+
+            CheckCategoryFilesDescription := FALSE;
+            CheckCategoryFilesDescription2 := FALSE;
+            CheckCategoryFilesPromotionDescription := FALSE;
+            CheckCategoryFilesExcerpt := FALSE;
+            CheckCategoryFilesCategoryImage := FALSE;
+            CheckCategoryFilesCategoryIcon := FALSE;
+            CategoryInitialised := TRUE;
+          END;
+
+          IF RowType = 'name' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory.Name,CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'level' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory.Level,CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'search_code' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Search Code",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'show_campaign_items' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              IF (CellValue = 'Nicht anzeigen') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Campain Items",WebshopCategory."Show Campain Items"::None);
+              IF (CellValue = 'Kachelansicht') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Campain Items",WebshopCategory."Show Campain Items"::List2);
+              IF (CellValue = 'Listenansicht') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Campain Items",WebshopCategory."Show Campain Items"::List1);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'no_of_campaign_items' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."No of Campain Items",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'show_all_items' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              IF (CellValue = 'Nicht anzeigen') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show All Items",WebshopCategory."Show All Items"::None);
+              IF (CellValue = 'Kachelansicht') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show All Items",WebshopCategory."Show All Items"::List2);
+              IF (CellValue = 'Listenansicht') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show All Items",WebshopCategory."Show All Items"::List1);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'show_sub_categories' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              IF (CellValue = 'Ja') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Sub Categorys",WebshopCategory."Show Sub Categorys"::Tiles);
+              IF (CellValue = 'Nein') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Sub Categorys",WebshopCategory."Show Sub Categorys"::None);
+              IF (CellValue = 'Artikelvorschau') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Show Sub Categorys",WebshopCategory."Show Sub Categorys"::ItemPreview);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'category_image' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              AddKeyValueToMap(DataMap,'category_picture',CellValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesCategoryImage := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'category_symbol' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              AddKeyValueToMap(DataMap,'category_icon',CellValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesCategoryIcon := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'category_description' THEN BEGIN
+            IF (CellValue <> '') OR (ExcelBuf.Lines) THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              IF ExcelBuf.Lines THEN BEGIN
+                ExcelLines.RESET;
+                ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                IF ExcelLines.FINDSET THEN REPEAT
+                  LineValue += ExcelLines.Value;
+                UNTIL ExcelLines.NEXT = 0;
+              END ELSE BEGIN
+                LineValue := CellValue;
+              END;
+
+              AddKeyValueToMap(DataMap,'category_description',LineValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesDescription := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'sorting' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              IF (CellValue = 'Beliebtheit') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::OrderRanking);
+              IF (CellValue = 'Artikelnummer') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::ItemNo);
+              IF (CellValue = 'Artikelbezeichnung') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::Name);
+              IF (CellValue = 'Neueste Artikel') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::"Creation Date");
+              IF (CellValue = 'Manuelle Empfehlung') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::Sorting);
+              IF (CellValue = 'Preis aufsteigend') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::PriceAsc);
+              IF (CellValue = 'Preis absteigend') THEN
+                WebshopCategory.VALIDATE(WebshopCategory."Sort Items",WebshopCategory."Sort Items"::PriceDec);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'user_sorting' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              IF (CellValue = 'Ja') THEN
+                WebshopCategory."User Sorting" := TRUE;
+              IF (CellValue = 'Nein') THEN
+                WebshopCategory."User Sorting" := FALSE;
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'active' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              IF (CellValue = 'Ja') THEN
+                WebshopCategory.Active := TRUE;
+              IF (CellValue = 'Nein') THEN
+                WebshopCategory.Active := FALSE;
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'validity_from' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Validity from",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'validity_to' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Validity to",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_active' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              IF (CellValue = 'Ja') THEN
+                WebshopCategory."Promtion Active" := TRUE;
+              IF (CellValue = 'Nein') THEN
+                WebshopCategory."Promtion Active" := FALSE;
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_validity_from' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Promtion Validity from",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_validity_to' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Promtion Validity to",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_label' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Promotion Label",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'promotion_description' THEN BEGIN
+            IF (CellValue <> '') OR (ExcelBuf.Lines) THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              IF ExcelBuf.Lines THEN BEGIN
+                ExcelLines.RESET;
+                ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                IF ExcelLines.FINDSET THEN REPEAT
+                  LineValue += ExcelLines.Value;
+                UNTIL ExcelLines.NEXT = 0;
+              END ELSE BEGIN
+                LineValue := CellValue;
+              END;
+
+              AddKeyValueToMap(DataMap,'promotion_description',LineValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesPromotionDescription := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'meta_keywords' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Meta Keywords",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'meta_description' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Meta Description",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'site_title' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Site Title",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'search_query' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Search Query",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+          IF RowType = 'category_description_2' THEN BEGIN
+            IF (CellValue <> '') OR (ExcelBuf.Lines) THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              IF ExcelBuf.Lines THEN BEGIN
+                ExcelLines.RESET;
+                ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                IF ExcelLines.FINDSET THEN REPEAT
+                  LineValue += ExcelLines.Value;
+                UNTIL ExcelLines.NEXT = 0;
+              END ELSE BEGIN
+                LineValue := CellValue;
+              END;
+
+              AddKeyValueToMap(DataMap,'category_description_2',LineValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesDescription2 := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'category_excerpt' THEN BEGIN
+            IF (CellValue <> '') OR (ExcelBuf.Lines) THEN BEGIN
+              PrimaryMap := PrimaryMap.Dictionary;
+              DataMap := DataMap.Dictionary;
+
+              AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+              AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+              AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+              AddKeyValueToMap(PrimaryMap,'line_no',CategoryLineNo);
+
+              IF ExcelBuf.Lines THEN BEGIN
+                ExcelLines.RESET;
+                ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                IF ExcelLines.FINDSET THEN REPEAT
+                  LineValue += ExcelLines.Value;
+                UNTIL ExcelLines.NEXT = 0;
+              END ELSE BEGIN
+                LineValue := CellValue;
+              END;
+
+              AddKeyValueToMap(DataMap,'category_description_excerpt',LineValue);
+
+              IF SendDataToWeb('shop_category',PrimaryMap,DataMap) THEN BEGIN
+                CheckCategoryFilesExcerpt := TRUE;
+                DataAdded := TRUE;
+              END;
+            END;
+          END;
+
+          IF RowType = 'google_product_category' THEN BEGIN
+            IF CellValue <> '' THEN BEGIN
+              EVALUATE(WebshopCategory."Google Product Category",CellValue);
+              DataAdded := TRUE;
+            END;
+          END;
+
+        END;
+
+        I += 1;
+
+      UNTIL ExcelBuf.NEXT = 0;
+
+      IF (CategoryInitialised) AND (DataAdded) THEN BEGIN
+        WebshopCategory.INSERT;
+        IF CheckCategoryFilesCategoryImage THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,0);
+        IF CheckCategoryFilesCategoryIcon THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,1);
+        IF CheckCategoryFilesDescription THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,2);
+        IF CheckCategoryFilesPromotionDescription THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,3);
+        IF CheckCategoryFilesDescription2 THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,4);
+        IF CheckCategoryFilesExcerpt THEN
+          WebshopUpdateManagement.CheckCategoryFiles(WebshopCategory,5);
+        CategoryInitialised := FALSE;
+      END;
+    END;
+
+    PROCEDURE InsertItemData@5447364(RowNo@1102153002 : Integer);
+    VAR
+      CheckCategoryFilesDescription@5447306 : Boolean;
+      CheckCategoryFilesDescription2@5447307 : Boolean;
+      CheckCategoryFilesPromotionDescription@5447308 : Boolean;
+      CheckCategoryFilesExcerpt@5447309 : Boolean;
+      CheckCategoryFilesCategoryImage@5447310 : Boolean;
+      CheckCategoryFilesCategoryIcon@5447311 : Boolean;
+      TmpRowDesc@1000000001 : Text;
+      RowType@1000000002 : Text;
+      RowValueType@1000000003 : Text;
+      RowName@1000000004 : Text;
+      SendMap@5447300 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      PrimaryMap@5447303 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      DataMap@5447304 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";
+      Key@5447301 : Variant;
+      Value@5447302 : Variant;
+      LineValue@5447305 : Text;
+    BEGIN
+      ItemInitialised := FALSE;
+      WebshopItemInitialised := FALSE;
+      WebshopItemFileInitialised := FALSE;
+      WebshopItemDescriptionInitialised := FALSE;
+      DataAdded := FALSE;
+      NavItemExists := FALSE;
+      IsVariant := FALSE;
+      ParentItemExists := FALSE;
+      ImageFileLineNo := 10000;
+      DocumentFileLineNo := 10000;
+      DescLineNo := 10000;
+
+
+      IsVariant := IsVariantItem(RowNo,GetColumnNoByName('parent_item_no'));
+      ParentItemExists := IsParentItemExisting(GetValueAtCell(RowNo,GetColumnNoByName('parent_item_no'),FALSE));
+      HasData := LineHasData(RowNo);
+      UnitOfMeasureCode := '';
+
+      //I := 1;
+      //CLEAR(ExcelBuf);
+      //ExcelBuf.RESET;
+      //ExcelBuf.SETRANGE("Row No.",RowNo);
+      //IF (ExcelBuf.FINDSET) THEN REPEAT
+
+      IF (((IsVariant) AND (ParentItemExists)) OR (NOT IsVariant)) AND (HasData) THEN BEGIN
+        FOR I := 1 TO TotalColumns DO BEGIN
+
+          TmpRowDesc := GetRowType(2,I);
+          RowType := WebshopManagement.Explode(TmpRowDesc,'#');
+          RowValueType := WebshopManagement.Explode(TmpRowDesc,'#');
+          RowName := WebshopManagement.Explode(TmpRowDesc,'#');
+          LineValue := '';
+          CellValue := GetValueAtCell(RowNo,I,FALSE);
+
+          IF RowType <> '' THEN BEGIN
+
+            IF RowType = 'item_no' THEN BEGIN
+              IF ItemInitialised THEN BEGIN
+                Item.MODIFY(TRUE);
+                ItemInitialised := FALSE;
+              END;
+
+              IF WebshopItemInitialised THEN BEGIN
+                WebshopItem.MODIFY(TRUE);
+                WebshopItemInitialised := FALSE;
+              END;
+
+              CLEAR(Item);
+
+              IF CellValue <> '' THEN BEGIN
+                IF (NOT Item.GET(CellValue)) AND (AddNavItems) THEN BEGIN
+                  Item.INIT;
+                  Item."No." := CellValue;
+                  Item.INSERT(TRUE);
+                  ItemInitialised := TRUE;
+                  NavItemExists := TRUE;
+                END;
+              END ELSE BEGIN
+                IF (AddNavItems) AND (NavItemNoSeries <> '') THEN BEGIN
+                  Item.INIT;
+                  Item."No. Series" := NavItemNoSeries;
+                  Item."No." := '';
+                  Item.INSERT(TRUE);
+                  Item."No. Series" := '';
+                  ItemInitialised := TRUE;
+                  NavItemExists := TRUE;
+                END;
+              END;
+
+              IF Item.GET(Item."No.") THEN BEGIN
+                NavItemExists := TRUE;
+                IF NOT WebshopItem.GET(ShopCode,LanguageCode,Item."No.") THEN BEGIN
+                  WebshopItem.INIT;
+                  WebshopItem."Shop Code" := ShopCode;
+                  WebshopItem."Language Code" := LanguageCode;
+                  EVALUATE(WebshopItem."Item No.",Item."No.");
+                  WebshopItem.INSERT(TRUE);
+                  WebshopItemInitialised := TRUE;
+                END ELSE BEGIN
+                  //Prefil line nos if item exists
+                  WebshopItemFile.RESET;
+                  WebshopItemFile.SETRANGE("Shop Code",ShopCode);
+                  WebshopItemFile.SETRANGE("Language Code",LanguageCode);
+                  WebshopItemFile.SETRANGE("Item No.",Item."No.");
+                  WebshopItemFile.SETRANGE("Variant Code",'');
+
+                  WebshopItemFile.SETRANGE(Type,WebshopItemFile.Type::Document);
+                  IF WebshopItemFile.FINDLAST THEN
+                    DocumentFileLineNo := WebshopItemFile."Line No." + 10000;
+
+                  WebshopItemFile.SETRANGE(Type,WebshopItemFile.Type::Picture);
+                  IF WebshopItemFile.FINDLAST THEN
+                    ImageFileLineNo := WebshopItemFile."Line No." + 10000;
+
+                  //Shop Code,Language Code,Item No.,Line No.
+                  WebshopItemDescription.RESET;
+                  WebshopItemDescription.SETRANGE("Shop Code",ShopCode);
+                  WebshopItemDescription.SETRANGE("Language Code",LanguageCode);
+                  WebshopItemDescription.SETRANGE("Item No.",Item."No.");
+
+                  IF WebshopItemDescription.FINDLAST THEN
+                    DescLineNo := WebshopItemDescription."Line No." + 10000;
+                END;
+              END;
+            END;
+
+            IF RowType = 'name' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                Item.VALIDATE(Description,COPYSTR(CellValue,1,MAXSTRLEN(Item.Description)));
+                WebshopItem.Description := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItem.Description));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'active' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF CellValue = 'Ja' THEN
+                  WebshopItem.VALIDATE("Is Active",TRUE)
+                ELSE
+                  WebshopItem.VALIDATE("Is Active",FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'parent_item_no' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF NOT WebshopItemLink.GET(WebshopItemLink.Type::Variant,ShopCode,CellValue,Item."No.") THEN BEGIN
+                  WebshopItemLink.INIT;
+                  WebshopItemLink.Type := WebshopItemLink.Type::Variant;
+                  WebshopItemLink."Shop Code" := ShopCode;
+                  WebshopItemLink."Item No." := CellValue;
+                  WebshopItemLink."Linked Item No." := Item."No.";
+                  WebshopItemLink.INSERT;
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'validity_from' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Starting Date",CellValue);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'validity_to' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Ending Date",CellValue);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'unit_of_measure' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                Item.VALIDATE("Base Unit of Measure",CellValue);
+                UnitOfMeasureCode := CellValue;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'gen_prod_posting_group' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                Item.VALIDATE("Gen. Prod. Posting Group",CellValue);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'vat_prod_posting_group' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                Item.VALIDATE("VAT Prod. Posting Group",CellValue);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'inventory_posting_group' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                Item.VALIDATE("Inventory Posting Group",CellValue);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'summary' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItem.Summary := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItem.Summary));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'price' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF RowName = 'Retailprice' THEN BEGIN
+                  WebshopShop.GET(ShopCode);
+                  CASE WebshopShop."Retail Price Type" OF
+                    WebshopShop."Retail Price Type"::"All Customer Price":
+                      BEGIN
+                        SalesPrice.RESET;
+                        CLEAR(SalesPrice);
+                        IF NOT SalesPrice.GET(Item."No.",SalesPrice."Sales Type"::"All Customers",'',0D,'','',UnitOfMeasureCode,0) THEN BEGIN
+                          SalesPrice.INIT;
+                          SalesPrice."Item No." := Item."No.";
+                          SalesPrice."Sales Type" := SalesPrice."Sales Type"::"All Customers";
+                          SalesPrice."Sales Code" := '';
+                          SalesPrice."Starting Date" := 0D;
+                          SalesPrice."Currency Code" := '';
+                          SalesPrice."Variant Code" := '';
+                          SalesPrice."Unit of Measure Code" := UnitOfMeasureCode;
+                          SalesPrice."Minimum Quantity" := 0;
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",CellValue);
+                          SalesPrice.INSERT;
+                        END ELSE BEGIN
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",CellValue);
+                          SalesPrice.MODIFY(TRUE);
+                        END;
+                      END;
+                    WebshopShop."Retail Price Type"::"Customer Price Group":
+                      BEGIN
+                        SalesPrice.RESET;
+                        CLEAR(SalesPrice);
+                        IF NOT SalesPrice.GET(Item."No.",SalesPrice."Sales Type"::"Customer Price Group",WebshopShop."Cust. Price Group Retail Price",0D,'','',UnitOfMeasureCode,0) THEN BEGIN
+                          SalesPrice.INIT;
+                          SalesPrice."Item No." := Item."No.";
+                          SalesPrice."Sales Type" := SalesPrice."Sales Type"::"Customer Price Group";
+                          SalesPrice."Sales Code" := WebshopShop."Cust. Price Group Retail Price";
+                          SalesPrice."Starting Date" := 0D;
+                          SalesPrice."Currency Code" := '';
+                          SalesPrice."Variant Code" := '';
+                          SalesPrice."Unit of Measure Code" := UnitOfMeasureCode;
+                          SalesPrice."Minimum Quantity" := 0;
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",CellValue);
+                          SalesPrice.INSERT;
+                        END ELSE BEGIN
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",CellValue);
+                          SalesPrice.MODIFY(TRUE);
+                        END;
+                      END;
+                    WebshopShop."Retail Price Type"::"Sales Price":
+                      BEGIN
+                        Item.VALIDATE("Price Includes VAT",WebshopShop."Display Prices Incl. VAT");
+                        EVALUATE(Item."Unit Price",CellValue);
+                      END;
+                  END;
+                  DataAdded := TRUE;
+                END;
+                IF RowName = 'Baseprice' THEN BEGIN
+                  WebshopShop.GET(ShopCode);
+                  CASE WebshopShop."Base Price Type" OF
+                    WebshopShop."Base Price Type"::"All Customer Price":
+                      BEGIN
+                        SalesPrice.RESET;
+                        CLEAR(SalesPrice);
+                        IF NOT SalesPrice.GET(Item."No.",SalesPrice."Sales Type"::"All Customers",'',0D,'','',UnitOfMeasureCode,0) THEN BEGIN
+                          SalesPrice.INIT;
+                          SalesPrice."Item No." := Item."No.";
+                          SalesPrice."Sales Type" := SalesPrice."Sales Type"::"All Customers";
+                          SalesPrice."Sales Code" := '';
+                          SalesPrice."Starting Date" := 0D;
+                          SalesPrice."Currency Code" := '';
+                          SalesPrice."Variant Code" := '';
+                          SalesPrice."Unit of Measure Code" := UnitOfMeasureCode;
+                          SalesPrice."Minimum Quantity" := 0;
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",CellValue);
+                          SalesPrice.INSERT;
+                        END ELSE BEGIN
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",CellValue);
+                          SalesPrice.MODIFY(TRUE);
+                        END;
+                      END;
+                    WebshopShop."Base Price Type"::"Customer Price Group":
+                      BEGIN
+                        SalesPrice.RESET;
+                        CLEAR(SalesPrice);
+                        IF NOT SalesPrice.GET(Item."No.",SalesPrice."Sales Type"::"Customer Price Group",WebshopShop."Cust. Price Group Base Price",0D,'','',UnitOfMeasureCode,0) THEN BEGIN
+                          SalesPrice.INIT;
+                          SalesPrice."Item No." := Item."No.";
+                          SalesPrice."Sales Type" := SalesPrice."Sales Type"::"Customer Price Group";
+                          SalesPrice."Sales Code" := WebshopShop."Cust. Price Group Base Price";
+                          SalesPrice."Starting Date" := 0D;
+                          SalesPrice."Currency Code" := '';
+                          SalesPrice."Variant Code" := '';
+                          SalesPrice."Unit of Measure Code" := UnitOfMeasureCode;
+                          SalesPrice."Minimum Quantity" := 0;
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",CellValue);
+                          SalesPrice.INSERT;
+                        END ELSE BEGIN
+                          SalesPrice."Price Includes VAT" := WebshopShop."Display Prices Incl. VAT";
+                          EVALUATE(SalesPrice."Unit Price",CellValue);
+                          SalesPrice.MODIFY(TRUE);
+                        END;
+                      END;
+                    WebshopShop."Retail Price Type"::"Sales Price":
+                      BEGIN
+                        Item.VALIDATE("Price Includes VAT",WebshopShop."Display Prices Incl. VAT");
+                        EVALUATE(Item."Unit Price",CellValue);
+                      END;
+                  END;
+                  DataAdded := TRUE;
+                END;
+              END;
+            END;
+
+            IF RowType = 'inventory_limit' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Insufficient Inventory Limit",CellValue);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'search_query' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItem."Search Query" := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItem."Search Query"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'minimum_order_quantity' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Minimum Order Quantity",CellValue);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'quantity_packing_unit' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                EVALUATE(WebshopItem."Quantity Packing Unit",CellValue);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'order_per_packing_unit' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF CellValue = 'Ja' THEN
+                  WebshopItem.VALIDATE("Order per Packing Unit only",TRUE)
+                ELSE
+                  WebshopItem.VALIDATE("Order per Packing Unit only",FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'allow_gift_package' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF CellValue = 'Ja' THEN
+                  WebshopItem.VALIDATE("Allows Gift Packaging",TRUE)
+                ELSE
+                  WebshopItem.VALIDATE("Allows Gift Packaging",FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'is_gift_package' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF CellValue = 'Ja' THEN
+                  WebshopItem.VALIDATE("Is Gift Package",TRUE)
+                ELSE
+                  WebshopItem.VALIDATE("Is Gift Package",FALSE);
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'meta_keywords' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItem."Meta Keywords" := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItem."Meta Keywords"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'meta_description' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItem."Meta Description" := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItem."Meta Description"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'site_title' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItem."Site Title" := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItem."Site Title"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'customizable' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                CASE CellValue OF
+                  'nein':
+                    WebshopItem.VALIDATE(Customizability,0);
+                  'zus�tzlich':
+                    WebshopItem.VALIDATE(Customizability,1);
+                  'ausschlie�lich':
+                    WebshopItem.VALIDATE(Customizability,2);
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+      //      IF RowType = 'shipping_category' THEN BEGIN
+      //        IF CellValue <> '' THEN BEGIN
+      //          CASE CellValue OF
+      //            'Keine Kategorie':
+      //              WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"0";
+      //            'Kategorie 1':
+      //              WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"1";
+      //            'Kategorie 2':
+      //              WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"2";
+      //            'Kategorie 3':
+      //              WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"3";
+      //            'Kategorie 4':
+      //              WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"4";
+      //            'Kategorie 5':
+      //              WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"5";
+      //            'Kategorie 6':
+      //              WebshopItem."Shipping Category" := WebshopItem."Shipping Category"::"6";
+      //          END;
+      //          DataAdded := TRUE;
+      //        END;
+      //      END;
+
+            IF RowType = 'item_orderable' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                CASE CellValue OF
+                  'Shop-Einstellung':
+                    WebshopItem."Item Availability Calculation" := WebshopItem."Item Availability Calculation"::ByShopSetting;
+                  'nach Verf�gbarkeit':
+                    WebshopItem."Item Availability Calculation" := WebshopItem."Item Availability Calculation"::ByInventory;
+                  'Nein':
+                    WebshopItem."Item Availability Calculation" := WebshopItem."Item Availability Calculation"::No;
+                  'Ja':
+                    WebshopItem."Item Availability Calculation" := WebshopItem."Item Availability Calculation"::Yes;
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'google_product_category' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItem."Google Product Category" := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItem."Google Product Category"));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'is_greeding_card' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF CellValue = 'Ja' THEN
+                  WebshopItem."Is Greeting Card" := TRUE
+                ELSE
+                  WebshopItem."Is Greeting Card" := FALSE;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'image' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF WebshopItemFileInitialised THEN BEGIN
+                  WebshopItemFile.INSERT;
+                  WebshopUpdateManagement.UpdateWebshopItemFile(WebshopItemFile);
+                  WebshopUpdateManagement.CheckWebshopItemFile(WebshopItemFile);
+                  ImageFileLineNo := ImageFileLineNo + 10000;
+                  WebshopItemFile.RESET;
+                  WebshopItemFileInitialised := FALSE;
+                END;
+                WebshopItemFileInitialised := TRUE;
+                WebshopItemFile.INIT;
+                WebshopItemFile."Shop Code" := ShopCode;
+                WebshopItemFile."Language Code" := LanguageCode;
+                WebshopItemFile."Line No." := ImageFileLineNo;
+                WebshopItemFile."Temp Filename" := CellValue;
+                WebshopItemFile.Type := WebshopItemFile.Type::Picture;
+                WebshopItemFile."Item No." := Item."No.";
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'image_seo' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItemFile.Description := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItemFile.Description));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'document' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                IF WebshopItemFileInitialised THEN BEGIN
+                  WebshopItemFile.INSERT;
+                  DocumentFileLineNo := DocumentFileLineNo + 10000;
+                  WebshopItemFile.RESET;
+                  WebshopItemFileInitialised := FALSE;
+                END;
+
+                WebshopItemFileInitialised := TRUE;
+                WebshopItemFile.INIT;
+                WebshopItemFile."Shop Code" := ShopCode;
+                WebshopItemFile."Language Code" := LanguageCode;
+                WebshopItemFile."Line No." := DocumentFileLineNo;
+                WebshopItemFile."Temp Filename" := CellValue;
+                WebshopItemFile.Type := WebshopItemFile.Type::Document;
+                WebshopItemFile."Item No." := Item."No.";
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'document_seo' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItemFile.Description := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItemFile.Description));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'description' THEN BEGIN
+              IF (CellValue <> '') OR ((ExcelBuf.GET(RowNo,I)) AND (ExcelBuf.Lines)) THEN BEGIN
+                IF WebshopItemDescriptionInitialised THEN BEGIN
+                  WebshopItemDescription.INSERT;
+                  WebshopUpdateManagement.UpdateWebshopItemDescription(WebshopItemDescription);
+                  WebshopUpdateManagement.CheckWebshopItemDescription(WebshopItemDescription);
+                  DescLineNo := DescLineNo + 10000;
+                  WebshopItemDescription.RESET;
+                  WebshopItemDescriptionInitialised := FALSE;
+                END;
+                WebshopItemDescriptionInitialised := TRUE;
+                WebshopItemDescription.INIT;
+                WebshopItemDescription."Shop Code" := ShopCode;
+                WebshopItemDescription."Language Code" := LanguageCode;
+                WebshopItemDescription."Line No." := DescLineNo;
+                WebshopItemDescription."Item No." := Item."No.";
+
+                PrimaryMap := PrimaryMap.Dictionary;
+                DataMap := DataMap.Dictionary;
+
+                AddKeyValueToMap(PrimaryMap,'company',COMPANYNAME);
+                AddKeyValueToMap(PrimaryMap,'shop_code',ShopCode);
+                AddKeyValueToMap(PrimaryMap,'language_code',LanguageCode);
+                AddKeyValueToMap(PrimaryMap,'item_no',Item."No.");
+                AddKeyValueToMap(PrimaryMap,'line_no',DescLineNo);
+
+                IF ExcelBuf.Lines THEN BEGIN
+                  ExcelLines.RESET;
+                  ExcelLines.SETRANGE(ExcelLines."Column No.",I);
+                  ExcelLines.SETRANGE(ExcelLines."Row No.",RowNo);
+                  IF ExcelLines.FINDSET THEN REPEAT
+                    LineValue += ExcelLines.Value;
+                  UNTIL ExcelLines.NEXT = 0;
+                END ELSE BEGIN
+                  LineValue := CellValue;
+                END;
+
+                AddKeyValueToMap(DataMap,'content',LineValue);
+
+                IF SendDataToWeb('shop_item_description',PrimaryMap,DataMap) THEN BEGIN
+                  DataAdded := TRUE;
+                  //WebshopUpdateManagement.CheckWebshopItemDescription(WebshopItemDescription);
+                END;
+              END;
+            END;
+
+            IF RowType = 'description_headline' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopItemDescription.Description := COPYSTR(CellValue,1,MAXSTRLEN(WebshopItemDescription.Description));
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'description_headdescription' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                CASE CellValue OF
+                  'Lightbox':
+                    WebshopItemDescription.Display := WebshopItemDescription.Display::Modal;
+                  'Nein':
+                    WebshopItemDescription.Display := WebshopItemDescription.Display::Bottom;
+                  'Ja':
+                    WebshopItemDescription.Display := WebshopItemDescription.Display::Top;
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'attribute' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                WebshopAttribute.RESET;
+                IF NOT WebshopAttribute.GET(COPYSTR(RowName,1,MAXSTRLEN(WebshopAttribute.Code))) THEN BEGIN
+                  WebshopAttribute.INIT;
+                  WebshopAttribute.Code := COPYSTR(RowName,1,MAXSTRLEN(WebshopAttribute.Code));
+                  WebshopAttribute.Description := RowName;
+                  WebshopAttribute."Display Type" := WebshopAttribute."Display Type"::"Drop-Down";
+                  WebshopAttribute."Data Type" := WebshopAttribute."Data Type"::Option;
+                  WebshopAttribute.INSERT;
+                END;
+
+                IF NOT WebshopAttributeLink.GET(WebshopAttributeLink.Type::Item,Item."No.",ShopCode,LanguageCode,0,WebshopAttribute.Code,COPYSTR(CellValue,1,MAXSTRLEN(WebshopAttributeOption.Code))) THEN BEGIN
+                  WebshopAttributeLink.INIT;
+                  WebshopAttributeLink.Type := WebshopAttributeLink.Type::Item;
+                  WebshopAttributeLink."No." := Item."No.";
+                  WebshopAttributeLink."Shop Code" := ShopCode;
+                  WebshopAttributeLink."Language Code" := LanguageCode;
+                  WebshopAttributeLink."Attribute Code" := WebshopAttribute.Code;
+
+                  WebshopAttributeLink2.RESET;
+                  WebshopAttributeLink2.SETCURRENTKEY(Type,"No.",Sorting);
+                  WebshopAttributeLink2.SETRANGE(WebshopAttributeLink2.Type,WebshopAttributeLink2.Type::Item);
+                  WebshopAttributeLink2.SETRANGE(WebshopAttributeLink2."Shop Code",ShopCode);
+                  WebshopAttributeLink2.SETRANGE(WebshopAttributeLink2."Language Code",LanguageCode);
+                  WebshopAttributeLink2.SETRANGE(WebshopAttributeLink2."No.",Item."No.");
+                  IF WebshopAttributeLink2.FINDLAST THEN
+                    WebshopAttributeLink.Sorting := WebshopAttributeLink2.Sorting + 1
+                  ELSE
+                    WebshopAttributeLink.Sorting := 0;
+
+                  //Option,Ganzzahl,Dezimalzahl,Ja/Nein-Feld,Text
+                  CASE RowValueType OF
+                    'Option':
+                      BEGIN
+                        IF NOT WebshopAttributeOption.GET(WebshopAttribute.Code,COPYSTR(CellValue,1,MAXSTRLEN(WebshopAttributeOption.Code))) THEN BEGIN
+                          WebshopAttributeOption.INIT;
+                          WebshopAttributeOption."Attribute Code" := WebshopAttribute.Code;
+                          WebshopAttributeOption.Code := COPYSTR(CellValue,1,MAXSTRLEN(WebshopAttributeOption.Code));
+                          WebshopAttributeOption.Description := CellValue;
+
+                          WebshopAttributeOption2.RESET;
+                          WebshopAttributeOption2.SETCURRENTKEY("Attribute Code",Sorting);
+                          WebshopAttributeOption2.SETRANGE(WebshopAttributeOption2."Attribute Code",WebshopAttribute.Code);
+                          IF WebshopAttributeOption2.FINDLAST THEN
+                            WebshopAttributeOption.Sorting := WebshopAttributeOption2.Sorting + 1
+                          ELSE
+                            WebshopAttributeOption.Sorting := 0;
+                          WebshopAttributeOption.INSERT;
+                        END;
+                        WebshopAttributeLink."Value Option" := WebshopAttributeOption.Code;
+                      END;
+                    'Gazzahl':
+                      BEGIN
+                        EVALUATE(WebshopAttributeLink."Value Integer",CellValue);
+                      END;
+                    'Dezimalzahl':
+                      BEGIN
+                        EVALUATE(WebshopAttributeLink."Value Decimal",CellValue);
+                      END;
+                    'Ja/Nein-Feld':
+                      BEGIN
+                        CASE CellValue OF
+                          'Ja':
+                            WebshopAttributeLink."Value Boolean" := TRUE;
+                          'Nein':
+                            WebshopAttributeLink."Value Boolean" := FALSE;
+                        END;
+                      END;
+                    'Text':
+                      BEGIN
+                        EVALUATE(WebshopAttributeLink."Value Text",CellValue);
+                      END;
+                  END;
+                  WebshopAttributeLink.INSERT;
+                END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+            IF RowType = 'item_link' THEN BEGIN
+              IF CellValue <> '' THEN BEGIN
+                CASE RowName OF
+                  'acc_item': BEGIN
+                        IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Acc. Item",ShopCode,Item."No.",CellValue) THEN BEGIN
+                          WebshopItemLink.INIT;
+                          WebshopItemLink.Type := WebshopItemLink.Type::"Acc. Item";
+                          WebshopItemLink."Shop Code" := ShopCode;
+                          WebshopItemLink."Item No." := Item."No.";
+                          WebshopItemLink."Linked Item No." := CellValue;
+                          WebshopItemLink.INSERT;
+                        END;
+                      END;
+                  'spare_part': BEGIN
+                        IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Spare Part",ShopCode,Item."No.",CellValue) THEN BEGIN
+                          WebshopItemLink.INIT;
+                          WebshopItemLink.Type := WebshopItemLink.Type::"Spare Part";
+                          WebshopItemLink."Shop Code" := ShopCode;
+                          WebshopItemLink."Item No." := Item."No.";
+                          WebshopItemLink."Linked Item No." := CellValue;
+                          WebshopItemLink.INSERT;
+                        END;
+                      END;
+                  'alt_item': BEGIN
+                        IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Alt. Item",ShopCode,Item."No.",CellValue) THEN BEGIN
+                          WebshopItemLink.INIT;
+                          WebshopItemLink.Type := WebshopItemLink.Type::"Alt. Item";
+                          WebshopItemLink."Shop Code" := ShopCode;
+                          WebshopItemLink."Item No." := Item."No.";
+                          WebshopItemLink."Linked Item No." := CellValue;
+                          WebshopItemLink.INSERT;
+                        END;
+                      END;
+                  'fit_item': BEGIN
+                        IF NOT WebshopItemLink.GET(WebshopItemLink.Type::"Fit. Item",ShopCode,Item."No.",CellValue) THEN BEGIN
+                          WebshopItemLink.INIT;
+                          WebshopItemLink.Type := WebshopItemLink.Type::"Fit. Item";
+                          WebshopItemLink."Shop Code" := ShopCode;
+                          WebshopItemLink."Item No." := Item."No.";
+                          WebshopItemLink."Linked Item No." := CellValue;
+                          WebshopItemLink.INSERT;
+                        END;
+                      END;
+                  END;
+                DataAdded := TRUE;
+              END;
+            END;
+
+          END;
+        END;
+      END ELSE BEGIN
+        IF ExcelBuf.GET(RowNo,I) THEN BEGIN
+          ExcelBuf."Import failed" := TRUE;
+          ExcelBuf.MODIFY(FALSE);
+        END;
+      END;
+      //UNTIL ExcelBuf.NEXT = 0;
+
+      IF ItemInitialised THEN BEGIN
+        Item.MODIFY(TRUE);
+        ItemInitialised := FALSE;
+      END;
+
+      IF WebshopItemInitialised THEN BEGIN
+        WebshopItem.MODIFY(TRUE);
+        WebshopItemInitialised := FALSE;
+      END;
+
+      IF WebshopItemFileInitialised THEN BEGIN
+        WebshopItemFile.INSERT(TRUE);
+        WebshopUpdateManagement.UpdateWebshopItemFile(WebshopItemFile);
+        WebshopUpdateManagement.CheckWebshopItemFile(WebshopItemFile);
+        WebshopItemFileInitialised := FALSE;
+      END;
+
+      IF WebshopItemDescriptionInitialised THEN BEGIN
+        WebshopItemDescription.INSERT(TRUE);
+        WebshopUpdateManagement.UpdateWebshopItemDescription(WebshopItemDescription);
+        WebshopUpdateManagement.CheckWebshopItemDescription(WebshopItemDescription);
+        WebshopItemDescriptionInitialised := FALSE;
+      END;
+    END;
+
+    PROCEDURE GetValueAtCell@1102153002(RowNo@1102153000 : Integer;ColNo@1102153001 : Integer;Lines@1000000000 : Boolean) : Text;
+    VAR
+      ExcelBuf1@1102153002 : Record 5447338;
+    BEGIN
+      IF ExcelBuf1.GET(RowNo,ColNo) THEN
+        EXIT(ExcelBuf1."Cell Value as Text")
+      ELSE
+        EXIT('');
+    END;
+
+    PROCEDURE GetRowType@1000000014(RowNo@1102153000 : Integer;ColNo@1102153001 : Integer) : Text;
+    VAR
+      ExcelBuf1@1102153002 : Record 5447338;
+    BEGIN
+      IF ExcelBuf1.GET(RowNo,ColNo) THEN
+        EXIT(ExcelBuf1."Cell Value as Text");
+    END;
+
+    LOCAL PROCEDURE SendDataToWeb@5447369(Table@5447306 : Text;PrimaryMap@5447300 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";DataMap@5447305 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2") Ok : Boolean;
+    VAR
+      CurrRec@1000000000 : Text;
+      TextValue@5447301 : Text;
+      Element@5447304 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.KeyValuePair`2";
+    BEGIN
+      WebshopSetup.GET;
+      CLEAR(CurrRec);
+
+      WebshopManagement.AddVar(CurrRec,'table',Table);
+
+      FOREACH Element IN PrimaryMap DO BEGIN
+        WebshopManagement.AddVar(CurrRec,'primary[' + FORMAT(Element.Key) + ']',FORMAT(Element.Value));
+      END;
+
+      FOREACH Element IN DataMap DO BEGIN
+        WebshopManagement.AddVar(CurrRec,'data[' + FORMAT(Element.Key) + ']',FORMAT(Element.Value));
+      END;
+
+      Ok := WebshopManagement.SendRequest('update',CurrRec);
+    END;
+
+    PROCEDURE SelectSheetsName@6(FileName@1000 : Text) : Text[250];
+    VAR
+      TempNameValueBuffer@1009 : TEMPORARY Record 823;
+      SheetNames@1008 : DotNet "'mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.ArrayList";
+      SheetName@1002 : Text[250];
+      SelectedSheetName@1007 : Text[250];
+      i@1001 : Integer;
+      OptionString@1000000000 : Text;
+      SelectedOption@1000000001 : Integer;
+      Text001@1000000003 : TextConst 'DEU=Sie m�ssen einen Dateinamen angeben.;ENU=You must enter a file name.';
+      Text002@1000000002 : TextConst 'DEU=Tabellenblatt ausw�hlen;ENU=Select Table Sheet';
+    BEGIN
+      IF FileName = '' THEN
+        ERROR(Text001);
+
+      XlWrkBkReader := XlWrkBkReader.Open(FileName);
+
+      SelectedSheetName := '';
+      SheetNames := SheetNames.ArrayList(XlWrkBkReader.SheetNames);
+      IF NOT ISNULL(SheetNames) THEN BEGIN
+        IF SheetNames.Count > 1 THEN BEGIN
+          FOR i := 0 TO SheetNames.Count - 1 DO BEGIN
+            IF FORMAT(SheetNames.Item(i)) <> 'Werte' THEN BEGIN
+              IF i <> 0 THEN
+                OptionString += ',';
+              OptionString += FORMAT(SheetNames.Item(i));
+            END;
+          END;
+          SelectedOption := DIALOG.STRMENU(OptionString,1,Text002);
+        END ELSE BEGIN
+          SelectedOption := 1;
+        END;
+        IF SelectedOption > 0 THEN BEGIN
+          SelectedSheetName := FORMAT(SheetNames.Item(SelectedOption - 1));
+        END;
+      END;
+      QuitExcel;
+      EXIT(SelectedSheetName);
+    END;
+
+    PROCEDURE QuitExcel@29();
+    BEGIN
+      // Close and clear the OpenXml book
+      CloseBook;
+
+      // Clear the worksheet automation
+      IF NOT ISNULL(XlWrkSht) THEN
+        CLEAR(XlWrkSht);
+
+      // Clear the workbook automation
+      IF NOT ISNULL(XlWrkBk) THEN
+        CLEAR(XlWrkBk);
+
+      // Clear and quit the Excel application automation
+      IF NOT ISNULL(XlApp) THEN BEGIN
+        XlHelper.CallQuit(XlApp);
+        CLEAR(XlApp);
+      END;
+    END;
+
+    PROCEDURE CloseBook@30();
+    BEGIN
+      IF NOT ISNULL(XlWrkBkWriter) THEN BEGIN
+        XlWrkBkWriter.ClearFormulaCalculations;
+        XlWrkBkWriter.ValidateDocument;
+        XlWrkBkWriter.Close;
+        CLEAR(XlWrkShtWriter);
+        CLEAR(XlWrkBkWriter);
+      END;
+
+      IF NOT ISNULL(XlWrkBkReader) THEN BEGIN
+        CLEAR(XlWrkShtReader);
+        CLEAR(XlWrkBkReader);
+      END;
+    END;
+
+    LOCAL PROCEDURE AddKeyValueToMap@5447372(VAR Map@5447301 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.Dictionary`2";Key@5447300 : Variant;Value@5447302 : Variant);
+    BEGIN
+      Map.Add(Key,Value);
+    END;
+
+    LOCAL PROCEDURE GetColumnNoByName@5447380(Name@5447300 : Text) "ColumnNo." : Integer;
+    BEGIN
+      ExcelBuf2.SETRANGE("Row No.",2);
+      ExcelBuf2.SETRANGE("Cell Value as Text",Name);
+      IF ExcelBuf2.FINDFIRST THEN
+        "ColumnNo." := ExcelBuf2."Column No.";
+    END;
+
+    LOCAL PROCEDURE IsVariantItem@5447381("RowNo."@5447300 : Integer;"ColumnNo."@5447301 : Integer) Ok : Boolean;
+    BEGIN
+      IF ("RowNo." <> 0) AND ("ColumnNo." <> 0) THEN BEGIN
+        IF GetValueAtCell("RowNo.","ColumnNo.",FALSE) <> '' THEN
+          Ok := TRUE
+        ELSE
+          Ok := FALSE;
+      END ELSE
+        Ok := FALSE;
+    END;
+
+    LOCAL PROCEDURE IsParentItemExisting@5447382("ParentItemNo."@5447300 : Code[10]) Ok : Boolean;
+    BEGIN
+      IF WebshopItem2.GET(ShopCode,LanguageCode,"ParentItemNo.") THEN
+        Ok := TRUE
+      ELSE
+        Ok := FALSE;
+    END;
+
+    LOCAL PROCEDURE LineHasData@5447325("RowNo."@5447300 : Integer) Ok : Boolean;
+    VAR
+      WebshopImportExportBuffer@5447301 : Record 5447338;
+    BEGIN
+      WebshopImportExportBuffer.SETRANGE("Row No.","RowNo.");
+      WebshopImportExportBuffer.SETFILTER("Cell Value as Text",'<>%1','');
+      IF WebshopImportExportBuffer.COUNT = 0 THEN
+        Ok := FALSE
+      ELSE
+        Ok := TRUE;
+    END;
+
+    LOCAL PROCEDURE GetInvtSetup@14();
+    BEGIN
+      IF NOT HasInvtSetup THEN BEGIN
+        InvtSetup.GET;
+        HasInvtSetup := TRUE;
+      END;
+    END;
+
+    PROCEDURE AssistEdit@2() : Boolean;
+    BEGIN
+      GetInvtSetup;
+      InvtSetup.TESTFIELD("Item Nos.");
+      IF NoSeriesMgt.SelectSeries(InvtSetup."Item Nos.",NavItemNoSeries,NavItemNoSeries) THEN BEGIN
+        EXIT(TRUE);
+      END;
+    END;
+
+    LOCAL PROCEDURE HasLinesWithoutItemNo@5447332() Ok : Boolean;
+    VAR
+      EmptyLineFound@5447300 : Boolean;
+    BEGIN
+      Ok := FALSE;
+      ExcelBuf2.RESET;
+      ExcelBuf2.SETRANGE("Column No.",GetColumnNoByName('item_no'));
+      ExcelBuf2.SETFILTER("Row No.",'>%1',2);
+      ExcelBuf2.SETFILTER("Cell Value as Text",'%1','');
+      IF ExcelBuf2.FINDFIRST THEN
+        Ok := TRUE;
+    END;
+
+    EVENT XlApp@1000000030::AppEvents_Event_NewWorkbook@424(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetSelectionChange@425(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetBeforeDoubleClick@426(Sh@1000000002 : Variant;Target@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetBeforeRightClick@427(Sh@1000000002 : Variant;Target@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetActivate@428(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetDeactivate@429(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetCalculate@430(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetChange@431(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookOpen@432(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookActivate@433(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookDeactivate@434(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforeClose@435(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforeSave@436(Wb@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";SaveAsUI@1000000001 : Boolean;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforePrint@437(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookNewSheet@438(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAddinInstall@439(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAddinUninstall@440(Wb@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WindowResize@441(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Wn@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Window");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WindowActivate@442(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Wn@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Window");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WindowDeactivate@443(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Wn@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Window");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetFollowHyperlink@444(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Hyperlink");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableUpdate@445(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookPivotTableCloseConnection@446(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookPivotTableOpenConnection@447(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookSync@448(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";SyncEventType@1000000000 : DotNet "'office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Core.MsoSyncEventType");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforeXmlImport@449(Wb@1000000004 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Map@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XmlMap";Url@1000000002 : Text;IsRefresh@1000000001 : Boolean;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAfterXmlImport@450(Wb@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Map@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XmlMap";IsRefresh@1000000001 : Boolean;Result@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XlXmlImportResult");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookBeforeXmlExport@451(Wb@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Map@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XmlMap";Url@1000000001 : Text;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAfterXmlExport@452(Wb@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Map@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XmlMap";Url@1000000001 : Text;Result@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XlXmlExportResult");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookRowsetComplete@453(Wb@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Description@1000000002 : Text;Sheet@1000000001 : Text;Success@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::AfterCalculate@454();
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableAfterValueChange@455(Sh@1000000002 : Variant;TargetPivotTable@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable";TargetRange@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Range");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableBeforeAllocateChanges@456(Sh@1000000004 : Variant;TargetPivotTable@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable";ValueChangeStart@1000000002 : Integer;ValueChangeEnd@1000000001 : Integer;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableBeforeCommitChanges@457(Sh@1000000004 : Variant;TargetPivotTable@1000000003 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable";ValueChangeStart@1000000002 : Integer;ValueChangeEnd@1000000001 : Integer;VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetPivotTableBeforeDiscardChanges@458(Sh@1000000003 : Variant;TargetPivotTable@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.PivotTable";ValueChangeStart@1000000001 : Integer;ValueChangeEnd@1000000000 : Integer);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowOpen@459(Pvw@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowBeforeEdit@460(Pvw@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowBeforeClose@461(Pvw@1000000002 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow";Reason@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.XlProtectedViewCloseReason";VAR Cancel@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowResize@462(Pvw@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowActivate@463(Pvw@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::ProtectedViewWindowDeactivate@464(Pvw@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ProtectedViewWindow");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookAfterSave@465(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Success@1000000000 : Boolean);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookNewChart@466(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Ch@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Chart");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetLensGalleryRenderComplete@467(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetTableUpdate@468(Sh@1000000001 : Variant;Target@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.TableObject");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::WorkbookModelChange@469(Wb@1000000001 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.Workbook";Changes@1000000000 : DotNet "'Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c'.Microsoft.Office.Interop.Excel.ModelChanges");
+    BEGIN
+    END;
+
+    EVENT XlApp@1000000030::SheetBeforeDelete@470(Sh@1000000000 : Variant);
+    BEGIN
+    END;
+
+    BEGIN
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

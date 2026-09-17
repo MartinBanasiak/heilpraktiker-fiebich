@@ -1,0 +1,51 @@
+OBJECT Page 5447375 Webshop Item Customizations
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikel Individualisierungen;
+               ENU=Webshop Item Customizations];
+    SourceTable=Table5447348;
+    PopulateAllFields=Yes;
+    PageType=List;
+    AutoSplitKey=Yes;
+    ShowFilter=No;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Type }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Field Length" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Field Name" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr=Description }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

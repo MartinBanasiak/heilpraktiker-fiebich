@@ -1,0 +1,55 @@
+OBJECT Table 5447318 Webshop Marketplace Errors
+{
+  OBJECT-PROPERTIES
+  {
+    Date=27.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Marktplatz Fehler;
+               ENU=Webshop Marketplace Errors];
+  }
+  FIELDS
+  {
+    { 1   ;   ;No.                 ;Integer       ;AutoIncrement=Yes;
+                                                   CaptionML=[DEU=Nr.;
+                                                              ENU=No.];
+                                                   NotBlank=Yes;
+                                                   Editable=No }
+    { 2   ;   ;Error Type          ;Option        ;OptionCaptionML=[DEU=Allgemein,Artikel;
+                                                                    ENU=General,Item];
+                                                   OptionString=General,Item }
+    { 3   ;   ;Marketplace Type    ;Option        ;OptionCaptionML=[DEU=,Amazon,Ebay;
+                                                                    ENU=,Amazon,Ebay];
+                                                   OptionString=,Amazon,Ebay }
+    { 4   ;   ;Shop Code           ;Code20        ;TableRelation="Webshop Shop" }
+    { 5   ;   ;Language Code       ;Code20        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code)) }
+    { 6   ;   ;Item No.            ;Code20        ;TableRelation="Webshop Item"."Item No." WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                  Language Code=FIELD(Language Code)) }
+    { 7   ;   ;Operation           ;Text250        }
+    { 8   ;   ;Errorcode           ;Text250        }
+    { 9   ;   ;Errortext           ;Text250        }
+    { 10  ;   ;Parameter           ;Text250        }
+    { 11  ;   ;WebId               ;Integer        }
+    { 12  ;   ;NotRead             ;Boolean       ;CaptionML=[DEU=Nicht gelesen;
+                                                              ENU=Unread] }
+    { 13  ;   ;Read                ;Boolean       ;CaptionML=[DEU=Gelesen;
+                                                              ENU=Read] }
+  }
+  KEYS
+  {
+    {    ;No.                                     ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

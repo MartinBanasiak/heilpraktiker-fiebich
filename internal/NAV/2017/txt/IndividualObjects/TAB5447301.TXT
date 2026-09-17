@@ -1,0 +1,505 @@
+OBJECT Table 5447301 Webshop Shop
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop;
+               ENU=Webshop];
+    LookupPageID=Page5447302;
+    DrillDownPageID=Page5447302;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code10        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 3   ;   ;Shop Type           ;Option        ;CaptionML=[DEU=Webshopart;
+                                                              ENU=Shop Type];
+                                                   OptionCaptionML=[DEU=B2B-Webshop,B2C-Webshop,Au�endienstanbindung,Artikelkatalog,Marketplace-Anbindung;
+                                                                    ENU=B2B-Portal,B2C-Portal,Salesperson-Portal,Item-Catalog,Marketplace-connection];
+                                                   OptionString=b2b,b2c,salesperson,catalog,marketplace }
+    { 4   ;   ;Default Language Code;Code10       ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Code));
+                                                   CaptionML=[DEU=Std. Sprachencode;
+                                                              ENU=Default Language Code] }
+    { 5   ;   ;Use Items from Shop Code;Code10    ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Artikel von Shop verwenden;
+                                                              ENU=Use Items from Shop Code] }
+    { 6   ;   ;Use Categories from Shop Code;Code10;
+                                                   TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Kategorien von Shop verwenden;
+                                                              ENU=Use Categories from Shop Code] }
+    { 7   ;   ;Variant Type        ;Option        ;CaptionML=[DEU=Variantenart;
+                                                              ENU=Variant Type];
+                                                   OptionCaptionML=[DEU=Shopvarianten mit Mutterartikel,Shopvarianten ohne Mutterartikel,Dynamics NAV Varianten;
+                                                                    ENU=Shop-Variants with Parent Item, Shop-Variants w/o Parent Item, Dynamics NAV Variants];
+                                                   OptionString=ShopVariantsParentItem,ShopVariantsNoParentItem,NAVVariants }
+    { 8   ;   ;Use Customers from Shop Code;Code10;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Debitoren von Shop Code verwenden;
+                                                              ENU=Use Customer from Shop Code] }
+    { 9   ;   ;Posting Type Disc. / Markups;Option;CaptionML=[DEU=Buchungstyp Rabatte / Aufschl�ge;
+                                                              ENU=Posting Type Disc. / Markups];
+                                                   OptionCaptionML=[DEU=Sachkonto,Ressource,Artikel,Zu-/Abschlag;
+                                                                    ENU=G/L Account,Resource,Item,Charge];
+                                                   OptionString=G/L Account,Resource,Item,Charge }
+    { 10  ;   ;Webshop URL         ;Text100       ;ExtendedDatatype=URL;
+                                                   CaptionML=[DEU=Webshop URL;
+                                                              ENU=Webshop URL] }
+    { 11  ;   ;Default Customer No. Login;Code20  ;TableRelation=Customer.No.;
+                                                   CaptionML=[DEU=Std. Kundennr. Anmeldung;
+                                                              ENU=Default Customer No. Login] }
+    { 12  ;   ;E-Mail Sender Addr. ;Text50        ;ExtendedDatatype=E-Mail;
+                                                   CaptionML=[DEU=Absender Adr. E-Mail;
+                                                              ENU=E-Mail Sender Addr.] }
+    { 13  ;   ;Order Conf. E-Mail BCC Addr.;Text80;ExtendedDatatype=E-Mail;
+                                                   CaptionML=[DEU=E-Mail Adr. BCC Bestellbest�tigung;
+                                                              ENU=Order Conf. E-Mail BCC Addr.] }
+    { 14  ;   ;Payment Provider Account ID;Text20 ;CaptionML=[DEU=Zahlungsanbieter Zugangs-ID;
+                                                              ENU=Payment Provider Account ID] }
+    { 15  ;   ;Payment Provider Password;Text40   ;CaptionML=[DEU=Zahlungsanbieter Passwort;
+                                                              ENU=Payment Provider Password] }
+    { 16  ;   ;Payment Provider HMAC Key;Text50   ;CaptionML=[DEU=Zahlungsanbieter HMAC Schl�ssel;
+                                                              ENU=Payment Provider HMAC Key] }
+    { 17  ;   ;Display Inv. Disc. in Checkout;Boolean;
+                                                   CaptionML=[DEU=Rechnungsrabatte bei Bestellung anzeigen;
+                                                              ENU=Display Inv. Disc. in Checkout] }
+    { 20  ;   ;Create Webshop Orders As;Option    ;CaptionML=[DEU=Bestellungen erstellen als;
+                                                              ENU=Create Webshop Orders As];
+                                                   OptionCaptionML=[DEU=Angebote,Auftr�ge;
+                                                                    ENU=Quotes,Orders];
+                                                   OptionString=Quotes,Orders }
+    { 21  ;   ;Small Quantity Charge Amnt.;Decimal;CaptionML=[DEU=Geb�hr Mindestbestellwert;
+                                                              ENU=Small Quantity Charge Amnt.] }
+    { 22  ;   ;Small Qty. Charge Threshold;Decimal;CaptionML=[DEU=Schwellwert Mindermengenzuschlag;
+                                                              ENU=Small Qty. Charge Threshold] }
+    { 23  ;   ;Sales No. Small Qty. Charge;Code20 ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Mindestbestellwert;
+                                                              ENU=Sales No. Small Qty Charge] }
+    { 24  ;   ;Online Discount %   ;Decimal       ;CaptionML=[DEU=Online-Rabatt %;
+                                                              ENU=Online Discount %] }
+    { 25  ;   ;Sales No. Online Discount;Code20   ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Online-Rabatt;
+                                                              ENU=Sales No. Online Discount] }
+    { 26  ;   ;Sales No. Shipping Cost;Code20     ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Versandkosten;
+                                                              ENU=Sales No. Shipping Cost] }
+    { 27  ;   ;Use Pool Customer   ;Boolean       ;CaptionML=[DEU=Sammeldebitor verwenden;
+                                                              ENU=Use Pool Customer] }
+    { 28  ;   ;Code No. Series Quotes;Code10      ;TableRelation="No. Series";
+                                                   OnValidate=BEGIN
+                                                                IF "Code No. Series Quotes" <> '' THEN BEGIN
+                                                                  SalesSetup.GET;
+                                                                  NoSeriesMgt.TestSeries(SalesSetup."Quote Nos.","Code No. Series Quotes");
+                                                                END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Code Nr.-Serie Angebote;
+                                                              ENU=Code No. Series Quotes] }
+    { 29  ;   ;Code No. Series Orders;Code10      ;TableRelation="No. Series".Code;
+                                                   OnValidate=BEGIN
+                                                                IF "Code No. Series Orders" <> '' THEN BEGIN
+                                                                  SalesSetup.GET;
+                                                                  NoSeriesMgt.TestSeries(SalesSetup."Order Nos.","Code No. Series Orders");
+                                                                END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Code Nr.-Serie Auftr�ge;
+                                                              ENU=Code No. Series Orders] }
+    { 30  ;   ;Retail Price Type   ;Option        ;CaptionML=[DEU=Listenpreistyp;
+                                                              ENU=Retail Price Type];
+                                                   OptionCaptionML=[DEU=Alle Debitoren,Debitorengruppe,VK-Preis;
+                                                                    ENU=All Customers,Customer Group,Sales Price];
+                                                   OptionString=All Customer Price,Customer Price Group,Sales Price }
+    { 31  ;   ;Cust. Price Group Retail Price;Code10;
+                                                   TableRelation="Customer Price Group".Code;
+                                                   CaptionML=[DEU=Debitorenpreisgruppe Listenpreis;
+                                                              ENU=Cust. Price Group Retail Price] }
+    { 32  ;   ;Cust. Disc. Group Retail Price;Code10;
+                                                   TableRelation="Customer Discount Group".Code;
+                                                   CaptionML=[DEU=Debitorenrabattgruppe Listenpreis;
+                                                              ENU=Cust. Disc. Group Retail Price] }
+    { 33  ;   ;Base Price Type     ;Option        ;CaptionML=[DEU=Basispreistyp;
+                                                              ENU=Base Price Type];
+                                                   OptionCaptionML=[DEU=Alle Debitoren,Debitorengruppe,VK-Preis;
+                                                                    ENU=All Customers,Customer Group,Sales Price];
+                                                   OptionString=All Customer Price,Customer Price Group,Sales Price }
+    { 34  ;   ;Cust. Price Group Base Price;Code10;TableRelation="Customer Price Group".Code;
+                                                   CaptionML=[DEU=Debitorenpreisgruppe Basispreis;
+                                                              ENU=Cust. Price Group Base Price] }
+    { 35  ;   ;Cust. Disc. Group Base Price;Code10;TableRelation="Customer Discount Group".Code;
+                                                   CaptionML=[DEU=Debitorenrabattgruppe Basispreis;
+                                                              ENU=Cust. Disc. Group Base Price] }
+    { 36  ;   ;Location Code Filter;Text80        ;TableRelation=Location.Code;
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Lagerortfilter;
+                                                              ENU=Location Code Filter] }
+    { 37  ;   ;Campain No.         ;Code10        ;TableRelation=Campaign.No.;
+                                                   CaptionML=[DEU=Kampagnennr.;
+                                                              ENU=Campaign No.] }
+    { 38  ;   ;Display Prices Incl. VAT;Boolean   ;CaptionML=[DEU=Preise inkl. MwSt. anzeigen;
+                                                              ENU=Display Prices Incl. VAT] }
+    { 39  ;   ;VAT Bus. Posting Group;Code10      ;TableRelation="VAT Business Posting Group".Code;
+                                                   CaptionML=[DEU=MwSt.-Gesch�ftsbuchungsgruppe;
+                                                              ENU=VAT Bus. Posting Group] }
+    { 40  ;   ;Inv. subtr. Sales Ord. (Days);Integer;
+                                                   CaptionML=[DEU=Lagerbest. ziehe Bestellungen ab (Tage);
+                                                              ENU=Inv. subtr. Sales Ord. (Days)] }
+    { 41  ;   ;Inv. add Purch Ord. (Days);Integer ;CaptionML=[DEU=Lagerbest. addiere Einkauf (Tage);
+                                                              ENU=Inv. add Purch. Ord. (Days)] }
+    { 42  ;   ;Select Req. Delivery Date;Boolean  ;CaptionML=[DEU=Gew�nschtes Lieferdatum w�hlbar;
+                                                              ENU=Select Req. Delivery Date] }
+    { 43  ;   ;Addition Req. Delivery Date;Integer;CaptionML=[DEU=Tage Aufschlag gew�nschtes Lieferdatum;
+                                                              ENU=Addition Req. Delivery Date] }
+    { 44  ;   ;Cross Price Type    ;Option        ;CaptionML=[DEU=Streichpreisanzeige;
+                                                              ENU=Cross Price Type];
+                                                   OptionCaptionML=[DEU=" ,Listenpreis -> Basispreis,Listenpreis -> Kundenpreis,Listenpreis -> Kampagenenpreis,Basispreis -> Kundenpreis,Basispreis -> Kampagnenpreis,Kundenpreis -> Kampagnenpreis";
+                                                                    ENU=" ,List Price -> Base Price,List Price -> Customer Price,List Price -> Campaign Price,Base Price -> Customer Price,Base Price -> Campaign Price,Customer Price -> Campaign Price"];
+                                                   OptionString=[ ,Retail Price - Base Price,Retail Price - Cust. Price,Retail Price - Campain Price,Base Price - Cust. Price,Base Price - Campain Price,Cust. Price - Campain Price] }
+    { 45  ;   ;Default Salesperson Code;Code20    ;TableRelation=Salesperson/Purchaser.Code;
+                                                   CaptionML=[DEU=Std. Verk�ufercode;
+                                                              ENU=Default Salesperson Code] }
+    { 46  ;   ;Sales No. Payment Cost;Code20      ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Geb�hren Zahlungsart;
+                                                              ENU=Sales No. Payment Cost] }
+    { 47  ;   ;Salutation Code Company;Code10     ;TableRelation=Salutation.Code;
+                                                   CaptionML=[DEU=Anredecode Unternehmen;
+                                                              ENU=Salutation Code Company] }
+    { 48  ;   ;Salutation Code Male;Code10        ;TableRelation=Salutation.Code;
+                                                   CaptionML=[DEU=Anredecode m�nnlich;
+                                                              ENU=Salutation Code Male] }
+    { 49  ;   ;Salutation Code Female;Code10      ;TableRelation=Salutation.Code;
+                                                   CaptionML=[DEU=Anredecode weiblich;
+                                                              ENU=Salutation Code Female] }
+    { 50  ;   ;G/L Account Coupons ;Code20        ;TableRelation="G/L Account".No.;
+                                                   CaptionML=[DEU=Sachkonto Wertgutscheine;
+                                                              ENU=G/L Account Coupons] }
+    { 51  ;   ;Sales No. Coupon Discount;Code20   ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Rabattgutscheine;
+                                                              ENU=Sales No. Coupon Discount] }
+    { 52  ;   ;Coupon Journal Template;Code10     ;TableRelation="Gen. Journal Template".Name;
+                                                   CaptionML=[DEU=Gutschein Buchblattvorlage;
+                                                              ENU=Coupon Journal Template] }
+    { 53  ;   ;Coupon Journal Name ;Code10        ;TableRelation="Gen. Journal Batch".Name WHERE (Journal Template Name=FIELD(Coupon Journal Template));
+                                                   CaptionML=[DEU=Gutschein Buchblattname;
+                                                              ENU=Coupon Journal Name] }
+    { 54  ;   ;Max Salesperson Discount %;Decimal ;CaptionML=[DEU=Max. Vertreterrabatt %;
+                                                              ENU=Max Salesperson Discount %] }
+    { 60  ;   ;Customer Permissions Active;Boolean;CaptionML=[DEU=Debitorberechtigungen aktiv;
+                                                              ENU=Customer Permissions Active] }
+    { 77  ;   ;Salutation Code Filter Male;Text30 ;CaptionML=[DEU=Anredecode-Filter "Herr";
+                                                              ENU=Salutation-code filter "Mr."] }
+    { 78  ;   ;Salutation Code Filter Female;Text30;
+                                                   CaptionML=[DEU=Anredecode-Filter "Frau";
+                                                              ENU=Salutation-code filter "Ms."] }
+    { 80  ;   ;No. of Global Filters;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Attribute Link" WHERE (Type=CONST(Shop),
+                                                                                                     Shop Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Globaler Merkmalfilter;
+                                                              ENU=No. of Global Filters];
+                                                   Editable=No }
+    { 81  ;   ;Attribute Filter Active;Boolean    ;CaptionML=[DEU=Merkmalfilter aktiv;
+                                                              ENU=Attribute Filter Active] }
+    { 82  ;   ;Atrribute Comparison Active;Boolean;CaptionML=[DEU=Artikelvergleich aktiv;
+                                                              ENU=Atrribute Comparison Active] }
+    { 83  ;   ;Attribute Info Active;Boolean      ;CaptionML=[DEU=Merkmale auf Artikelkarte anzeigen;
+                                                              ENU=Attribute Info Active] }
+    { 84  ;   ;Attribute Brand     ;Code20        ;TableRelation="Webshop Attribute".Code;
+                                                   CaptionML=[DEU=Merkmal Marke/Hersteller;
+                                                              ENU=Brand/Manufacturer attribute] }
+    { 85  ;   ;VAT Identifier 1    ;Code10        ;TableRelation="VAT Product Posting Group".Code;
+                                                   CaptionML=[DEU=MwSt.-Kennzeichen 1;
+                                                              ENU=VAT-Tag 1] }
+    { 86  ;   ;VAT Identifier 2    ;Code10        ;TableRelation="VAT Product Posting Group".Code;
+                                                   CaptionML=[DEU=MwSt.-Kennzeichen 2;
+                                                              ENU=VAT-Tag 2] }
+    { 87  ;   ;VAT Identifier 3    ;Code10        ;TableRelation="VAT Product Posting Group".Code;
+                                                   CaptionML=[DEU=MwSt.-Kennzeichen 3;
+                                                              ENU=VAT-Tag 3] }
+    { 88  ;   ;Sales No. Coupon Discount 1;Code20 ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 1;
+                                                              ENU=Sales No. Coupon Discount 1] }
+    { 89  ;   ;Sales No. Coupon Discount 2;Code20 ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 2;
+                                                              ENU=Sales No. Coupon Discount 2] }
+    { 90  ;   ;Sales No. Coupon Discount 3;Code20 ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 3;
+                                                              ENU=Sales No. Coupon Discount 3] }
+    { 91  ;   ;Login-Type          ;Option        ;CaptionML=[DEU=Login-Typ;
+                                                              ENU=Login Type];
+                                                   OptionCaptionML=[DEU=E-Mail & Passwort,Login & Passwort,Kunden-Nr. & Login & Passwort,Kunden-Nr. & E-mail & Passwort,Kunden-Nr. & Passwort;
+                                                                    ENU=email & password,login & password,customer no. & login & password,customer no. & password];
+                                                   OptionString=0,1,2,3,4 }
+    { 92  ;   ;Customer No. Series Code;Code10    ;TableRelation="No. Series".Code;
+                                                   CaptionML=[DEU=Nr. Seriencode Debitor;
+                                                              ENU=No. Series Code Customer] }
+    { 93  ;   ;Default Newsletter Segment;Text50  ;CaptionML=[DEU=Std. Newsletter Segmentbezeichnung;
+                                                              ENU=Default newsletter segment name] }
+    { 94  ;   ;Return Order Type   ;Option        ;CaptionML=[DEU=Reklamationstyp;
+                                                              ENU=Return Order Type];
+                                                   OptionCaptionML=[DEU=R�cksendungsauftrag,Verkaufsgutschrift;
+                                                                    ENU=Return Order,Sales Cr. Memo];
+                                                   OptionString=Return Order,Sales Cr. Memo }
+    { 95  ;   ;Return Order No. Series;Code20     ;TableRelation="No. Series".Code;
+                                                   CaptionML=[DEU=Nummernserie Reklamation;
+                                                              ENU=No. Series Return Order] }
+    { 96  ;   ;Return Max. Days Shipment;Integer  ;CaptionML=[DEU=Maximale Anzahl Tage reklamierbar;
+                                                              ENU=Max no. of days returnable] }
+    { 97  ;   ;Sales No. Online Discount 1;Code20 ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Onlinerabatt MwSt-Satz 1;
+                                                              ENU=Sales No. Online Discount 1] }
+    { 98  ;   ;Sales No. Online Discount 2;Code20 ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Onlinerabatt MwSt-Satz 2;
+                                                              ENU=Sales No. Online Discount 2] }
+    { 99  ;   ;Sales No. Online Discount 3;Code20 ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Onlinerabatt MwSt-Satz 3;
+                                                              ENU=Sales No. Online Discount 3] }
+    { 100 ;   ;Use Extended Search ;Boolean       ;CaptionML=[DEU=Erweiterte Artikelsuche nutzen;
+                                                              ENU=Use extended item-search] }
+    { 101 ;   ;Forerun Subscr. Order Create;DateFormula;
+                                                   CaptionML=[DEU=Vorlauf Abo-Auftragsanlage;
+                                                              ENU=Forerun Subscription Order Create] }
+    { 102 ;   ;Forerun Payment Capture;DateFormula;CaptionML=[DEU=Vorlauf Zahlungsreservierung;
+                                                              ENU=Forerun Payment Capture] }
+    { 103 ;   ;Sales No. Subscr. Discount;Code20  ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=Vk.-Nr. Abo-Rabatte;
+                                                              ENU=Sales No. Subscr. Discounts] }
+    { 104 ;   ;Subscr. Order No. Series Code;Code10;
+                                                   TableRelation="No. Series".Code;
+                                                   CaptionML=[DEU=Nr.-Serie Abo-Bestellungen;
+                                                              ENU=No.-Series Subscription Orders] }
+    { 105 ;   ;G/L Account Subscriptions;Code20   ;TableRelation="G/L Account".No.;
+                                                   CaptionML=[DEU=Sachkonto Abonnements;
+                                                              ENU=G/L Account Subscriptions] }
+    { 110 ;   ;Marketplace Type    ;Option        ;CaptionML=[DEU=Marktplatz;
+                                                              ENU=Marketplace];
+                                                   OptionCaptionML=[DEU=Kein Marktplatz,Amazon,eBay;
+                                                                    ENU=No Marketplace,Amazon,eBay];
+                                                   OptionString=No Marketplace,Amazon,eBay }
+    { 150 ;   ;Customization Price Typ;Option     ;CaptionML=[DEU=Individualisierungspreistyp;
+                                                              ENU=Customization Price Type];
+                                                   OptionCaptionML=[DEU=Alle Debitoren,Debitorengruppe,VK-Preis;
+                                                                    ENU=All Customers,Customer Group,Sales Price];
+                                                   OptionString=All Customer Price,Customer Price Group,Sales Price }
+    { 151 ;   ;Cust. Price Group Cust. Price;Code10;
+                                                   TableRelation="Customer Price Group".Code;
+                                                   CaptionML=[DEU=Debitorenpreisgruppe Individualisierungspreis;
+                                                              ENU=Cust. Price Group Customize Price] }
+    { 152 ;   ;Cust. Disc. Group Cust. Price;Code10;
+                                                   TableRelation="Customer Discount Group".Code;
+                                                   CaptionML=[DEU=Debitorenrabattgruppe Individualisierungspreis;
+                                                              ENU=Cust. Disc. Group Customize Price] }
+    { 153 ;   ;Order Options Display;Option       ;CaptionML=[DEU=Darstellung Zahlungs- u. Versandoptionen;
+                                                              ENU=Display Payment & Shippment Options];
+                                                   OptionCaptionML=[DEU=Dropdown,Kachel;
+                                                                    ENU=Dropdown,Tile];
+                                                   OptionString=Dropdown,Tile }
+    { 154 ;   ;Order Options Sorting;Option       ;CaptionML=[DEU=Sortierung Zahlungs- u. Versandoptionen;
+                                                              ENU=Sorting Payment & Shippment Options];
+                                                   OptionCaptionML=[DEU=Preis,manuelle Sortierung;
+                                                                    ENU=Price,manual sorting];
+                                                   OptionString=price,sorting }
+    { 155 ;   ;Inventory Display   ;Option        ;CaptionML=[DEU=Verf�gbarkeitsanzeige;
+                                                              ENU=Inventory Display];
+                                                   OptionCaptionML=[DEU=Checkbox,Ampel,Anzahl;
+                                                                    ENU=checkmark,traffig light,number];
+                                                   OptionString=checkmark,traffic light,number }
+    { 156 ;   ;Responsibility Center;Code10       ;TableRelation="Responsibility Center";
+                                                   CaptionML=[DEU=Zust�ndigkeitseinheitencode;
+                                                              ENU=Responsibility Center] }
+    { 157 ;   ;Use Online Order No.;Boolean       ;CaptionML=[DEU=Onlinebestellnummer als Auftragsnummer verwenden;
+                                                              ENU=Online order no. as order no.] }
+    { 158 ;   ;Invoice No. Series Code;Code10     ;TableRelation="No. Series".Code;
+                                                   OnValidate=BEGIN
+                                                                IF "Invoice No. Series Code" <> '' THEN BEGIN
+                                                                  SalesSetup.GET;
+                                                                  NoSeriesMgt.TestSeries(SalesSetup."Posted Invoice Nos.","Invoice No. Series Code");
+                                                                END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Nr. Seriencode Rechnung;
+                                                              ENU=Invoice No. Series Code] }
+    { 159 ;   ;Shipment No. Series Code;Code10    ;TableRelation="No. Series".Code;
+                                                   OnValidate=BEGIN
+                                                                IF "Shipment No. Series Code" <> '' THEN BEGIN
+                                                                  SalesSetup.GET;
+                                                                  NoSeriesMgt.TestSeries(SalesSetup."Posted Shipment Nos.","Shipment No. Series Code");
+                                                                END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Nr. Seriencode Lieferschein;
+                                                              ENU=Shipment No. Series Code] }
+    { 160 ;   ;Paydirekt Api Key   ;Text64        ;CaptionML=[DEU=Paydirekt API Schl�ssel;
+                                                              ENU=Paydirekt API Key] }
+    { 161 ;   ;Item Availability Calculation;Option;
+                                                   OnValidate=VAR
+                                                                WebshopItem@1000000001 : Record 5447304;
+                                                                WebshopManagement@1000000000 : Codeunit 5447300;
+                                                              BEGIN
+                                                              END;
+
+                                                   CaptionML=[DEU=Berechnung Artikelverf�gbarkeit;
+                                                              ENU=Item Availability Calculation];
+                                                   OptionCaptionML=[DEU=Nach Verf�gbarkeit,Nie verf�gbar,Immer verf�bar;
+                                                                    ENU=By Inventory,Never available, Always available];
+                                                   OptionString=ByInventory,Never,Always }
+    { 162 ;   ;Payolution Invoice Copy Mail;Text100;
+                                                   CaptionML=[DEU=E-Mail Payolution Rechnungskopie;
+                                                              ENU=Email Payolution Invoice Copy] }
+    { 200 ;   ;Google FTP URL      ;Text50        ;ExtendedDatatype=URL }
+    { 201 ;   ;Google FTP User     ;Text50         }
+    { 202 ;   ;Google FTP Password ;Text50        ;CaptionML=[DEU=Google FTP Passwort;
+                                                              ENU=Google FTP Password] }
+    { 203 ;   ;Google Channel Title;Text50        ;CaptionML=[DEU=Google Channel Titel;
+                                                              ENU=Google Channel Title] }
+    { 204 ;   ;Google Channel Link ;Text50         }
+    { 205 ;   ;Google Channel Description;Text100 ;CaptionML=[DEU=Google Channel Beschreibung;
+                                                              ENU=Google Channel Description] }
+    { 206 ;   ;Google Product Category;Text250    ;CaptionML=[DEU=Google Produktkategorie;
+                                                              ENU=Google Product Category] }
+    { 210 ;   ;AWS Access Key ID   ;Text30        ;CaptionML=[DEU=Amazon AWS Access Key ID;
+                                                              ENU=Amazon AWS Access Key ID] }
+    { 211 ;   ;AWS Secret Access Key;Text50       ;CaptionML=[DEU=Amazon AWS Secret Access Key;
+                                                              ENU=Amazon AWS Secret Access Key] }
+    { 212 ;   ;Amazon Merchant ID  ;Text50        ;CaptionML=[DEU=Amazon Merchant ID;
+                                                              ENU=Amazon Merchant ID] }
+    { 213 ;   ;Amazon Marketplace ID;Text50       ;CaptionML=[DEU=Amazon Marketplace ID;
+                                                              ENU=Amazon Marketplace ID] }
+    { 214 ;   ;Amazon Auth Token   ;Text60        ;CaptionML=[DEU=Amazon Auth. Token;
+                                                              ENU=Amazon Auth. Token] }
+    { 220 ;   ;Ebay Environment    ;Option        ;CaptionML=[DEU=Ebay Umgebung;
+                                                              ENU=Ebay Environment];
+                                                   OptionCaptionML=[DEU=Testumgebung,Produktion;
+                                                                    ENU=Sandbox,Production];
+                                                   OptionString=sandbox,production }
+    { 221 ;   ;Ebay Dev Name       ;Text100       ;CaptionML=[DEU=Ebay Entwickler Name;
+                                                              ENU=Ebay Dev. Name] }
+    { 222 ;   ;Ebay App Name       ;Text100       ;CaptionML=[DEU=Ebay App Name;
+                                                              ENU=Ebay App Name] }
+    { 223 ;   ;Ebay Cert Name      ;Text100       ;CaptionML=[DEU=Ebay Zertifikatsname;
+                                                              ENU=Ebay Cert. Name] }
+    { 224 ;   ;PayPal Address      ;Text100       ;CaptionML=[DEU=Ebay PayPal Adresse;
+                                                              ENU=Ebay PayPal Address] }
+    { 225 ;   ;Item Loc. Post Code ;Text20        ;CaptionML=[DEU=Ebay PLZ Artikelstandort;
+                                                              ENU=Ebay Post Code Item Location] }
+    { 226 ;   ;Return Charges Payable By;Option   ;CaptionML=[DEU=Ebay Retourkosten zu zahlen von;
+                                                              ENU=Return Charges payable by];
+                                                   OptionCaptionML=[DEU=H�ndler,Kunde;
+                                                                    ENU=Reseller,Customer];
+                                                   OptionString=Reseller,Customer }
+    { 227 ;   ;Ebay Auth Token     ;BLOB          ;CaptionML=[DEU=Auth. Token;
+                                                              ENU=Ebay Auth. Token] }
+    { 250 ;   ;Ship. Notice Mail Send Delay;Duration;
+                                                   CaptionML=[DEU=E-Mail Versandbenachrichtigung Verz�gerung;
+                                                              ENU=E-mail send shipping copy delay] }
+    { 251 ;   ;Invoice Mail Send Delay;Duration   ;CaptionML=[DEU=E-Mail Rechnungsversand Verz�gerung;
+                                                              ENU=E-mail send invoice copy delay] }
+    { 252 ;   ;US Sales Tax enabled;Boolean       ;CaptionML=[DEU=US Sales Tax aktiv;
+                                                              ENU=US Sales Tax enabled] }
+    { 253 ;   ;Sales No US Sales Tax;Code20       ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. US Sales Tax;
+                                                              ENU=Sales No US Sales Tax] }
+    { 254 ;   ;Sales No. Set Discount 1;Code20    ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 1;
+                                                              ENU=Sales No. Coupon Discount 1] }
+    { 255 ;   ;Sales No. Set Discount 2;Code20    ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 2;
+                                                              ENU=Sales No. Coupon Discount 2] }
+    { 256 ;   ;Sales No. Set Discount 3;Code20    ;TableRelation=IF (Posting Type Disc. / Markups=CONST(G/L Account)) "G/L Account".No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Resource)) Resource.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Item)) Item.No.
+                                                                 ELSE IF (Posting Type Disc. / Markups=CONST(Charge)) "Item Charge".No.;
+                                                   CaptionML=[DEU=VK-Nr. Rabattgutscheine MwSt.-Kennzeichen 3;
+                                                              ENU=Sales No. Coupon Discount 3] }
+    { 300 ;   ;Item Link Type Common Purchase;Option;
+                                                   CaptionML=[DEU=Artikelverkn�pfungstyp Gemeinsam Gekauft;
+                                                              ENU=Item Link Type Common Purchase];
+                                                   OptionCaptionML=[DEU=Zuberh�r,Ersatzteil,Alternative,Passende;
+                                                                    ENU=Accessory,Spare Part,Alternative,Fitting Item];
+                                                   OptionString=Acc. Item,Spare Part,Alt. Item,Fit. Item }
+    { 302 ;   ;No. of Joint Purch. Item Links;Integer;
+                                                   CaptionML=[DEU=Anzahl Verkn�pfungen Gemeinsam Gekauft;
+                                                              ENU=No. of Common Item Links] }
+    { 400 ;   ;Newsletter Account  ;Text45        ;CaptionML=[DEU=Newsletter Account;
+                                                              ENU=Newsletter Account] }
+    { 401 ;   ;Newsletter Login    ;Text45        ;CaptionML=[DEU=Newsletter Login;
+                                                              ENU=Newsletter Login] }
+    { 402 ;   ;Newsletter Password ;Text45        ;CaptionML=[DEU=Newsletter Passwort;
+                                                              ENU=Newsletter Password] }
+    { 403 ;   ;Newsletter Group    ;Text45        ;CaptionML=[DEU=Newsletter Gruppe;
+                                                              ENU=Newsletter Group] }
+    { 404 ;   ;Newsletter Segment  ;Text50        ;CaptionML=[DEU=Newsletter Segment;
+                                                              ENU=Newsletter Segment] }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      NoSeriesMgt@1000000000 : Codeunit 396;
+      SalesSetup@1000000001 : Record 311;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

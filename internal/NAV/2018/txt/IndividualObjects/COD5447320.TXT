@@ -1,0 +1,275 @@
+OBJECT Codeunit 5447320 Webshop Assembly Resolver
+{
+  OBJECT-PROPERTIES
+  {
+    Date=18.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    SingleInstance=Yes;
+    OnRun=BEGIN
+            StartResolver();
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      ResolverNst@1000000001 : DotNet "'NavHelper.AssemblyResolver, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'.NavHelper.AssemblyResolver.AssemblyResolver" WITHEVENTS;
+      ResolverRtc@1000000000 : DotNet "'NavHelper.AssemblyResolver, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'.NavHelper.AssemblyResolver.AssemblyResolver" RUNONCLIENT;
+      Text001@1000000006 : TextConst 'DEU=Dynamic .NET assembly resolver wurde nicht installiert da das entsprechende .NET interop add-in nicht konfiguriert ist. Bitte konfigurieren Sie dieses.;ENU=Dynamic .NET assembly resolver was not installed because the corresponding .NET interop add-in is not configured. Please configure it.';
+      CompilerError@1000000005 : TextConst 'DEU=Fehler beim kompilieren der resolver assembly:\\%1;ENU=Error compiling the resolver assembly:\\%1';
+      AssemblyName@1000000004 : TextConst 'DEU="NavHelper.AssemblyResolver, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";ENU="NavHelper.AssemblyResolver, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"';
+      TypeName@1000000003 : TextConst 'DEU=NavHelper.AssemblyResolver.AssemblyResolver;ENU=NavHelper.AssemblyResolver.AssemblyResolver';
+      ShortAssemblyName@1000000002 : TextConst 'DEU=NavHelper.AssemblyResolver;ENU=NavHelper.AssemblyResolver';
+
+    LOCAL PROCEDURE ResolveAssemblies@6();
+    VAR
+      Asmbl@1000 : Record 5447350;
+    BEGIN
+      WITH Asmbl DO BEGIN
+        SETFILTER("User ID",'%1|%2','',USERID);
+        IF FINDSET() THEN
+          REPEAT
+            IF (Tier IN [Tier::Both,Tier::Client]) AND (CURRENTCLIENTTYPE = CLIENTTYPE::Windows) THEN
+              ResolveAssembly(Asmbl,ResolverRtc,Tier::Client);
+            IF Tier IN [Tier::Both,Tier::Server] THEN
+              ResolveAssembly(Asmbl,ResolverNst,Tier::Server);
+          UNTIL NEXT = 0;
+      END;
+    END;
+
+    LOCAL PROCEDURE ResolveServerSide@1(Name@1000 : Text;Resolver@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Object");
+    VAR
+      Asmbl@1001 : Record 5447350;
+    BEGIN
+      WITH Asmbl DO BEGIN
+        SETRANGE("Assembly Name",Name);
+        SETFILTER(Tier,'%1|%2',Tier::Both,Tier::Server);
+        SETFILTER("User ID",'%1|%2','',USERID);
+        IF FINDFIRST() THEN
+          ResolveAssembly(Asmbl,Resolver,Tier::Server);
+      END;
+    END;
+
+    LOCAL PROCEDURE ResolveAssembly@7(Asmbl@1000 : Record 5447350;VAR Resolver@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Object";TargetTier@1003 : Integer);
+    VAR
+      Asm@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Reflection.Assembly";
+      Bytes@1008 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array";
+      MemStr@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      MethodInfo@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Reflection.MethodInfo";
+      MethodInfoClient@1010 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Reflection.MethodInfo" RUNONCLIENT;
+      Params@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array";
+      ParamsClient@1009 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array" RUNONCLIENT;
+      Object@1011 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Object";
+      InStr@1001 : InStream;
+    BEGIN
+      LoadAssemblyBytes(Asmbl,Bytes);
+      WITH Asmbl DO BEGIN
+        CASE TargetTier OF
+          Tier::Server:
+            BEGIN
+              MethodInfo := Resolver.GetType().GetMethod('ResolveAssembly');
+              Params := Params.CreateInstance(GETDOTNETTYPE(Object),2);
+              Params.SetValue("Assembly Name",0);
+              Params.SetValue(Bytes,1);
+              MethodInfo.Invoke(Resolver,Params);
+      END;
+          Tier::Client:
+            BEGIN
+              MethodInfoClient := Resolver.GetType().GetMethod('ResolveAssembly');
+              ParamsClient := ParamsClient.CreateInstance(GETDOTNETTYPE(Object),2);
+              ParamsClient.SetValue("Assembly Name",0);
+              ParamsClient.SetValue(Bytes,1);
+              MethodInfoClient.Invoke(Resolver,ParamsClient);
+            END;
+        END;
+      END;
+    END;
+
+    LOCAL PROCEDURE LoadAssemblyBytes@65(Asmbl@1000 : Record 5447350;VAR Bytes@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array");
+    VAR
+      MemStr@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      InStr@1003 : InStream;
+      Byte@1002 : Char;
+    BEGIN
+      WITH Asmbl DO BEGIN
+        CALCFIELDS(Assembly);
+        Assembly.CREATEINSTREAM(InStr);
+        MemStr := MemStr.MemoryStream();
+        COPYSTREAM(MemStr,InStr);
+        Bytes := MemStr.ToArray();
+      END;
+    END;
+
+    LOCAL PROCEDURE CompileResolverAssembly@56() : Text;
+    VAR
+      CodeDomProvider@1003 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.CodeDom.Compiler.CodeDomProvider";
+      CompilerParameters@1002 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.CodeDom.Compiler.CompilerParameters";
+      CompilerResults@1001 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.CodeDom.Compiler.CompilerResults";
+      Sources@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array";
+      Path@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+    BEGIN
+      Sources := Sources.CreateInstance(GETDOTNETTYPE(''),1);
+      Sources.SetValue(GetSource(),0);
+
+      CodeDomProvider := CodeDomProvider.CreateProvider('CSharp');
+      CompilerParameters := CompilerParameters.CompilerParameters();
+      CompilerParameters.ReferencedAssemblies.Add('System.Core.dll');
+      CompilerParameters.OutputAssembly := Path.Combine(Path.GetTempPath(),ShortAssemblyName + '.dll');
+      CompilerResults := CodeDomProvider.CompileAssemblyFromSource(CompilerParameters,Sources);
+      IF CompilerResults.Errors.Count() > 0 THEN
+        ERROR(CompilerError,CompilerResults.Errors.Item(0));
+
+      EXIT(CompilerParameters.OutputAssembly);
+    END;
+
+    LOCAL PROCEDURE InstallResolverAssembly@12();
+    VAR
+      AddIn@100021 : Record 2000000069;
+      ZipFile@100014 : DotNet "'System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Compression.ZipFile";
+      Directory@100015 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Directory";
+      Path@100016 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+      IOFile@100022 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      FileStream@100024 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream";
+      FileMode@100023 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileMode";
+      OutStream@100019 : OutStream;
+      Output@100013 : Text;
+      ZipSource@100017 : Text;
+      ZipTarget@100018 : Text;
+      AssemblyFileName@100020 : Text;
+    BEGIN
+      Output := CompileResolverAssembly();
+      ZipSource := Path.Combine(Path.GetTempPath,Path.GetTempFileName);
+      ZipTarget := Path.Combine(Path.GetTempPath,Path.GetTempFileName);
+
+      IF EXISTS(ZipSource) THEN
+        ERASE(ZipSource);
+      IF EXISTS(ZipTarget) THEN
+        ERASE(ZipTarget);
+
+      ZipSource := Path.Combine(Path.GetTempPath,Path.GetFileNameWithoutExtension(ZipSource));
+      ZipTarget := Path.Combine(Path.GetTempPath,Path.GetFileNameWithoutExtension(ZipTarget)) + '.zip';
+      Directory.CreateDirectory(ZipSource);
+
+      IOFile.Copy(Output,Path.Combine(ZipSource,Path.GetFileName(Output)));
+      ZipFile.CreateFromDirectory(ZipSource,ZipTarget);
+      FileStream := IOFile.Open(ZipTarget,FileMode.Open);
+
+      WITH AddIn DO BEGIN
+        "Add-in Name" := ShortAssemblyName;
+        Version := '1.0.0.0';
+        Category := Category::"DotNet Interoperability";
+        Resource.CREATEOUTSTREAM(OutStream);
+        COPYSTREAM(OutStream,FileStream);
+        IF NOT INSERT() THEN
+          MODIFY();
+      END;
+
+      FileStream.Close();
+      Directory.Delete(ZipSource,TRUE);
+      ERASE(ZipTarget);
+      ERASE(Output);
+    END;
+
+    LOCAL PROCEDURE GetSource@54() Source : Text;
+    BEGIN
+      Source += 'using System;using System.Collections.Concurrent;using System.Collections.Generic;using Sy';
+      Source += 'stem.Linq;using System.Reflection;[assembly:AssemblyTitle("NavHelper.AssemblyResolver")][a';
+      Source += 'ssembly:AssemblyVersion("1.0.0.0")][assembly:AssemblyFileVersion("1.0.0.0")]namespace NavH';
+      Source += 'elper.AssemblyResolver{public class AssemblyResolver:IDisposable{private static readonly C';
+      Source += 'oncurrentDictionary<string,byte[]>Assemblies =new ConcurrentDictionary<string,byte[]>();pr';
+      Source += 'ivate static readonly List<AssemblyResolver>Resolvers=new List<AssemblyResolver>();private';
+      Source += ' static bool _resolverActive;private static readonly object LockResolvers=new object();pri';
+      Source += 'vate bool _subscribed;private string GetExceptionMessage(Exception e,string method){return';
+      Source += ' string.Format("Exception of type{0} with message{1} was thrown in method{2}",e.GetType(),';
+      Source += 'e.Message,method);}private void Subscribe(){try{if(_resolverActive)return;_resolverActive=';
+      Source += 'true;_subscribed=true;AppDomain.CurrentDomain.AssemblyResolve+=AssemblyResolve;}catch(Exce';
+      Source += 'ption e){throw new Exception(GetExceptionMessage(e,"Subscribe"));}}private void Unsubscrib';
+      Source += 'e(){try{if(!_subscribed)return;_resolverActive=false;AppDomain.CurrentDomain.AssemblyResol';
+      Source += 've-=AssemblyResolve;}catch(Exception e){throw new Exception(GetExceptionMessage(e,"Unsubsc';
+      Source += 'ribe"));}}private Assembly AssemblyResolve(object sender,ResolveEventArgs args){try{if(!As';
+      Source += 'semblies.ContainsKey(args.Name)&&OnResolveAssembly!=null)OnResolveAssembly.Invoke(sender,a';
+      Source += 'rgs);}catch(Exception e){throw new Exception(GetExceptionMessage(e,"AssemblyResolve(resolv';
+      Source += 'ing)"));}try{return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a=>a.FullName==';
+      Source += 'args.Name)??(Assemblies.ContainsKey(args.Name)?Assembly.Load(Assemblies[args.Name]):null);';
+      Source += '}catch(Exception e){throw new Exception(GetExceptionMessage(e,"AssemblyResolve(retrieving)';
+      Source += '"));}}public AssemblyResolver(){lock(LockResolvers){try{Resolvers.Add(this);}catch(Excepti';
+      Source += 'on e){throw new Exception(GetExceptionMessage(e,"[constructor]"));}Subscribe();}}public ev';
+      Source += 'ent EventHandler<ResolveEventArgs>OnResolveAssembly;public void ResolveAssembly(string nam';
+      Source += 'e,byte[]asm){try{Assemblies.AddOrUpdate(name,asm,(key,old)=>asm);}catch(Exception e){throw';
+      Source += ' new Exception(GetExceptionMessage(e,"ResolveAssembly"));}}void IDisposable.Dispose(){lock';
+      Source += '(LockResolvers){Unsubscribe();try{Resolvers.Remove(this);if(Resolvers.Any())Resolvers.Firs';
+      Source += 't().Subscribe();}catch(Exception e){throw new Exception(GetExceptionMessage(e,"Dispose"));';
+      Source += '}}}}}';
+    END;
+
+    LOCAL PROCEDURE StartResolver@4();
+    VAR
+      Asm@100015 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Reflection.Assembly";
+      AsmClient@100014 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Reflection.Assembly" RUNONCLIENT;
+      Object@100013 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Object";
+    BEGIN
+      IF NOT CANLOADTYPE(ResolverNst) THEN
+        InstallResolverAssembly();
+
+      IF NOT CANLOADTYPE(ResolverNst) THEN BEGIN
+        MESSAGE(Text001);
+        EXIT;
+      END;
+
+      ResolverNst := ResolverNst.AssemblyResolver();
+      IF CURRENTCLIENTTYPE = CLIENTTYPE::Windows THEN
+        ResolverRtc := ResolverRtc.AssemblyResolver();
+
+      ResolveAssemblies();
+    END;
+
+    [EventSubscriber(Codeunit,1,OnAfterCompanyOpen)]
+    LOCAL PROCEDURE OnAfterCompanyOpen@2();
+    BEGIN
+      //StartResolver();
+    END;
+
+    PROCEDURE ClientAddInVersion@1000000002() ClientAddInType : Integer;
+    VAR
+      ClientAddIns@1000000000 : Record 2000000069;
+    BEGIN
+      WITH ClientAddIns DO BEGIN
+        ClientAddInType := 0;
+
+        //DynamicCommerce
+        SETRANGE("Add-in Name",'DynamicCommerce.DynamicCommerce.AddIn');
+        IF FINDFIRST THEN BEGIN
+          IF Resource.HASVALUE THEN
+            ClientAddInType := 2;
+        END;
+
+        //Legacy
+        RESET;
+        SETFILTER("Add-in Name",'%1|%2','MysydeShop','DynamicCommerce.MysydeShop.Connect');
+        IF (FINDFIRST) AND (ClientAddInType = 0) THEN
+          ClientAddInType := 1;
+
+      END;
+    END;
+
+    EVENT ResolverRtc@1000000000::OnResolveAssembly@8(sender@1000000001 : Variant;e@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.ResolveEventArgs");
+    BEGIN
+    END;
+
+    EVENT ResolverNst@1000000001::OnResolveAssembly@8(sender@1000000001 : Variant;e@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.ResolveEventArgs");
+    BEGIN
+      ResolveServerSide(e.Name,ResolverNst);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

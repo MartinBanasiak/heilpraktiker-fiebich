@@ -1,0 +1,139 @@
+OBJECT Table 5447312 Webshop Payment Option
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.04.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=VAR
+               TempPaymentOption@1000000000 : Record 5447312;
+             BEGIN
+               TempPaymentOption.SETCURRENTKEY("Shop Code","Language Code",Sorting);
+               TempPaymentOption.SETRANGE("Shop Code","Shop Code");
+               TempPaymentOption.SETRANGE("Language Code","Language Code");
+               IF TempPaymentOption.FINDLAST THEN
+                 Sorting := TempPaymentOption.Sorting + 1
+               ELSE
+                 Sorting := 1;
+             END;
+
+    CaptionML=[DEU=Webshop Zahlungsart;
+               ENU=Webshop Payment Option];
+    LookupPageID=Page5447357;
+    DrillDownPageID=Page5447357;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Shop Code           ;Code10        ;CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code] }
+    { 2   ;   ;Language Code       ;Code10        ;CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code] }
+    { 3   ;   ;Line No.            ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.] }
+    { 4   ;   ;Is Active           ;Boolean       ;InitValue=Yes;
+                                                   CaptionML=[DEU=Ist Aktiv;
+                                                              ENU=Is Active] }
+    { 5   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 6   ;   ;Country Code        ;Code10        ;TableRelation="Webshop Country"."Country Code" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                         Language Code=FIELD(Language Code));
+                                                   CaptionML=[DEU=L�ndercode;
+                                                              ENU=Country Code] }
+    { 10  ;   ;Payment Terms Code  ;Code10        ;TableRelation="Payment Terms".Code;
+                                                   CaptionML=[DEU=Zahlungsbedingungscode;
+                                                              ENU=Payment Terms Code] }
+    { 11  ;   ;Payment Method Code ;Code10        ;TableRelation="Payment Method".Code;
+                                                   CaptionML=[DEU=Zahlungsformcode;
+                                                              ENU=Payment Method Code] }
+    { 12  ;   ;Payment Cost        ;Decimal       ;CaptionML=[DEU=Geb�hren;
+                                                              ENU=Payment Cost] }
+    { 20  ;   ;Checkout            ;Option        ;CaptionML=[DEU=Checkout;
+                                                              ENU=Checkout];
+                                                   OptionCaptionML=[DEU=" ,Lastschrift,Kreditkarte,Kreditkarte verz�gert,Paypal,Paypal verz�gert,Rechnung Billpay,Lastschrift Billpay,Ratenkauf Billpay,Sofort,PayDirekt,Amazon Payments,EPS,Postfinance,iDeal,Klarna,Paymorrow,Payolution Rechnungskauf,Payolution Ratenkauf,RatePay,PayPal Express,PayPal Express verz�gert";
+                                                                    ENU=" ,Lastschrift,Kreditkarte,Kreditkarte verz�gert,Paypal,Paypal verz�gert,Rechnung Billpay,Lastschrift Billpay,Ratenkauf Billpay,Sofort,PayDirekt,Amazon Payments,EPS,Postfinance,iDeal,Klarna,Paymorrow,Payolution Rechnungskauf,Payolution Ratenkauf,RatePay,PayPal Express,PayPal Express verz�gert"];
+                                                   OptionString=[ ,Lastschrift,Kreditkarte,Kreditkarte verz�gert,Paypal,Paypal verz�gert,Rechnung Billpay,Lastschrift Billpay,Ratenkauf Billpay,Sofort,PayDirekt,Amazon Payments,EPS,Postfinance,iDeal,Klarna,Paymorrow,Payolution Rechnungskauf,Payolution Ratenkauf,RatePay,PayPal Express,PayPal Express verz�gert] }
+    { 21  ;   ;Checkout State      ;Option        ;CaptionML=[DEU=Checkout Status;
+                                                              ENU=Checkout State];
+                                                   OptionCaptionML=[DEU=" ,Testphase,Live";
+                                                                    ENU=" ,Testing,Live"];
+                                                   OptionString=[ ,test,live] }
+    { 22  ;   ;Auto Clearing       ;Boolean       ;CaptionML=[DEU=Auto Zahlungsausgleich;
+                                                              ENU=Auto Clearing] }
+    { 23  ;   ;Gen. Journal Template;Code10       ;TableRelation="Gen. Journal Template".Name;
+                                                   CaptionML=[DEU=Buch.-Blattvorlage Zahlungsausgleich;
+                                                              ENU=Gen. Journal Template] }
+    { 24  ;   ;Gen. Journal Batch  ;Code10        ;TableRelation="Gen. Journal Batch".Name;
+                                                   CaptionML=[DEU=Buch.-Blattname Zahlungsausgleich;
+                                                              ENU=Gen. Journal Batch] }
+    { 40  ;   ;G/L Account Clearing;Code20        ;TableRelation="G/L Account".No.;
+                                                   CaptionML=[DEU=Sachkonto Zahlungsausgleich;
+                                                              ENU=G/L Account Clearing] }
+    { 41  ;   ;Credit Check Required;Boolean      ;CaptionML=[DEU=Bonit�tspr�fung;
+                                                              ENU=credit check required] }
+    { 42  ;   ;Digital Coupon Is Allowed;Boolean  ;CaptionML=[DEU=Erlaubt f�r Digitalen Gutschein;
+                                                              ENU=Permitted for digital coupon] }
+    { 43  ;   ;Recurrent Payments active;Boolean  ;CaptionML=[DEU=Erlaubt f�r wiederkehrende Zahlungen;
+                                                              ENU=Permitted for recurrent payments] }
+    { 44  ;   ;Has Icon            ;Boolean       ;CaptionML=[DEU=Hat Icon;
+                                                              ENU=Has Icon];
+                                                   Editable=No }
+    { 45  ;   ;Has Description     ;Boolean       ;CaptionML=[DEU=Hat Beschreibung;
+                                                              ENU=Has Description];
+                                                   Editable=No }
+    { 46  ;   ;Sorting             ;Integer       ;CaptionML=[DEU=Reihenfolge;
+                                                              ENU=Sorting];
+                                                   Editable=No }
+    { 47  ;   ;Sales Order Text    ;Code20        ;TableRelation="Standard Text".Code;
+                                                   CaptionML=[DEU=Textbaustein Auftrag;
+                                                              ENU=Text Order] }
+    { 48  ;   ;EMail Invoice       ;Code10        ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Rechnung;
+                                                              ENU=Email Invoice] }
+    { 49  ;   ;No. of Permission Entries;Integer  ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=FILTER(PaymentGroup|CustomerPayment),
+                                                                                                      Shop Code=FIELD(Shop Code),
+                                                                                                      Language Code=FIELD(Language Code),
+                                                                                                      Line No.=FIELD(Line No.)));
+                                                   CaptionML=[DEU=Anzahl Berechtigungen;
+                                                              ENU=No. of Permissions] }
+    { 50  ;   ;Provider Email Addr. Invoice;Text128;
+                                                   ExtendedDatatype=E-Mail;
+                                                   CaptionML=[DEU=Anbieter E-Mail Adr. Rechnungskopie;
+                                                              ENU=Provider Email addr. invoice] }
+    { 51  ;   ;Email Invoice Copy To Provider;Code80;
+                                                   TableRelation="Webshop Text Module".Code;
+                                                   OnValidate=VAR
+                                                                Error001@1000000000 : TextConst 'DEU=Bitte geben Sie eine E-Mail Adresse f�r die zus. Dokumentkopie an\bevor Sie ein abweichendes Textmodul hinterlegen.;ENU=Please enter an email address for the add. document copy\before you enter an alternative text module.';
+                                                              BEGIN
+                                                                IF ("Email Invoice Copy To Provider" <> '') AND ("Provider Email Addr. Invoice" = '') THEN
+                                                                  ERROR(Error001)
+                                                              END;
+
+                                                   CaptionML=[DEU=E-Mail Rechnungskopie an Anbieter;
+                                                              ENU=Email invoice copy to provider] }
+    { 52  ;   ;Email Order Confirmation;Code80    ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Bestellbest�tigung;
+                                                              ENU=Email order confirmation] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Line No.        ;Clustered=Yes }
+    {    ;Shop Code,Language Code,Sorting          }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

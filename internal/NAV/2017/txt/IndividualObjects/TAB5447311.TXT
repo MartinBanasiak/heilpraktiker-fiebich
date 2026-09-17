@@ -1,0 +1,118 @@
+OBJECT Table 5447311 Webshop Shipping Option
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=VAR
+               TempShippingOption@1000000000 : Record 5447311;
+             BEGIN
+               TempShippingOption.SETCURRENTKEY("Shop Code","Language Code",Sorting);
+               TempShippingOption.SETRANGE("Shop Code","Shop Code");
+               TempShippingOption.SETRANGE("Language Code","Language Code");
+               IF TempShippingOption.FINDLAST THEN
+                 Sorting := TempShippingOption.Sorting + 1
+               ELSE
+                 Sorting := 1;
+             END;
+
+    CaptionML=[DEU=Webshop Versandart;
+               ENU=Webshop Shipping Option];
+    LookupPageID=Page5447355;
+    DrillDownPageID=Page5447355;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code;
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Line No.            ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.] }
+    { 4   ;   ;Country Code        ;Code10        ;TableRelation="Webshop Country"."Country Code" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                         Language Code=FIELD(Language Code));
+                                                   CaptionML=[DEU=L�ndercode;
+                                                              ENU=Country Code] }
+    { 5   ;   ;Shipping Agent Code ;Code10        ;TableRelation="Shipping Agent";
+                                                   CaptionML=[DEU=Zustellercode;
+                                                              ENU=Shipping Agent Code];
+                                                   NotBlank=Yes }
+    { 6   ;   ;Shipping Agent Service Code;Code10 ;TableRelation="Shipping Agent Services".Code WHERE (Shipping Agent Code=FIELD(Shipping Agent Code));
+                                                   CaptionML=[DEU=Zustellertransportartencode;
+                                                              ENU=Shipping Agent Service Code] }
+    { 7   ;   ;Weight from         ;Decimal       ;CaptionML=[DEU=Ab Gewicht;
+                                                              ENU=Weight from];
+                                                   BlankZero=Yes }
+    { 8   ;   ;Weight to           ;Decimal       ;CaptionML=[DEU=Bis Gewicht;
+                                                              ENU=Weight to];
+                                                   BlankZero=Yes }
+    { 10  ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 11  ;   ;Exemption           ;Decimal       ;CaptionML=[DEU=Freibetrag;
+                                                              ENU=Exemption] }
+    { 12  ;   ;Shipping Cost       ;Decimal       ;CaptionML=[DEU=Versandkosten;
+                                                              ENU=Shipping Cost] }
+    { 13  ;   ;Shipment Method Code;Code10        ;TableRelation="Shipment Method".Code;
+                                                   CaptionML=[DEU=Lieferbedinungscode;
+                                                              ENU=Shipment Method Code] }
+    { 14  ;   ;Is Active           ;Boolean       ;InitValue=Yes;
+                                                   CaptionML=[DEU=Ist Aktiv;
+                                                              ENU=Is Active] }
+    { 15  ;   ;Amount from         ;Decimal       ;CaptionML=[DEU=Von Betrag;
+                                                              ENU=Amount from] }
+    { 16  ;   ;Amount to           ;Decimal       ;CaptionML=[DEU=Bis Betrag;
+                                                              ENU=Amount to] }
+    { 17  ;   ;Coupon Shipping Cost;Decimal       ;CaptionML=[DEU=Gutschein Versandkosten;
+                                                              ENU=Coupon Shipping Cost] }
+    { 18  ;   ;Campaign Code       ;Code20        ;TableRelation="Webshop Campaign Header".Code;
+                                                   CaptionML=[DEU=Kampagnencode;
+                                                              ENU=Campaign Code] }
+    { 19  ;   ;Has Icon            ;Boolean       ;CaptionML=[DEU=Hat Icon;
+                                                              ENU=Has Icon];
+                                                   Editable=No }
+    { 20  ;   ;Has Description     ;Boolean       ;CaptionML=[DEU=Hat Beschreibung;
+                                                              ENU=Has Description];
+                                                   Editable=No }
+    { 21  ;   ;Sorting             ;Integer       ;CaptionML=[DEU=Reihenfolge;
+                                                              ENU=Sorting];
+                                                   Editable=No }
+    { 22  ;   ;Max. Shipping Category;Option      ;CaptionML=[DEU=Max. Versandkategorie;
+                                                              ENU=Max. Shipping Category];
+                                                   OptionCaptionML=[DEU=Keine Kategorie,Kategorie 1,Kategorie 2,Kategorie 3,Kategorie 4,Kategorie 5,Kategorie 6;
+                                                                    ENU=No Category,Category 1,Category 2,Category 3,Category 4,Category 5,Category 6];
+                                                   OptionString=0,1,2,3,4,5,6 }
+    { 23  ;   ;Sales Order Text    ;Code20        ;TableRelation="Standard Text".Code;
+                                                   CaptionML=[DEU=Auftrag Textbaustein;
+                                                              ENU=Sales Order Text] }
+    { 24  ;   ;Shipping Notice Mail Text;Code10   ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Text E-Mail Versandbenachrichtigung;
+                                                              ENU=Shipping Notice Mail Text] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Line No.        ;Clustered=Yes }
+    {    ;Shop Code,Language Code,Sorting          }
+    {    ;Shipping Cost                            }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,114 @@
+OBJECT Table 5447306 Webshop Item Description
+{
+  OBJECT-PROPERTIES
+  {
+    Date=18.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnModify=BEGIN
+               // Webshop-Artikel zur Aktualisierung kennzeichnen
+               WebshopManagement.SetWebshopItemModified("Item No.",TRUE,FALSE,FALSE);
+             END;
+
+    OnDelete=BEGIN
+               // Web-Datensatz l�schen
+               IF WebshopManagement.ConnectionTest THEN BEGIN
+                 IF Type = Type::Description THEN
+                   WebshopUpdateManagement.DeleteWebshopItemDescription(Rec);
+               END;
+             END;
+
+    OnRename=BEGIN
+               ERROR(Text001);
+             END;
+
+    CaptionML=[DEU=Webshop Artikelbeschreibung;
+               ENU=Webshop Item Description];
+    LookupPageID=Page5447311;
+    DrillDownPageID=Page5447311;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Item No.            ;Code20        ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Item No.];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Line No.            ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.];
+                                                   NotBlank=Yes }
+    { 4   ;   ;Description Template Code;Code30   ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=Webshop Textmodul;
+                                                              ENU=Webshop Text Module] }
+    { 5   ;   ;Description         ;Text45        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 6   ;   ;Content             ;Boolean       ;CaptionML=[DEU=Inhalt;
+                                                              ENU=Content];
+                                                   Editable=No }
+    { 7   ;   ;All Language Codes  ;Boolean       ;CaptionML=[DEU=Alle Sprachen;
+                                                              ENU=All Language Codes] }
+    { 8   ;   ;Display             ;Option        ;CaptionML=[DEU=Darstellung;
+                                                              ENU=Display];
+                                                   OptionCaptionML=[DEU=Unten,Oben,Lightbox;
+                                                                    ENU=Bottom,Top,Modal];
+                                                   OptionString=Bottom,Top,Modal }
+    { 10  ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code] }
+    { 11  ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Beschreibung,Bewertung;
+                                                                    ENU=Description,Review];
+                                                   OptionString=Description,Review }
+    { 12  ;   ;Comment Released    ;Boolean       ;CaptionML=[DEU=Freigegeben;
+                                                              ENU=Released] }
+    { 13  ;   ;Comment Date        ;DateTime      ;CaptionML=[DEU=Datum;
+                                                              ENU=Date] }
+    { 14  ;   ;Comment Rating      ;Option        ;CaptionML=[DEU=Bewertung;
+                                                              ENU=Rating];
+                                                   OptionCaptionML=[DEU=" ,�,��,���,����,�����";
+                                                                    ENU=" ,�,��,���,����,�����"];
+                                                   OptionString=[ ,1,2,3,4,5] }
+    { 15  ;   ;Comment User Name   ;Text50        ;CaptionML=[DEU=Autor Name;
+                                                              ENU=Author Name] }
+    { 16  ;   ;Comment User City   ;Text30        ;CaptionML=[DEU=Autor Ort;
+                                                              ENU=Author City] }
+    { 20  ;   ;Item Description    ;Text50        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Item".Description WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                        Language Code=FIELD(Language Code),
+                                                                                                        Item No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Artikelbeschreibung;
+                                                              ENU=Item Description];
+                                                   Editable=No }
+    { 21  ;   ;Marketplace Only    ;Boolean       ;CaptionML=[DEU=Nur f�r Marktpl�tze;
+                                                              ENU=Only for Marketplaces] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Item No.,Line No.;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      Text001@1000000001 : TextConst 'DEU=Sie k�nnen den Datensatz nicht umbenennen.;ENU=Row cannot be renamed';
+      WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

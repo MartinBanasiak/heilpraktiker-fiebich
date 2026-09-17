@@ -1,0 +1,676 @@
+OBJECT Page 130 Posted Sales Shipment
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.07.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Geb. Verkaufslieferung;
+               ENU=Posted Sales Shipment];
+    InsertAllowed=No;
+    SourceTable=Table110;
+    PageType=Document;
+    OnOpenPage=BEGIN
+                 SetSecurityFilterOnRespCenter;
+               END;
+
+    OnModifyRecord=BEGIN
+                     CODEUNIT.RUN(CODEUNIT::"Shipment Header - Edit",Rec);
+                     EXIT(FALSE);
+                   END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 47      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Lieferung;
+                                 ENU=&Shipment];
+                      Image=Shipment }
+      { 10      ;2   ;Action    ;
+                      ShortCutKey=F7;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      RunObject=Page 396;
+                      RunPageLink=No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Statistics;
+                      PromotedCategory=Process }
+      { 78      ;2   ;Action    ;
+                      CaptionML=[DEU=Be&merkungen;
+                                 ENU=Co&mments];
+                      RunObject=Page 67;
+                      RunPageLink=Document Type=CONST(Shipment),
+                                  No.=FIELD(No.),
+                                  Document Line No.=CONST(0);
+                      Image=ViewComments }
+      { 80      ;2   ;Action    ;
+                      AccessByPermission=TableData 348=R;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DEU=Dimensionen;
+                                 ENU=Dimensions];
+                      ToolTipML=[DEU=Anzeigen oder Bearbeiten von Dimensionen, wie etwa eines Bereichs, eines Projekts oder einer Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen k�nnen, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.;
+                                 ENU=View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.];
+                      Image=Dimensions;
+                      OnAction=BEGIN
+                                 ShowDimensions;
+                               END;
+                                }
+      { 107     ;2   ;Action    ;
+                      AccessByPermission=TableData 456=R;
+                      CaptionML=[DEU=Genehmigungen;
+                                 ENU=Approvals];
+                      ToolTipML=[DEU=Zeigt eine Liste der Datens�tze an, die noch genehmigt werden m�ssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.;
+                                 ENU=View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.];
+                      ApplicationArea=#Suite;
+                      Image=Approvals;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.ShowPostedApprovalEntries(RECORDID);
+                               END;
+                                }
+      { 3       ;2   ;Action    ;
+                      Name=CertificateOfSupplyDetails;
+                      CaptionML=[DEU=Details der Gelangensbest�tigung;
+                                 ENU=Certificate of Supply Details];
+                      RunObject=Page 780;
+                      RunPageLink=Document Type=FILTER(Sales Shipment),
+                                  Document No.=FIELD(No.);
+                      Image=Certificate }
+      { 5       ;2   ;Action    ;
+                      Name=PrintCertificateofSupply;
+                      CaptionML=[DEU=Gelangensbest�tigung drucken;
+                                 ENU=Print Certificate of Supply];
+                      Promoted=No;
+                      Image=PrintReport;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 CertificateOfSupply@1002 : Record 780;
+                               BEGIN
+                                 CertificateOfSupply.SETRANGE("Document Type",CertificateOfSupply."Document Type"::"Sales Shipment");
+                                 CertificateOfSupply.SETRANGE("Document No.","No.");
+                                 CertificateOfSupply.Print;
+                               END;
+                                }
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 74      ;1   ;ActionGroup;
+                      CaptionML=[DEU=F&unktion;
+                                 ENU=F&unctions];
+                      Image=Action }
+      { 79      ;2   ;Action    ;
+                      CaptionML=[DEU=&Paketverfolgung;
+                                 ENU=&Track Package];
+                      Image=ItemTracking;
+                      OnAction=BEGIN
+                                 StartTrackingSite;
+                               END;
+                                }
+      { 49      ;1   ;Action    ;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=D&rucken;
+                                 ENU=&Print];
+                      Promoted=Yes;
+                      Image=Print;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 CurrPage.SETSELECTIONFILTER(SalesShptHeader);
+                                 SalesShptHeader.PrintRecords(TRUE);
+                               END;
+                                }
+      { 50      ;1   ;Action    ;
+                      CaptionML=[DEU=&Navigate;
+                                 ENU=&Navigate];
+                      Promoted=Yes;
+                      Image=Navigate;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 Navigate;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General] }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Datensatzes an.;
+                           ENU=Specifies the number of the record.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 52  ;2   ;Field     ;
+                CaptionML=[DEU=Debitor;
+                           ENU=Customer];
+                ToolTipML=[DEU=Gibt den Namen des Debitors an der Verk. an Adresse an.;
+                           ENU=Specifies the name of customer at the sell-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Customer Name";
+                Editable=FALSE }
+
+    { 6   ;2   ;Group     ;
+                CaptionML=[DEU=Verk. an;
+                           ENU=Sell-to];
+                GroupType=Group }
+
+    { 54  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Verk. an Adresse des Debitors an.;
+                           ENU=Specifies the customer's sell-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Address";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 56  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt die erweiterte Verk. an Adresse des Debitors an.;
+                           ENU=Specifies the customer's extended sell-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Address 2";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 8   ;3   ;Field     ;
+                CaptionML=[DEU=PLZ;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die PLZ des Debitors an der Verk. an Adresse an.;
+                           ENU=Specifies the post code of the customer's sell-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Post Code";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 58  ;3   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort des Debitors an der Verk. an Adresse an.;
+                           ENU=Specifies the city of the customer's sell-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to City";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 112 ;3   ;Field     ;
+                CaptionML=[DEU=Kontaktnr.;
+                           ENU=Contact No.];
+                ToolTipML=[DEU=Gibt die Kontaktnummer an.;
+                           ENU=Specifies the contact number.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Contact No.";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 60  ;2   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen des Kontakts des Debitors an der Verk. an Adresse an.;
+                           ENU=Specifies the name of the contact at the customer's sell-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Contact";
+                Editable=FALSE }
+
+    { 16  ;2   ;Field     ;
+                SourceExpr="No. Printed";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 14  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Buchungsdatum des Postens an.;
+                           ENU=Specifies the posting date for the entry.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Posting Date";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 27  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Buchungsdatum des Belegs an.;
+                           ENU=Specifies the posting date of the document.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Document Date";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 84  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem der Debitor die Lieferung des Auftrags w�nscht.;
+                           ENU=Specifies the date that the customer has asked for the order to be delivered.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Requested Delivery Date";
+                Editable=FALSE }
+
+    { 87  ;2   ;Field     ;
+                SourceExpr="Promised Delivery Date";
+                Editable=FALSE }
+
+    { 111 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Verkaufsangebots an, wenn der Verkaufsprozess mit einem Angebot begann.;
+                           ENU=Specifies the number of the sales quote document if a quote was used to start the sales process.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Quote No.";
+                Editable=FALSE }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Verkaufsauftrags an, aus dem die Rechnung gebucht wurde.;
+                           ENU=Specifies the number of the sales order that this invoice was posted from.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Order No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 89  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer an, die der Debitor im eigenen System verwendet, um auf diesen Verkaufsbeleg zu verweisen.;
+                           ENU=Specifies the number that the customer uses in their own system to refer to this sales document.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="External Document No.";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 12  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Code f�r den Verk�ufer an, der normalerweise das Konto dieses Debitors bearbeitet.;
+                           ENU=Specifies a code for the salesperson who normally handles this customer's account.];
+                ApplicationArea=#Suite;
+                SourceExpr="Salesperson Code";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 82  ;2   ;Field     ;
+                SourceExpr="Responsibility Center";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 46  ;1   ;Part      ;
+                Name=SalesShipmLines;
+                ApplicationArea=#Basic,#Suite;
+                SubPageLink=Document No.=FIELD(No.);
+                PagePartID=Page131 }
+
+    { 1906801201;1;Group  ;
+                CaptionML=[DEU=Lieferung;
+                           ENU=Shipping];
+                GroupType=Group }
+
+    { 30  ;2   ;Field     ;
+                CaptionML=[DEU=Adresscode;
+                           ENU=Address Code];
+                ToolTipML=[DEU=Gibt den Code f�r die zus�tzliche Lieferadresse des Debitors an.;
+                           ENU=Specifies the code for the customer's additional shipment address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Code";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 32  ;2   ;Field     ;
+                CaptionML=[DEU=Name;
+                           ENU=Name];
+                ToolTipML=[DEU=Gibt den Namen des Debitors an, an den Sie die Artikel geliefert haben.;
+                           ENU=Specifies the name of the customer that you delivered the items to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Name";
+                Editable=FALSE }
+
+    { 34  ;2   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Adresse an, an die Sie die Artikel geliefert haben.;
+                           ENU=Specifies the address that you delivered the items to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Address";
+                Editable=FALSE }
+
+    { 36  ;2   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt die erweiterte Adresse an, an die Sie die Artikel geliefert haben.;
+                           ENU=Specifies the extended address that you delivered the items to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Address 2";
+                Editable=FALSE }
+
+    { 69  ;2   ;Field     ;
+                CaptionML=[DEU=PLZ-Code;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die PLZ des Debitors an der Lief. an Adresse an.;
+                           ENU=Specifies the post code of the customer's ship-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Post Code";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 38  ;2   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort des Debitors an der Lief. an Adresse an.;
+                           ENU=Specifies the city of the customer's ship-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to City";
+                Editable=FALSE }
+
+    { 40  ;2   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson an der Adresse an, an die die Artikel geliefert wurden.;
+                           ENU=Specifies the name of the person you regularly contact at the address that the items were shipped to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Contact";
+                Editable=FALSE }
+
+    { 65  ;2   ;Field     ;
+                SourceExpr="Location Code";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 91  ;2   ;Field     ;
+                SourceExpr="Outbound Whse. Handling Time";
+                Editable=FALSE }
+
+    { 95  ;2   ;Field     ;
+                SourceExpr="Shipping Time";
+                Editable=FALSE }
+
+    { 7   ;2   ;Group     ;
+                CaptionML=[DEU=Lieferbedingung;
+                           ENU=Shipment Method];
+                GroupType=Group }
+
+    { 42  ;3   ;Field     ;
+                CaptionML=[DEU=Code;
+                           ENU=Code];
+                ToolTipML=[DEU=Gibt die Lieferbedingung f�r die Lieferung an.;
+                           ENU=Specifies the shipment method for the shipment.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Shipment Method Code";
+                Editable=FALSE }
+
+    { 62  ;3   ;Field     ;
+                CaptionML=[DEU=Zusteller;
+                           ENU=Agent];
+                ToolTipML=[DEU=Gibt an, welcher Zusteller verwendet wird, um die Artikel im Verkaufsbeleg zum Debitor zu transportieren.;
+                           ENU=Specifies which shipping agent is used to transport the items on the sales document to the customer.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shipping Agent Code";
+                Importance=Additional }
+
+    { 93  ;3   ;Field     ;
+                CaptionML=[DEU=Zustellertransportart;
+                           ENU=Agent Service];
+                ToolTipML=[DEU=Gibt an, welche Zustellertransportart verwendet wird, um die Artikel im Verkaufsbeleg zum Debitor zu transportieren.;
+                           ENU=Specifies which shipping agent service is used to transport the items on the sales document to the customer.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shipping Agent Service Code";
+                Importance=Additional }
+
+    { 72  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt die Paketnummer des Zustellers an.;
+                           ENU=Specifies the shipping agent's package number.];
+                ApplicationArea=#Suite;
+                SourceExpr="Package Tracking No.";
+                Importance=Additional }
+
+    { 44  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem die Verkaufslieferung gebucht wurde.;
+                           ENU=Specifies the date when the sales shipment was posted.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Shipment Date";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 1905885101;1;Group  ;
+                CaptionML=[DEU=Abrechnung;
+                           ENU=Billing];
+                GroupType=Group }
+
+    { 18  ;2   ;Field     ;
+                CaptionML=[DEU=Debitorennummer;
+                           ENU=Customer No.];
+                ToolTipML=[DEU=Gibt die Nummer des Debitors an der Rechnungsanschrift an.;
+                           ENU=Specifies the number of the customer at the billing address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Customer No.";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 20  ;2   ;Field     ;
+                CaptionML=[DEU=Name;
+                           ENU=Name];
+                ToolTipML=[DEU=Gibt den Namen des Debitors an, an den Sie die Rechnung gesendet haben.;
+                           ENU=Specifies the name of the customer that you sent the invoice to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Name";
+                Editable=FALSE }
+
+    { 22  ;2   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Adresse an, an die Sie die Rechnung gesendet haben.;
+                           ENU=Specifies the address that you sent the invoice to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Address";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 24  ;2   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt die erweiterte Adresse an, an die Sie die Rechnung gesendet haben.;
+                           ENU=Specifies the extended address that you sent the invoice to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Address 2";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 67  ;2   ;Field     ;
+                CaptionML=[DEU=PLZ;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die PLZ des Debitors an der Rech. an Adresse an.;
+                           ENU=Specifies the post code of the customer's bill-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Post Code";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 26  ;2   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort des Debitors an der Rech. an Adresse an.;
+                           ENU=Specifies the city of the customer's bill-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to City";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 114 ;2   ;Field     ;
+                CaptionML=[DEU=Kontaktnr.;
+                           ENU=Contact No.];
+                ToolTipML=[DEU=Gibt die Nummer des Kontakts des Debitors an der Rech. an Adresse an.;
+                           ENU=Specifies the number of the contact at the customer's bill-to address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Contact No.";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 28  ;2   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson beim Debitor an der Adresse an, an die Sie die Rechnung gesendet haben.;
+                           ENU=Specifies the name of the person you regularly contact at the customer to whom you sent the invoice.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Contact";
+                Editable=FALSE }
+
+    { 9   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code f�r die Shortcutdimension 1 an.;
+                           ENU=Specifies the code for Shortcut Dimension 1.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shortcut Dimension 1 Code";
+                Editable=FALSE }
+
+    { 63  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code f�r die Shortcutdimension 2 an.;
+                           ENU=Specifies the code for Shortcut Dimension 2.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shortcut Dimension 2 Code";
+                Editable=FALSE }
+
+    { 1000000023;1;Group  ;
+                Name=E-Commerce;
+                GroupType=Group }
+
+    { 1000000020;2;Field  ;
+                SourceExpr="Webshop Order No." }
+
+    { 1000000021;2;Field  ;
+                SourceExpr="Webshop Shop Code" }
+
+    { 1000000018;2;Field  ;
+                SourceExpr="Webshop Language Code" }
+
+    { 1000000019;2;Field  ;
+                SourceExpr="Webshop Shipping Opt. Descr." }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Webshop Payment Opt. Descr." }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Webshop Payment Transaction ID" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Date Webshop Synchronization" }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Date Web. Order Confirm. Sent" }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Date Web. Ship. Notice Sent" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Date Last Updated (Webshop)" }
+
+    { 1000000010;2;Group  ;
+                Name=Reklamation;
+                CaptionML=[DEU=Reklamation;
+                           ENU=Return Order];
+                GroupType=Group }
+
+    { 1000000011;3;Field  ;
+                SourceExpr="Webshop Return Order No.";
+                Editable=FALSE }
+
+    { 1000000008;3;Field  ;
+                SourceExpr="Webshop Return Order Shop Code";
+                Editable=FALSE }
+
+    { 1000000009;3;Field  ;
+                SourceExpr="Webshop Ret. Order Lang. Code";
+                Editable=FALSE }
+
+    { 1000000006;3;Field  ;
+                SourceExpr="Date Webshop Ret. Order Sync.";
+                Editable=FALSE }
+
+    { 1000000007;2;Group  ;
+                Name=Abonnement;
+                CaptionML=[DEU=Abonnement;
+                           ENU=Subscription];
+                Editable=FALSE;
+                GroupType=Group }
+
+    { 1000000004;3;Field  ;
+                SourceExpr="Webshop Subscription Code" }
+
+    { 1000000005;3;Field  ;
+                SourceExpr="Webshop Subscr. Cust. Line No." }
+
+    { 1000000002;3;Field  ;
+                SourceExpr="Web. Cust. Ps.-Pay. Line No." }
+
+    { 1000000003;3;Field  ;
+                SourceExpr="Webshop Sub. Seq. St. Line No." }
+
+    { 1000000000;3;Field  ;
+                SourceExpr="Is Webshop Subscr. Ship. Order" }
+
+    { 1000000001;3;Field  ;
+                SourceExpr="Is Webshop Subscr. Inv. Order" }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      SalesShptHeader@1000 : Record 110;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (23):
+
+          TYPE            SUBTYPE         SOURCEEXPR                        NAME                              CAPTION
+
+          Group           Group                                             E-Commerce                        <E-Commerce>
+          Field                           "Webshop Order No."               <Webshop Order No.>               <Online Bestellnummer>
+          Field                           "Webshop Shop Code"               <Webshop Shop Code>               <Webshop Code>
+          Field                           "Webshop Language Code"           <Webshop Language Code>           <Webshop Sprachcode>
+          Field                           "Webshop Pay. Opt. Description"   <Webshop Pay. Opt. Description>   <Zahlungsart Beschreibung>
+          Field                           "Webshop Ship. Opt. Description"  <Webshop Ship. Opt. Description>  <Versandart Beschreibung>
+          Field                           "Webshop Payment Transaction ID"  <Webshop Payment Transaction ID>  <Zahlungstransaktionsnr.>
+          Field                           "Webshop Sync Date"               <Webshop Sync Date>               <Empfangen am>
+          Field                           "Webshop Order Mail 2 Sent"       <Webshop Order Mail 2 Sent>       <Auftragsbest�tigung versendet>
+          Field                           "Webshop Order Mail 3 Sent"       <Webshop Order Mail 3 Sent>       <Lieferbenachrichtigung  versendet>
+          Field                           "Webshop Last Date Updated"       <Webshop Last Date Updated>       <Online Aktualisiert am>
+          Group           Group                                             Reklamation                       Reklamation
+          Field                           "Webshop Return Order No."        <Webshop Return Order No.>        <Online Reklamationsnr.>
+          Field                           "Webshop Return Order Shop"       <Webshop Return Order Shop>       <Webshop Shop Code Reklamation>
+          Field                           "Webshop Return Order Language"   <Webshop Return Order Language>   <Webshop Sprachcode Reklamation>
+          Field                           "Webshop Return Order Sync Date"  <Webshop Return Order Sync Date>  <Webshop Synchronisationsdatum Reklamation>
+          Group          Group                                          AbonnementSubscription
+          Field                        "Webshop Subscription Code"      <Webshop Subscription Code>      <Webshop Subscription Code>
+          Field                        "Webshop Sub. Cust. Line No."    <Webshop Sub. Cust. Line No.>    <Webshop Sub. Cust. Line No.>
+          Field                        "Webshop Cust. Ps.-Pay. Line No"<Webshop Cust. Ps.-Pay. Line No><Webshop Cust. Ps.-Pay. Line No>
+          Field                        "Webshop Sub. Seq. St. Line No."<Webshop Sub. Seq. St. Line No.><Webshop Sub. Seq. St. Line No.>
+          Field                        "Webshop Subscr. Shipping Order"<Webshop Subscr. Shipping Order><Webshop Subscr. Shipping Order>
+          Field                        "Webshop Subscr. Paym. Order"    <Webshop Subscr. Paym. Order>    <Webshop Subscr. Paym. Order>
+
+
+
+        PAGE ACTIONS (0):
+        TRIGGERS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

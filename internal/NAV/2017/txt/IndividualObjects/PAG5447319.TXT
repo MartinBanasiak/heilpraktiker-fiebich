@@ -1,0 +1,129 @@
+OBJECT Page 5447319 Webshop Order List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Bestell�bersicht;
+               ENU=Webshop Order List];
+    SourceTable=Table36;
+    SourceTableView=SORTING(Date Webshop Synchronization)
+                    ORDER(Descending)
+                    WHERE(Document Type=FILTER(Quote|Order),
+                          Webshop Order No.=FILTER(<>''));
+    PageType=List;
+    ActionList=ACTIONS
+    {
+      { 1000000015;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000016;1 ;Action    ;
+                      Name=Bestellung �ffnen;
+                      ShortCutKey=Return;
+                      CaptionML=[DEU=Bestellung �ffnen;
+                                 ENU=Card];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=ViewPage;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 SalesHeader@1000000000 : Record 36;
+                               BEGIN
+                                 SalesHeader.GET("Document Type","No.");
+                                 IF "Document Type" = "Document Type"::Order THEN
+                                   PAGE.RUN(PAGE::"Sales Order",SalesHeader);
+                                 IF "Document Type" = "Document Type"::Quote THEN
+                                   PAGE.RUN(PAGE::"Sales Quote",SalesHeader);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Empfangen am;
+                           ENU=Webshop Sync Date];
+                SourceExpr="Date Webshop Synchronization" }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Online-Bestellnr.;
+                           ENU=Webshop Order No.];
+                SourceExpr="Webshop Order No." }
+
+    { 1000000004;2;Field  ;
+                CaptionML=[DEU=Webshop Code;
+                           ENU=Webshop Shop Code];
+                SourceExpr="Webshop Shop Code" }
+
+    { 1000000005;2;Field  ;
+                CaptionML=[DEU=Webshop Sprachcode;
+                           ENU=Webshop Language Code];
+                SourceExpr="Webshop Language Code" }
+
+    { 1000000006;2;Field  ;
+                CaptionML=[DEU=Belegart;
+                           ENU=Document Type];
+                SourceExpr="Document Type" }
+
+    { 1000000007;2;Field  ;
+                CaptionML=[DEU=Nr.;
+                           ENU=No.];
+                SourceExpr="No." }
+
+    { 1000000008;2;Field  ;
+                CaptionML=[DEU=Verk. an Deb.-Nr.;
+                           ENU=Sell-to Customer No.];
+                SourceExpr="Sell-to Customer No." }
+
+    { 1000000009;2;Field  ;
+                CaptionML=[DEU=Verk. an Name;
+                           ENU=Sell-to Customer Name];
+                SourceExpr="Sell-to Customer Name" }
+
+    { 1000000010;2;Field  ;
+                CaptionML=[DEU=Verk. an PLZ-Code;
+                           ENU=Sell-to Post Code];
+                SourceExpr="Sell-to Post Code" }
+
+    { 1000000011;2;Field  ;
+                CaptionML=[DEU=Verk. an Ort;
+                           ENU=Sell-to City];
+                SourceExpr="Sell-to City" }
+
+    { 1000000012;2;Field  ;
+                CaptionML=[DEU=Ursprungsbetrag Online-Bestellung;
+                           ENU=Webshop Original Amount];
+                SourceExpr="Webshop Original Order Amount" }
+
+    { 1000000013;2;Field  ;
+                CaptionML=[DEU=Status;
+                           ENU=Status];
+                SourceExpr=Status }
+
+    { 1000000014;2;Field  ;
+                CaptionML=[DEU=Auftragsbest�tigung versendet;
+                           ENU=Order Confirmation sent];
+                SourceExpr="Date Web. Order Confirm. Sent" }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

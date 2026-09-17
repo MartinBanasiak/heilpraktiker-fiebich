@@ -1,0 +1,179 @@
+OBJECT Page 5093 Segment List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17.07.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Segmente�bersicht;
+               ENU=Segment List];
+    SourceTable=Table5076;
+    DataCaptionFields=Campaign No.,Salesperson Code;
+    PageType=List;
+    CardPageID=Segment;
+    ActionList=ACTIONS
+    {
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 15      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Segment;
+                                 ENU=&Segment];
+                      Image=Segment }
+      { 17      ;2   ;Action    ;
+                      CaptionML=[DEU=Aufga&ben;
+                                 ENU=T&o-dos];
+                      ToolTipML=[DEU=Zeigt die Aufgaben an, die Verk�ufern oder Teams zugewiesen wurden. Aufgaben k�nnen mit Kontakten und/oder Kampagnen verkn�pft werden.;
+                                 ENU=View the to-dos that have been assigned to salespeople or teams. To-dos can be linked to contacts and/or campaigns.];
+                      RunObject=Page 5096;
+                      RunPageView=SORTING(Segment No.);
+                      RunPageLink=Segment No.=FIELD(No.);
+                      Image=TaskList }
+      { 1000000000;1 ;ActionGroup;
+                      Name=E-Commerce }
+      { 1000000001;2 ;Action    ;
+                      Name=Send Contacts to Newsletter-System;
+                      CaptionML=[DEU=Kontakte mit E-Commerce Marketing synchronisieren;
+                                 ENU=Synchronize Contacts with E-Commerce Marketing];
+                      Promoted=Yes;
+                      Image=TransmitElectronicDoc;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text5447300@1000000000 : TextConst 'DEU=Kontakte an Newsletter-System senden;ENU=Send contacts to newsletter-system';
+                                 WebshopSetup@1000000001 : Record 5447300;
+                                 DefaultNumber@1000000002 : Integer;
+                                 i@1000000003 : Integer;
+                                 Shop@1000000004 : Record 5447301;
+                                 OptionString@1000000005 : Text;
+                                 SelectedOption@1000000006 : Integer;
+                                 Text5447301@1000000007 : TextConst 'DEU=Mit welchem Webshop sollen die Kontakte verkn�pft werden?;ENU=With what Shop should the contacts be synced?';
+                               BEGIN
+                                 //--- dynamic commerce ---
+                                 IF Rec."Webshop Code" = '' THEN BEGIN
+                                   WebshopSetup.GET;
+                                   DefaultNumber := 1;
+
+                                   IF Shop.COUNT > 1 THEN BEGIN
+                                     i := 1;
+                                     IF Shop.FINDSET THEN REPEAT
+                                       IF i <> 1 THEN
+                                         OptionString += ',';
+                                       OptionString += Shop.Description;
+                                       IF Shop.Code = WebshopSetup."Default Shop Code" THEN
+                                         DefaultNumber := i;
+                                       i += 1;
+                                     UNTIL Shop.NEXT = 0;
+                                     SelectedOption := DIALOG.STRMENU(OptionString,DefaultNumber,Text5447301);
+                                   END ELSE BEGIN
+                                     SelectedOption := 1;
+                                   END;
+                                   IF SelectedOption = 1 THEN
+                                     Shop.FINDFIRST
+                                   ELSE BEGIN
+                                     Shop.RESET;
+                                     i := 1;
+                                     IF Shop.FINDSET THEN REPEAT
+                                       i += 1;
+                                     UNTIL (SelectedOption=i) OR (Shop.NEXT = 0);
+                                   END;
+                                 END ELSE
+                                   Shop.GET("Webshop Code");
+
+                                 WebshopUpdateMgmt.StateIndicatorOpen(Text5447300);
+                                 WebshopUpdateMgmt.NewsletterSegmentLineSyncAll(Rec,TRUE,Shop);
+                                 WebshopUpdateMgmt.NewsletterSegmentLineSyncAll(Rec,FALSE,Shop);
+                                 WebshopUpdateMgmt.StateIndicatorClose;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                GroupType=Repeater }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Segments an.;
+                           ENU=Specifies the number of the segment.];
+                ApplicationArea=#All;
+                SourceExpr="No." }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Beschreibung des Segments an.;
+                           ENU=Specifies the description of the segment.];
+                ApplicationArea=#All;
+                SourceExpr=Description }
+
+    { 6   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer der Kampagne an, f�r die das Segment erstellt wurde.;
+                           ENU=Specifies the number of the campaign for which the segment has been created.];
+                SourceExpr="Campaign No." }
+
+    { 8   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code des Verk�ufers an, der f�r dieses Segment und/oder die Aktivit�t verantwortlich ist.;
+                           ENU=Specifies the code of the salesperson responsible for this segment and/or interaction.];
+                SourceExpr="Salesperson Code" }
+
+    { 10  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem das Segment erstellt wurde.;
+                           ENU=Specifies the date that the segment was created.];
+                ApplicationArea=#RelationshipMgmt;
+                SourceExpr=Date }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      "--- dynamic commerce ---"@1000000001 : Integer;
+      WebshopUpdateMgmt@1000000000 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (0):
+        PAGE ACTIONS (2):
+
+          NAME                                            CAPTION                                 TYPE                 SUBTYPE
+
+          E-Commerce                                      <E-Commerce>                            ActionGroup
+          Synchronize Contacts with E-Commerce Marketing  Kontakte mit E-Commerce Marketing synchronisieren
+
+
+        TRIGGERS (0):
+        GLOBAL VARIABLES (1):
+
+          WebshopUpdateMgmt
+
+
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

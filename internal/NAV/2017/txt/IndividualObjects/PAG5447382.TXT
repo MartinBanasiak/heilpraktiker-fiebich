@@ -1,0 +1,79 @@
+OBJECT Page 5447382 Webshop Campaign Element List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop Kampagnen Elemente;
+               ENU=Webshop Campaign Elements];
+    ModifyAllowed=No;
+    SourceTable=Table5447346;
+    DataCaptionExpr=TitleText;
+    PageType=List;
+    OnOpenPage=BEGIN
+                 TitleText := STRSUBSTNO(Text001,GETFILTER("Link Type"),GETFILTER("Link-to Header Code"));
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       Description := GetName();
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Type }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Include / Exclude" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Item No." }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Item Variant Code" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Category Line No." }
+
+    { 1000000010;2;Field  ;
+                Name=Description;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description;
+                Editable=FALSE }
+
+  }
+  CODE
+  {
+    VAR
+      TitleText@1000000000 : Text[120];
+      Text001@1000000001 : TextConst 'DEU=%1 f?r Shop-Kampagne %2;ENU=%2 for Shop-Campagin %2';
+      Description@1000000002 : Text[80];
+
+    PROCEDURE SetFilters@1000000000(ParamLinkToHeaderCode@1000000000 : Code[20];ParamLinkType@1000000001 : 'ConditionItem,ActionItem');
+    BEGIN
+      SETRANGE("Link-to Header Code",ParamLinkToHeaderCode);
+      SETRANGE("Link Type",ParamLinkType);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

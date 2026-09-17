@@ -1,0 +1,132 @@
+OBJECT Page 5447335 Webshop Item Ratings List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=16.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop Artikelbewertungen;
+               ENU=Webshop Item Ratings];
+    InsertAllowed=No;
+    SourceTable=Table5447317;
+    PageType=List;
+    CardPageID=Webshop Item Ratings Card;
+    OnOpenPage=BEGIN
+                 SETCURRENTKEY("Review Date");
+                 ASCENDING(FALSE);
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000015;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000014;1 ;Action    ;
+                      Name=Release;
+                      CaptionML=[DEU=Freigegeben;
+                                 ENU=Release];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Approve;
+                      PromotedCategory=Process;
+                      Scope=Page;
+                      OnAction=VAR
+                                 WebshopItemComment@1000000001 : Record 5447317;
+                                 form@1000000000 : Page 5447334;
+                                 filters@1000000002 : Text[250];
+                                 IsMarked@1000000003 : Boolean;
+                               BEGIN
+                                 "Is Review Released" := TRUE;
+                                 Checked := TRUE;
+                                 MODIFY(FALSE);
+                                 "Date Last Modified" := CURRENTDATETIME;
+                                 WebshopUpdateManagement.UpdateWebshopItemComment(Rec);
+                               END;
+                                }
+      { 1000000013;1 ;Action    ;
+                      Name=Hide;
+                      CaptionML=[DEU=Ausblenden;
+                                 ENU=Hide];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Reject;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopItemDescription@1000000001 : Record 5447306;
+                                 WebshopItem@1000000002 : Record 5447304;
+                               BEGIN
+                                 "Is Review Released" := FALSE;
+                                 Checked := TRUE;
+                                 MODIFY(FALSE);
+                                 "Date Last Modified" := CURRENTDATETIME;
+                                 WebshopUpdateManagement.UpdateWebshopItemComment(Rec);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Shop Code" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Language Code" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Review Date" }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Item No." }
+
+    { 1000000016;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Review Text";
+                Visible=false }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Review Title" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Is Review Released";
+                Editable=False }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Review Rating" }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Review User Name" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Review User City";
+                Visible=false }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Review User E-Mail";
+                Visible=false }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

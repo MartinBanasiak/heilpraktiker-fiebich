@@ -1,0 +1,105 @@
+OBJECT Table 5447322 Webshop Attribute Option
+{
+  OBJECT-PROPERTIES
+  {
+    Date=22.02.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=VAR
+               TempAttributeOption@1000000000 : Record 5447322;
+             BEGIN
+               // Reihenfolge beim Einf�gen setzten
+               TempAttributeOption.SETCURRENTKEY("Attribute Code",Sorting);
+               TempAttributeOption.SETRANGE("Attribute Code","Attribute Code");
+               IF TempAttributeOption.FINDLAST THEN
+                 Sorting :=  TempAttributeOption.Sorting + 1
+               ELSE
+                 Sorting := 1;
+             END;
+
+    OnDelete=BEGIN
+               AttributeTranslation.SETRANGE(AttributeTranslation.Type,AttributeTranslation.Type::"Attribute Option");
+               AttributeTranslation.SETRANGE("Attribute Code","Attribute Code");
+               AttributeTranslation.SETRANGE("Attribute Link No.",Code);
+               AttributeTranslation.DELETEALL(TRUE);
+             END;
+
+    CaptionML=[DEU=Webshop Merkmaloption;
+               ENU=Webshop Attribute Option];
+    LookupPageID=Page5447326;
+    DrillDownPageID=Page5447326;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Attribute Code      ;Code30        ;TableRelation="Webshop Attribute".Code;
+                                                   CaptionML=[DEU=Merkmalcode;
+                                                              ENU=Attribute Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Code                ;Code30        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 10  ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 11  ;   ;Filter for exist. Data;Text100     ;OnValidate=BEGIN
+                                                                Attribute.GET("Attribute Code");
+                                                                IF Attribute."Existing Data" <> Attribute."Existing Data"::" " THEN BEGIN
+                                                                  CASE Attribute."Existing Data" OF
+                                                                    Attribute."Existing Data"::Width: TempAttributeLink.SETFILTER("Value Decimal","Filter for exist. Data");
+                                                                    Attribute."Existing Data"::Length: TempAttributeLink.SETFILTER("Value Decimal","Filter for exist. Data");
+                                                                    Attribute."Existing Data"::Height: TempAttributeLink.SETFILTER("Value Decimal","Filter for exist. Data");
+                                                                    Attribute."Existing Data"::Cubage: TempAttributeLink.SETFILTER("Value Decimal","Filter for exist. Data");
+                                                                    Attribute."Existing Data"::Weight: TempAttributeLink.SETFILTER("Value Decimal","Filter for exist. Data");
+                                                                    Attribute."Existing Data"::RetailPrice: TempAttributeLink.SETFILTER("Value Decimal","Filter for exist. Data");
+                                                                    Attribute."Existing Data"::BasePrice: TempAttributeLink.SETFILTER("Value Decimal","Filter for exist. Data");
+                                                                    Attribute."Existing Data"::Vendor: TempAttributeLink.SETFILTER("Value Text","Filter for exist. Data");
+                                                                    Attribute."Existing Data"::Inventory: TempAttributeLink.SETFILTER("Value Integer","Filter for exist. Data");
+                                                                  END;
+                                                                END ELSE BEGIN
+                                                                  CASE Attribute."Data Type" OF
+                                                                    Attribute."Data Type"::Integer: TempAttributeLink.SETFILTER("Value Integer","Filter for exist. Data");
+                                                                    Attribute."Data Type"::Decimal: TempAttributeLink.SETFILTER("Value Decimal","Filter for exist. Data");
+                                                                    Attribute."Data Type"::Boolean: TempAttributeLink.SETFILTER("Value Boolean","Filter for exist. Data");
+                                                                    Attribute."Data Type"::Text: TempAttributeLink.SETFILTER("Value Text","Filter for exist. Data");
+                                                                  END;
+                                                                END;
+                                                              END;
+
+                                                   CaptionML=[DEU=Filter f�r best. Daten;
+                                                              ENU=Filter for exist. Data] }
+    { 12  ;   ;Icon                ;Boolean       ;CaptionML=[DEU=Symbol;
+                                                              ENU=Icon];
+                                                   Editable=No }
+    { 13  ;   ;Sorting             ;Integer       ;CaptionML=[DEU=Reihenfolge;
+                                                              ENU=Sorting] }
+    { 14  ;   ;Icon Link URL       ;Text250       ;CaptionML=[DEU=Icon Link URL;
+                                                              ENU=Icon Link URL] }
+    { 30  ;   ;Marketplace Attr. Option Code;Text30;
+                                                   CaptionML=[DEU=Marktplatz Merkmaloptionscode;
+                                                              ENU=Marketplace Attr. Option Code] }
+  }
+  KEYS
+  {
+    {    ;Attribute Code,Code                     ;Clustered=Yes }
+    {    ;Attribute Code,Sorting                   }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      Attribute@1000000000 : Record 5447320;
+      TempAttributeLink@1000000001 : Record 5447321;
+      AttributeTranslation@1000000002 : Record 5447323;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

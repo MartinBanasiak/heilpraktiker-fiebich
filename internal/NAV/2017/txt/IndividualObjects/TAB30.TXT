@@ -1,0 +1,146 @@
+OBJECT Table 30 Item Translation
+{
+  OBJECT-PROPERTIES
+  {
+    Date=12.07.17;
+    Time=16:00:00;
+    Version List=NAVW17.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    DataCaptionFields=Item No.,Variant Code,Language Code,Description;
+    OnInsert=BEGIN
+               // dynamic commerce ---
+               IF "Variant Code" <> '' THEN
+                 WebshopManagement.SetWebshopItemModified("Item No.",FALSE,FALSE,FALSE);
+               // dynamic commerce +++
+             END;
+
+    OnModify=BEGIN
+               // dynamic commerce ---
+               IF "Variant Code" <> '' THEN
+                 WebshopManagement.SetWebshopItemModified("Item No.",FALSE,FALSE,FALSE);
+               // dynamic commerce +++
+             END;
+
+    OnDelete=BEGIN
+               // dynamic commerce ---
+               IF "Variant Code" <> '' THEN
+                 WebshopManagement.SetWebshopItemModified("Item No.",FALSE,FALSE,FALSE);
+               // dynamic commerce +++
+             END;
+
+    OnRename=BEGIN
+               // dynamic commerce ---
+               IF "Variant Code" <> '' THEN BEGIN
+                 WebshopManagement.SetWebshopItemModified("Item No.",FALSE,FALSE,FALSE);
+                 WebshopManagement.SetWebshopItemModified(xRec."Item No.",FALSE,FALSE,FALSE);
+               END;
+               // dynamic commerce +++
+             END;
+
+    CaptionML=[DEU=Artikel�bersetzung;
+               ENU=Item Translation];
+    LookupPageID=Page35;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Item No.            ;Code20        ;TableRelation=Item;
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Item No.];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Language Code       ;Code10        ;TableRelation=Language;
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Description         ;Text50        ;OnValidate=BEGIN
+                                                                // dynamic commerce ---
+                                                                IF (Description <> xRec.Description) AND ("Variant Code" = '') THEN BEGIN
+                                                                  WebshopItem.SETRANGE("Language Code","Language Code");
+                                                                  WebshopItem.SETRANGE("Item No.","Item No.");
+                                                                  IF WebshopItem.FINDSET THEN REPEAT
+                                                                    Item.GET("Item No.");
+                                                                    IF (WebshopItem.Description = xRec.Description) OR (WebshopItem.Description = Item.Description) THEN BEGIN
+                                                                      WebshopItem.VALIDATE(Description,Description);
+                                                                      WebshopItem.MODIFY(TRUE);
+                                                                    END;
+                                                                  UNTIL WebshopItem.NEXT = 0;
+                                                                END;
+                                                                // dynamic commerce +++
+                                                              END;
+
+                                                   CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 4   ;   ;Description 2       ;Text50        ;OnValidate=BEGIN
+                                                                // dynamic commerce ---
+                                                                IF ("Description 2" <> xRec."Description 2") AND ("Variant Code" = '') THEN BEGIN
+                                                                  WebshopItem.SETRANGE("Language Code","Language Code");
+                                                                  WebshopItem.SETRANGE("Item No.","Item No.");
+                                                                  IF WebshopItem.FINDSET THEN REPEAT
+                                                                    Item.GET("Item No.");
+                                                                    IF (WebshopItem.Summary = xRec."Description 2") OR (WebshopItem.Summary = Item."Description 2") THEN BEGIN
+                                                                      WebshopItem.VALIDATE(Summary,"Description 2");
+                                                                      WebshopItem.MODIFY(TRUE);
+                                                                    END;
+                                                                  UNTIL WebshopItem.NEXT = 0;
+                                                                END;
+                                                                // dynamic commerce +++
+                                                              END;
+
+                                                   CaptionML=[DEU=Beschreibung 2;
+                                                              ENU=Description 2] }
+    { 5400;   ;Variant Code        ;Code10        ;TableRelation="Item Variant".Code WHERE (Item No.=FIELD(Item No.));
+                                                   CaptionML=[DEU=Variantencode;
+                                                              ENU=Variant Code] }
+  }
+  KEYS
+  {
+    {    ;Item No.,Variant Code,Language Code     ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      "--- dynamic commerce ---"@1000000003 : Integer;
+      WebshopManagement@1000000002 : Codeunit 5447300;
+      WebshopItem@1000000001 : Record 5447304;
+      Item@1000000000 : Record 27;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        FIELDS (0):
+        TRIGGERS (6):
+
+          OnInsert()
+          OnModify()
+          OnDelete()
+          OnRename()
+          Description - OnValidate()
+          Description 2 - OnValidate()
+
+
+        KEYS (0):
+        GLOBAL VARIABLES (3):
+
+          NAME                          DATATYPE        SUBTYPE                       LENGTH
+
+          Item                          Record          Item
+          WebshopItem                   Record          "Webshop Item"
+          WebshopManagement             Codeunit        "Webshop Management"
+
+
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

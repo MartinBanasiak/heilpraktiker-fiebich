@@ -1,0 +1,343 @@
+OBJECT Page 5447329 Webshop Coupon Header Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Gutscheinkarte;
+               ENU=Webshop Coupon Header];
+    SourceTable=Table5447330;
+    PageType=Document;
+    PromotedActionCategoriesML=[DEU=Neu,Vorgang,Berichte,Aktualisierung,Gutscheine,Versand;
+                                ENU=New,Process,Reports,Update,Coupons,Shipping];
+    OnInit=BEGIN
+             "Value CouponVisible" := TRUE;
+             "Item No.Visible" := TRUE;
+             PercentageVisible := TRUE;
+             AmountVisible := TRUE;
+             CategoryCouponVisible :=  TRUE;
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       OnAfterGetCurrRecord;
+                     END;
+
+    OnNewRecord=BEGIN
+                  AmountVisible := TRUE;
+                  PercentageVisible := FALSE;
+                  "Item No.Visible" := FALSE;
+                  "Value CouponVisible" := TRUE;
+                  OnAfterGetCurrRecord;
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000010;1 ;ActionGroup;
+                      Name=Zeile;
+                      CaptionML=[DEU=Zeile;
+                                 ENU=Line];
+                      ActionContainerType=NewDocumentItems }
+      { 1       ;2   ;Action    ;
+                      Name=Gutscheinzeilen;
+                      CaptionML=[DEU=Gutscheinzeilen;
+                                 ENU=Coupon Lines];
+                      RunObject=Page 5447332;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Code=FIELD(Code);
+                      Promoted=No;
+                      Image=VoucherDescription }
+      { 1000000001;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000012;1 ;ActionGroup;
+                      Name=Funktion;
+                      CaptionML=[DEU=Funktion;
+                                 ENU=Function] }
+      { 1000000011;2 ;Action    ;
+                      CaptionML=[DEU=Online aktualisieren;
+                                 ENU=Coupon Update];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopManagement@1000000000 : Codeunit 5447301;
+                               BEGIN
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.GetCouponLine();
+                                 WebshopUpdateManagement.UpdateCouponHeader(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                               END;
+                                }
+      { 1000000002;2 ;Action    ;
+                      Name=BtnPost;
+                      CaptionML=[DEU=Gutscheine buchen;
+                                 ENU=Post Coupons];
+                      Promoted=Yes;
+                      Image=PostedPayableVoucher;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopManagement@1118900000 : Codeunit 5447301;
+                                 Text001@1000000000 : TextConst 'DEU=Gutscheine ins Buchblatt �bertragen.;ENU=Transfer coupons to journal template.';
+                               BEGIN
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.PostCouponLines(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000017;2 ;Action    ;
+                      CaptionML=[DEU=Gutscheinzeilen erzeugen;
+                                 ENU=Create Coupon Lines];
+                      Promoted=Yes;
+                      Image=PostedVoucherGroup;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ReportCreate@1000000000 : Report 5447329;
+                                 CouponHeader@1000000001 : Record 5447330;
+                                 Text001@1000000002 : TextConst 'DEU=Bitte beachten Sie, dass das erzeugen von Gutscheinzeilen einige Zeit in Anspruch nehmen kann. Je mehr Gutscheinzeilen Sie erzeugen m�chten, desto l�nger wird die Generierung der Zuf�lligen Codes ben�tigen. W�hrend dieser Zeit liefert Dynamics NAV keine weitere R�ckmeldung;ENU=Please note that creating coupon lines may take some time. The more coupon lines you wish to create, the longer the generation of random codes will take. Dynamics NAV will not provide further notification until the process is complete';
+                               BEGIN
+                                 CurrPage.UPDATE;
+                                 CouponHeader.SETRANGE(CouponHeader.Code,Code);
+                                 REPORT.RUN(5447329,TRUE,FALSE,CouponHeader);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000003;1;Group  ;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General] }
+
+    { 1000000019;2;Field  ;
+                SourceExpr=Code }
+
+    { 5174222;2;Field     ;
+                CaptionML=[DEU=Shop Code;
+                           ENU=Shop Code];
+                SourceExpr="Shop Code" }
+
+    { 5174223;2;Field     ;
+                CaptionML=[DEU=Sprach Code;
+                           ENU=Language Code];
+                SourceExpr="Language Code";
+                TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code)) }
+
+    { 1000000016;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000023;2;Field  ;
+                SourceExpr="Starting Date" }
+
+    { 1000000022;2;Field  ;
+                SourceExpr="Ending Date" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Value Type";
+                OnValidate=BEGIN
+                             ValueTypeOnAfterValidate;
+                           END;
+                            }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Value Coupon";
+                Visible="Value CouponVisible";
+                Enabled="Value CouponVisible" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Amount;
+                Visible=AmountVisible;
+                Enabled=AmountVisible;
+                Editable=AmountVisible }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Amount From" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr=Percentage;
+                Visible=PercentageVisible;
+                Enabled=PercentageVisible;
+                Editable=PercentageVisible }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Item No.";
+                Visible="Item No.Visible";
+                Enabled="Item No.Visible";
+                Editable="Item No.Visible" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Is Category Coupon";
+                Visible=CategoryCouponVisible;
+                Enabled=CategoryCouponVisible;
+                Editable=CategoryCouponVisible }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Category Line No.";
+                Visible=CategoryCouponVisible;
+                Enabled=CategoryCouponVisible;
+                Editable=CategoryCouponVisible }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Category Name";
+                Visible=CategoryCouponVisible;
+                Enabled=FALSE;
+                Editable=FALSE }
+
+    { 1000000000;1;Part   ;
+                Name=CouponSubform;
+                CaptionML=[DEU=Gutscheinzeilen;
+                           ENU=Coupon Lines];
+                SubPageLink=Code=FIELD(Code),
+                            Shop Code=FIELD(Shop Code),
+                            Language Code=FIELD(Language Code);
+                PagePartID=Page5447330;
+                PartType=Page }
+
+  }
+  CODE
+  {
+    VAR
+      AmountVisible@19071318 : Boolean INDATASET;
+      PercentageVisible@19036170 : Boolean INDATASET;
+      "Item No.Visible"@19079144 : Boolean INDATASET;
+      "Value CouponVisible"@19030937 : Boolean INDATASET;
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+      CategoryCouponVisible@1000000003 : Boolean;
+      CategoryLineNoVisible@1000000002 : Boolean;
+      CategoryNameVisible@1000000001 : Boolean;
+
+    LOCAL PROCEDURE ValueTypeOnAfterValidate@19028630();
+    VAR
+      Type@1000000000 : Integer;
+    BEGIN
+
+      Type := "Value Type";
+
+      CASE Type OF
+      0:
+        BEGIN
+          AmountVisible := TRUE;
+          PercentageVisible := FALSE;
+          "Item No.Visible" := FALSE;
+          CategoryCouponVisible :=  TRUE;
+        END;
+      1:
+        BEGIN
+          AmountVisible := FALSE;
+          PercentageVisible := TRUE;
+          "Item No.Visible" := FALSE;
+          CategoryCouponVisible :=  TRUE;
+        END;
+      2:
+        BEGIN
+          AmountVisible := FALSE;
+          PercentageVisible := FALSE;
+          "Item No.Visible" := TRUE;
+          CategoryCouponVisible :=  TRUE;
+        END;
+      3:
+        BEGIN
+          AmountVisible := FALSE;
+          PercentageVisible := FALSE;
+          "Item No.Visible" := FALSE;
+          CategoryCouponVisible :=  FALSE;
+          "Is Category Coupon" := FALSE;
+        END;
+      4:
+        BEGIN
+          AmountVisible := FALSE;
+          PercentageVisible := FALSE;
+          "Item No.Visible" := FALSE;
+          "Value CouponVisible" := FALSE;
+          CategoryCouponVisible :=  FALSE;
+        END;
+      END;
+      CurrPage.UPDATE;
+      CurrPage.CouponSubform.PAGE.FormatFields(Rec);
+
+      IF "Value Type" = 3 THEN BEGIN
+        "Value CouponVisible" := TRUE;
+      END ELSE BEGIN
+        "Value CouponVisible" := FALSE;
+      END;
+    END;
+
+    LOCAL PROCEDURE OnAfterGetCurrRecord@19077479();
+    BEGIN
+
+      xRec := Rec;
+      CASE "Value Type" OF
+      0:
+        BEGIN
+          AmountVisible := TRUE;
+          PercentageVisible := FALSE;
+          "Item No.Visible" := FALSE;
+          "Value CouponVisible" := FALSE;
+          CategoryCouponVisible :=  TRUE;
+        END;
+      1:
+        BEGIN
+          AmountVisible := FALSE;
+          PercentageVisible := TRUE;
+          "Item No.Visible" := FALSE;
+          "Value CouponVisible" := FALSE;
+          CategoryCouponVisible :=  TRUE;
+
+        END;
+      2:
+        BEGIN
+          AmountVisible := FALSE;
+          PercentageVisible := FALSE;
+          "Item No.Visible" := TRUE;
+          "Value CouponVisible" := FALSE;
+          CategoryCouponVisible :=  TRUE;
+        END;
+      3:
+        BEGIN
+          AmountVisible := FALSE;
+          PercentageVisible := FALSE;
+          "Item No.Visible" := FALSE;
+          "Value CouponVisible" := TRUE;
+          CategoryCouponVisible :=  FALSE;
+          "Is Category Coupon" := FALSE;
+        END;
+
+      4:
+        BEGIN
+          AmountVisible := FALSE;
+          PercentageVisible := FALSE;
+          "Item No.Visible" := FALSE;
+          "Value CouponVisible" := FALSE;
+          CategoryCouponVisible :=  FALSE;
+        END;
+
+      END;
+      CurrPage.CouponSubform.PAGE.FormatFields(Rec);
+    END;
+
+    LOCAL PROCEDURE ValueTypeOnInputChange@19034761(VAR Text@19028590 : Text[1024]);
+    BEGIN
+      Rec.Amount := 0;
+      Rec.Percentage := 0;
+      Rec."Item No." := '';
+      ValueTypeOnAfterValidate;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

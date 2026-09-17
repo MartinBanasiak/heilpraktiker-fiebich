@@ -23,7 +23,22 @@ $result2 = @mysqli_query($GLOBALS['mysql_con'], $query2);
                     responsiveClass: true,
                     animateOut: 'fadeOut',
                     nav: true,
-                    navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
+                    // Owl setzt an seine Pfeil-Schaltflaechen im Standard ein
+                    // role="presentation". Das soll ein Element aus dem
+                    // Accessibility-Baum nehmen - bei einer fokussierbaren
+                    // Schaltflaeche loest der Browser die Rolle aber gar nicht auf.
+                    // Uebrig bleibt ein Widerspruch, den Pruefwerkzeuge melden.
+                    // Ohne die Angabe ist das Element schlicht ein Button.
+                    navElement: 'button type="button"',
+                    // Die Pfeile sind reine Symbolschrift und haben keinen Textinhalt -
+                    // Screenreader lesen die Schaltflaechen sonst nur als "Schaltflaeche"
+                    // vor (WCAG 4.1.2). Das Symbol wird deshalb ausgeblendet, den Namen
+                    // liefert der Text daneben. .sr-only kommt aus Bootstrap: sichtbar
+                    // nur fuer Hilfsmittel, nicht fuer das Auge.
+                    navText: [
+                        '<i class="fa fa-angle-left" aria-hidden="true"></i><span class="sr-only"><?=htmlspecialchars($GLOBALS['tc']['slideshow_previous_label'], ENT_QUOTES)?></span>',
+                        '<i class="fa fa-angle-right" aria-hidden="true"></i><span class="sr-only"><?=htmlspecialchars($GLOBALS['tc']['slideshow_next_label'], ENT_QUOTES)?></span>'
+                    ],
                     onInitialized: function(elem){
                         setTimeout(function(){
                             $(elem.currentTarget).find('.owl-item.active .slideshow_content_inner').addClass('active');

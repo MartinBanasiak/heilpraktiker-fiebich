@@ -1,0 +1,57 @@
+OBJECT Page 5447336 Webshop Permissions Group
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Berechtigungsgruppen;
+               ENU=Webshop Permissions Group];
+    SourceTable=Table5447336;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Code }
+
+    { 1000000003;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="No. of Item Permissions" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="No. of Customer Permissions" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="No. of Category Permissions" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="No. of Shipping Permissions" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="No. of Pay. Opt. Permissions" }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

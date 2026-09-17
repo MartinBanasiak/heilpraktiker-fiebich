@@ -1,0 +1,130 @@
+OBJECT Page 5447383 Webshop Campaign Element LPart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Kampagnen Elemente;
+               ENU=Webshop Campaign Elements];
+    SourceTable=Table5447346;
+    DataCaptionExpr=TitleText;
+    PopulateAllFields=Yes;
+    PageType=ListPart;
+    OnOpenPage=BEGIN
+                 TitleText := FORMAT("Link Type");
+               END;
+
+    OnAfterGetRecord=VAR
+                       WebshopItem@1000000000 : Record 5447304;
+                       WebshopCategory@1000000001 : Record 5447303;
+                     BEGIN
+                       Description := GetName();
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Type }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Include / Exclude" }
+
+    { 1000000004;2;Field  ;
+                Lookup=Yes;
+                SourceExpr="Item No.";
+                TableRelation="Webshop Item"."Item No.";
+                LookupPageID=Webshop Item List;
+                OnLookup=VAR
+                           ItemList@1000000000 : Page 5447309;
+                           WebshopItem@1000000001 : Record 5447304;
+                         BEGIN
+                           WebshopItem.SETRANGE("Shop Code",ItemShopCode);
+                           WebshopItem.SETRANGE("Language Code",LanguageCode);
+                           ItemList.SETTABLEVIEW(WebshopItem);
+                           ItemList.LOOKUPMODE := TRUE;
+                           ItemList.EDITABLE := FALSE;
+                           IF (ItemList.RUNMODAL = ACTION::LookupOK) THEN BEGIN
+                             ItemList.GETRECORD(WebshopItem);
+                             "Item No." := WebshopItem."Item No.";
+                           END;
+                         END;
+                          }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Item Variant Code" }
+
+    { 1000000006;2;Field  ;
+                Lookup=Yes;
+                SourceExpr="Category Line No.";
+                TableRelation="Webshop Category"."Line No.";
+                LookupPageID=Webshop Category List;
+                OnLookup=VAR
+                           Category@1000000000 : Record 5447303;
+                           CategoryList@1000000001 : Page 5447307;
+                         BEGIN
+                           Category.SETRANGE("Shop Code",CategoryShopCode);
+                           Category.SETRANGE("Language Code",LanguageCode);
+                           CategoryList.SETTABLEVIEW(Category);
+                           CategoryList.LOOKUPMODE := TRUE;
+                           CategoryList.EDITABLE := FALSE;
+                           IF (CategoryList.RUNMODAL = ACTION::LookupOK) THEN BEGIN
+                             CategoryList.GETRECORD(Category);
+                             "Category Line No." := Category."Line No.";
+                           END;
+                         END;
+                          }
+
+    { 1000000007;2;Field  ;
+                Name=Description;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description;
+                Editable=FALSE }
+
+  }
+  CODE
+  {
+    VAR
+      TitleText@1000000000 : Text[120];
+      LanguageCode@1000000002 : Code[10];
+      ItemShopCode@1000000003 : Code[20];
+      CategoryShopCode@1000000004 : Code[20];
+      Header@1000000001 : Record 5447345;
+      Shop@1000000005 : Record 5447301;
+      Description@1000000006 : Text[80];
+
+    PROCEDURE SetItemShopCode@1000000000(ShopCode@1000000000 : Code[10]);
+    BEGIN
+      ItemShopCode := ShopCode;
+    END;
+
+    PROCEDURE SetCategoryShopCode@1000000001(ShopCode@1000000000 : Code[20]);
+    BEGIN
+      CategoryShopCode := ShopCode;
+    END;
+
+    PROCEDURE SetLanguageCode@1000000002(ParamLanguageCode@1000000000 : Code[10]);
+    BEGIN
+      LanguageCode := ParamLanguageCode;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

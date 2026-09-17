@@ -1,0 +1,49 @@
+OBJECT Page 5447342 Webshop Subsc. Seq. Step List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table5447341;
+    PageType=List;
+    AutoSplitKey=Yes;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Subscription Code" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Fix Date" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr=Interval }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="No. of Items";
+                Editable=FALSE;
+                DrillDownPageID=Webshop Subsc. Item Link List }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

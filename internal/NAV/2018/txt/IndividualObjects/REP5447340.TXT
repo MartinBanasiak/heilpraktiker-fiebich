@@ -1,0 +1,71 @@
+OBJECT Report 5447340 Webshop Add Items to Subscr.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=28.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshopartikel zu Abo hinzuf�gen;
+               ENU=Webshop Add Items to Subscription];
+    ProcessingOnly=Yes;
+    OnPreReport=VAR
+                  Text001@1000000000 : TextConst 'DEU=Dieser Report kann nur von einem Abo-Kopf mit Typ "Bestelloption" gestartet werden.;ENU=This report can only be started from a Subscription Header of type "Order Option".';
+                BEGIN
+                  IF (WebshopSubscriptionHeader.Type <> WebshopSubscriptionHeader.Type::SubscriptionOrderOption) THEN
+                   ERROR(Text001);
+                END;
+
+  }
+  DATASET
+  {
+    { 1000000000;;DataItem;                  ;
+               DataItemTable=Table27;
+               OnAfterGetRecord=BEGIN
+                                  WebshopSubscriptionItemLink.RESET;
+                                  WebshopSubscriptionItemLink.INIT;
+                                  WebshopSubscriptionItemLink."Subscription Code" := WebshopSubscriptionHeader.Code;
+                                  WebshopSubscriptionItemLink."Link to" := WebshopSubscriptionItemLink."Link to"::"Subscription Header";
+                                  WebshopSubscriptionItemLink."Item No." := Item."No.";
+                                  WebshopSubscriptionItemLink.INSERT;
+                                END;
+
+               ReqFilterFields=No.,Description,Item Disc. Group,Is Webshop Item }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopSubscriptionHeader@1000000000 : Record 5447340;
+      WebshopSubscriptionItemLink@1000000001 : Record 5447342;
+
+    PROCEDURE SetSubscriptionHeader@1000000000(SubscrHeader@1000000000 : Record 5447340);
+    BEGIN
+      WebshopSubscriptionHeader := SubscrHeader;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

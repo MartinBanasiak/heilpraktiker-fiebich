@@ -1,0 +1,202 @@
+T18-F100-P8629-A1033-L999:Credit Amount (LCY)
+T18-F102-P8629-A1033-L999:Email
+T18-F103-P8629-A1033-L999:Home Page
+T18-F104-P8629-A1033-L999:Reminder Terms Code
+T18-F105-P8629-A1033-L999:Reminder Amounts
+T18-F106-P8629-A1033-L999:Reminder Amounts (LCY)
+T18-F107-P8629-A1033-L999:No. Series
+T18-F108-P8629-A1033-L999:Tax Area Code
+T18-F109-P8629-A1033-L999:Tax Liable
+T18-F10-P8629-A1033-L999:Telex No.
+T18-F110-P8629-A1033-L999:VAT Bus. Posting Group
+T18-F111-P8629-A1033-L999:Currency Filter
+T18-F113-P8629-A1033-L999:Outstanding Orders (LCY)
+T18-F114-P8629-A1033-L999:Shipped Not Invoiced (LCY)
+T18-F115-P8629-A1033-L999:Reserve
+T18-F115-P8632-A1033-L999:Never,Optional,Always
+T18-F116-P8629-A1033-L999:Block Payment Tolerance
+T18-F117-P8629-A1033-L999:Pmt. Disc. Tolerance (LCY)
+T18-F118-P8629-A1033-L999:Pmt. Tolerance (LCY)
+T18-F119-P8629-A1033-L999:IC Partner Code
+T18-F11-P8629-A1033-L999:Document Sending Profile
+T18-F120-P8629-A1033-L999:Refunds
+T18-F121-P8629-A1033-L999:Refunds (LCY)
+T18-F122-P8629-A1033-L999:Other Amounts
+T18-F123-P8629-A1033-L999:Other Amounts (LCY)
+T18-F124-P8629-A1033-L999:Prepayment %
+T18-F125-P8629-A1033-L999:Outstanding Invoices (LCY)
+T18-F126-P8629-A1033-L999:Outstanding Invoices
+T18-F130-P8629-A1033-L999:Bill-to No. Of Archived Doc.
+T18-F131-P8629-A1033-L999:Sell-to No. Of Archived Doc.
+T18-F132-P8629-A1033-L999:Partner Type
+T18-F132-P8632-A1033-L999: ,Company,Person
+T18-F140-P8629-A1033-L999:Image
+T18-F14-P8629-A1033-L999:Our Account No.
+T18-F15-P8629-A1033-L999:Territory Code
+T18-F16-P8629-A1033-L999:Global Dimension 1 Code
+T18-F17-P8629-A1033-L999:Global Dimension 2 Code
+T18-F18-P8629-A1033-L999:Chain Name
+T18-F19-P8629-A1033-L999:Budgeted Amount
+T18-F1-P8629-A1033-L999:No.
+T18-F20-P8629-A1033-L999:Credit Limit (LCY)
+T18-F21-P8629-A1033-L999:Customer Posting Group
+T18-F22-P8629-A1033-L999:Currency Code
+T18-F23-P8629-A1033-L999:Customer Price Group
+T18-F24-P8629-A1033-L999:Language Code
+T18-F26-P8629-A1033-L999:Statistics Group
+T18-F27-P8629-A1033-L999:Payment Terms Code
+T18-F288-P8629-A1033-L999:Preferred Bank Account Code
+T18-F28-P8629-A1033-L999:Fin. Charge Terms Code
+T18-F29-P8629-A1033-L999:Salesperson Code
+T18-F2-P8629-A1033-L999:Name
+T18-F30-P8629-A1033-L999:Shipment Method Code
+T18-F31-P8629-A1033-L999:Shipping Agent Code
+T18-F32-P8629-A1033-L999:Place of Export
+T18-F33-P8629-A1033-L999:Invoice Disc. Code
+T18-F34-P8629-A1033-L999:Customer Disc. Group
+T18-F35-P8629-A1033-L999:Country/Region Code
+T18-F36-P8629-A1033-L999:Collection Method
+T18-F37-P8629-A1033-L999:Amount
+T18-F38-P8629-A1033-L999:Comment
+T18-F39-P8629-A1033-L999:Blocked
+T18-F39-P8632-A1033-L999: ,Ship,Invoice,All
+T18-F3-P8629-A1033-L999:Search Name
+T18-F40-P8629-A1033-L999:Invoice Copies
+T18-F41-P8629-A1033-L999:Last Statement No.
+T18-F42-P8629-A1033-L999:Print Statements
+T18-F45-P8629-A1033-L999:Bill-to Customer No.
+T18-F46-P8629-A1033-L999:Priority
+T18-F47-P8629-A1033-L999:Payment Method Code
+T18-F4-P8629-A1033-L999:Name 2
+T18-F5049-P8629-A1033-L999:Primary Contact No.
+T18-F5050-P8629-A1033-L999:Contact Type
+T18-F5050-P8632-A1033-L999:Company,Person
+T18-F53-P8629-A1033-L999:Last Modified Date Time
+T18-F5447300-P8629-A1033-L999:Date Webshop Login Sent
+T18-F5447301-P8629-A1033-L999:Has Webshop Login
+T18-F5447302-P8629-A1033-L999:Webshop Login E-Mail Addr.
+T18-F5447303-P8629-A1033-L999:Webshop Shop Code
+T18-F5447304-P8629-A1033-L999:Webshop Language Code
+T18-F5447305-P8629-A1033-L999:Date Last Modified (Webshop)
+T18-F5447306-P8629-A1033-L999:Date Last Updated (Webshop)
+T18-F5447311-P8629-A1033-L999:No. of Web. Group Permissions
+T18-F5447312-P8629-A1033-L999:No. of Web. Item Permissions
+T18-F5447313-P8629-A1033-L999:No. of Web. Cat. Permissions
+T18-F5447450-P4962-Q1000000001-P26171-A1033-L999:The country code of the shipping option and the associated zone do not match.
+T18-F5447450-P8629-A1033-L999:Shipping Group Code
+T18-F54-P8629-A1033-L999:Last Date Modified
+T18-F55-P8629-A1033-L999:Date Filter
+T18-F56-P8629-A1033-L999:Global Dimension 1 Filter
+T18-F5700-P8629-A1033-L999:Responsibility Center
+T18-F5750-P8629-A1033-L999:Shipping Advice
+T18-F5750-P8632-A1033-L999:Partial,Complete
+T18-F5790-P8629-A1033-L999:Shipping Time
+T18-F5792-P8629-A1033-L999:Shipping Agent Service Code
+T18-F57-P8629-A1033-L999:Global Dimension 2 Filter
+T18-F58-P8629-A1033-L999:Balance
+T18-F5900-P8629-A1033-L999:Service Zone Code
+T18-F5902-P8629-A1033-L999:Contract Gain/Loss Amount
+T18-F5903-P8629-A1033-L999:Ship-to Filter
+T18-F5910-P8629-A1033-L999:Outstanding Serv. Orders (LCY)
+T18-F5911-P8629-A1033-L999:Serv Shipped Not Invoiced(LCY)
+T18-F5912-P8629-A1033-L999:Outstanding Serv.Invoices(LCY)
+T18-F59-P8629-A1033-L999:Balance (LCY)
+T18-F5-P8629-A1033-L999:Address
+T18-F60-P8629-A1033-L999:Net Change
+T18-F61-P8629-A1033-L999:Net Change (LCY)
+T18-F62-P8629-A1033-L999:Sales (LCY)
+T18-F63-P8629-A1033-L999:Profit (LCY)
+T18-F64-P8629-A1033-L999:Inv. Discounts (LCY)
+T18-F65-P8629-A1033-L999:Pmt. Discounts (LCY)
+T18-F66-P8629-A1033-L999:Balance Due
+T18-F67-P8629-A1033-L999:Balance Due (LCY)
+T18-F69-P8629-A1033-L999:Payments
+T18-F6-P8629-A1033-L999:Address 2
+T18-F7001-P8629-A1033-L999:Allow Line Disc.
+T18-F70-P8629-A1033-L999:Invoice Amounts
+T18-F7171-P8629-A1033-L999:No. of Quotes
+T18-F7172-P8629-A1033-L999:No. of Blanket Orders
+T18-F7173-P8629-A1033-L999:No. of Orders
+T18-F7174-P8629-A1033-L999:No. of Invoices
+T18-F7175-P8629-A1033-L999:No. of Return Orders
+T18-F7176-P8629-A1033-L999:No. of Credit Memos
+T18-F7177-P8629-A1033-L999:No. of Pstd. Shipments
+T18-F7178-P8629-A1033-L999:No. of Pstd. Invoices
+T18-F7179-P8629-A1033-L999:No. of Pstd. Return Receipts
+T18-F7180-P8629-A1033-L999:No. of Pstd. Credit Memos
+T18-F7181-P8629-A1033-L999:No. of Ship-to Addresses
+T18-F7182-P8629-A1033-L999:Bill-To No. of Quotes
+T18-F7183-P8629-A1033-L999:Bill-To No. of Blanket Orders
+T18-F7184-P8629-A1033-L999:Bill-To No. of Orders
+T18-F7185-P8629-A1033-L999:Bill-To No. of Invoices
+T18-F7186-P8629-A1033-L999:Bill-To No. of Return Orders
+T18-F7187-P8629-A1033-L999:Bill-To No. of Credit Memos
+T18-F7188-P8629-A1033-L999:Bill-To No. of Pstd. Shipments
+T18-F7189-P8629-A1033-L999:Bill-To No. of Pstd. Invoices
+T18-F7190-P8629-A1033-L999:Bill-To No. of Pstd. Return R.
+T18-F7191-P8629-A1033-L999:Bill-To No. of Pstd. Cr. Memos
+T18-F71-P8629-A1033-L999:Cr. Memo Amounts
+T18-F72-P8629-A1033-L999:Finance Charge Memo Amounts
+T18-F74-P8629-A1033-L999:Payments (LCY)
+T18-F75-P8629-A1033-L999:Inv. Amounts (LCY)
+T18-F7600-P8629-A1033-L999:Base Calendar Code
+T18-F7601-P8629-A1033-L999:Copy Sell-to Addr. to Qte From
+T18-F7601-P8632-A1033-L999:Company,Person
+T18-F7602-P8629-A1033-L999:Validate EU Vat Reg. No.
+T18-F76-P8629-A1033-L999:Cr. Memo Amounts (LCY)
+T18-F77-P8629-A1033-L999:Fin. Charge Memo Amounts (LCY)
+T18-F78-P8629-A1033-L999:Outstanding Orders
+T18-F79-P8629-A1033-L999:Shipped Not Invoiced
+T18-F7-P8629-A1033-L999:City
+T18-F8000-P8629-A1033-L999:Id
+T18-F8001-P8629-A1033-L999:Currency Id
+T18-F8002-P8629-A1033-L999:Payment Terms Id
+T18-F8003-P8629-A1033-L999:Shipment Method Id
+T18-F8004-P8629-A1033-L999:Payment Method Id
+T18-F80-P8629-A1033-L999:Application Method
+T18-F80-P8632-A1033-L999:Manual,Apply to Oldest
+T18-F82-P8629-A1033-L999:Prices Including VAT
+T18-F83-P8629-A1033-L999:Location Code
+T18-F840-P8629-A1033-L999:Cash Flow Payment Terms Code
+T18-F84-P8629-A1033-L999:Fax No.
+T18-F85-P8629-A1033-L999:Telex Answer Back
+T18-F86-P8629-A1033-L999:VAT Registration No.
+T18-F87-P8629-A1033-L999:Combine Shipments
+T18-F88-P8629-A1033-L999:Gen. Bus. Posting Group
+T18-F89-P8629-A1033-L999:Picture
+T18-F8-P8629-A1033-L999:Contact
+T18-F9003-P8629-A1033-L999:Tax Area ID
+T18-F9004-P8629-A1033-L999:Tax Area Display Name
+T18-F9005-P8629-A1033-L999:Contact ID
+T18-F9006-P8629-A1033-L999:Contact Graph Id
+T18-F90-P8629-A1033-L999:GLN
+T18-F91-P8629-A1033-L999:Post Code
+T18-F92-P8629-A1033-L999:County
+T18-F97-P8629-A1033-L999:Debit Amount
+T18-F98-P8629-A1033-L999:Credit Amount
+T18-F99-P8629-A1033-L999:Debit Amount (LCY)
+T18-F9-P8629-A1033-L999:Phone No.
+T18-P8629-A1033-L999:Customer
+T18-Q1000-P26171-A1033-L999:You cannot delete %1 %2 because there is at least one outstanding Sales %3 for this customer.
+T18-Q1001-P26171-A1033-L999:Do you wish to create a contact for %1 %2?
+T18-Q1017-P26171-A1033-L999:Before you can use Online Map, you must fill in the Online Map Setup window.\See Setting Up Online Map in Help.
+T18-Q1019-P26171-A1033-L999:Do you want to remove payment tolerance from entries that are currently open?
+T18-Q1020-P26171-A1033-L999:Contact %1 %2 is not related to customer %3 %4.
+T18-Q1023-P26171-A1033-L999:post
+T18-Q1024-P26171-A1033-L999:create
+T18-Q1025-P26171-A1033-L999:You cannot %1 this type of document when Customer %2 is blocked with type %3
+T18-Q1028-P26171-A1033-L999:You cannot delete %1 %2 because there is at least one not cancelled Service Contract for this customer.
+T18-Q1029-P26171-A1033-L999:Deleting the %1 %2 will cause the %3 to be deleted for the associated Service Items. Do you want to continue?
+T18-Q1030-P26171-A1033-L999:Cannot delete customer.
+T18-Q1031-P26171-A1033-L999:The %1 %2 has been assigned to %3 %4.\The same %1 cannot be entered on more than one %3. Enter another code.
+T18-Q1032-P26171-A1033-L999:You cannot change the contents of the %1 field because this %2 has one or more open ledger entries.
+T18-Q1033-P26171-A1033-L999:Reconciling IC transactions may be difficult if you change IC Partner Code because this %1 has ledger entries in a fiscal year that has not yet been closed.\ Do you still want to change the IC Partner Code?
+T18-Q1035-P26171-A1033-L999:You cannot delete %1 %2 because there is at least one outstanding Service %3 for this customer.
+T18-Q1036-P26171-A1033-L999:You cannot delete %1 %2 because there is at least one %3 associated to this customer.
+T18-Q1037-P26171-A1033-L999:Do you want to allow payment tolerance for entries that are currently open?
+T18-Q1040-P26171-A1033-L999:You must select an existing customer.
+T18-Q1041-P26171-A1033-L999:Create a new customer card for %1
+T18-Q1042-P26171-A1033-L999:This customer is not registered. To continue, choose one of the following options:
+T18-Q1043-P26171-A1033-L999:Select an existing customer
+T18-Q1045-P26171-A1033-L999:Override Image?
+T18-Q1046-P26171-A1033-L999:You cannot delete %1 because it has open invoices.

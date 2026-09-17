@@ -1,0 +1,82 @@
+N5091-C10-P8631-A1033-L999:Specifies the interaction template code of the interaction involving the segment.
+N5091-C12-P8631-A1033-L999:Specifies the code of the salesperson responsible for this segment and/or interaction.
+N5091-C14-P8631-A1033-L999:Specifies the cost, in LCY, of one unit of the item or resource on the line.
+N5091-C16-P8631-A1033-L999:Specifies the duration of a single interaction created for this segment.
+N5091-C18-P8629-A1033-L999:Attachment
+N5091-C18-P8631-A1033-L999:Specifies if the linked attachment is inherited or unique.
+N5091-C1900598201-P8629-A1033-L999:Campaign
+N5091-C1907335101-P8629-A1033-L999:Interaction
+N5091-C1-P8629-A1033-L999:General
+N5091-C2-P8631-A1033-L999:Specifies the number of the involved entry or record, according to the specified number series.
+N5091-C39-P8631-A1033-L999:Specifies the number of lines within the segment.
+N5091-C41-P8631-A1033-L999:Specifies that the segment is part of the target of the campaign to which it is linked.
+N5091-C43-P8631-A1033-L999:Specifies that the interaction created for the segment is the response to a campaign.
+N5091-C45-P8631-A1033-L999:Specifies the direction of the information that is part of the interaction created for the segment. There are two options: Inbound and Outbound.
+N5091-C47-P8631-A1033-L999:Specifies whether the interaction recorded for this segment was initiated by your company or by one of your contacts. The Us option indicates that your company was the initiator; the Them option indicates that a contact was the initiator.
+N5091-C4-P8631-A1033-L999:Specifies the description of the segment.
+N5091-C52-P8631-A1033-L999:Specifies the number of actions you have taken when modifying the segmentation criteria, that is, when adding contacts to the segment, refining, or reducing it.
+N5091-C57-P8631-A1033-L999:Specifies the preferred type of correspondence for the interaction. NOTE: If you use the Web client, you must not select the Hard Copy option because printing is not possible from the web client.
+N5091-C66-P8631-A1033-L999:Specifies that the Microsoft Word document should be sent as an attachment in the e-mail message.
+N5091-C6-P8631-A1033-L999:Specifies the date that the segment was created.
+N5091-C70-P8631-A1033-L999:Specifies the language code for the segment.
+N5091-C72-P8631-A1033-L999:Specifies that the correspondence type that you select in the Correspondence Type (Default) field should be used. If there is no check mark, the program uses the correspondence type selected on the Contact Card.
+N5091-C74-P8631-A1033-L999:Specifies the subject of the segment. The text in the field is used as the subject in e-mails and in Word documents.
+N5091-C76-P8631-A1033-L999:Specifies a description of the campaign to which the segment is related. The description is copied from the campaign card.
+N5091-C8-P8631-A1033-L999:Specifies the number of the campaign for which the segment has been created.
+N5091-P55242-G1000000000-P55160-Q1000000000-P26171-A1033-L999:Send contacts to newsletter-system
+N5091-P55242-G1000000000-P55160-Q1000000007-P26171-A1033-L999:With what Shop should the contacts be synced?
+N5091-P55242-G1000000000-P8629-A1033-L999:Synchronize Contacts with E-Commerce Marketing
+N5091-P55242-G22-P8629-A1033-L999:&Print
+N5091-P55242-G23-P8629-A1033-L999:F&unctions
+N5091-P55242-G24-P8629-A1033-L999:&Segment
+N5091-P55242-G25-P8629-A1033-L999:&Log
+N5091-P55242-G25-P8631-A1033-L999:Log segments and interactions that are assigned to your segments and delivery attachments that you have sent.
+N5091-P55242-G27-P8629-A1033-L999:T&asks
+N5091-P55242-G27-P8631-A1033-L999:View all marketing tasks that involve the segment.
+N5091-P55242-G28-P8629-A1033-L999:S&egment
+N5091-P55242-G29-P8629-A1033-L999:Add Contacts
+N5091-P55242-G29-P8631-A1033-L999:Select which contacts to add to the segment.
+N5091-P55242-G30-P8629-A1033-L999:Reduce Contacts
+N5091-P55242-G30-P8631-A1033-L999:Select which contacts to remove from your segment.
+N5091-P55242-G31-P8629-A1033-L999:Re&fine Contacts
+N5091-P55242-G31-P8631-A1033-L999:Select which contacts to keep in your segment.
+N5091-P55242-G33-P8629-A1033-L999:Go Back
+N5091-P55242-G33-P8631-A1033-L999:Go one step back, for example if you have added contacts to a segment by mistake.
+N5091-P55242-G34-P8629-A1033-L999:E&xport Contacts
+N5091-P55242-G34-P8631-A1033-L999:Export the segment contact list as an Excel file.
+N5091-P55242-G35-P8629-A1033-L999:Apply &Mailing Group
+N5091-P55242-G35-P8631-A1033-L999:Assign a mailing group to a segment.
+N5091-P55242-G37-P8629-A1033-L999:Print Cover &Sheets
+N5091-P55242-G37-P8631-A1033-L999:View cover sheets to send to your contact.
+N5091-P55242-G38-P8629-A1033-L999:Print &Labels
+N5091-P55242-G38-P8631-A1033-L999:View mailing labels with names and addresses.
+N5091-P55242-G50-P8629-A1033-L999:Save Criteria
+N5091-P55242-G50-P8631-A1033-L999:Save a segment criteria.
+N5091-P55242-G54-P8629-A1033-L999:
+N5091-P55242-G55-P8629-A1033-L999:Reuse Segment
+N5091-P55242-G55-P8631-A1033-L999:Reuse a logged segment.
+N5091-P55242-G56-P8629-A1033-L999:Reuse Criteria
+N5091-P55242-G56-P8631-A1033-L999:Reuse a saved segment criteria.
+N5091-P55242-G59-P8629-A1033-L999:
+N5091-P55242-G5-P8629-A1033-L999:Create opportunities
+N5091-P55242-G5-P8631-A1033-L999:Create a new opportunity card related to the segment.
+N5091-P55242-G60-P8629-A1033-L999:Attachment
+N5091-P55242-G61-P8629-A1033-L999:Open
+N5091-P55242-G61-P8631-A1033-L999:Open the card for the selected record.
+N5091-P55242-G62-P8629-A1033-L999:Create
+N5091-P55242-G62-P8631-A1033-L999:Create an attachment.
+N5091-P55242-G63-P8629-A1033-L999:Import
+N5091-P55242-G63-P8631-A1033-L999:Import an attachment.
+N5091-P55242-G64-P8629-A1033-L999:Export
+N5091-P55242-G64-P8631-A1033-L999:Export an attachment.
+N5091-P55242-G65-P8629-A1033-L999:Remove
+N5091-P55242-G65-P8631-A1033-L999:Remove an attachment.
+N5091-P55242-G68-P8629-A1033-L999:Criteria
+N5091-P55242-G68-P8631-A1033-L999:View a list of the actions that you have performed (adding or removing contacts) in order to define the segment criteria.
+N5091-P55242-G69-P8629-A1033-L999:Oppo&rtunities
+N5091-P55242-G69-P8631-A1033-L999:View the sales opportunities that are handled by salespeople for the segment. Opportunities must involve a contact and can be linked to campaigns.
+N5091-P55242-G90-P8629-A1033-L999:Contacts
+N5091-P8629-A1033-L999:Segment
+N5091-Q1000-P26171-A1033-L999:Do you want to create an opportunity for all contacts in segment?
+N5091-Q1011-P26171-A1033-L999:Segment %1 has been logged.
+N5091-Q1013-P26171-A1033-L999:This will undo the last criteria action.\Do you want to continue?

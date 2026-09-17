@@ -1,0 +1,850 @@
+OBJECT Page 134 Posted Sales Credit Memo
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.07.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Geb. Verkaufsgutschrift;
+               ENU=Posted Sales Credit Memo];
+    InsertAllowed=No;
+    SourceTable=Table114;
+    PageType=Document;
+    RefreshOnActivate=Yes;
+    PromotedActionCategoriesML=[DEU=Neu,Verarbeiten,Melden,Gutschrift,Abbrechen;
+                                ENU=New,Process,Report,Cr. Memo,Cancel];
+    OnOpenPage=VAR
+                 OfficeMgt@1000 : Codeunit 1630;
+               BEGIN
+                 SetSecurityFilterOnRespCenter;
+                 IsOfficeAddin := OfficeMgt.IsAvailable;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       DocExchStatusStyle := GetDocExchStatusStyle;
+                     END;
+
+    OnAfterGetCurrRecord=VAR
+                           IncomingDocument@1000 : Record 130;
+                         BEGIN
+                           HasIncomingDocument := IncomingDocument.PostedDocExists("No.","Posting Date");
+                           DocExchStatusStyle := GetDocExchStatusStyle;
+                           DocExchStatusVisible := DocExchangeStatusIsSent;
+                           CurrPage.IncomingDocAttachFactBox.PAGE.LoadDataFromRecord(Rec);
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 47      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Gutschrift;
+                                 ENU=&Cr. Memo];
+                      Image=CreditMemo }
+      { 9       ;2   ;Action    ;
+                      Name=Statistics;
+                      ShortCutKey=F7;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      RunObject=Page 398;
+                      RunPageLink=No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Statistics;
+                      PromotedCategory=Category4 }
+      { 49      ;2   ;Action    ;
+                      CaptionML=[DEU=Be&merkungen;
+                                 ENU=Co&mments];
+                      ToolTipML=[DEU=Zeigen Sie Notizen �ber die gebuchte Verkaufsgutschrift an oder f�gen Sie welche hinzu.;
+                                 ENU=View or add notes about the posted sales credit memo.];
+                      RunObject=Page 67;
+                      RunPageLink=Document Type=CONST(Posted Credit Memo),
+                                  No.=FIELD(No.),
+                                  Document Line No.=CONST(0);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=ViewComments;
+                      PromotedCategory=Category4 }
+      { 77      ;2   ;Action    ;
+                      AccessByPermission=TableData 348=R;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DEU=Dimensionen;
+                                 ENU=Dimensions];
+                      ToolTipML=[DEU=Zeigt Dimensionen an oder bearbeitet sie, wie etwa einen Bereich, ein Projekt oder eine Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen k�nnen, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.;
+                                 ENU=View or edits dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Dimensions;
+                      PromotedCategory=Category4;
+                      OnAction=BEGIN
+                                 ShowDimensions;
+                               END;
+                                }
+      { 92      ;2   ;Action    ;
+                      AccessByPermission=TableData 456=R;
+                      CaptionML=[DEU=Genehmigungen;
+                                 ENU=Approvals];
+                      ToolTipML=[DEU=Zeigt eine Liste der Datens�tze an, die noch genehmigt werden m�ssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.;
+                                 ENU=View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.];
+                      ApplicationArea=#Suite;
+                      Image=Approvals;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.ShowPostedApprovalEntries(RECORDID);
+                               END;
+                                }
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 3       ;1   ;Action    ;
+                      ShortCutKey=Shift+F7;
+                      CaptionML=[DEU=Debitor;
+                                 ENU=Customer];
+                      ToolTipML=[DEU=Zeigen Sie detaillierte Informationen �ber den Debitor auf dem gebuchten Verkaufsbeleg an, oder bearbeiten Sie sie.;
+                                 ENU=View or edit detailed information about the customer on the posted sales document.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 21;
+                      RunPageLink=No.=FIELD(Sell-to Customer No.);
+                      Promoted=Yes;
+                      Image=Customer;
+                      PromotedCategory=Process }
+      { 8       ;1   ;Action    ;
+                      Name=SendCustom;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Senden;
+                                 ENU=Send];
+                      ToolTipML=[DEU=Bereiten Sie sich vor, den Beleg dem Sendeprofil des Debitors entsprechend zu senden, etwa an eine E-Mail angeh�ngt. Das Fenster "Beleg senden an" wird zuerst ge�ffnet, damit Sie ein Sendeprofil best�tigen oder ausw�hlen k�nnen.;
+                                 ENU=Prepare to send the document according to the customer's sending profile, such as attached to an email. The Send document to window opens first so you can confirm or select a sending profile.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=SendToMultiple;
+                      PromotedCategory=Category4;
+                      OnAction=VAR
+                                 SalesCrMemoHeader@1000 : Record 114;
+                               BEGIN
+                                 SalesCrMemoHeader := Rec;
+                                 CurrPage.SETSELECTIONFILTER(SalesCrMemoHeader);
+                                 SalesCrMemoHeader.SendRecords;
+                               END;
+                                }
+      { 50      ;1   ;Action    ;
+                      Name=Print;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=D&rucken;
+                                 ENU=&Print];
+                      ToolTipML=[DEU=Bereitet das Drucken des Belegs vor. Ein Berichtanforderungsfenster f�r den Beleg wird ge�ffnet, in dem Sie angeben k�nnen, was auf dem Ausdruck enthalten sein soll.;
+                                 ENU=Prepare to print the document. A report request window for the document opens where you can specify what to include on the print-out.];
+                      ApplicationArea=#Basic,#Suite;
+                      Visible=NOT IsOfficeAddin;
+                      Image=Print;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 SalesCrMemoHeader := Rec;
+                                 CurrPage.SETSELECTIONFILTER(SalesCrMemoHeader);
+                                 SalesCrMemoHeader.PrintRecords(TRUE);
+                               END;
+                                }
+      { 11      ;1   ;Action    ;
+                      CaptionML=[DEU=Per &E-Mail senden;
+                                 ENU=Send by &Email];
+                      ToolTipML=[DEU=Sendet den Verkaufsgutschriftsbeleg als PDF-Datei im Anhang einer E-Mail.;
+                                 ENU=Send the sales credit memo document as a PDF file attached to an email.];
+                      ApplicationArea=#All;
+                      Image=Email;
+                      OnAction=BEGIN
+                                 SalesCrMemoHeader := Rec;
+                                 CurrPage.SETSELECTIONFILTER(SalesCrMemoHeader);
+                                 SalesCrMemoHeader.EmailRecords(TRUE);
+                               END;
+                                }
+      { 51      ;1   ;Action    ;
+                      CaptionML=[DEU=&Navigate;
+                                 ENU=&Navigate];
+                      ToolTipML=[DEU=Sucht alle Posten und Belege, die f�r die Belegnummer und das Buchungsdatum auf dem ausgew�hlten Posten oder Beleg vorhanden sind.;
+                                 ENU=Find all entries and documents that exist for the document number and posting date on the selected entry or document.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Visible=NOT IsOfficeAddin;
+                      PromotedIsBig=Yes;
+                      Image=Navigate;
+                      PromotedCategory=Category4;
+                      OnAction=BEGIN
+                                 Navigate;
+                               END;
+                                }
+      { 15      ;1   ;Action    ;
+                      Name=ActivityLog;
+                      CaptionML=[DEU=Aktivit�tsprotokoll;
+                                 ENU=Activity Log];
+                      ToolTipML=[DEU=Zeigen Sie den Status sowie alle auftretenden Fehler an, wenn der Beleg als elektronisches Dokument oder OCR-Datei �ber den Belegaustauschdienst gesendet wurde.;
+                                 ENU=View the status and any errors if the document was sent as an electronic document or OCR file through the document exchange service.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=Log;
+                      OnAction=BEGIN
+                                 ShowActivityLog;
+                               END;
+                                }
+      { 39      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Abbrechen;
+                                 ENU=Cancel] }
+      { 35      ;2   ;Action    ;
+                      Name=CancelCrMemo;
+                      CaptionML=[DEU=Abbrechen;
+                                 ENU=Cancel];
+                      ToolTipML=[DEU=Erstellt und bucht eine Rechnung, die diese gebuchte Verkaufsgutschrift storniert. Diese gebuchte Verkaufsgutschrift wird storniert.;
+                                 ENU=Create and post a sales invoice that reverses this posted sales credit memo. This posted sales credit memo will be canceled.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Cancel;
+                      PromotedCategory=Category5;
+                      OnAction=BEGIN
+                                 CODEUNIT.RUN(CODEUNIT::"Cancel PstdSalesCrM (Yes/No)",Rec);
+                               END;
+                                }
+      { 33      ;2   ;Action    ;
+                      Name=ShowInvoice;
+                      CaptionML=[DEU=Stornierte Rechnung/Korrekturrechnung anzeigen;
+                                 ENU=Show Canceled/Corrective Invoice];
+                      ToolTipML=[DEU=�ffnet die gebuchte Verkaufsrechnung, die erstellt wurde, als Sie die gebuchte Verkaufsgutschrift stornierten. Falls die gebuchte Verkaufsgutschrift das Ergebnis einer stornierten Verkaufsrechnung ist, wird die stornierte Rechnung ge�ffnet.;
+                                 ENU=Open the posted sales invoice that was created when you canceled the posted sales credit memo. If the posted sales credit memo is the result of a canceled sales invoice, then canceled invoice will open.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Enabled=Cancelled OR Corrective;
+                      PromotedIsBig=Yes;
+                      Image=Invoice;
+                      PromotedCategory=Category5;
+                      Scope=Repeater;
+                      OnAction=BEGIN
+                                 ShowCanceledOrCorrInvoice;
+                               END;
+                                }
+      { 21      ;1   ;ActionGroup;
+                      Name=IncomingDocument;
+                      CaptionML=[DEU=Eingehender Beleg;
+                                 ENU=Incoming Document];
+                      ActionContainerType=NewDocumentItems;
+                      Image=Documents }
+      { 23      ;2   ;Action    ;
+                      Name=IncomingDocCard;
+                      CaptionML=[DEU=Eingehenden Beleg anzeigen;
+                                 ENU=View Incoming Document];
+                      ToolTipML=[DEU=Zeigen Sie eingehende Belegdatens�tze und Dateianh�nge an, die f�r den Posten oder Beleg vorhanden sind.;
+                                 ENU=View any incoming document records and file attachments that exist for the entry or document.];
+                      ApplicationArea=#Basic,#Suite;
+                      Enabled=HasIncomingDocument;
+                      Image=ViewOrder;
+                      OnAction=VAR
+                                 IncomingDocument@1000 : Record 130;
+                               BEGIN
+                                 IncomingDocument.ShowCard("No.","Posting Date");
+                               END;
+                                }
+      { 17      ;2   ;Action    ;
+                      Name=SelectIncomingDoc;
+                      AccessByPermission=TableData 130=R;
+                      CaptionML=[DEU=Eingehenden Beleg ausw�hlen;
+                                 ENU=Select Incoming Document];
+                      ToolTipML=[DEU=W�hlen Sie einen eingehenden Belegdatensatz und einen Dateianhang aus, die mit dem Posten oder Beleg verkn�pft werden sollen.;
+                                 ENU=Select an incoming document record and file attachment that you want to link to the entry or document.];
+                      ApplicationArea=#Basic,#Suite;
+                      Enabled=NOT HasIncomingDocument;
+                      Image=SelectLineToApply;
+                      OnAction=VAR
+                                 IncomingDocument@1000 : Record 130;
+                               BEGIN
+                                 IncomingDocument.SelectIncomingDocumentForPostedDocument("No.","Posting Date",RECORDID);
+                               END;
+                                }
+      { 19      ;2   ;Action    ;
+                      Name=IncomingDocAttachFile;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Eingehenden Beleg aus Datei erstellen;
+                                 ENU=Create Incoming Document from File];
+                      ToolTipML=[DEU=Erstellen Sie einen eingehenden Belegdatensatz durch Auswahl einer anzuh�ngenden Datei, und verkn�pfen Sie den Belegdatensatz mit dem Posten oder Beleg.;
+                                 ENU=Create an incoming document record by selecting a file to attach, and then link the incoming document record to the entry or document.];
+                      ApplicationArea=#Basic,#Suite;
+                      Enabled=NOT HasIncomingDocument;
+                      Image=Attach;
+                      OnAction=VAR
+                                 IncomingDocumentAttachment@1000 : Record 133;
+                               BEGIN
+                                 IncomingDocumentAttachment.NewAttachmentFromPostedDocument("No.","Posting Date");
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General] }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die gebuchte Gutschriftnummer an.;
+                           ENU=Specifies the posted credit memo number.];
+                ApplicationArea=#All;
+                SourceExpr="No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 53  ;2   ;Field     ;
+                CaptionML=[DEU=Debitor;
+                           ENU=Customer];
+                ToolTipML=[DEU=Gibt den Namen des Debitors an, an den Sie die Artikel auf der Gutschrift geliefert haben.;
+                           ENU=Specifies the name of the customer that you shipped the items on the credit memo to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Customer Name";
+                TableRelation=Customer.Name;
+                Editable=FALSE;
+                ShowMandatory=TRUE }
+
+    { 4   ;2   ;Group     ;
+                CaptionML=[DEU=Verk. an;
+                           ENU=Sell-to];
+                GroupType=Group }
+
+    { 55  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Adresse des Debitors an, an die die Artikel auf der Gutschrift gesendet wurden.;
+                           ENU=Specifies the address of the customer that the items on the credit memo were sent to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Address";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 57  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt zus�tzliche Adressinformationen an.;
+                           ENU=Specifies additional address information.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Address 2";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 6   ;3   ;Field     ;
+                CaptionML=[DEU=PLZ-Code;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die Postleitzahl an.;
+                           ENU=Specifies the postal code.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Post Code";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 59  ;3   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort an, an den die Artikel auf der Gutschrift geliefert wurden.;
+                           ENU=Specifies the city the items on the credit memo were shipped to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to City";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 95  ;3   ;Field     ;
+                CaptionML=[DEU=Kontaktnr.;
+                           ENU=Contact No.];
+                ToolTipML=[DEU=Zeigt die Nummer des Kontakts beim Debitor an, der die Gutschrift bearbeitet.;
+                           ENU=Specifies the number of the contact at the customer who handles the credit memo.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Contact No.";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 61  ;2   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson bei dem Debitor an, an den Sie die Artikel auf der Gutschrift geliefert haben.;
+                           ENU=Specifies the name of the person to contact when you communicate with the customer who you shipped the items on the credit memo to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sell-to Contact";
+                Editable=FALSE }
+
+    { 12  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem die Gutschrift gebucht wurde.;
+                           ENU=Specifies the date on which the credit memo was posted.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Posting Date";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 29  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Datum an, an dem Sie den Verkaufsbeleg erstellt haben.;
+                           ENU=Specifies the date on which you created the sales document.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Document Date";
+                Editable=FALSE }
+
+    { 20  ;2   ;Group     ;
+                Visible=DocExchStatusVisible;
+                GroupType=Group }
+
+    { 25  ;3   ;Field     ;
+                ToolTipML=[DEU=Gibt den Status des Belegs an, wenn Sie einen Belegaustauschdienst verwenden, um den Beleg als elektronischen Beleg zu senden. Die Statuswerte werden vom Belegaustauschdienst gemeldet.;
+                           ENU=Specifies the status of the document if you are using a document exchange service to send it as an electronic document. The status values are reported by the document exchange service.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Document Exchange Status";
+                Editable=FALSE;
+                StyleExpr=DocExchStatusStyle;
+                OnDrillDown=BEGIN
+                              DocExchStatusDrillDown;
+                            END;
+                             }
+
+    { 65  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer der Gutschrift an, von der aus die gebuchte Gutschrift erstellt wurde.;
+                           ENU=Specifies the number of the credit memo that the posted credit memo was created from.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Pre-Assigned No.";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 84  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die externe Belegnummer des Verkaufskopfes an, von dem aus diese Zeile gebucht wurde.;
+                           ENU=Specifies the external document number that is entered on the sales header that this line was posted from.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="External Document No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 10  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code des Verk�ufers an, der f�r die Gutschrift verantwortlich ist.;
+                           ENU=Specifies which salesperson is associated with the credit memo.];
+                ApplicationArea=#Suite;
+                SourceExpr="Salesperson Code";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 80  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code f�r die Zust�ndigkeitseinheit an, die f�r den Debitor in diesem Verkaufsbeleg verantwortlich ist.;
+                           ENU=Specifies the code for the responsibility center that serves the customer on this sales document.];
+                SourceExpr="Responsibility Center";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 31  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob die gebuchte Verkaufsrechnung, die mit dieser Verkaufsgutschrift verkn�pft ist, korrigiert oder storniert wurde.;
+                           ENU=Specifies if the posted sales invoice that relates to this sales credit memo has been either corrected or canceled.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Cancelled;
+                Importance=Additional;
+                Style=Unfavorable;
+                StyleExpr=Cancelled;
+                OnDrillDown=BEGIN
+                              ShowCorrectiveInvoice;
+                            END;
+                             }
+
+    { 37  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob die gebuchte Verkaufsrechnung korrigiert oder durch diese Verkaufsgutschrift storniert wurde.;
+                           ENU=Specifies if the posted sales invoice has been either corrected or canceled by this sales credit memo.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Corrective;
+                Importance=Additional;
+                Style=Unfavorable;
+                StyleExpr=Corrective;
+                OnDrillDown=BEGIN
+                              ShowCancelledInvoice;
+                            END;
+                             }
+
+    { 18  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wie h�ufig die Gutschrift gedruckt wurde.;
+                           ENU=Specifies how many times the credit memo has been printed.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="No. Printed";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 46  ;1   ;Part      ;
+                Name=SalesCrMemoLines;
+                ApplicationArea=#Basic,#Suite;
+                SubPageLink=Document No.=FIELD(No.);
+                PagePartID=Page135 }
+
+    { 1905885101;1;Group  ;
+                CaptionML=[DEU=Rechnungsdetails;
+                           ENU=Invoice Details];
+                GroupType=Group }
+
+    { 75  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den W�hrungscode der Gutschrift an.;
+                           ENU=Specifies the currency code of the credit memo.];
+                ApplicationArea=#Suite;
+                SourceExpr="Currency Code";
+                Importance=Promoted;
+                OnAssistEdit=BEGIN
+                               ChangeExchangeRate.SetParameter("Currency Code","Currency Factor","Posting Date");
+                               ChangeExchangeRate.EDITABLE(FALSE);
+                               IF ChangeExchangeRate.RUNMODAL = ACTION::OK THEN BEGIN
+                                 "Currency Factor" := ChangeExchangeRate.GetParameter;
+                                 MODIFY;
+                               END;
+                               CLEAR(ChangeExchangeRate);
+                             END;
+                              }
+
+    { 7   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code f�r die Shortcutdimension 1 an.;
+                           ENU=Specifies the code for Shortcut Dimension 1.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shortcut Dimension 1 Code";
+                Editable=FALSE }
+
+    { 66  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code f�r die Shortcutdimension 2 an.;
+                           ENU=Specifies the code for Shortcut Dimension 2.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shortcut Dimension 2 Code";
+                Editable=FALSE }
+
+    { 68  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Lagerort an, f�r den die Gutschrift erfasst wurde.;
+                           ENU=Specifies the location where the credit memo was registered.];
+                SourceExpr="Location Code";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 14  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Typ des gebuchten Belegs an, auf den dieser Beleg oder diese Buch.-Blattzeile angewendet wird.;
+                           ENU=Specifies the type of the posted document that this document or journal line is applied to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Applies-to Doc. Type";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 16  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des gebuchten Belegs an, auf den dieser Beleg oder diese Buch.-Blattzeile angewendet wird.;
+                           ENU=Specifies the number of the posted document that this document or journal line is applied to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Applies-to Doc. No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 282 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Zahlungsmodalit�t des Debitors an. Der Code wird aus dem Feld "Zahlungsformcode" des Verkaufskopfs �bernommen.;
+                           ENU=Specifies the customer's method of payment. The program has copied the code from the Payment Method Code field on the sales header.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Payment Method Code";
+                Editable=FALSE }
+
+    { 44  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob die Rechnung Teil eines EU-Dreiecksgesch�fts war.;
+                           ENU=Specifies whether the invoice was part of an EU 3-party trade transaction.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="EU 3-Party Trade";
+                Editable=FALSE }
+
+    { 1906801201;1;Group  ;
+                CaptionML=[DEU=Lieferung und Abrechnung;
+                           ENU=Shipping and Billing];
+                GroupType=Group }
+
+    { 5   ;2   ;Group     ;
+                CaptionML=[DEU=Lief. an;
+                           ENU=Ship-to];
+                GroupType=Group }
+
+    { 34  ;3   ;Field     ;
+                CaptionML=[DEU=Name;
+                           ENU=Name];
+                ToolTipML=[DEU=Gibt den Namen des Debitors an, an den die Artikel geliefert wurden.;
+                           ENU=Specifies the name of the customer that the items were shipped to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Name";
+                Editable=FALSE }
+
+    { 36  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Adresse an, an die die Artikel geliefert wurden.;
+                           ENU=Specifies the address that the items were shipped to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Address";
+                Editable=FALSE }
+
+    { 38  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt zus�tzliche Adressinformationen an.;
+                           ENU=Specifies additional address information.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Address 2";
+                Editable=FALSE }
+
+    { 72  ;3   ;Field     ;
+                CaptionML=[DEU=PLZ-Code;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die Postleitzahl an.;
+                           ENU=Specifies the postal code.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Post Code";
+                Editable=FALSE }
+
+    { 40  ;3   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort an, an den die Artikel geliefert wurden.;
+                           ENU=Specifies the city the items were shipped to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to City";
+                Editable=FALSE }
+
+    { 42  ;3   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson beim Kunden an, an die die Artikel geliefert wurden.;
+                           ENU=Specifies the name of the person you regularly contact at the customer to whom the items were shipped.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Ship-to Contact";
+                Editable=FALSE }
+
+    { 27  ;2   ;Group     ;
+                CaptionML=[DEU=Rech. an;
+                           ENU=Bill-to];
+                GroupType=Group }
+
+    { 22  ;3   ;Field     ;
+                CaptionML=[DEU=Name;
+                           ENU=Name];
+                ToolTipML=[DEU=Gibt den Namen des Debitors an, an den die Gutschrift gesendet wurde.;
+                           ENU=Specifies the name of the customer that the credit memo was sent to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Name";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 24  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse;
+                           ENU=Address];
+                ToolTipML=[DEU=Gibt die Adresse des Debitors an, an den die Gutschrift gesendet wurde.;
+                           ENU=Specifies the address of the customer that the credit memo was sent to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Address";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 26  ;3   ;Field     ;
+                CaptionML=[DEU=Adresse 2;
+                           ENU=Address 2];
+                ToolTipML=[DEU=Gibt zus�tzliche Adressinformationen an.;
+                           ENU=Specifies additional address information.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Address 2";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 70  ;3   ;Field     ;
+                CaptionML=[DEU=PLZ-Code;
+                           ENU=Post Code];
+                ToolTipML=[DEU=Gibt die Postleitzahl an.;
+                           ENU=Specifies the postal code.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Post Code";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 28  ;3   ;Field     ;
+                CaptionML=[DEU=Ort;
+                           ENU=City];
+                ToolTipML=[DEU=Gibt den Ort an, an den die Gutschrift gesendet wurde.;
+                           ENU=Specifies the city the credit memo was sent to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to City";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 97  ;3   ;Field     ;
+                CaptionML=[DEU=Kontaktnr.;
+                           ENU=Contact No.];
+                ToolTipML=[DEU=Zeigt die Nummer des Kontakts beim Debitor an, der die Gutschrift bearbeitet.;
+                           ENU=Specifies the number of the contact at the customer who handles the credit memo.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Contact No.";
+                Importance=Additional;
+                Editable=FALSE }
+
+    { 30  ;3   ;Field     ;
+                CaptionML=[DEU=Kontakt;
+                           ENU=Contact];
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson beim Debitor an, dem die Gutschrift zugeschickt wurde.;
+                           ENU=Specifies the name of the person you regularly contact when you communicate with the customer to whom the credit memo was sent.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Bill-to Contact";
+                Editable=FALSE }
+
+    { 1000000022;1;Group  ;
+                Name=E-Commerce;
+                GroupType=Group }
+
+    { 1000000023;2;Field  ;
+                SourceExpr="Webshop Order No." }
+
+    { 1000000020;2;Field  ;
+                SourceExpr="Webshop Shop Code" }
+
+    { 1000000021;2;Field  ;
+                SourceExpr="Webshop Language Code" }
+
+    { 1000000018;2;Field  ;
+                SourceExpr="Webshop Shipping Opt. Descr." }
+
+    { 1000000019;2;Field  ;
+                SourceExpr="Webshop Payment Opt. Descr." }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Webshop Payment Transaction ID" }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Date Webshop Payment Processed" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Date Webshop Payment Cleared" }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Webshop Payment Error" }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Date Webshop Synchronization" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Date Last Updated (Webshop)" }
+
+    { 1000000010;2;Group  ;
+                Name=Reklamation;
+                CaptionML=[DEU=Reklamation;
+                           ENU=Return Order];
+                GroupType=Group }
+
+    { 1000000011;3;Field  ;
+                SourceExpr="Webshop Return Order No.";
+                Editable=FALSE }
+
+    { 1000000008;3;Field  ;
+                SourceExpr="Webshop Return Order Shop Code";
+                Editable=FALSE }
+
+    { 1000000009;3;Field  ;
+                SourceExpr="Webshop Ret. Order Lang. Code";
+                Editable=FALSE }
+
+    { 1000000006;3;Field  ;
+                SourceExpr="Date Webshop Ret. Order Sync.";
+                Editable=FALSE }
+
+    { 1000000007;2;Group  ;
+                Name=Abonnement;
+                CaptionML=[DEU=Abonnement;
+                           ENU=Subscription];
+                GroupType=Group }
+
+    { 1000000004;3;Field  ;
+                SourceExpr="Webshop Subscription Code" }
+
+    { 1000000005;3;Field  ;
+                SourceExpr="Webshop Subscr. Cust. Line No." }
+
+    { 1000000002;3;Field  ;
+                SourceExpr="Web. Cust. Ps.-Pay. Line No." }
+
+    { 1000000003;3;Field  ;
+                SourceExpr="Webshop Sub. Seq. St. Line No." }
+
+    { 1000000000;3;Field  ;
+                SourceExpr="Is Webshop Subscr. Ship. Order" }
+
+    { 1000000001;3;Field  ;
+                SourceExpr="Is Webshop Subscr. Inv. Order" }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 13  ;1   ;Part      ;
+                Name=IncomingDocAttachFactBox;
+                ApplicationArea=#Basic,#Suite;
+                PagePartID=Page193;
+                Visible=NOT IsOfficeAddin;
+                PartType=Page;
+                ShowFilter=No }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      SalesCrMemoHeader@1000 : Record 114;
+      ChangeExchangeRate@1001 : Page 511;
+      HasIncomingDocument@1002 : Boolean;
+      DocExchStatusStyle@1003 : Text;
+      DocExchStatusVisible@1004 : Boolean;
+      IsOfficeAddin@1005 : Boolean;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (24):
+
+          TYPE            SUBTYPE         SOURCEEXPR                        NAME                              CAPTION
+
+          Group           Group                                             E-Commerce                        <E-Commerce>
+          Field                           "Webshop Order No."               <Webshop Order No.>               <Online Bestellnummer>
+          Field                           "Webshop Shop Code"               <Webshop Shop Code>               <Webshop Code>
+          Field                           "Webshop Language Code"           <Webshop Language Code>           <Webshop Sprachcode>
+          Field                           "Webshop Pay. Opt. Description"   <Webshop Pay. Opt. Description>   <Zahlungsart Beschreibung>
+          Field                           "Webshop Ship. Opt. Description"  <Webshop Ship. Opt. Description>  <Versandart Beschreibung>
+          Field                           "Webshop Payment Transaction ID"  <Webshop Payment Transaction ID>  <Zahlungstransaktionsnr.>
+          Field                           "Webshop Payment Processed"       <Webshop Payment Processed>       <Online Zahlung durchgef?hrt>
+          Field                           "Webshop Payment Cleared"         <Webshop Payment Cleared>         <Online Zahlung ausgeglichen>
+          Field                           "Webshop Payment Error"           <Webshop Payment Error>           <Fehler Online Zahlung>
+          Field                           "Webshop Sync Date"               <Webshop Sync Date>               <Empfangen am>
+          Field                           "Webshop Last Date Updated"       <Webshop Last Date Updated>       <Online Aktualisiert am>
+          Group           Group                                             Reklamation                       Reklamation
+          Field                           "Webshop Return Order No."        <Webshop Return Order No.>        <Online Reklamationsnr.>
+          Field                           "Webshop Return Order Shop"       <Webshop Return Order Shop>       <Webshop Shop Code Reklamation>
+          Field                           "Webshop Return Order Language"   <Webshop Return Order Language>   <Webshop Sprachcode Reklamation>
+          Field                           "Webshop Return Order Sync Date"  <Webshop Return Order Sync Date>  <Webshop Synchronisationsdatum Reklamation>
+          Group          Group        Abonnement                      Abonnement
+          Field                        "Webshop Subscription Code"      <Webshop Subscription Code>       <Webshop Abo-Code>
+          Field                        "Webshop Sub. Cust. Line No."    <Webshop Sub. Cust. Line No.>     <Webshop Sub. Cust. Line No.>
+          Field                        "Webshop Cust. Ps.-Pay. Line No"  <Webshop Cust. Ps.-Pay. Line No><Webshop Cust. Ps.-Pay. Line No>
+          Field                        "Webshop Sub. Seq. St. Line No."  <Webshop Sub. Seq. St. Line No.><Webshop Sub. Seq. St. Line No.>
+          Field                        "Webshop Subscr. Shipping Order"<Webshop Subscr. Shipping Order><Webshop Subscr. Shipping Order>
+          Field                        "Webshop Subscr. Paym. Order"    <Webshop Subscr. Paym. Order>    <Webshop Subscr. Paym. Order>
+
+
+        PAGE ACTIONS (0):
+        TRIGGERS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

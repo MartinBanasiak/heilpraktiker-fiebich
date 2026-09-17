@@ -1,0 +1,100 @@
+OBJECT Table 5447342 Webshop Subscription Item Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnModify=BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnDelete=BEGIN
+               WebshopUpdateManagement.DeleteSubscItemLink(Rec);
+             END;
+
+    OnRename=BEGIN
+               WebshopUpdateManagement.DeleteSubscItemLink(xRec);
+             END;
+
+    CaptionML=[DEU=Webshop Abonnement Artikel Verkn�pfung;
+               ENU=Webshop Subscription Item Link];
+  }
+  FIELDS
+  {
+    { 1   ;   ;Subscription Code   ;Code30        ;TableRelation="Webshop Subscription Header".Code;
+                                                   OnValidate=VAR
+                                                                StepCount@1000000000 : Integer;
+                                                                DistributedPrice@1000000001 : Decimal;
+                                                              BEGIN
+                                                              END;
+
+                                                   CaptionML=[DEU=Abo Code;
+                                                              ENU=Subscription Code] }
+    { 2   ;   ;Link to             ;Option        ;CaptionML=[DEU=Verkn�pft mit;
+                                                              ENU=Linked to];
+                                                   OptionCaptionML=[DEU=Abo-Kopf,Sequenz-Schritt;
+                                                                    ENU=Subscription Header,Subscription Sequence Step];
+                                                   OptionString=Subscription Header,Sequence Step }
+    { 3   ;   ;Item No.            ;Code30        ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Artikel-Nr.;
+                                                              ENU=Item No.] }
+    { 4   ;   ;Variant Code        ;Code10        ;TableRelation="Item Variant".Code WHERE (Item No.=FIELD(Item No.));
+                                                   CaptionML=[DEU=Variatencode;
+                                                              ENU=Variant Code] }
+    { 5   ;   ;Subscr. Seq. Step Line No.;Integer ;TableRelation="Webshop Subscription Seq. Step"."Line No." WHERE (Subscription Code=FIELD(Subscription Code));
+                                                   CaptionML=[DEU=Abo-Sequenz Schritt Zeilennr.;
+                                                              ENU=Subscription Sequence Step Line No.] }
+    { 6   ;   ;Description         ;Text80        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup(Item.Description WHERE (No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 8   ;   ;Fix Price           ;Decimal       ;CaptionML=[DEU=Festpreis;
+                                                              ENU=Fix Price] }
+    { 9   ;   ;Discount %          ;Decimal       ;CaptionML=[DEU=Rabatt %;
+                                                              ENU=Discount %] }
+    { 10  ;   ;Fix Price Includes VAT;Boolean     ;InitValue=Yes;
+                                                   CaptionML=[DEU=Festpreis inkl. MwSt.;
+                                                              ENU=Fix Price incl. VAT] }
+    { 11  ;   ;Min. Quantity       ;Decimal       ;CaptionML=[DEU=Mindestmenge;
+                                                              ENU=Min. Quantity] }
+    { 12  ;   ;Max. Quantity       ;Decimal       ;CaptionML=[DEU=H�chstmenge;
+                                                              ENU=Max. Quantity] }
+    { 13  ;   ;Quantity            ;Decimal       ;CaptionML=[DEU=Menge;
+                                                              ENU=Quantity] }
+    { 14  ;   ;Date Last Modified  ;DateTime      ;CaptionML=[DEU=Datum Letzte �nderung;
+                                                              ENU=Date Last Modified] }
+    { 15  ;   ;Date Last Updated   ;DateTime      ;CaptionML=[DEU=Datum letzte Aktualisierung;
+                                                              ENU=Date Last Updated] }
+  }
+  KEYS
+  {
+    {    ;Subscription Code,Link to,Item No.,Variant Code,Subscr. Seq. Step Line No.;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopSubscriptionHeader@1000000000 : Record 5447340;
+      WebshopSubscriptionItemLink@1000000001 : Record 5447342;
+      WebshopSubscriptionSeqStep@1000000002 : Record 5447341;
+      WebshopUpdateManagement@1000000003 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

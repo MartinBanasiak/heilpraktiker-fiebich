@@ -1,0 +1,7 @@
+T5447323-F10-P8629-A1031-L999:Übersetzung
+T5447323-F1-P8629-A1031-L999:Typ
+T5447323-F1-P8632-A1031-L999:Merkmal,Merkmalverknüpfung,Merkmaloption,Merkmalvorlage
+T5447323-F2-P8629-A1031-L999:Merkmalcode
+T5447323-F3-P8629-A1031-L999:Verknüpfungsnr.
+T5447323-F4-P8629-A1031-L999:Sprachcode
+T5447323-P8629-A1031-L999:Webshop Merkmalübersetzung

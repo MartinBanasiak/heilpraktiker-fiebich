@@ -1,0 +1,693 @@
+OBJECT Page 5447366 Webshop Webform
+{
+  OBJECT-PROPERTIES
+  {
+    Date=25.06.18;
+    Time=16:00:00;
+    Version List=MYSW14.21;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop Webform;
+               ENU=Webshop Webform];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    LinksAllowed=No;
+    PageType=StandardDialog;
+    ShowFilter=No;
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+
+                 DownloadEnabled := FALSE;
+                 DeleteEnabled := FALSE;
+                 PrevEnabled := FALSE;
+                 NextEnabled := FALSE;
+
+                 UnsavedChanges := FALSE;
+                 SaveRequested := FALSE;
+                 UrlLoaded := FALSE;
+                 IF RecordCode <> '' THEN
+                   CurrPage.CAPTION := CurrPage.CAPTION + ' - ' + RecordCode;
+
+                 RANDOMIZE();
+
+                 Request :=
+                   STRSUBSTNO('%1webforms/webform.php?pass=%2&company=%3',
+                     WebshopSetup."Server Synch. Endpoint URL",
+                     WebshopSetup."Server Synch. Password",
+                     WebshopManagement.URLEncode(COMPANYNAME));
+                 Request +=
+                   STRSUBSTNO('&rand=%1&nav_lang=%2&rtc=TRUE',
+                     RANDOM(2000),
+                     GLOBALLANGUAGE);
+
+                 //Textedit
+                 IF WebformType = WebformType::TextModul THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&code=%1&webform=TextModul&webformtype=Editor',
+                       WebshopManagement.URLEncode(RecordCode));
+                 END;
+
+                 IF WebformType = WebformType::ItemDesc THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&shop_code=%1&language_code=%2&item_no=%3&line_no=%4&webform=ItemDescription&webformtype=Editor',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       WebshopManagement.URLEncode(ItemNo),
+                       LineNo);
+                 END;
+
+                 IF WebformType = WebformType::CategoryDesc THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&shop_code=%1&language_code=%2&line_no=%3&type=%4&webform=CategoryDesc&webformtype=Editor',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       LineNo,
+                       FORMAT(DescriptionType,0,'<Standard Format,2>'));
+                 END;
+
+                 IF WebformType = WebformType::ShippingOption THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&shipping_group_code=%1&language_code=%2&line_no=%3&webform=ShippingOption&webformtype=Editor',
+                       WebshopManagement.URLEncode(RecordCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       LineNo);
+                 END;
+
+                 IF WebformType = WebformType::ShippingOptionTranslationDescription THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&shipping_group_code=%1&language_code=%2&line_no=%3&webform=ShippingOptionTranslation&webformtype=Editor',
+                       WebshopManagement.URLEncode(RecordCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       LineNo);
+                 END;
+
+                 IF WebformType = WebformType::PaymentOption THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&shop_code=%1&language_code=%2&line_no=%3&webform=PaymentOption&webformtype=Editor',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       LineNo);
+                 END;
+
+                 //Marketplace
+
+                 IF WebformType = WebformType::Marketplace THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&webform=Marketplace&webformtype=Marketplace&shop_code=%1&language_code=%2&marketplace_type=%3&parent_id=%4&root_only%5',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       WebshopManagement.URLEncode(FORMAT(MarketplaceType)),
+                       WebshopManagement.URLEncode(FORMAT(ParentId)),
+                       WebshopManagement.URLEncode(FORMAT(RootOnly)),
+                       FORMAT(AttachmentNo));
+                   SaveRequested := TRUE;
+                 END;
+
+                 //Upload
+                 IF WebformType = WebformType::TxtModAttac THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&text_module_code=%1&webform=TxtModAttac&webformtype=Upload&shop_code=%2&attachment_no=%3',
+                       WebshopManagement.URLEncode(RecordCode),
+                       WebshopSetup."Default Shop Code",
+                       FORMAT(AttachmentNo));
+                   SaveRequested := TRUE;
+                 END;
+
+                 IF WebformType = WebformType::ItemFile THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&webform=ItemFile&webformtype=Upload&multiupload=1&shop_code=%1&language_code=%2&item_no=%3&type=%4&line_no=%5',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       ItemNo,
+                       FORMAT(ItemFileType,0,'<Standard Format,2>'),
+                       LineNo);
+                   SaveRequested := TRUE;
+                 END;
+
+                 IF WebformType = WebformType::AttributeIcon THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&webform=AttributeIcon&webformtype=Upload&code=%1&attribute_code=%2',
+                       WebshopManagement.URLEncode(RecordCode),
+                       WebshopManagement.URLEncode(AttributeCode));
+                   SaveRequested := TRUE;
+                 END;
+
+                 IF WebformType = WebformType::CouponBackground THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&webform=CouponBackground&webformtype=Upload&shop_code=%1&code=%2&no=%3',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       BackgroundNo);
+                   SaveRequested := TRUE;
+                 END;
+
+                 IF WebformType = WebformType::CategoryImage THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&webform=CategoryImage&webformtype=Upload&shop_code=%1&language_code=%2&line_no=%3&type=%4',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       LineNo,
+                       FORMAT(AttachmentType,0,'<Standard Format,2>'));
+                   SaveRequested := TRUE;
+                 END;
+
+                 IF WebformType = WebformType::Placeholder THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&webform=Placeholder&webformtype=Upload&shop_code=%1&language_code=%2',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode));
+                   SaveRequested := TRUE;
+                 END;
+
+                 IF WebformType = WebformType::CampaignImages THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&webform=CampaignImages&webformtype=Upload&shop_code=%1&language_code=%2&code=%3&field=%4',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       WebshopManagement.URLEncode(RecordCode),
+                       WebFieldName);
+                   SaveRequested := TRUE;
+                 END;
+
+                 IF WebformType = WebformType::Collection THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&webformtype=Collection&shop_code=%1&language_code=%2',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode));
+                   SaveRequested := TRUE;
+                 END;
+
+                 IF WebformType = WebformType::ShippingOptionIcon THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&shipping_group_code=%1&line_no=%2&webform=ShippingOption&webformtype=Upload',
+                       WebshopManagement.URLEncode(RecordCode),
+                       LineNo);
+                 END;
+
+                 IF WebformType = WebformType::PaymentOptionIcon THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&shop_code=%1&language_code=%2&line_no=%3&webform=PaymentOption&webformtype=Upload',
+                       WebshopManagement.URLEncode(ShopCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       LineNo);
+                 END;
+
+                 IF WebformType = WebformType::SalesPerson THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&sales_person_code=%1&webform=SalesPerson&webformtype=Upload',
+                       WebshopManagement.URLEncode(RecordCode));
+                 END;
+
+                 IF WebformType = WebformType::ShippingOptionTranslationIcon THEN BEGIN
+                   Request +=
+                     STRSUBSTNO('&shipping_group_code=%1&language_code=%2&line_no=%3&webform=ShippingOptionTranslation&webformtype=Upload',
+                       WebshopManagement.URLEncode(RecordCode),
+                       WebshopManagement.URLEncode(LanguageCode),
+                       LineNo);
+                 END;
+
+                 //HYPERLINK(Request);
+               END;
+
+    OnClosePage=VAR
+                  OK@1000000000 : Boolean;
+                  Text001@1000000001 : TextConst 'DEU=Haben Sie alle �nderungen gespeichert?;ENU=Did you save your changes?';
+                BEGIN
+                END;
+
+    OnNextRecord=BEGIN
+                   EXIT;
+                 END;
+
+    OnQueryClosePage=VAR
+                       OK@1000000000 : Boolean;
+                     BEGIN
+                       IF UrlLoaded THEN BEGIN
+                         IF SaveRequested = FALSE THEN BEGIN
+                           IF (CloseAction = ACTION::OK) OR (CloseAction = ACTION::LookupOK) OR (CloseAction = ACTION::Yes) THEN BEGIN
+                             IF UnsavedChanges THEN BEGIN
+                               CurrPage.ControlAddIn.RequestSave();
+                               EXIT(FALSE);
+                             END ELSE
+                               EXIT(TRUE);
+                           END ELSE BEGIN
+                             IF UnsavedChanges THEN BEGIN
+                               OK := CONFIRM(Text005);
+                               IF OK THEN BEGIN
+                                 CurrPage.ControlAddIn.RequestSave();
+                                 EXIT(FALSE)
+                               END ELSE
+                                 EXIT(TRUE);
+                             END;
+                           END;
+                         END;
+                       END;
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000003;  ;ActionContainer;
+                      Name=<Action1000000010>;
+                      ActionContainerType=ActionItems }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Field  ;
+                Name=ControlAddIn;
+                ControlAddIn=[DynamicCommerce.DynamicCommerce.AddIn;PublicKeyToken=602ac87117155e33] }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000001 : Record 5447300;
+      Language@1000000004 : Record 8;
+      WebshopManagement@1000000005 : Codeunit 5447300;
+      Request@1000000002 : Text[1024];
+      Type@1000000000 : 'Image,Symbol,Description1,Promotion,Description2,Picture,Document,Videoclip,360DegreeImage';
+      Text001@1000000006 : TextConst 'DEU=�nderungen gespeichert. Seite schlie�en?;ENU=Changes saved. Close Page?';
+      Text002@1000000003 : TextConst 'DEU=Fehler beim Speichern;ENU=Error on save';
+      Saved@1000000007 : Boolean;
+      DownloadEnabled@1000000016 : Boolean;
+      DeleteEnabled@1000000018 : Boolean;
+      PrevEnabled@1000000008 : Boolean;
+      NextEnabled@1000000017 : Boolean;
+      Save@1000000015 : Integer;
+      "--- Setter Vars ---"@1000000033 : Integer;
+      WebformType@1000000009 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection,ShippingOption,PaymentOption,ShippingOptionIcon,PaymentOptionIcon,Marketplace,SalesPerson,ShippingOptionTranslationDescription,ShippingOptionTranslationIcon';
+      WebformCaption@1000000012 : Text[250];
+      RecordCode@1000000013 : Text[60];
+      CurrTyp@1000000011 : Text[1024];
+      AttachmentNo@1000000010 : Integer;
+      Text003@1000000014 : TextConst 'DEU=Anhang %1 zu Textbaustein %2 bearbeiten;ENU=Edit attachment %1 for text module %2';
+      Text004@1000000019 : TextConst 'DEU=Ungespeicherte �nderungen gefunden. Seite trotzdem schlie�en?';
+      UnsavedChanges@1000000020 : Boolean;
+      SaveRequested@1000000021 : Boolean;
+      UrlLoaded@1000000022 : Boolean;
+      Text005@1000000023 : TextConst 'DEU=M�chten Sie Ihre �nderungen speichern?;ENU=Would you like to save your changes?';
+      ShopCode@1000000024 : Code[10];
+      LanguageCode@1000000025 : Code[10];
+      ItemNo@1000000026 : Code[20];
+      LineNo@1000000027 : Integer;
+      AttributeCode@1000000042 : Code[30];
+      BackgroundNo@1000000043 : Integer;
+      WebFieldName@1000000044 : Text[80];
+      MarketplaceType@1000000054 : Integer;
+      ParentId@1000000055 : Text[50];
+      RootOnly@1000000056 : Boolean;
+      "--- Types ---"@1000000028 : Integer;
+      DescriptionType@1000000029 : 'Description1,Promotion,Description2';
+      AttachmentType@1000000030 : 'Image,Symbol';
+      ItemFileType@1000000031 : 'Picture,Document,Videoclip,360DegreeImage';
+      RecordType@1000000048 : 'Language,Category,Item';
+      "--- WebshopItemFileUpload ---"@1000000032 : Integer;
+      WebshopItemFile@1000000037 : Record 5447307;
+      DataShopCode@1000000034 : Code[20];
+      DataLanguageCode@1000000035 : Code[20];
+      DataItemNo@1000000036 : Code[20];
+      DataType@1000000038 : Integer;
+      DataVariantCode@1000000039 : Code[10];
+      DataLineNo@1000000040 : Integer;
+      DataName@1000000041 : Text[100];
+      "--- Collection ---"@1000000045 : Integer;
+      CollectionId@1000000046 : Text;
+      CollectionName@1000000047 : Text[250];
+      WebshopLanguage@1000000049 : Record 5447302;
+      WebshopCategory@1000000050 : Record 5447303;
+      WebshopItem@1000000051 : Record 5447304;
+      "--- Page ---"@1000000052 : Integer;
+      PageType@1000000053 : Integer;
+      "--- Helper Vars ---"@5447300 : Integer;
+      FileShopCode@5447301 : Text;
+      FileLanguageCode@5447302 : Text;
+      FileIemNo@5447303 : Text;
+      FileItemFileType@5447304 : Integer;
+      FileVariantCode@5447305 : Text;
+      FileLineNo@5447306 : Integer;
+      FileFileName@5447307 : Text;
+      MultiuploadResponseCount@1000000057 : Integer;
+
+    PROCEDURE SetWebformType@1000000004(ParaWebformType@1000000000 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection,ShippingOption,PaymentOption,ShippingOptionIcon,PaymentOptionIcon,Marketplace,SalesPerson');
+    BEGIN
+      WebformType := ParaWebformType;
+    END;
+
+    PROCEDURE SetRecordCode@1000000007(ParamCode@1000000000 : Text[60]);
+    BEGIN
+      RecordCode := ParamCode;
+    END;
+
+    PROCEDURE SetAttachmentNo@1000000000(ParamAttachmentNo@1000000000 : Integer);
+    BEGIN
+      AttachmentNo := ParamAttachmentNo;
+    END;
+
+    PROCEDURE SetShopCode@1000000002(ParaShopCode@1000000000 : Code[10]);
+    BEGIN
+      ShopCode := ParaShopCode;
+    END;
+
+    PROCEDURE SetLanguageCode@1000000003(ParaLanguageCode@1000000000 : Code[10]);
+    BEGIN
+      LanguageCode := ParaLanguageCode;
+    END;
+
+    PROCEDURE SetItemNo@1000000005(ParaItemNo@1000000000 : Code[20]);
+    BEGIN
+      ItemNo := ParaItemNo;
+    END;
+
+    PROCEDURE SetLineNo@1000000006(ParaLineNo@1000000000 : Integer);
+    BEGIN
+      LineNo := ParaLineNo;
+    END;
+
+    PROCEDURE SetType@1000000008(ParaType@1000000000 : 'Image,Symbol,Description1,Promotion,Description2,Picture,Document,Videoclip,360DegreeImage');
+    BEGIN
+      Type := ParaType;
+    END;
+
+    PROCEDURE SetDescriptionType@1000000022(ParaType@1000000000 : 'Description1,Promotion,Description2');
+    BEGIN
+      DescriptionType := ParaType;
+    END;
+
+    PROCEDURE SetAttachmentType@1000000023(ParaType@1000000000 : 'Image,Symbol');
+    BEGIN
+      AttachmentType := ParaType;
+    END;
+
+    PROCEDURE SetItemFileType@1000000024(ParaType@1000000000 : 'Picture,Document,Videoclip');
+    BEGIN
+      ItemFileType := ParaType;
+    END;
+
+    PROCEDURE SetAttributeCode@1000000016(ParaAttributeCode@1000000000 : Code[30]);
+    BEGIN
+      AttributeCode := ParaAttributeCode;
+    END;
+
+    PROCEDURE SetBackgroundNo@1000000019(ParaBackgroundNo@1000000000 : Integer);
+    BEGIN
+      BackgroundNo := ParaBackgroundNo;
+    END;
+
+    PROCEDURE SetWebFieldName@1000000026(ParaField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems');
+    BEGIN
+      CASE ParaField OF
+        ParaField::IconCondItems:   WebFieldName := 'icon_condition_items';
+        ParaField::BannerCondItems: WebFieldName := 'banner_condition_items';
+        ParaField::IconActItems:    WebFieldName := 'icon_action_items';
+        ParaField::BannerActItems:  WebFieldName := 'banner_action_items';
+      END;
+    END;
+
+    PROCEDURE SetRecordType@1000000009(ParaRecordType@1000000000 : 'Language,Category,Item');
+    BEGIN
+      RecordType := ParaRecordType;
+    END;
+
+    PROCEDURE SetMarketplaceType@1000000025(ParaMarketplaceType@1000000000 : Integer);
+    BEGIN
+      MarketplaceType := ParaMarketplaceType;
+    END;
+
+    PROCEDURE SetParentId@1000000027(ParaParentId@1000000000 : Text[50]);
+    BEGIN
+      ParentId := ParaParentId;
+    END;
+
+    PROCEDURE SetRootOnly@1000000028(ParaRootOnly@1000000000 : Boolean);
+    BEGIN
+      RootOnly := ParaRootOnly;
+    END;
+
+    LOCAL PROCEDURE "--- DLL Functions ---"@1000000001();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE OnControlAddInReady@1000000010();
+    VAR
+      uriObj@1000000000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Uri";
+    BEGIN
+      uriObj := uriObj.Uri(Request);
+      CurrPage.ControlAddIn.LoadUrl(uriObj);
+    END;
+
+    LOCAL PROCEDURE OnURLLoaded@1000000011();
+    BEGIN
+      UrlLoaded := TRUE;
+    END;
+
+    LOCAL PROCEDURE OnSaveCompleted@1000000012(Status@1000000000 : Text;Data@1000000001 : Text);
+    BEGIN
+      IF Status = 'saved' THEN BEGIN
+        SaveRequested := TRUE;
+        CurrPage.CLOSE;
+      END ELSE BEGIN
+        MESSAGE(Text002);
+      END;
+    END;
+
+    LOCAL PROCEDURE OnWebshopItemFileUploaded@1000000013();
+    VAR
+      i@1000000001 : Integer;
+      PointPosition@1000000002 : Integer;
+    BEGIN
+
+      // DataShopCode := WebshopItemFileObject.ShopCode;
+      // DataLanguageCode := WebshopItemFileObject.LanguageCode;
+      // DataItemNo := WebshopItemFileObject.ItemNo;
+      // DataType := WebshopItemFileObject.ItemFileType;
+      // DataVariantCode := WebshopItemFileObject.VariantCode;
+      // DataLineNo := WebshopItemFileObject.LineNo;
+      // DataName := WebshopItemFileObject.FileName;
+
+
+      DataShopCode := FileShopCode;
+      DataLanguageCode := FileLanguageCode;
+      DataItemNo := FileIemNo;
+      DataType := FileItemFileType;
+      DataVariantCode := FileVariantCode;
+      DataLineNo := FileLineNo;
+      DataName := FileFileName;
+
+      CLEAR(FileShopCode);
+      CLEAR(FileLanguageCode);
+      CLEAR(FileIemNo);
+      CLEAR(FileItemFileType);
+      CLEAR(FileVariantCode);
+      CLEAR(FileLineNo);
+      CLEAR(FileFileName);
+
+
+       PointPosition := 0;
+
+       FOR i := 1 TO STRLEN(DataName) DO BEGIN
+        IF DataName[STRLEN(DataName)+1-i] = '.' THEN
+          PointPosition := STRLEN(DataName)-i;
+       END;
+
+       IF PointPosition > 0 THEN
+        DataName := COPYSTR(DataName,1,PointPosition);
+
+       IF NOT WebshopItemFile.GET(DataShopCode,DataLanguageCode,DataItemNo,DataType,DataVariantCode,DataLineNo) THEN BEGIN
+        WebshopItemFile.RESET;
+        WebshopItemFile.INIT;
+        WebshopItemFile."Item No." := DataItemNo;
+        WebshopItemFile."Language Code" := DataLanguageCode;
+        WebshopItemFile.Type := DataType;
+        WebshopItemFile."Line No." := DataLineNo;
+        WebshopItemFile.Description := DataName;
+        WebshopItemFile.File := TRUE;
+        WebshopItemFile."Shop Code" := DataShopCode;
+        WebshopItemFile."Variant Code" := DataVariantCode;
+        WebshopItemFile.INSERT;
+       END ELSE BEGIN
+        IF WebshopItemFile.Description = '' THEN BEGIN
+          WebshopItemFile.Description := DataName;
+          WebshopItemFile.MODIFY(FALSE);
+        END;
+       END;
+    END;
+
+    LOCAL PROCEDURE OnWebshopCollectionSelected@1000000014();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE OnUnsavedChanges@1000000015(Saved@1000000000 : Boolean);
+    BEGIN
+      UnsavedChanges := Saved;
+      SaveRequested := TRUE;
+      CurrPage.CLOSE;
+    END;
+
+    LOCAL PROCEDURE OnChangeDetected@1000000017();
+    BEGIN
+      UnsavedChanges := TRUE;
+    END;
+
+    LOCAL PROCEDURE OnEventResponse@1000000018(EventName@1000000000 : Text;Success@1000000001 : Boolean);
+    BEGIN
+
+    END;
+
+    LOCAL PROCEDURE OnReceiveData@5447300(Action@5447300 : Text;Data@5447301 : Text);
+    BEGIN
+      IF Action = 'fileuploaded' THEN BEGIN
+        IF (WebformType = WebformType::ItemFile) AND (MultiuploadResponseCount = 0) THEN BEGIN
+          HandleResult(Data);
+          OnWebshopItemFileUploaded;
+        END;
+        IF (WebformType = WebformType::ItemFile) AND (ItemFileType = ItemFileType::"360DegreeImage") THEN
+          MultiuploadResponseCount += 1
+      END
+    END;
+
+    LOCAL PROCEDURE "--- Helper ---"@5447304();
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE ProcessKeyValue@5447305(Key@5447300 : Text;Value@5447301 : Text);
+    BEGIN
+      IF Key = 'ShopCode' THEN
+        FileShopCode := Value;
+
+      IF Key = 'LanguageCode' THEN
+        FileLanguageCode := Value;
+
+      IF Key = 'ItemNo' THEN
+        FileIemNo := Value;
+
+      IF Key = 'ItemFileType' THEN
+        EVALUATE(FileItemFileType,Value);
+
+      IF Key = 'VariantCode' THEN
+        FileVariantCode := Value;
+
+      IF Key = 'LineNo' THEN
+        EVALUATE(FileLineNo,Value);
+
+      IF Key = 'FileName' THEN
+        FileFileName := Value;
+    END;
+
+    LOCAL PROCEDURE HandleResult@5447306(Value@5447304 : Text);
+    VAR
+      i@5447303 : Integer;
+      Mode@5447302 : Integer;
+      Key@5447301 : Text;
+      KeyValue@5447300 : Text;
+    BEGIN
+      Mode := 1;
+
+      FOR i := 1 TO STRLEN(Value) DO BEGIN
+        CASE Mode OF
+          0: // Search for key end
+            BEGIN
+              IF Value[i] = '"' THEN BEGIN
+                Mode := 6;
+              END ELSE Key := Key + FORMAT(Value[i]);
+            END;
+          1: // Search for key begin
+            BEGIN
+              IF Value[i] = '"' THEN BEGIN
+                Mode := 0;
+              END;
+            END;
+          2: // Handle complex data types not required in this case...
+            BEGIN
+              //message('Complex Type ' + Key);
+              Key := '';
+              IF Value[i] = '"' THEN Mode := 0
+              ELSE Mode := 1;
+            END;
+          3: // Search for Value end
+            BEGIN
+              IF Value[i] = '"' THEN BEGIN
+                Mode := 1;
+                ProcessKeyValue(Key, KeyValue);
+                Key := '';
+                KeyValue := '';
+              END ELSE KeyValue := KeyValue + FORMAT(Value[i]);
+            END;
+
+          4: // Search for Value begin
+            BEGIN
+              IF (Value[i] = '{') OR (Value[i] = '[') THEN
+                Mode := 2;
+              IF Value[i] = '"' THEN
+                Mode := 3;
+              IF Value[i] IN ['0'..'9'] THEN BEGIN
+                KeyValue := KeyValue + FORMAT(Value[i]);
+                Mode := 5;
+              END;
+            END;
+          5: // Numeric value
+            BEGIN
+              IF Value[i] IN ['0'..'9'] THEN
+                KeyValue := KeyValue + FORMAT(Value[i])
+              ELSE BEGIN
+                Mode := 1;
+                ProcessKeyValue(Key, KeyValue);
+                Key := '';
+                KeyValue := '';
+              END;
+            END;
+          6: // Search for :
+            BEGIN
+              IF Value[i] = ':' THEN Mode := 4;
+            END;
+        END;
+      END;
+    END;
+
+    EVENT ControlAddIn@-1000000001::ControlAddInReady@4();
+    BEGIN
+      OnControlAddInReady;
+    END;
+
+    EVENT ControlAddIn@-1000000001::URLLoaded@5();
+    BEGIN
+      OnURLLoaded;
+    END;
+
+    EVENT ControlAddIn@-1000000001::SaveCompleted@6(status@5447301 : Text;data@5447300 : Text);
+    BEGIN
+      OnSaveCompleted(status,data);
+    END;
+
+    EVENT ControlAddIn@-1000000001::UnsavedChanges@7(saved@5447300 : Boolean);
+    BEGIN
+      OnUnsavedChanges(saved);
+    END;
+
+    EVENT ControlAddIn@-1000000001::ChangeDetected@8();
+    BEGIN
+      OnChangeDetected;
+    END;
+
+    EVENT ControlAddIn@-1000000001::ChangeActionButton@9(actionButton@5447301 : Text;enabled@5447300 : Boolean);
+    BEGIN
+    END;
+
+    EVENT ControlAddIn@-1000000001::ReceiveData@10(status@5447301 : Text;data@5447300 : Text);
+    BEGIN
+      OnReceiveData(status,data);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

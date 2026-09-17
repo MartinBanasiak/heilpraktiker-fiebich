@@ -1,0 +1,154 @@
+OBJECT Table 5447337 Webshop Permission Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               CASE Type OF
+                 Type::CustomerGroup: BEGIN
+                   TESTFIELD("Customer No.");
+                   TESTFIELD("Permission Group Code");
+                 END;
+                 Type::ItemGroup: BEGIN
+                   TESTFIELD("Item No.");
+                   TESTFIELD("Permission Group Code");
+                 END;
+                 Type::CustomerItem: BEGIN
+                   TESTFIELD("Item No.");
+                   TESTFIELD("Customer No.");
+                 END;
+                 Type::CustomerCategory: BEGIN
+                   TESTFIELD("Customer No.");
+                   TESTFIELD("Shop Code");
+                   TESTFIELD("Language Code");
+                   TESTFIELD("Line No.");
+                 END;
+                 Type::CategoryGroup: BEGIN
+                   TESTFIELD("Permission Group Code");
+                   TESTFIELD("Shop Code");
+                   TESTFIELD("Language Code");
+                   TESTFIELD("Line No.");
+                 END;
+               END;
+               CheckValues();
+             END;
+
+    OnModify=BEGIN
+               CheckValues();
+             END;
+
+    CaptionML=[DEU=Webshop Berechtigungsverkn�pfung;
+               ENU=Webshop Permission Link];
+    LookupPageID=Page5447337;
+    DrillDownPageID=Page5447337;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionString=CustomerGroup,ItemGroup,CustomerItem,CustomerCategory,CategoryGroup,ShippingGroup,CustomerShipping,PaymentGroup,CustomerPayment }
+    { 2   ;   ;Customer No.        ;Code20        ;TableRelation=Customer.No.;
+                                                   CaptionML=[DEU=Debitornr.;
+                                                              ENU=Customer No.] }
+    { 3   ;   ;Item No.            ;Code20        ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Item No.] }
+    { 4   ;   ;Permission Group Code;Code20       ;TableRelation="Webshop Permission Group".Code;
+                                                   CaptionML=[DEU=Berechtigungsgruppencode;
+                                                              ENU=Permission Group Code] }
+    { 5   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Kategorie Shopcode;
+                                                              ENU=Category Shop Code] }
+    { 6   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Kategorie Sprachcode;
+                                                              ENU=Category Language Code] }
+    { 7   ;   ;Line No.            ;Integer       ;TableRelation="Webshop Category"."Line No." WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                      Language Code=FIELD(Language Code));
+                                                   CaptionML=[DEU=Kategoriezeilennr.;
+                                                              ENU=Category Line No.] }
+    { 10  ;   ;Customer Name       ;Text50        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup(Customer.Name WHERE (No.=FIELD(Customer No.)));
+                                                   CaptionML=[DEU=Debitorname;
+                                                              ENU=Customer Name];
+                                                   Editable=No }
+    { 11  ;   ;Item Description    ;Text50        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup(Item.Description WHERE (No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Artikelbeschreibung;
+                                                              ENU=Item Description];
+                                                   Editable=No }
+    { 12  ;   ;Permission Group Description;Text50;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Permission Group".Description WHERE (Code=FIELD(Permission Group Code)));
+                                                   CaptionML=[DEU=Gruppenbeschreibung;
+                                                              ENU=Permission Group Description];
+                                                   Editable=No }
+    { 13  ;   ;Category Name       ;Text50        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Category".Name WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                     Language Code=FIELD(Language Code),
+                                                                                                     Line No.=FIELD(Line No.)));
+                                                   CaptionML=[DEU=Kategoriename;
+                                                              ENU=Category Name];
+                                                   Editable=No }
+    { 14  ;   ;Shipping Description;Text50        ;CaptionML=[DEU=Versandbeschreibung;
+                                                              ENU=Shipping Description];
+                                                   Editable=No }
+    { 15  ;   ;Payment Description ;Text50        ;CaptionML=[DEU=Zahlungsbeschreibung;
+                                                              ENU=Payment Description];
+                                                   Editable=No }
+  }
+  KEYS
+  {
+    {    ;Type,Customer No.,Item No.,Permission Group Code,Shop Code,Language Code,Line No.;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopCategory@1000000001 : Record 5447303;
+      WebshopShippingOption@1000000000 : Record 5447311;
+      WebshopPaymentOption@1000000002 : Record 5447312;
+
+    PROCEDURE CategoryPath@1000000002() : Text[250];
+    VAR
+      WebshopCategory@1000000000 : Record 5447303;
+    BEGIN
+      IF WebshopCategory.GET("Shop Code","Language Code","Line No.") THEN
+        EXIT(WebshopCategory.GetCategoryPath);
+    END;
+
+    LOCAL PROCEDURE CheckValues@1000000004();
+    BEGIN
+      "Category Name" := '';
+      "Shipping Description" := '';
+
+      IF (Type = Type::CustomerShipping) OR (Type = Type::ShippingGroup) THEN  BEGIN
+        IF WebshopShippingOption.GET("Shop Code","Language Code","Line No.") THEN
+           "Shipping Description" := WebshopShippingOption.Description
+      END;
+
+      IF (Type = Type::CustomerPayment) OR (Type = Type::PaymentGroup) THEN  BEGIN
+        IF WebshopPaymentOption.GET("Shop Code","Language Code","Line No.") THEN
+           "Payment Description" := WebshopPaymentOption.Description
+      END;
+
+      IF (Type = Type::CustomerCategory) OR (Type = Type::CategoryGroup) THEN BEGIN
+          IF WebshopCategory.GET("Shop Code","Language Code","Line No.") THEN
+            "Category Name" := WebshopCategory.Name
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

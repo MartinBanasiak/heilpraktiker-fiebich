@@ -1,0 +1,94 @@
+OBJECT Table 5447317 Webshop Item Ratings
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnModify=VAR
+               WebshopItemComment@1000000000 : Record 5447317;
+             BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    CaptionML=[DEU=Webshop Artikelbewertungen;
+               ENU=Webshop Item Ratings];
+    LookupPageID=Page5447335;
+    DrillDownPageID=Page5447335;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Item No.            ;Code20        ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Item No.];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Line No.            ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.];
+                                                   NotBlank=Yes }
+    { 4   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code] }
+    { 5   ;   ;Review Text         ;Text250       ;CaptionML=[DEU=Kommentar;
+                                                              ENU=Comment] }
+    { 6   ;   ;Review Title        ;Text50        ;CaptionML=[DEU=�berschrift;
+                                                              ENU=Headline] }
+    { 7   ;   ;Is Review Released  ;Boolean       ;CaptionML=[DEU=Freigegeben;
+                                                              ENU=Released] }
+    { 8   ;   ;Review Date         ;DateTime      ;CaptionML=[DEU=Datum;
+                                                              ENU=Date] }
+    { 9   ;   ;Review Rating       ;Integer       ;ExtendedDatatype=Ratio;
+                                                   CaptionML=[DEU=Bewertung;
+                                                              ENU=Rating] }
+    { 10  ;   ;Review User Name    ;Text50        ;CaptionML=[DEU=Autor Name;
+                                                              ENU=Author Name] }
+    { 11  ;   ;Review User City    ;Text30        ;CaptionML=[DEU=Autor Ort;
+                                                              ENU=Author City] }
+    { 12  ;   ;Review User E-Mail  ;Text30        ;CaptionML=[DEU=Autor Email;
+                                                              ENU=Author Email] }
+    { 13  ;   ;Date Last Updated   ;DateTime      ;CaptionML=[DEU=Online Aktualisiert am;
+                                                              ENU=Last Date Updated];
+                                                   Editable=No }
+    { 14  ;   ;Date Last Modified  ;DateTime      ;CaptionML=[DEU=Korrigiert am;
+                                                              ENU=Last Date Modified];
+                                                   Editable=No }
+    { 15  ;   ;Description         ;Text50        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Item".Description WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                        Language Code=FIELD(Language Code),
+                                                                                                        Item No.=FIELD(Item No.)));
+                                                   CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 16  ;   ;Checked             ;Boolean       ;InitValue=No;
+                                                   CaptionML=[DEU=Gepr�ft;
+                                                              ENU=Checked];
+                                                   Editable=No }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Item No.,Line No.;
+                                                   Clustered=Yes }
+    {    ;Review Date                              }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

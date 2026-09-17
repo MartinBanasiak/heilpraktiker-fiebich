@@ -1,0 +1,142 @@
+OBJECT Page 5447330 Webshop Coupon Line Part
+{
+  OBJECT-PROPERTIES
+  {
+    Date=17.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Gutscheinzeilen Part;
+               ENU=Webshop Coupon Line Part];
+    MultipleNewLines=No;
+    SourceTable=Table5447329;
+    PageType=ListPart;
+    OnInit=BEGIN
+             "Max No of UsageVisible" := TRUE;
+             "Amount LeftVisible" := TRUE;
+             AmountVisible := TRUE;
+             "Customer NoVisible" := TRUE;
+             CurrPage.UPDATE;
+           END;
+
+    OnInsertRecord=BEGIN
+                     "Is Posted" := FALSE;
+                   END;
+
+    OnDeleteRecord=VAR
+                     Error001@1000000000 : TextConst 'DEU=Gutschein ist bereits verbucht.;ENU=Coupon is already posted.';
+                   BEGIN
+                     IF "Is Posted" = TRUE THEN
+                       ERROR(Error001);
+                   END;
+
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Coupon Code" }
+
+    { 1000000005;2;Field  ;
+                Lookup=Yes;
+                SourceExpr="Customer No.";
+                TableRelation=Customer.No.;
+                Visible="Customer NoVisible";
+                LookupPageID=Customer List }
+
+    { 1000000007;2;Field  ;
+                SourceExpr=Amount;
+                Visible=AmountVisible }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Amount Left";
+                Visible="Amount LeftVisible" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Times Used" }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Max No. of Uses";
+                Visible="Max No of UsageVisible" }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Date Last Used" }
+
+    { 1000000001;2;Field  ;
+                SourceExpr=Code;
+                Visible=false }
+
+  }
+  CODE
+  {
+    VAR
+      Blank@1000000000 : Text[30];
+      WebshopManagement@1000000001 : Codeunit 5447301;
+      "Customer NoVisible"@19074881 : Boolean INDATASET;
+      AmountVisible@19071318 : Boolean INDATASET;
+      "Amount LeftVisible"@19049145 : Boolean INDATASET;
+      "Max No of UsageVisible"@19015773 : Boolean INDATASET;
+
+    PROCEDURE FormatFields@1000000000(CouponHeader@1000000000 : Record 5447330);
+    BEGIN
+      CASE CouponHeader."Value Type" OF
+        0:
+          BEGIN
+            "Customer NoVisible" := FALSE;
+            AmountVisible := FALSE;
+            "Amount LeftVisible" := FALSE;
+            "Max No of UsageVisible" := TRUE;
+          END;
+        1:
+          BEGIN
+            "Customer NoVisible" := FALSE;
+            AmountVisible := FALSE;
+            "Amount LeftVisible" := FALSE;
+            "Max No of UsageVisible" := TRUE;
+          END;
+        2:
+          BEGIN
+            "Customer NoVisible" := FALSE;
+            AmountVisible := FALSE;
+            "Amount LeftVisible" := FALSE;
+            "Max No of UsageVisible" := TRUE;
+          END;
+        3:
+          BEGIN
+            "Customer NoVisible" := TRUE;
+            AmountVisible := TRUE;
+            "Amount LeftVisible" := TRUE;
+            "Max No of UsageVisible" := FALSE;
+          END;
+        4:
+          BEGIN
+            "Customer NoVisible" := FALSE;
+            AmountVisible := FALSE;
+            "Amount LeftVisible" := FALSE;
+            "Max No of UsageVisible" := TRUE;
+          END;
+
+      END;
+      CurrPage.UPDATE;
+    END;
+
+    PROCEDURE SendCouponMail@1000000001();
+    BEGIN
+      //WebshopManagement.SendCouponMail(Rec);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

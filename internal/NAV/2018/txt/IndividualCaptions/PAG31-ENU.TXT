@@ -1,0 +1,336 @@
+N31-C101-P8631-A1033-L999:Specifies the number of the production routing that the item is used in.
+N31-C106-P8631-A1033-L999:Specifies if the item card represents a physical item (Inventory) or a service (Service).
+N31-C1102601000-P8631-A1033-L999:Specifies the category that the item belongs to. Item categories also contain any assigned item attributes.
+N31-C1102601002-P8631-A1033-L999:Specifies a product group code associated with the item category.
+N31-C1102601004-P8631-A1033-L999:Specifies that transactions with the item cannot be posted, for example, because the item is in quarantine.
+N31-C1102601006-P8631-A1033-L999:Specifies when the item card was last modified.
+N31-C1102601010-P8631-A1033-L999:Specifies the unit of measure code used when you sell the item.
+N31-C1102601012-P8631-A1033-L999:Specifies the type of supply order created by the planning system when the item needs to be replenished.
+N31-C1102601016-P8631-A1033-L999:Specifies the unit of measure code used when you purchase the item.
+N31-C1102601018-P8631-A1033-L999:Specifies a date formula for the amount of time it takes to replenish the item.
+N31-C1102601020-P8631-A1033-L999:Specifies if additional orders for any related components are calculated.
+N31-C1102601024-P8631-A1033-L999:Specifies how consumption of the item (component) is calculated and handled in production processes. Manual: Enter and post consumption in the consumption journal manually. Forward: Automatically posts consumption according to the production order component lines when the first operation starts. Backward: Automatically calculates and posts consumption according to the production order component lines when the production order is finished. Pick + Forward / Pick + Backward: Variations with warehousing.
+N31-C1102601026-P8631-A1033-L999:Specifies how items are tracked in the supply chain.
+N31-C112-P8631-A1033-L999:Specifies that a stockkeeping unit exists for this item.
+N31-C113-P8631-A1033-L999:Specifies how many units, such as pieces, boxes, or cans, of the item are in inventory.
+N31-C122-P8631-A1033-L999:Specifies whether the item's unit cost has been adjusted, either automatically or manually.
+N31-C12-P8631-A1033-L999:Specifies the item's product type to link transactions made for this item with the appropriate general ledger account according to the general posting setup.
+N31-C140-P8629-A1033-L999:Power BI Reports
+N31-C1-P8629-A1033-L999:Item
+N31-C2-P8631-A1033-L999:Specifies the number of the item.
+N31-C31-P8629-A1033-L999:Default Deferral Template
+N31-C31-P8631-A1033-L999:Specifies the default template that governs how to defer revenues and expenses to the periods when they occurred.
+N31-C35-P8631-A1033-L999:Specifies an item group code that can be used as a criterion to grant a discount when the item is sold to a certain customer.
+N31-C43-P8631-A1033-L999:Specifies where to find the item in the warehouse. This is informational only.
+N31-C45-P8631-A1033-L999:Specifies how the item's cost flow is recorded and whether an actual or budgeted value is capitalized and used in the cost calculation.
+N31-C4-P8631-A1033-L999:Specifies a description of the item.
+N31-C51-P8631-A1033-L999:Specifies the unit cost that is used as an estimation to be adjusted with variances later. It is typically used in assembly and production where costs can vary.
+N31-C53-P8631-A1033-L999:Specifies the cost per unit of the item.
+N31-C55-P8631-A1033-L999:Specifies the most recent direct unit cost that was paid for the item.
+N31-C57-P8631-A1033-L999:Specifies the relationship between the Unit Cost, Unit Price, and Profit Percentage fields associated with this item.
+N31-C59-P8631-A1033-L999:Specifies the profit margin that you want to sell the item at. You can enter a profit percentage manually or have it entered according to the Price/Profit Calculation field
+N31-C61-P8631-A1033-L999:Specifies the price for one unit of the item, in LCY.
+N31-C63-P8631-A1033-L999:Specifies links between business transactions made for the item and an inventory account in the general ledger, to group amounts for that item type.
+N31-C65-P8631-A1033-L999:Specifies the vendor code of who supplies this item by default.
+N31-C67-P8631-A1033-L999:Specifies the number that the vendor uses for this item.
+N31-C69-P8631-A1033-L999:Specifies a code for the item's tariff number.
+N31-C6-P8631-A1033-L999:Specifies the base unit used to measure the item, such as piece, box, or pallet. The base unit of measure also serves as the conversion basis for alternate units of measure.
+N31-C71-P8631-A1033-L999:Specifies a search description that you use to find the item in lists.
+N31-C74-P8631-A1033-L999:Specifies the VAT product posting group. Links business transactions made for the item, resource, or G/L account with the general ledger, to account for VAT amounts resulting from trade with that record.
+N31-C89-P8631-A1033-L999:Specifies the percentage of the item's last purchase cost that includes indirect costs, such as freight that is associated with the purchase of the item.
+N31-C8-P8631-A1033-L999:Specifies if the item is an assembly BOM.
+N31-C91-P8631-A1033-L999:Specifies the item's indirect cost as an absolute amount.
+N31-C95-P8631-A1033-L999:Specifies that the item was created from a nonstock item.
+N31-C97-P8631-A1033-L999:Specifies that a substitute exists for this item.
+N31-C99-P8631-A1033-L999:Specifies the number of the production BOM that the item represents.
+N31-C9-P8631-A1033-L999:Specifies which default order flow is used to supply this assembly item.
+N31-P55132-A1033-L999:New,Process,Report,Item,History,Special Prices & Discounts,Request Approval,Periodic Activities,Inventory,Attributes
+N31-P55242-G1000000000-P8629-A1033-L999:Webshop
+N31-P55242-G1000000003-P8629-A1033-L999:E-Commerce
+N31-P55242-G1000000-P8629-A1033-L999:C&opy Item
+N31-P55242-G1000000-P8631-A1033-L999:Copy the information on another item card to this item card.
+N31-P55242-G100-P8629-A1033-L999:Inventory Details
+N31-P55242-G102-P8629-A1033-L999:Inventory Statistics
+N31-P55242-G103-P8629-A1033-L999:Ser&vice Items
+N31-P55242-G103-P8631-A1033-L999:View instances of the item as service items, such as machines that you maintain or repair for customers through service orders.
+N31-P55242-G104-P8629-A1033-L999:Finance Reports
+N31-P55242-G105-P8629-A1033-L999:Troubleshooting Setup
+N31-P55242-G105-P8631-A1033-L999:View or edit your settings for troubleshooting service items.
+N31-P55242-G107-P8629-A1033-L999:Special Prices & Discounts Overview
+N31-P55242-G107-P8631-A1033-L999:View the special prices and line discounts that you grant for this item when certain criteria are met, such as vendor, quantity, or ending date.
+N31-P55242-G108-P8629-A1033-L999:Resource &Skills
+N31-P55242-G108-P8631-A1033-L999:View the assignment of skills to resources, items, service item groups, and service items. You can use skill codes to allocate skilled resources to service items or items that need special skills for servicing.
+N31-P55242-G109-P8629-A1033-L999:Skilled R&esources
+N31-P55242-G109-P8631-A1033-L999:View a list of all registered resources with information about whether they have the skills required to service the particular service item group, item, or service item.
+N31-P55242-G10-P8629-A1033-L999:Availability
+N31-P55242-G110-P8629-A1033-L999:F&unctions
+N31-P55242-G111-P8629-A1033-L999:&Create Stockkeeping Unit
+N31-P55242-G111-P8631-A1033-L999:Create an instance of the item at each location that is set up.
+N31-P55242-G114-P8629-A1033-L999:Returns Orders
+N31-P55242-G114-P8631-A1033-L999:View ongoing sales or purchase return orders for the item.
+N31-P55242-G115-P8629-A1033-L999:Return Orders
+N31-P55242-G115-P8631-A1033-L999:Open the list of ongoing return orders for the item.
+N31-P55242-G116-P8629-A1033-L999:&Bin Contents
+N31-P55242-G116-P8631-A1033-L999:View the quantities of the item in each bin where it exists. You can see all the important parameters relating to bin content, and you can modify certain bin content parameters in this window.
+N31-P55242-G117-P8629-A1033-L999:Periodic Activities
+N31-P55242-G118-P8629-A1033-L999:Ven&dors
+N31-P55242-G118-P8631-A1033-L999:View the list of vendors who can supply the item, and at which lead time.
+N31-P55242-G119-P8629-A1033-L999:Revaluation Journal
+N31-P55242-G119-P8631-A1033-L999:View or edit the inventory value of items, which you can change, such as after doing a physical inventory.
+N31-P55242-G11-P8629-A1033-L999:Troubleshooting
+N31-P55242-G11-P8631-A1033-L999:View or edit information about technical problems with a service item.
+N31-P55242-G120-P8629-A1033-L999:Prices and Discounts
+N31-P55242-G121-P8629-A1033-L999:Identifiers
+N31-P55242-G121-P8631-A1033-L999:View a unique identifier for each item that you want warehouse employees to keep track of within the warehouse when using handheld devices. The item identifier can include the item number, the variant code and the unit of measure.
+N31-P55242-G123-P8629-A1033-L999:Approvals
+N31-P55242-G123-P8631-A1033-L999:View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.
+N31-P55242-G124-P8629-A1033-L999:Prepa&yment Percentages
+N31-P55242-G124-P8631-A1033-L999:View or edit the percentages of the price that can be paid as a prepayment.
+N31-P55242-G125-P8629-A1033-L999:Prepa&yment Percentages
+N31-P55242-G125-P8631-A1033-L999:View or edit the percentages of the price that can be paid as a prepayment.
+N31-P55242-G126-P8629-A1033-L999:Item
+N31-P55242-G127-P8629-A1033-L999:Assembly/Production
+N31-P55242-G128-P8629-A1033-L999:Inventory
+N31-P55242-G129-P8629-A1033-L999:Orders
+N31-P55242-G130-P8629-A1033-L999:Costing
+N31-P55242-G131-P8629-A1033-L999:Item Register
+N31-P55242-G132-P8629-A1033-L999:Costing
+N31-P55242-G133-P8629-A1033-L999:Special Prices & Discounts Overview
+N31-P55242-G133-P8631-A1033-L999:View the special prices and line discounts that you grant for this item when certain criteria are met, such as vendor, quantity, or ending date.
+N31-P55242-G134-P8629-A1033-L999:Create Approval Workflow
+N31-P55242-G134-P8631-A1033-L999:Set up an approval workflow for creating or changing items, by going through a few pages that will guide you.
+N31-P55242-G135-P8629-A1033-L999:Workflow
+N31-P55242-G137-P8629-A1033-L999:Attributes
+N31-P55242-G137-P8631-A1033-L999:View or edit the item's attributes, such as color, size, or other characteristics that help to describe the item.
+N31-P55242-G138-P8629-A1033-L999:Filter by Attributes
+N31-P55242-G138-P8631-A1033-L999:Find items that match specific attributes. To make sure you include recent changes made by other users, clear the filter and then reset it.
+N31-P55242-G139-P8629-A1033-L999:Clear Attributes Filter
+N31-P55242-G139-P8631-A1033-L999:Remove the filter for specific item attributes.
+N31-P55242-G13-P8629-A1033-L999:BOM Level
+N31-P55242-G13-P8631-A1033-L999:View availability figures for items on bills of materials that show how many units of a parent item you can make based on the availability of child items.
+N31-P55242-G141-P8629-A1033-L999:Show/Hide Power BI Reports
+N31-P55242-G141-P8631-A1033-L999:Select if the Power BI FactBox is visible or not.
+N31-P55242-G142-P8629-A1033-L999:Display
+N31-P55242-G143-P8629-A1033-L999:Set Special Discounts
+N31-P55242-G143-P8631-A1033-L999:Set up different discounts for the item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.
+N31-P55242-G144-P8629-A1033-L999:Set Special Prices
+N31-P55242-G144-P8631-A1033-L999:Set up different prices for the item. An item price is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.
+N31-P55242-G146-P8629-A1033-L999:Special Purchase Prices & Discounts
+N31-P55242-G147-P8629-A1033-L999:Apply Template
+N31-P55242-G147-P8631-A1033-L999:Apply a template to update one or more entities with your standard settings for a certain type of entity.
+N31-P55242-G14-P8629-A1033-L999:Ledger E&ntries
+N31-P55242-G14-P8631-A1033-L999:View the history of transactions that have been posted for the selected record.
+N31-P55242-G15-P8629-A1033-L999:Co&mments
+N31-P55242-G15-P8631-A1033-L999:View or add comments for the record.
+N31-P55242-G16-P8629-A1033-L999:Statistics
+N31-P55242-G16-P8631-A1033-L999:View statistical information, such as the value of posted entries, for the record.
+N31-P55242-G17-P8629-A1033-L999:Entry Statistics
+N31-P55242-G17-P8631-A1033-L999:View statistics for item ledger entries.
+N31-P55242-G184-P8629-A1033-L999:Dimensions-Single
+N31-P55242-G184-P8631-A1033-L999:View or edit the single set of dimensions that are set up for the selected record.
+N31-P55242-G18-P8629-A1033-L999:Assemble to Order - Sales
+N31-P55242-G18-P8631-A1033-L999:View key sales figures for assembly components that may be sold either as part of assembly items in assemble-to-order sales or as separate items directly from inventory. Use this report to analyze the quantity, cost, sales, and profit figures of assembly components to support decisions, such as whether to price a kit differently or to stop or start using a particular item in assemblies.
+N31-P55242-G1900111206-P8629-A1033-L999:Item Age Composition - Qty.
+N31-P55242-G1900111206-P8631-A1033-L999:View, print, or save an overview of the current age composition of selected items in your inventory.
+N31-P55242-G1900128906-P8629-A1033-L999:Inventory Cost and Price List
+N31-P55242-G1900128906-P8631-A1033-L999:View, print, or save a list of your items and their price and cost information. The report specifies direct unit cost, last direct cost, unit price, profit percentage, and profit.
+N31-P55242-G1900210306-P8629-A1033-L999:Inventory - Sales Back Orders
+N31-P55242-G1900210306-P8631-A1033-L999:Shows a list of order lines with shipment dates that are exceeded. The report also shows if there are other items for the customer on back order.
+N31-P55242-G1900430206-P8629-A1033-L999:Item/Vendor Catalog
+N31-P55242-G1900430206-P8631-A1033-L999:View a list of the vendors for the selected items. For each combination of item and vendor, it shows direct unit cost, lead time calculation and the vendor's item number.
+N31-P55242-G1900461506-P8629-A1033-L999:Item Charges - Specification
+N31-P55242-G1900461506-P8631-A1033-L999:View a specification of the direct costs that your company has assigned and posted as item charges. The report shows the various value entries that have been posted as item charges. It includes all costs, both those posted as invoiced and those posted as expected.
+N31-P55242-G1900730006-P8629-A1033-L999:Inventory - Cost Variance
+N31-P55242-G1900730006-P8631-A1033-L999:View information about selected items, unit of measure, standard cost, and costing method, as well as additional information about item entries: unit amount, direct unit cost, unit cost variance (the difference between the unit amount and unit cost), invoiced quantity, and total variance amount (quantity * unit cost variance). The report can be used primarily if you have chosen the Standard costing method on the item card.
+N31-P55242-G1900762706-P8629-A1033-L999:Inventory - Sales Statistics
+N31-P55242-G1900762706-P8631-A1033-L999:View, print, or save a summary of selected items' sales per customer, for example, to analyze the profit on individual items or trends in revenues and profit. The report specifies direct unit cost, unit price, sales quantity, sales in LCY, profit percentage, and profit.
+N31-P55242-G1900805004-P8629-A1033-L999:Adjust Item Cost/Price
+N31-P55242-G1900805004-P8631-A1033-L999:Adjusts the Last Direct Cost, Standard Cost, Unit Price, Profit %, or Indirect Cost % fields on selected item or stockkeeping unit cards and for selected filters. For example, you can change the last direct cost by 5% on all items from a specific vendor.
+N31-P55242-G1900812706-P8629-A1033-L999:Rolled-up Cost Shares
+N31-P55242-G1900812706-P8631-A1033-L999:View the cost shares of all items in the parent item's product structure, their quantity and their cost shares specified in material, capacity, overhead, and total cost. Material cost is calculated as the cost of all items in the parent item's product structure. Capacity and subcontractor costs are calculated as the costs related to produce all of the items in the parent item's product structure. Material cost is calculated as the cost of all items in the item's product structure. Capacity and subcontractor costs are the cost related to the parent item only.
+N31-P55242-G1900869004-P8629-A1033-L999:Special Discounts
+N31-P55242-G1900869004-P8631-A1033-L999:Set up different discounts for the selected item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.
+N31-P55242-G1900907306-P8629-A1033-L999:Inventory - List
+N31-P55242-G1900907306-P8631-A1033-L999:View various information about the item, such as name, unit of measure, posting group, shelf number, vendor's item number, lead time calculation, minimum inventory, and alternate item number. You can also see if the item is blocked.
+N31-P55242-G1901091106-P8629-A1033-L999:Inventory Availability
+N31-P55242-G1901091106-P8631-A1033-L999:View, print, or save a summary of historical inventory transactions with selected items, for example, to decide when to purchase the items. The report specifies quantity on sales order, quantity on purchase order, back orders from vendors, minimum inventory, and whether there are reorders.
+N31-P55242-G1901240604-P8629-A1033-L999:Special Prices
+N31-P55242-G1901240604-P8631-A1033-L999:Set up different prices for the selected item. An item price is automatically used on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.
+N31-P55242-G1901254106-P8629-A1033-L999:Status
+N31-P55242-G1901254106-P8631-A1033-L999:View, print, or save the status of partially filled or unfilled orders so you can determine what effect filling these orders may have on your inventory.
+N31-P55242-G1901316306-P8629-A1033-L999:Single-Level Cost Shares
+N31-P55242-G1901316306-P8631-A1033-L999:View the cost shares of all items in the item's product structure, their quantity and their cost shares specified in material, capacity, overhead, and total cost. Material cost is calculated as the cost of all items in the parent item's product structure. Capacity and subcontractor costs are calculated as the costs related to produce all of the items in the parent item's product structure.
+N31-P55242-G1901374406-P8629-A1033-L999:Detailed Calculation
+N31-P55242-G1901374406-P8631-A1033-L999:View the list of all costs for the item taking into account any scrap during production.
+N31-P55242-G1902353206-P8629-A1033-L999:Where-Used (Top Level)
+N31-P55242-G1902353206-P8631-A1033-L999:View where and in what quantities the item is used in the product structure. The report only shows information for the top-level item. For example, if item "A" is used to produce item "B", and item "B" is used to produce item "C", the report will show item B if you run this report for item A. If you run this report for item B, then item C will be shown as where-used.
+N31-P55242-G1902532604-P8629-A1033-L999:Item Tracing
+N31-P55242-G1902532604-P8631-A1033-L999:Trace where a lot or serial number assigned to the item was used, for example, to find which lot a defective component came from or to find all the customers that have received items containing the defective component.
+N31-P55242-G1902962906-P8629-A1033-L999:Item Register - Value
+N31-P55242-G1902962906-P8631-A1033-L999:View one or more selected item registers showing value. The report can be used to document the contents of a register for internal or external audits.
+N31-P55242-G1903262806-P8629-A1033-L999:Inventory Order Details
+N31-P55242-G1903262806-P8631-A1033-L999:View a list of the orders that have not yet been shipped or received and the items in the orders. It shows the order number, customer's name, shipment date, order quantity, quantity on back order, outstanding quantity and unit price, as well as possible discount percentage and amount. The quantity on back order and outstanding quantity and amount are totaled for each item. The report can be used to find out whether there are currently shipment problems or any can be expected.
+N31-P55242-G1903496006-P8629-A1033-L999:Item Age Composition - Value
+N31-P55242-G1903496006-P8631-A1033-L999:View, print, or save an overview of the current age composition of selected items in your inventory.
+N31-P55242-G1904034006-P8629-A1033-L999:Inventory - Customer Sales
+N31-P55242-G1904034006-P8631-A1033-L999:View, print, or save a list of customers that have purchased selected items within a selected period, for example, to analyze customers' purchasing patterns. The report specifies quantity, amount, discount, profit percentage, and profit.
+N31-P55242-G1904068306-P8629-A1033-L999:Inventory - Transaction Detail
+N31-P55242-G1904068306-P8631-A1033-L999:View transaction details with entries for the selected items for a selected period. The report shows the inventory at the beginning of the period, all of the increase and decrease entries during the period with a running update of the inventory, and the inventory at the close of the period. The report can be used at the close of an accounting period, for example, or for an audit.
+N31-P55242-G1904299906-P8629-A1033-L999:Invt. Valuation - Cost Spec.
+N31-P55242-G1904299906-P8631-A1033-L999:View an overview of the current inventory value of selected items and specifies the cost of these items as of the date specified in the Valuation Date field. The report includes all costs, both those posted as invoiced and those posted as expected. For each of the items that you specify when setting up the report, the printed report shows quantity on stock, the cost per unit and the total amount. For each of these columns, the report specifies the cost as the various value entry types.
+N31-P55242-G1904344904-P8629-A1033-L999:Item Journal
+N31-P55242-G1904344904-P8631-A1033-L999:Open a list of journals where you can adjust the physical quantity of items on inventory.
+N31-P55242-G1904739806-P8629-A1033-L999:Inventory Purchase Orders
+N31-P55242-G1904739806-P8631-A1033-L999:View a list of items on order from vendors. It also shows the expected receipt date and the quantity and amount on back orders. The report can be used, for example, to see when items should be received and whether a reminder of a back order should be issued.
+N31-P55242-G1905370404-P8629-A1033-L999:Requisition Worksheet
+N31-P55242-G1905370404-P8631-A1033-L999:Calculate a supply plan to fulfill item demand with purchases or transfers.
+N31-P55242-G1905572506-P8629-A1033-L999:Price List
+N31-P55242-G1905572506-P8631-A1033-L999:View, print, or save a list of your items and their prices, for example, to send to customers. You can create the list for specific customers, campaigns, currencies, or other criteria.
+N31-P55242-G1905753506-P8629-A1033-L999:Item Substitutions
+N31-P55242-G1905753506-P8631-A1033-L999:View or edit any substitute items that are set up to be traded instead of the item in case it is not available.
+N31-P55242-G1905889606-P8629-A1033-L999:Cost Shares Breakdown
+N31-P55242-G1905889606-P8631-A1033-L999:View the item's cost broken down in inventory, WIP, or COGS, according to purchase and material cost, capacity cost, capacity overhead cost, manufacturing overhead cost, subcontracted cost, variance, indirect cost, revaluation, and rounding. The report breaks down cost at a single BOM level and does not roll up the costs from lower BOM levels. The report does not calculate the cost share from items that use the Average costing method.
+N31-P55242-G1906101206-P8629-A1033-L999:Inventory - Reorders
+N31-P55242-G1906101206-P8631-A1033-L999:View a list of items with negative inventory that is sorted by vendor. You can use this report to help decide which items have to be reordered. The report shows how many items are inbound on purchase orders or transfer orders and how many items are in inventory. Based on this information and any defined reorder quantity for the item, a suggested value is inserted in the Qty. to Order field.
+N31-P55242-G1906212206-P8629-A1033-L999:Inventory - Availability Plan
+N31-P55242-G1906212206-P8631-A1033-L999:View a list of the quantity of each item in customer, purchase, and transfer orders and the quantity available in inventory. The list is divided into columns that cover six periods with starting and ending dates as well as the periods before and after those periods. The list is useful when you are planning your inventory purchases.
+N31-P55242-G1906231806-P8629-A1033-L999:Inventory - Vendor Purchases
+N31-P55242-G1906231806-P8631-A1033-L999:View a list of the vendors that your company has purchased items from within a selected period. It shows invoiced quantity, amount and discount. The report can be used to analyze a company's item purchases.
+N31-P55242-G1906316306-P8629-A1033-L999:Inventory Valuation
+N31-P55242-G1906316306-P8631-A1033-L999:View, print, or save a list of the values of the on-hand quantity of each inventory item.
+N31-P55242-G1906716204-P8629-A1033-L999:Item Reclassification Journal
+N31-P55242-G1906716204-P8631-A1033-L999:Change information on item ledger entries, such as dimensions, location codes, bin codes, and serial or lot numbers.
+N31-P55242-G1906747006-P8629-A1033-L999:Item Expiration - Quantity
+N31-P55242-G1906747006-P8631-A1033-L999:View an overview of the quantities of selected items in your inventory whose expiration dates fall within a certain period. The list shows the number of units of the selected item that will expire in a given time period. For each of the items that you specify when setting up the report, the printed document shows the number of units that will expire during each of three periods of equal length and the total inventory quantity of the selected item.
+N31-P55242-G1907108104-P8629-A1033-L999:Adjust Cost - Item Entries
+N31-P55242-G1907108104-P8631-A1033-L999:Adjust inventory values in value entries so that you use the correct adjusted cost for updating the general ledger and so that sales and profit statistics are up to date.
+N31-P55242-G1907253406-P8629-A1033-L999:Nonstock Item Sales
+N31-P55242-G1907253406-P8631-A1033-L999:View a list of item sales for each nonstock item during a selected time period. It can be used to review a company's sale of nonstock items.
+N31-P55242-G1907629906-P8629-A1033-L999:Item Register - Quantity
+N31-P55242-G1907629906-P8631-A1033-L999:View one or more selected item registers showing quantity. The report can be used to document a register's contents for internal or external audits.
+N31-P55242-G1907644006-P8629-A1033-L999:Phys. Inventory List
+N31-P55242-G1907644006-P8631-A1033-L999:View a list of the lines that you have calculated in the Phys. Inventory Journal window. You can use this report during the physical inventory count to mark down actual quantities on hand in the warehouse and compare them to what is recorded in the program.
+N31-P55242-G1907778006-P8629-A1033-L999:Quantity Explosion of BOM
+N31-P55242-G1907778006-P8631-A1033-L999:View an indented BOM listing for the item or items that you specify in the filters. The production BOM is completely exploded for all levels.
+N31-P55242-G1907846806-P8629-A1033-L999:Compare List
+N31-P55242-G1907846806-P8631-A1033-L999:View a comparison of components for two items. The printout compares the components, their unit cost, cost share and cost per component.
+N31-P55242-G1907928706-P8629-A1033-L999:Inventory Valuation - WIP
+N31-P55242-G1907928706-P8631-A1033-L999:View inventory valuation for selected production orders in your WIP inventory. The report also shows information about the value of consumption, capacity usage and output in WIP. The printed report only shows invoiced amounts, that is, the cost of entries that have been posted as invoiced.
+N31-P55242-G1907930606-P8629-A1033-L999:Inventory - Top 10 List
+N31-P55242-G1907930606-P8631-A1033-L999:View information about the items with the highest or lowest sales within a selected period. You can also choose that items that are not on hand or have not been sold are not included in the report. The items are sorted by order size within the selected period. The list gives a quick overview of the items that have sold either best or worst, or the items that have the most or fewest units on inventory.
+N31-P55242-G19-P8629-A1033-L999:Timeline
+N31-P55242-G19-P8631-A1033-L999:Get a graphical view of an item's projected inventory based on future supply and demand events, with or without planning suggestions. The result is a graphical representation of the inventory profile.
+N31-P55242-G20-P8629-A1033-L999:Manage Approval Workflow
+N31-P55242-G20-P8631-A1033-L999:View or edit existing approval workflows for creating or changing items.
+N31-P55242-G21-P8629-A1033-L999:Period
+N31-P55242-G21-P8631-A1033-L999:Show the projected quantity of the item over time according to time periods, such as day, week, or month.
+N31-P55242-G22-P8629-A1033-L999:T&urnover
+N31-P55242-G22-P8631-A1033-L999:View a detailed account of item turnover by periods after you have set the relevant filters for location and variant.
+N31-P55242-G23-P8629-A1033-L999:&Phys. Inventory Ledger Entries
+N31-P55242-G23-P8631-A1033-L999:View how many units of the item you had in stock at the last physical count.
+N31-P55242-G24-P8629-A1033-L999:Calc. Stan&dard Cost
+N31-P55242-G24-P8631-A1033-L999:Calculate the unit cost of the item by rolling up the unit cost of each component and resource in the item's assembly BOM or production BOM. The unit cost of a parent item must always equals the total of the unit costs of its components, subassemblies, and any resources.
+N31-P55242-G25-P8629-A1033-L999:&Units of Measure
+N31-P55242-G25-P8631-A1033-L999:Set up the different units that the item can be traded in, such as piece, box, or hour.
+N31-P55242-G27-P8629-A1033-L999:Translations
+N31-P55242-G27-P8631-A1033-L999:Set up translated item descriptions for the selected item. Translated item descriptions are automatically inserted on documents according to the language code.
+N31-P55242-G28-P8629-A1033-L999:E&xtended Texts
+N31-P55242-G28-P8631-A1033-L999:Select or set up additional text for the description of the item. Extended text can be inserted under the Description field on document lines for the item.
+N31-P55242-G29-P8629-A1033-L999:Where-Used
+N31-P55242-G29-P8631-A1033-L999:View a list of BOMs in which the item is used.
+N31-P55242-G30-P8629-A1033-L999:Va&riants
+N31-P55242-G30-P8631-A1033-L999:View how the inventory level of an item will develop over time according to the variant that you select.
+N31-P55242-G32-P8629-A1033-L999:Production BOM
+N31-P55242-G32-P8631-A1033-L999:Open the item's production bill of material to view or edit its components.
+N31-P55242-G33-P8629-A1033-L999:S&ales
+N31-P55242-G34-P8629-A1033-L999:Line Discounts
+N31-P55242-G34-P8631-A1033-L999:View or set up different discounts for the item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.
+N31-P55242-G36-P8629-A1033-L999:Prices
+N31-P55242-G36-P8631-A1033-L999:View or set up different prices for the item. An item price is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.
+N31-P55242-G37-P8629-A1033-L999:Orders
+N31-P55242-G37-P8631-A1033-L999:View a list of ongoing orders for the item.
+N31-P55242-G38-P8629-A1033-L999:&Purchases
+N31-P55242-G39-P8629-A1033-L999:Prices
+N31-P55242-G39-P8631-A1033-L999:View or set up different prices for the item. An item price is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.
+N31-P55242-G40-P8629-A1033-L999:Orders
+N31-P55242-G40-P8631-A1033-L999:View a list of ongoing orders for the item.
+N31-P55242-G41-P8629-A1033-L999:Production
+N31-P55242-G42-P8629-A1033-L999:Line Discounts
+N31-P55242-G42-P8631-A1033-L999:View or set up different discounts for the item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.
+N31-P55242-G44-P8629-A1033-L999:Calc. Unit Price
+N31-P55242-G44-P8631-A1033-L999:Calculate the unit price based on the unit cost and the profit percentage.
+N31-P55242-G46-P8629-A1033-L999:Calc. Stan&dard Cost
+N31-P55242-G46-P8631-A1033-L999:Calculate the unit cost of the item by rolling up the unit cost of each component and resource in the item's assembly BOM or production BOM. The unit cost of a parent item must always equals the total of the unit costs of its components, subassemblies, and any resources.
+N31-P55242-G47-P8629-A1033-L999:Where-Used
+N31-P55242-G47-P8631-A1033-L999:View a list of BOMs in which the item is used.
+N31-P55242-G48-P8629-A1033-L999:Assembly BOM
+N31-P55242-G48-P8631-A1033-L999:View or edit the bill of material that specifies which items and resources are required to assemble the assembly item.
+N31-P55242-G49-P8629-A1033-L999:Assemb&ly
+N31-P55242-G500-P8629-A1033-L999:Substituti&ons
+N31-P55242-G500-P8631-A1033-L999:View substitute items that are set up to be sold instead of the item.
+N31-P55242-G50-P8629-A1033-L999:Cost Shares
+N31-P55242-G50-P8631-A1033-L999:View how the costs of underlying items in the BOM roll up to the parent item. The information is organized according to the BOM structure to reflect at which levels the individual costs apply. Each item level can be collapsed or expanded to obtain an overview or detailed view.
+N31-P55242-G52-P8629-A1033-L999:Structure
+N31-P55242-G52-P8631-A1033-L999:View which child items are used in an item's assembly BOM or production BOM. Each item level can be collapsed or expanded to obtain an overview or detailed view.
+N31-P55242-G54-P8629-A1033-L999:Assembly/Production
+N31-P55242-G56-P8629-A1033-L999:History
+N31-P55242-G5800-P8629-A1033-L999:&Value Entries
+N31-P55242-G5800-P8631-A1033-L999:View the history of posted amounts that affect the value of the item. Value entries are created for every transaction with the item.
+N31-P55242-G58-P8629-A1033-L999:Warehouse
+N31-P55242-G5-P8629-A1033-L999:Event
+N31-P55242-G5-P8631-A1033-L999:View how the actual and the projected available balance of an item will develop over time according to supply and demand events.
+N31-P55242-G60-P8629-A1033-L999:Service
+N31-P55242-G62-P8629-A1033-L999:Resources
+N31-P55242-G64-P8629-A1033-L999:Item
+N31-P55242-G6500-P8629-A1033-L999:Item &Tracking Entries
+N31-P55242-G6500-P8631-A1033-L999:View serial or lot numbers that are assigned to items.
+N31-P55242-G66-P8629-A1033-L999:Delete Coupling
+N31-P55242-G66-P8631-A1033-L999:Delete the coupling to a Dynamics 365 for Sales product.
+N31-P55242-G68-P8629-A1033-L999:Set Up Coupling
+N31-P55242-G68-P8631-A1033-L999:Create or modify the coupling to a Dynamics 365 for Sales product.
+N31-P55242-G70-P8629-A1033-L999:Coupling
+N31-P55242-G70-P8631-A1033-L999:Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Dynamics 365 for Sales record.
+N31-P55242-G72-P8629-A1033-L999:Synchronize
+N31-P55242-G72-P8631-A1033-L999:Send updated data to Dynamics 365 for Sales.
+N31-P55242-G7380-P8629-A1033-L999:C&alculate Counting Period
+N31-P55242-G7380-P8631-A1033-L999:Prepare for a physical inventory by calculating which items or SKUs need to be counted in the current period.
+N31-P55242-G73-P8629-A1033-L999:Items b&y Location
+N31-P55242-G73-P8631-A1033-L999:Show a list of items grouped by location.
+N31-P55242-G75-P8629-A1033-L999:Product
+N31-P55242-G75-P8631-A1033-L999:Open the coupled Dynamics 365 for Sales product.
+N31-P55242-G76-P8629-A1033-L999:Nonstoc&k Items
+N31-P55242-G76-P8631-A1033-L999:View the list of items that you do not carry in inventory.
+N31-P55242-G77-P8629-A1033-L999:&Reservation Entries
+N31-P55242-G77-P8631-A1033-L999:View all reservations that are made for the item, either manually or automatically.
+N31-P55242-G78-P8629-A1033-L999:Location
+N31-P55242-G78-P8631-A1033-L999:View the actual and projected quantity of the item per location.
+N31-P55242-G79-P8629-A1033-L999:&Item Availability by
+N31-P55242-G7-P8629-A1033-L999:&Warehouse Entries
+N31-P55242-G7-P8631-A1033-L999:View the history of quantities that are registered for the item in warehouse activities.
+N31-P55242-G80-P8629-A1033-L999:Variant
+N31-P55242-G80-P8631-A1033-L999:View or edit the item's variants. Instead of setting up each color of an item as a separate item, you can set up the various colors as variants of the item.
+N31-P55242-G81-P8629-A1033-L999:Stockkeepin&g Units
+N31-P55242-G81-P8631-A1033-L999:Open the item's SKUs to view or edit instances of the item at different locations or with different variants.
+N31-P55242-G82-P8629-A1033-L999:Cross Re&ferences
+N31-P55242-G82-P8631-A1033-L999:Set up a customer's or vendor's own identification of the selected item. Cross-references to the customer's item number means that the item number is automatically shown on sales documents instead of the number that you use.
+N31-P55242-G83-P8629-A1033-L999:Dynamics 365 for Sales
+N31-P55242-G84-P8629-A1033-L999:E&ntries
+N31-P55242-G85-P8629-A1033-L999:Statistics
+N31-P55242-G86-P8629-A1033-L999:Cancel Approval Re&quest
+N31-P55242-G86-P8631-A1033-L999:Cancel the approval request.
+N31-P55242-G87-P8629-A1033-L999:Send A&pproval Request
+N31-P55242-G87-P8631-A1033-L999:Request approval to change the record.
+N31-P55242-G88-P8629-A1033-L999:Request Approval
+N31-P55242-G90-P8629-A1033-L999:Adjust Inventory
+N31-P55242-G90-P8631-A1033-L999:Increase or decrease the item's inventory quantity manually by entering a new quantity. Adjusting the inventory quantity manually may be relevant after a physical count or if you do not record purchased quantities.
+N31-P55242-G92-P8629-A1033-L999:Sales Price Worksheet
+N31-P55242-G92-P8631-A1033-L999:Change to the unit price for the item or specify how you want to enter changes in the price agreement for one customer, a group of customers, or all customers.
+N31-P55242-G93-P8629-A1033-L999:Dimensions-&Multiple
+N31-P55242-G93-P8631-A1033-L999:View or edit dimensions for a group of records. You can assign dimension codes to transactions to distribute costs and analyze historical information.
+N31-P55242-G94-P8629-A1033-L999:Dimensions
+N31-P55242-G96-P8629-A1033-L999:Post Inventory Cost to G/L
+N31-P55242-G96-P8631-A1033-L999:Post the quantity and value changes to the inventory in the item ledger entries and the value entries when you post inventory transactions, such as sales shipments or purchase receipts.
+N31-P55242-G98-P8629-A1033-L999:Physical Inventory Journal
+N31-P55242-G98-P8631-A1033-L999:Select how you want to maintain an up-to-date record of your inventory at different locations.
+N31-P8629-A1033-L999:Items
+N31-Q1140000-P26171-A1033-L999:Do you want to edit the new item?

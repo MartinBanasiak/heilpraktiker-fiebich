@@ -1,0 +1,165 @@
+OBJECT Page 5447347 Webshop Sub. Cust. Link LPart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table5447343;
+    PageType=ListPart;
+    AutoSplitKey=Yes;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Subscription Code";
+                Visible=FALSE }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Customer No." }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Webshop Order Email" }
+
+    { 1000000037;2;Field  ;
+                SourceExpr="Subscription Item No." }
+
+    { 1000000039;2;Field  ;
+                SourceExpr="Subscription Qty. Per Turn" }
+
+    { 1000000033;2;Field  ;
+                SourceExpr="Signup Date" }
+
+    { 1000000034;2;Field  ;
+                SourceExpr="Cancellation Date" }
+
+    { 1000000035;2;Field  ;
+                SourceExpr="Next Order Creation Date" }
+
+    { 1000000036;2;Field  ;
+                SourceExpr="Next Order w. Payment Date" }
+
+    { 1000000038;2;Field  ;
+                SourceExpr="Next Planned Delivery Date" }
+
+    { 1000000040;2;Field  ;
+                SourceExpr="Next Sequence Step Line No." }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Bill-to Name" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Bill-to Name 2" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Bill-to Address" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Bill-to Address 2" }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Bill-to City" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Ship-to Name" }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Ship-to Name 2" }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Ship-to Address" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Ship-to Address 2" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Ship-to City" }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Bill-to Post Code" }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Bill-to County" }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Bill-to Country/Region Code" }
+
+    { 1000000018;2;Field  ;
+                SourceExpr="Ship-to Post Code" }
+
+    { 1000000019;2;Field  ;
+                SourceExpr="Ship-to County" }
+
+    { 1000000020;2;Field  ;
+                SourceExpr="Ship-to Country/Region Code" }
+
+    { 1000000021;2;Field  ;
+                SourceExpr="Webshop Shop Code" }
+
+    { 1000000022;2;Field  ;
+                SourceExpr="Webshop Language Code" }
+
+    { 1000000023;2;Field  ;
+                SourceExpr="Webshop Pay. Opt. Line No." }
+
+    { 1000000024;2;Field  ;
+                SourceExpr="Webshop Pay. Opt. Description" }
+
+    { 1000000025;2;Field  ;
+                SourceExpr="Webshop Ship. Opt. Line No." }
+
+    { 1000000026;2;Field  ;
+                SourceExpr="Webshop Ship. Opt. Description" }
+
+    { 1000000027;2;Field  ;
+                SourceExpr="Customer Pseudo-Pay. Line No." }
+
+    { 1000000028;2;Field  ;
+                SourceExpr="No. of Sales Orders";
+                Editable=FALSE }
+
+    { 1000000029;2;Field  ;
+                SourceExpr="No. of Sales Invoices";
+                Editable=FALSE }
+
+    { 1000000030;2;Field  ;
+                SourceExpr="No. of Sales Shipments";
+                Editable=FALSE }
+
+    { 1000000031;2;Field  ;
+                SourceExpr="No. of Credit Memos" }
+
+    { 1000000032;2;Field  ;
+                SourceExpr="No. of Return Orders";
+                Editable=FALSE }
+
+    { 1000000041;2;Field  ;
+                SourceExpr="No. of turns processed";
+                Editable=FALSE }
+
+  }
+  CODE
+  {
+    VAR
+      IsSubscriptionSet@1000000000 : Boolean INDATASET;
+      IsSubscriptionSequenceItem@1000000001 : Boolean INDATASET;
+      WebshopSubscriptionHeader@1000000002 : Record 5447340;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

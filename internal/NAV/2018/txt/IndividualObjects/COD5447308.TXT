@@ -1,0 +1,99 @@
+OBJECT Codeunit 5447308 Webshop Frontend Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            Customer@1000000000 : Record 18;
+            Salesperson@1000000001 : Record 13;
+          BEGIN
+            // �ffnet den Webshop mit dem in der Einrichtung hinterlegten Debitor
+
+            WebshopSetup.GET;
+
+            IF STRLEN(gShopCode)>0 THEN
+              Shop.GET(gShopCode)
+            ELSE BEGIN
+              DefaultNumber := 1;
+
+              IF Shop.COUNT > 1 THEN BEGIN
+                i := 1;
+                IF Shop.FINDSET THEN REPEAT
+                  IF i <> 1 THEN
+                    OptionString += ',';
+                  OptionString += Shop.Description;
+                  IF Shop.Code = WebshopSetup."Default Shop Code" THEN
+                    DefaultNumber := i;
+                  i += 1;
+                UNTIL Shop.NEXT = 0;
+                SelectedOption := DIALOG.STRMENU(OptionString,DefaultNumber,Text001);
+              END ELSE BEGIN
+                SelectedOption := 1;
+              END;
+              IF SelectedOption = 1 THEN
+                Shop.FINDFIRST
+              ELSE IF SelectedOption > 1 THEN BEGIN
+                Shop.RESET;
+                i := 1;
+                IF Shop.FINDSET THEN REPEAT
+                  i += 1;
+                UNTIL (SelectedOption=i) OR (Shop.NEXT = 0);
+              END ELSE
+                EXIT;
+            END;
+
+
+            Shop.TESTFIELD("Webshop URL");
+            CASE Shop."Shop Type" OF
+              Shop."Shop Type"::b2b: BEGIN
+                Shop.TESTFIELD("Default Customer No. Login");
+                Customer.GET(Shop."Default Customer No. Login");
+                WebshopUpdateManagement.OpenCustomerLogin(Customer);
+              END;
+              Shop."Shop Type"::b2c: BEGIN
+                HYPERLINK(Shop."Webshop URL");
+              END;
+              Shop."Shop Type"::salesperson: BEGIN
+                Shop.TESTFIELD("Default Salesperson Code");
+                Salesperson.GET(Shop."Default Salesperson Code");
+                WebshopUpdateManagement.OpenSalespersonLogin(Salesperson);
+              END;
+              Shop."Shop Type"::catalog: BEGIN
+                HYPERLINK(Shop."Webshop URL");
+              END;
+            END;
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000008 : Codeunit 5447301;
+      WebshopSetup@1000000001 : Record 5447300;
+      Shop@1000000002 : Record 5447301;
+      OptionString@1000000003 : Text[1024];
+      Text001@1000000004 : TextConst 'DEU=Welchen Webshop m�chten Sie �ffnen?;ENU=Which shop shall be opened?';
+      DefaultNumber@1000000005 : Integer;
+      SelectedOption@1000000006 : Integer;
+      i@1000000007 : Integer;
+      gShopCode@1000 : Code[10];
+
+    PROCEDURE SetShopCode@1(ShopCode@1000 : Code[10]);
+    BEGIN
+      gShopCode := ShopCode;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

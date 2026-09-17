@@ -1,0 +1,420 @@
+OBJECT Page 6650 Posted Return Shipment
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.07.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,NAVDACH10.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Gebuchte R�cklieferung;
+               ENU=Posted Return Shipment];
+    InsertAllowed=No;
+    SourceTable=Table6650;
+    PageType=Document;
+    RefreshOnActivate=Yes;
+    OnOpenPage=BEGIN
+                 SetSecurityFilterOnRespCenter;
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 45      ;1   ;ActionGroup;
+                      CaptionML=[DEU=R&�cklieferung;
+                                 ENU=&Return Shpt.];
+                      Image=Shipment }
+      { 8       ;2   ;Action    ;
+                      ShortCutKey=F7;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      RunObject=Page 6655;
+                      RunPageLink=No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Statistics;
+                      PromotedCategory=Process }
+      { 47      ;2   ;Action    ;
+                      CaptionML=[DEU=Be&merkungen;
+                                 ENU=Co&mments];
+                      RunObject=Page 66;
+                      RunPageLink=Document Type=CONST(Posted Return Shipment),
+                                  No.=FIELD(No.),
+                                  Document Line No.=CONST(0);
+                      Image=ViewComments }
+      { 79      ;2   ;Action    ;
+                      AccessByPermission=TableData 348=R;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DEU=Dimensionen;
+                                 ENU=Dimensions];
+                      ToolTipML=[DEU=Anzeigen oder Bearbeiten von Dimensionen, wie etwa eines Bereichs, eines Projekts oder einer Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen k�nnen, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.;
+                                 ENU=View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.];
+                      Image=Dimensions;
+                      OnAction=BEGIN
+                                 ShowDimensions;
+                               END;
+                                }
+      { 83      ;2   ;Action    ;
+                      AccessByPermission=TableData 456=R;
+                      CaptionML=[DEU=Genehmigungen;
+                                 ENU=Approvals];
+                      ToolTipML=[DEU=Zeigt eine Liste der Datens�tze an, die noch genehmigt werden m�ssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.;
+                                 ENU=View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.];
+                      Image=Approvals;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1000 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.ShowPostedApprovalEntries(RECORDID);
+                               END;
+                                }
+      { 77      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Zeile;
+                                 ENU=&Line];
+                      Image=Line }
+      { 86      ;2   ;Separator  }
+      { 1140001 ;2   ;Action    ;
+                      Name=DocumentLineTracking;
+                      CaptionML=[DEU=&Belegzeilenverfolgung;
+                                 ENU=Document &Line Tracking];
+                      Image=Navigate;
+                      OnAction=BEGIN
+                                 CurrPage. ReturnShptLines.PAGE.ShowDocumentLineTracking;
+                               END;
+                                }
+      { 81      ;2   ;Action    ;
+                      Name=CertificateOfSupplyDetails;
+                      CaptionML=[DEU=Details der Gelangensbest�tigung;
+                                 ENU=Certificate of Supply Details];
+                      RunObject=Page 780;
+                      RunPageLink=Document Type=FILTER(Return Shipment),
+                                  Document No.=FIELD(No.);
+                      Image=Certificate;
+                      PromotedCategory=Process }
+      { 82      ;2   ;Action    ;
+                      Name=PrintCertificateofSupply;
+                      CaptionML=[DEU=Gelangensbest�tigung drucken;
+                                 ENU=Print Certificate of Supply];
+                      Image=PrintReport;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 CertificateOfSupply@1000 : Record 780;
+                               BEGIN
+                                 CertificateOfSupply.SETRANGE("Document Type",CertificateOfSupply."Document Type"::"Return Shipment");
+                                 CertificateOfSupply.SETRANGE("Document No.","No.");
+                                 CertificateOfSupply.Print;
+                               END;
+                                }
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 48      ;1   ;Action    ;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=D&rucken;
+                                 ENU=&Print];
+                      Promoted=Yes;
+                      Image=Print;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 CurrPage.SETSELECTIONFILTER(ReturnShptHeader);
+                                 ReturnShptHeader.PrintRecords(TRUE);
+                               END;
+                                }
+      { 49      ;1   ;Action    ;
+                      CaptionML=[DEU=&Navigate;
+                                 ENU=&Navigate];
+                      Promoted=Yes;
+                      Image=Navigate;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 Navigate;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General] }
+
+    { 2   ;2   ;Field     ;
+                SourceExpr="No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="Buy-from Vendor No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 87  ;2   ;Field     ;
+                SourceExpr="Buy-from Contact No.";
+                Editable=FALSE }
+
+    { 51  ;2   ;Field     ;
+                SourceExpr="Buy-from Vendor Name";
+                Editable=FALSE }
+
+    { 53  ;2   ;Field     ;
+                SourceExpr="Buy-from Address";
+                Editable=FALSE }
+
+    { 55  ;2   ;Field     ;
+                SourceExpr="Buy-from Address 2";
+                Editable=FALSE }
+
+    { 6   ;2   ;Field     ;
+                SourceExpr="Buy-from Post Code";
+                Editable=FALSE }
+
+    { 57  ;2   ;Field     ;
+                SourceExpr="Buy-from City";
+                Editable=FALSE }
+
+    { 59  ;2   ;Field     ;
+                SourceExpr="Buy-from Contact";
+                Editable=FALSE }
+
+    { 12  ;2   ;Field     ;
+                SourceExpr="Posting Date";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 31  ;2   ;Field     ;
+                SourceExpr="Document Date";
+                Editable=FALSE }
+
+    { 63  ;2   ;Field     ;
+                SourceExpr="Return Order No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 14  ;2   ;Field     ;
+                SourceExpr="Vendor Authorization No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 7   ;2   ;Field     ;
+                SourceExpr="Order Address Code";
+                Editable=FALSE }
+
+    { 10  ;2   ;Field     ;
+                SourceExpr="Purchaser Code";
+                Editable=FALSE }
+
+    { 80  ;2   ;Field     ;
+                SourceExpr="Responsibility Center";
+                Editable=FALSE }
+
+    { 20  ;2   ;Field     ;
+                SourceExpr="No. Printed";
+                Editable=FALSE }
+
+    { 44  ;1   ;Part      ;
+                Name=ReturnShptLines;
+                SubPageLink=Document No.=FIELD(No.);
+                PagePartID=Page6651 }
+
+    { 1905885101;1;Group  ;
+                CaptionML=[DEU=Fakturierung;
+                           ENU=Invoicing] }
+
+    { 22  ;2   ;Field     ;
+                SourceExpr="Pay-to Vendor No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 89  ;2   ;Field     ;
+                SourceExpr="Pay-to Contact No.";
+                Editable=FALSE }
+
+    { 24  ;2   ;Field     ;
+                SourceExpr="Pay-to Name";
+                Editable=FALSE }
+
+    { 26  ;2   ;Field     ;
+                SourceExpr="Pay-to Address";
+                Editable=FALSE }
+
+    { 28  ;2   ;Field     ;
+                SourceExpr="Pay-to Address 2";
+                Editable=FALSE }
+
+    { 70  ;2   ;Field     ;
+                SourceExpr="Pay-to Post Code";
+                Editable=FALSE }
+
+    { 30  ;2   ;Field     ;
+                SourceExpr="Pay-to City";
+                Editable=FALSE }
+
+    { 32  ;2   ;Field     ;
+                SourceExpr="Pay-to Contact";
+                Editable=FALSE }
+
+    { 64  ;2   ;Field     ;
+                SourceExpr="Shortcut Dimension 1 Code";
+                Editable=FALSE }
+
+    { 66  ;2   ;Field     ;
+                SourceExpr="Shortcut Dimension 2 Code";
+                Editable=FALSE }
+
+    { 16  ;2   ;Field     ;
+                SourceExpr="Applies-to Doc. Type";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 18  ;2   ;Field     ;
+                SourceExpr="Applies-to Doc. No.";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 1906801201;1;Group  ;
+                CaptionML=[DEU=Lieferung;
+                           ENU=Shipping] }
+
+    { 34  ;2   ;Field     ;
+                SourceExpr="Ship-to Name";
+                Editable=FALSE }
+
+    { 36  ;2   ;Field     ;
+                SourceExpr="Ship-to Address";
+                Editable=FALSE }
+
+    { 38  ;2   ;Field     ;
+                SourceExpr="Ship-to Address 2";
+                Editable=FALSE }
+
+    { 72  ;2   ;Field     ;
+                SourceExpr="Ship-to Post Code";
+                Editable=FALSE }
+
+    { 40  ;2   ;Field     ;
+                SourceExpr="Ship-to City";
+                Editable=FALSE }
+
+    { 42  ;2   ;Field     ;
+                SourceExpr="Ship-to Contact";
+                Editable=FALSE }
+
+    { 68  ;2   ;Field     ;
+                SourceExpr="Location Code";
+                Importance=Promoted;
+                Editable=FALSE }
+
+    { 1907468901;1;Group  ;
+                CaptionML=[DEU=Au�enhandel;
+                           ENU=Foreign Trade] }
+
+    { 75  ;2   ;Field     ;
+                SourceExpr="Currency Code";
+                Importance=Promoted;
+                OnAssistEdit=BEGIN
+                               ChangeExchangeRate.SetParameter("Currency Code","Currency Factor","Posting Date");
+                               ChangeExchangeRate.EDITABLE(FALSE);
+                               IF ChangeExchangeRate.RUNMODAL = ACTION::OK THEN BEGIN
+                                 "Currency Factor" := ChangeExchangeRate.GetParameter;
+                                 MODIFY;
+                               END;
+                               CLEAR(ChangeExchangeRate);
+                             END;
+                              }
+
+    { 1000000009;1;Group  ;
+                Name=E-Commerce;
+                GroupType=Group }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Webshop Order No." }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Webshop Shop Code" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Webshop Language Code" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Date Webshop Synchronization" }
+
+    { 1000000005;2;Group  ;
+                Name=Reklamation;
+                CaptionML=[DEU=Reklamation;
+                           ENU=Return Order];
+                GroupType=Group }
+
+    { 1000000002;3;Field  ;
+                SourceExpr="Webshop Return Order No.";
+                Editable=FALSE }
+
+    { 1000000003;3;Field  ;
+                SourceExpr="Webshop Return Order Shop Code";
+                Editable=FALSE }
+
+    { 1000000000;3;Field  ;
+                SourceExpr="Webshop Ret. Order Lang. Code";
+                Editable=FALSE }
+
+    { 1000000001;3;Field  ;
+                SourceExpr="Date Webshop Ret. Order Sync.";
+                Editable=FALSE }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                Visible=TRUE;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      ReturnShptHeader@1000 : Record 6650;
+      ChangeExchangeRate@1001 : Page 511;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+      Fast-Tab "E-Commerce"
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (10):
+
+          TYPE            SUBTYPE         SOURCEEXPR                        NAME                              CAPTION
+
+          Group           Group                                             E-Commerce                        <E-Commerce>
+          Field                           "Webshop Order No."               <Webshop Order No.>               <Online Bestellnummer>
+          Field                           "Webshop Shop Code"               <Webshop Shop Code>               <Webshop Code>
+          Field                           "Webshop Language Code"           <Webshop Language Code>           <Webshop Sprachcode>
+          Field                           "Webshop Sync Date"               <Webshop Sync Date>               <Empfangen am>
+          Group           Group                                             Reklamation                       Reklamation
+          Field                           "Webshop Return Order No."        <Webshop Return Order No.>        <Online Reklamationsnr.>
+          Field                           "Webshop Return Order Shop"       <Webshop Return Order Shop>       <Webshop Shop Code Reklamation>
+          Field                           "Webshop Return Order Language"   <Webshop Return Order Language>   <Webshop Sprachcode Reklamation>
+          Field                           "Webshop Return Order Sync Date"  <Webshop Return Order Sync Date>  <Webshop Synchronisationsdatum Reklamation>
+
+
+        PAGE ACTIONS (0):
+        TRIGGERS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+       +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,293 @@
+OBJECT Page 5447358 Webshop Payment Options Part
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Zahlungsoptionen Part;
+               ENU=Webshop Payment Options Part];
+    SourceTable=Table5447312;
+    SourceTableView=SORTING(Shop Code,Language Code,Sorting)
+                    ORDER(Ascending);
+    PageType=ListPart;
+    AutoSplitKey=Yes;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       IF "Has Description" THEN
+                         ContentText := YesText
+                       ELSE
+                         ContentText := NoText;
+
+                       IF "Has Icon" THEN
+                         LogoText := YesText
+                       ELSE
+                         LogoText := NoText;
+
+                       IF COUNT > 1 THEN BEGIN
+                         MoveDownVisible := TRUE;
+                         MoveUpVisible := TRUE;
+                       END;
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000018;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000019;1 ;Action    ;
+                      Name=MoveUp;
+                      CaptionML=[DEU=Nach oben verschieben;
+                                 ENU=Move up];
+                      Promoted=Yes;
+                      Visible=MoveUpVisible;
+                      PromotedIsBig=Yes;
+                      Image=MoveUp;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ToPaymentOption@1000000003 : Record 5447312;
+                                 FromSorting@1000000002 : Integer;
+                                 ToSorting@1000000000 : Integer;
+                               BEGIN
+                                 ToPaymentOption.SETCURRENTKEY("Shop Code","Language Code",Sorting);
+                                 ToPaymentOption.SETRANGE("Shop Code","Shop Code");
+                                 ToPaymentOption.SETRANGE("Language Code","Language Code");
+                                 CurrPage.UPDATE(FALSE);
+                                 ToPaymentOption.SETFILTER(Sorting,'<%1',Sorting);
+                                 IF ToPaymentOption.FINDLAST THEN BEGIN
+                                   FromSorting := Sorting;
+                                   ToSorting := ToPaymentOption.Sorting;
+                                   Sorting := ToSorting;
+                                   MODIFY(FALSE);
+                                   ToPaymentOption.Sorting := FromSorting;
+                                   ToPaymentOption.MODIFY(FALSE);
+                                 END;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+      { 1000000017;1 ;Action    ;
+                      Name=MoveDown;
+                      CaptionML=[DEU=Nach unten verschieben;
+                                 ENU=Move down];
+                      Promoted=Yes;
+                      Visible=MoveDownVisible;
+                      PromotedIsBig=Yes;
+                      Image=MoveDown;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ToPaymentOption@1000000001 : Record 5447312;
+                                 FromSorting@1000000002 : Integer;
+                                 ToSorting@1000000000 : Integer;
+                               BEGIN
+                                 ToPaymentOption.SETCURRENTKEY("Shop Code","Language Code",Sorting);
+                                 ToPaymentOption.SETRANGE("Shop Code","Shop Code");
+                                 ToPaymentOption.SETRANGE("Language Code","Language Code");
+                                 CurrPage.UPDATE(FALSE);
+                                 ToPaymentOption.SETFILTER(Sorting,'>%1',Sorting);
+                                 IF ToPaymentOption.FINDFIRST THEN BEGIN
+                                   FromSorting := Sorting;
+                                   ToSorting := ToPaymentOption.Sorting;
+                                   Sorting := ToSorting;
+                                   MODIFY(FALSE);
+                                   ToPaymentOption.Sorting := FromSorting;
+                                   ToPaymentOption.MODIFY(FALSE);
+                                 END;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description }
+
+    { 1000000004;2;Field  ;
+                CaptionML=[DEU=L�ndercode;
+                           ENU=Country Code];
+                SourceExpr="Country Code" }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Aktiv;
+                           ENU=Active];
+                SourceExpr="Is Active" }
+
+    { 1000000005;2;Field  ;
+                CaptionML=[DEU=Zahlungsbedingungscode;
+                           ENU=Payment Terms Code];
+                SourceExpr="Payment Terms Code" }
+
+    { 1000000006;2;Field  ;
+                CaptionML=[DEU=Zahlungsformcode;
+                           ENU=Payment Method Code];
+                SourceExpr="Payment Method Code" }
+
+    { 1000000007;2;Field  ;
+                CaptionML=[DEU=Geb�hren;
+                           ENU=Payment Cost];
+                SourceExpr="Payment Cost" }
+
+    { 1000000008;2;Field  ;
+                CaptionML=[DEU=Checkout;
+                           ENU=Checkout];
+                SourceExpr=Checkout }
+
+    { 1000000009;2;Field  ;
+                CaptionML=[DEU=Checkout Status;
+                           ENU=Checkout State];
+                SourceExpr="Checkout State" }
+
+    { 1000000010;2;Field  ;
+                CaptionML=[DEU=Auto Zahlungsausgleich;
+                           ENU=Auto Clearing];
+                SourceExpr="Auto Clearing" }
+
+    { 1000000011;2;Field  ;
+                CaptionML=[DEU=Buch.-Blattvorlage Zahlungsausgleich;
+                           ENU=Gen. Journal Template];
+                SourceExpr="Gen. Journal Template" }
+
+    { 1000000012;2;Field  ;
+                CaptionML=[DEU=Buch.-Blattname Zahlungsausgleich;
+                           ENU=Gen. Journal Batch];
+                SourceExpr="Gen. Journal Batch" }
+
+    { 1000000013;2;Field  ;
+                CaptionML=[DEU=Sachkonto Zahlungsausgleich;
+                           ENU=G/L Account Clearing];
+                SourceExpr="G/L Account Clearing" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Digital Coupon Is Allowed" }
+
+    { 1000000015;2;Field  ;
+                CaptionML=[DEU=Logo;
+                           ENU=Logo];
+                SourceExpr=LogoText;
+                OnAssistEdit=BEGIN
+                               EditIcon();
+                             END;
+                              }
+
+    { 1000000016;2;Field  ;
+                CaptionML=[DEU=Langbeschreibung;
+                           ENU=Long Description];
+                SourceExpr=ContentText;
+                Editable=false;
+                OnAssistEdit=BEGIN
+                               EditContent();
+                             END;
+                              }
+
+  }
+  CODE
+  {
+    VAR
+      ContentText@1000000007 : Text[30];
+      LogoText@1000000006 : Text[30];
+      WebshopUpdateManagement@1000000005 : Codeunit 5447301;
+      ClientAddInType@1000000004 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000003 : Codeunit 5447320;
+      WebshopWebform@1000000002 : Page 5447366;
+      Type@1000000001 : 'Description1,Promotion,Description2';
+      WebformType@1000000000 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection,ShippingOption,PaymentOption,ShippingOptionIcon,PaymentOptionIcon';
+      YesText@1000000010 : TextConst 'DEU=Ja;ENU=Yes';
+      NoText@1000000009 : TextConst 'DEU=Nein;ENU=No';
+      Text007@1000000008 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+      MoveUpVisible@1000000012 : Boolean INDATASET;
+      MoveDownVisible@1000000011 : Boolean INDATASET;
+
+    PROCEDURE EditContent@1000000000();
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD("Line No.");
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdatePaymentOption(Rec);
+      GET("Shop Code","Language Code","Line No.");
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        CLEAR(WebshopWebform);
+        //DynamicCommerceAddIn
+        WebshopWebform.SetWebformType(WebformType::PaymentOption);
+        WebshopWebform.SetShopCode("Shop Code");
+        WebshopWebform.SetLanguageCode("Language Code");
+        WebshopWebform.SetLineNo("Line No.");
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+
+      END;
+
+      GET("Shop Code","Language Code","Line No.");
+      WebshopUpdateManagement.CheckPaymentOption(Rec);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      GET("Shop Code","Language Code","Line No.");
+
+      IF "Has Description" THEN
+        ContentText := YesText
+      ELSE
+        ContentText := NoText;
+    END;
+
+    PROCEDURE EditIcon@1000000001();
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD("Line No.");
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdatePaymentOption(Rec);
+      GET("Shop Code","Language Code","Line No.");
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        //DynamicCommerceAddIn
+        CLEAR(WebshopWebform);
+        WebshopWebform.SetWebformType(WebformType::PaymentOptionIcon);
+        WebshopWebform.SetShopCode("Shop Code");
+        WebshopWebform.SetLanguageCode("Language Code");
+        WebshopWebform.SetLineNo("Line No.");
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+
+      END;
+
+      GET("Shop Code","Language Code","Line No.");
+      WebshopUpdateManagement.CheckPaymentOptionIcon(Rec);
+      GET("Shop Code","Language Code","Line No.");
+      WebshopUpdateManagement.SetSendNow(FALSE);
+
+      IF "Has Icon"  THEN
+        LogoText := YesText
+      ELSE
+        LogoText := NoText;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

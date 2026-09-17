@@ -1,0 +1,233 @@
+OBJECT Page 5447351 Webshop Cue PagePart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=08.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Monitoring;
+               ENU=Monitoring];
+    SourceTable=Table5447313;
+    PageType=CardPart;
+    OnOpenPage=BEGIN
+
+                 RESET;
+                 IF NOT GET THEN BEGIN
+                   INIT;
+                   INSERT;
+                 END;
+
+                 SETFILTER("Date Filter Past",'%1..%2',CALCDATE('<CD-7D>',TODAY),TODAY);
+                 SETFILTER("Date Filter Future",'%1..%2',TODAY,CALCDATE('<CD+7D>',TODAY));
+                 SetOpenOrders;
+                 SetAvgTimeToShip;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       IF ("Webshop Orders - Open" <= 20) THEN
+                         OpenOrdersColor := 'Favorable'
+                       ELSE IF ("Webshop Orders - Open" <= 60) THEN
+                         OpenOrdersColor := 'Ambiguous'
+                       ELSE IF ("Webshop Orders - Open" > 60) THEN
+                         OpenOrdersColor := 'Unfavorable';
+
+                       IF ("Webshop Quotes - Open" <= 20) THEN
+                         OpenQuotesColor := 'Favorable'
+                       ELSE IF ("Webshop Quotes - Open" <= 60) THEN
+                         OpenQuotesColor := 'Ambiguous'
+                       ELSE IF ("Webshop Quotes - Open" > 60) THEN
+                         OpenQuotesColor := 'Unfavorable';
+
+
+                       IF(AvgTimeToShip <= 1) THEN
+                         TimeToShipStyle := 'Favorable'
+                       ELSE IF (AvgTimeToShip <= 2) THEN
+                         TimeToShipStyle := 'Ambiguous'
+                       ELSE IF (AvgTimeToShip > 2) THEN
+                         TimeToShipStyle := 'Unfavorable';
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1   ;    ;Container ;
+                CaptionML=[DEU=Webshop Monitoring;
+                           ENU=Webshop Monitoring];
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                CaptionML=[DEU=Allgemein;
+                           ENU=General];
+                GroupType=CueGroup }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Webshop Orders - Open";
+                StyleExpr=OpenOrdersColor;
+                OnDrillDown=BEGIN
+                              SalesHeader.RESET;
+                              SalesHeader.SETRANGE("Document Type",SalesHeader."Document Type"::Order);
+                              //SalesHeader.SETFILTER("Document Date",GetFilter("Date Filter"));
+                              SalesHeader.SETFILTER("Webshop Order No.",'<>%1','');
+                              SalesHeader.SETRANGE(Status,SalesHeader.Status::Open);
+                              WebshopOrderList.SETTABLEVIEW(SalesHeader);
+                              WebshopOrderList.RUN;
+                            END;
+                             }
+
+    { 1000000014;2;Field  ;
+                DrillDown=Yes;
+                CaptionML=[DEU=Durchschn. Tage bis Versand;
+                           ENU=Avg. Days to Ship];
+                SourceExpr=AvgTimeToShip;
+                Image=Calendar;
+                DrillDownPageID=Posted Sales Shipments;
+                StyleExpr=TimeToShipStyle;
+                OnDrillDown=VAR
+                              SalesShipmentHeader@1000000000 : Record 110;
+                              PostedSalesShipments@1000000001 : Page 142;
+                            BEGIN
+                              SalesShipmentHeader.RESET;
+                              //SalesShipmentHeader.SETFILTER("Webshop Shop Code",'<>%1','');
+                              SalesShipmentHeader.SETFILTER("Posting Date",GETFILTER("Date Filter Past"));
+                              SalesShipmentHeader.SETFILTER("Order Date",'<>%1',0D);
+                              PostedSalesShipments.SETTABLEVIEW(SalesShipmentHeader);
+                              PostedSalesShipments.RUN;
+                            END;
+                             }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Webshop Campaigns - Starting";
+                OnDrillDown=VAR
+                              WebshopCampaignHeader@1000000000 : Record 5447345;
+                              WebshopCampaignHeaderList@1000000001 : Page 5447380;
+                            BEGIN
+                              WebshopCampaignHeader.RESET;
+                              WebshopCampaignHeader.SETFILTER("Active from Date",GETFILTER("Date Filter Future"));
+                              WebshopCampaignHeaderList.SETTABLEVIEW(WebshopCampaignHeader);
+                              WebshopCampaignHeaderList.RUN();
+                            END;
+                             }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Webshop Campaigns - Ending";
+                OnDrillDown=VAR
+                              WebshopCampaignHeader@1000000001 : Record 5447345;
+                              WebshopCampaignHeaderList@1000000000 : Page 5447380;
+                            BEGIN
+                              WebshopCampaignHeader.RESET;
+                              WebshopCampaignHeader.SETFILTER("Active to Date",GETFILTER("Date Filter Future"));
+                              WebshopCampaignHeaderList.SETTABLEVIEW(WebshopCampaignHeader);
+                              WebshopCampaignHeaderList.RUN();
+                            END;
+                             }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Webshop Coupons - Starting" }
+
+    { 1000000000;2;Field  ;
+                SourceExpr="Webshop Coupons - Ending" }
+
+    { 1000000004;1;Group  ;
+                CaptionML=[DEU=Stammdaten;
+                           ENU=Master Data];
+                GroupType=CueGroup }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Webshop Item Starting" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Webshop Item Ending" }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Webshop Items - No Image" }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Webshop Items - No Description" }
+
+    { 1000000009;1;Group  ;
+                CaptionML=[DEU=Update;
+                           ENU=Update];
+                GroupType=CueGroup }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Webshop Ratings - New";
+                OnDrillDown=BEGIN
+                              WebshopItemRatings.RESET;
+                              WebshopItemRatings.SETRANGE(Checked,FALSE);
+                              IF NOT WebshopItemRatings.ISEMPTY THEN BEGIN
+                                WebshopItemRatingsList.SETTABLEVIEW(WebshopItemRatings);
+                                WebshopItemRatingsList.RUN;
+                              END;
+                            END;
+                             }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Webshop Ratings - not released" }
+
+  }
+  CODE
+  {
+    VAR
+      OpenOrders@1000000000 : Integer;
+      SalesHeader@1000000001 : Record 36;
+      SalesOrders@1000000002 : Page 48;
+      WebshopOrderList@1000000003 : Page 5447319;
+      WebshopItem@1000000004 : Record 5447304;
+      WebshopItemList@1000000005 : Page 5447309;
+      OpenOrdersColor@1000000006 : Text[20];
+      OpenQuotesColor@1000000007 : Text[20];
+      AvgTimeToShip@1000000008 : Decimal;
+      TimeToShipStyle@1000000009 : Text[20];
+      WebshopItemRatings@1000000010 : Record 5447317;
+      WebshopItemRatingsList@1000000011 : Page 5447335;
+
+    PROCEDURE SetOpenOrders@1000000004();
+    BEGIN
+    END;
+
+    PROCEDURE GetCountWebshopItemsNoImage@1000000001() Counter : Integer;
+    BEGIN
+      Counter := 0;
+      WebshopItem.RESET;
+      //FILTERGROUP(4);
+      WebshopItem.SETRANGE("Shop Code");
+      WebshopItem.SETRANGE("Language Code");
+      //FILTERGROUP(0);
+      IF WebshopItem.FINDSET THEN REPEAT
+        WebshopItem.CALCFIELDS("No. of Pictures","Is Variant");
+        IF (NOT WebshopItem."Is Variant") AND (WebshopItem."No. of Pictures" = 0) THEN
+          Counter += 1;
+      UNTIL WebshopItem.NEXT = 0;
+    END;
+
+    PROCEDURE SetAvgTimeToShip@1000000000();
+    VAR
+      SalesShipmentHeader@1000000002 : Record 110;
+      HeaderCounter@1000000000 : Integer;
+      SumDays@1000000001 : Integer;
+    BEGIN
+      SalesShipmentHeader.RESET;
+      //SalesShipmentHeader.SETFILTER("Webshop Shop Code",'<>%1','');
+      SalesShipmentHeader.SETFILTER("Posting Date",GETFILTER("Date Filter Past"));
+      SalesShipmentHeader.SETFILTER("Order Date",'<>%1',0D);
+      IF SalesShipmentHeader.FINDSET THEN REPEAT
+        HeaderCounter += 1;
+        SumDays += (SalesShipmentHeader."Posting Date" - SalesShipmentHeader."Order Date");
+      UNTIL SalesShipmentHeader.NEXT = 0;
+      IF HeaderCounter > 0 THEN
+        AvgTimeToShip := ROUND((SumDays / HeaderCounter),0.01,'=')
+      ELSE
+        AvgTimeToShip := 0;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

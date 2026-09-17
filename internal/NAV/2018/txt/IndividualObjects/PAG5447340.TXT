@@ -1,0 +1,120 @@
+OBJECT Page 5447340 Webshop Subscr. Header List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Abonnements;
+               ENU=Webshop Subscriptions];
+    InsertAllowed=No;
+    ModifyAllowed=No;
+    SourceTable=Table5447340;
+    PageType=List;
+    CardPageID=Webshop Subscr. Header Card;
+    OnOpenPage=VAR
+                 DateFormula1@1000000000 : DateFormula;
+               BEGIN
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000014;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000013;1 ;Action    ;
+                      Name=UpdateOnline;
+                      CaptionML=[DEU=Abonnement online aktualisieren;
+                                 ENU=Synchronize Subscription];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+                                 Text001@1000000001 : TextConst 'DEU=Das Abonnement wurde mit allen verkn�pften Daten aktualisiert.;ENU=The subscription was syncronized with all linked data.';
+                               BEGIN
+                                 WebshopUpdateManagement.UpdateSubscriptionHeader(Rec);
+                                 WebshopUpdateManagement.UpdateAllSubscSeqStepForHeader(Rec);
+                                 WebshopUpdateManagement.UpdAllSubscItemLinkForHeader(Rec);
+                                 WebshopUpdateManagement.UpdAllSubscCustLinkForHeader(Rec);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000012;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000011;1 ;Action    ;
+                      Name=LinkedItems;
+                      CaptionML=[DEU=Verkn�pfte Artikel;
+                                 ENU=Linked Items];
+                      RunObject=Page 5447344;
+                      RunPageLink=Subscription Code=FIELD(Code);
+                      Image=Item }
+      { 1000000008;1 ;Action    ;
+                      Name=LinkedSeqSteps;
+                      CaptionML=[DEU=Sequenz-Schritte;
+                                 ENU=Sequence-Steps];
+                      RunObject=Page 5447342;
+                      RunPageLink=Subscription Code=FIELD(Code);
+                      Image=PickLines;
+                      OnAction=VAR
+                                 Error001@1000000000 : TextConst 'DEU=Das Abo muss vom Typ "Sequenz-Artikel" sein, um Sequenz-Schritte einsehen zu k�nnen.;ENU=The Subscription has to be of type "Sequence-Item" in order to view its sequence-steps.';
+                               BEGIN
+                                 IF Rec.Type <> Rec.Type::SubscriptionSequenceItem THEN
+                                   ERROR(Error001);
+                               END;
+                                }
+      { 1000000007;1 ;Action    ;
+                      Name=LinkedCustomers;
+                      CaptionML=[DEU=Verkn�pfte Kunden;
+                                 ENU=Linked Customers];
+                      RunObject=Page 5447346;
+                      RunPageLink=Subscription Code=FIELD(Code);
+                      Image=CustomerList }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000009;2;Field  ;
+                SourceExpr=Type }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Code }
+
+    { 1000000010;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="No. of Sequence Steps" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="No. of Items" }
+
+    { 1000000005;2;Field  ;
+                Name=<No. of Items>;
+                SourceExpr="No. of Customers" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Is Active" }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

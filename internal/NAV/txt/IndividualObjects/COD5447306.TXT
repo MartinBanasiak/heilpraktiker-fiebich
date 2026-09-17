@@ -1,0 +1,345 @@
+OBJECT Codeunit 5447306 Webshop Webforms
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000000 : Record 5447300;
+      WebshopManagement@1000000001 : Codeunit 5447300;
+
+    PROCEDURE EditItemDescription@1000000001(ItemDescription@1000000001 : Record 5447306) : Boolean;
+    VAR
+      Request@1000000004 : Text[1024];
+      Text001@1000000002 : TextConst 'DEU="Artikelbeschreibung bearbeiten - ";ENU=Edit Item Description';
+    BEGIN
+      // Artikelbeschreibug in Webform bearbeiten
+
+      WITH ItemDescription DO BEGIN
+        TESTFIELD("Line No.");
+        WebshopSetup.GET;
+        WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+        RANDOMIZE();
+        Request :=
+          STRSUBSTNO('%1webforms/edit_description.php?pass=%2&company=%3',
+            WebshopSetup."Server Synch. Endpoint URL",
+            WebshopManagement.MD5(WebshopSetup."Server Synch. Password"),
+            WebshopManagement.URLEncode(COMPANYNAME));
+        Request +=
+          STRSUBSTNO('&shop_code=%1&language_code=%2&item_no=%3&line_no=%4&nav_lang=%5&rand=%6',
+            WebshopManagement.URLEncode("Shop Code"),
+            WebshopManagement.URLEncode("Language Code"),
+            WebshopManagement.URLEncode("Item No."),
+            "Line No.",
+            GLOBALLANGUAGE,
+            RANDOM(2000));
+        //IF ISCLEAR(ShopControl) THEN
+        //  CREATE(ShopControl);
+        //ShopControl.setSize(560,800);
+        //ShopControl.setUrl(Request);
+        //ShopControl.setMaximizeable(FALSE);
+        //ShopControl.setTitle(Text001 + ItemDescription."Item No.");
+        //ShopControl.runModal;
+        //CLEAR(ShopControl);
+        HYPERLINK(Request);
+        EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE EditItemFile@1000000000(ParameterItemFile@1000000000 : Record 5447307) : Boolean;
+    VAR
+      CurrTyp@1000000001 : Text[100];
+      Text50000@1000000002 : TextConst 'DEU=%1 %2 zu Artikel %3 bearbeiten;ENU=Edit %1 %2 for item %3';
+      Request@1000000004 : Text[1024];
+      ItemFile@1000000003 : Record 5447307;
+    BEGIN
+      // Bilder, Videos und Dateien in Webform bearbeiten/hochladen
+
+      WITH ItemFile DO BEGIN
+        GET(ParameterItemFile."Shop Code",ParameterItemFile."Language Code",ParameterItemFile."Item No.",
+            ParameterItemFile.Type,ParameterItemFile."Variant Code",ParameterItemFile."Line No.");
+        TESTFIELD("Line No.");
+        WebshopSetup.GET;
+        WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+        RANDOMIZE();
+        CurrTyp := STRSUBSTNO(Text50000,Type,"Line No.","Item No.");
+        Request :=
+          STRSUBSTNO('%1webforms/edit_file.php?pass=%2&company=%3&shop_code=%4',
+            WebshopSetup."Server Synch. Endpoint URL",
+            WebshopManagement.MD5(WebshopSetup."Server Synch. Password"),
+            WebshopManagement.URLEncode(COMPANYNAME),
+            WebshopManagement.URLEncode("Shop Code"));
+        Request +=
+          STRSUBSTNO('&language_code=%1&item_no=%2&type=%3&line_no=%4&nav_lang=%5&rand=%6',
+            WebshopManagement.URLEncode("Language Code"),
+            WebshopManagement.URLEncode("Item No."),
+            FORMAT(Type,0,'<Standard Format,2>'),
+            "Line No.",
+            GLOBALLANGUAGE,
+            RANDOM(2000));
+
+        //IF ISCLEAR(ShopControl) THEN
+        //  CREATE(ShopControl);
+        //ShopControl.setSize(390,358);
+        //ShopControl.setUrl(Request);
+        //ShopControl.setMaximizeable(FALSE);
+        //ShopControl.setTitle(CurrTyp);
+        //ShopControl.runModal;
+        //CLEAR(ShopControl);
+        HYPERLINK(Request);
+
+        EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE EditTextModule@1000000002(TextModule@1000000000 : Record 5447309) : Boolean;
+    VAR
+      Text001@1000000002 : TextConst 'DEU=Textbaustein bearbeiten;ENU=Edit Textmodule';
+      Request@1000000004 : Text[1024];
+    BEGIN
+      // Webhop-Textbaustein in Webform bearbeiten
+
+      WITH TextModule DO BEGIN
+        TESTFIELD(Code);
+        WebshopSetup.GET;
+        WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+        RANDOMIZE();
+        Request :=
+          STRSUBSTNO('%1webforms/edit_text_module.php?pass=%2&company=%3&code=%4&nav_lang=%5&rand=%6',
+            WebshopSetup."Server Synch. Endpoint URL",
+            WebshopManagement.MD5(WebshopSetup."Server Synch. Password"),
+            WebshopManagement.URLEncode(COMPANYNAME),
+            WebshopManagement.URLEncode(Code),
+            GLOBALLANGUAGE,
+            RANDOM(2000));
+        //IF ISCLEAR(ShopControl) THEN
+        //  CREATE(ShopControl);
+        //ShopControl.setSize(560,800);
+        //ShopControl.setUrl(Request);
+        //ShopControl.setMaximizeable(FALSE);
+        //ShopControl.setTitle(Text001);
+        //ShopControl.runModal;
+        //CLEAR(ShopControl);
+        HYPERLINK(Request);
+
+        EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE EditCategoryFile@1000000005(Category@1000000000 : Record 5447303;Type@1000000005 : 'Image,Icon') : Boolean;
+    VAR
+      Language@1000000003 : Record 8;
+      CurrTyp@1000000001 : Text[100];
+      Text001@1000000002 : TextConst 'DEU=Kategoriebild bearbeiten;ENU=Edit Category Picture';
+      Request@1000000004 : Text[1024];
+      Text002@1000000006 : TextConst 'DEU=Kategoriesymbol bearbeiten;ENU=Edit Category Symbol';
+    BEGIN
+      // Kategoriebild und Kategoriesymbol in Webform bearbeiten/hochladen
+
+      WITH Category DO BEGIN
+        TESTFIELD("Line No.");
+        WebshopSetup.GET;
+        WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+        RANDOMIZE();
+        CASE Type OF
+          Type::Image: CurrTyp := STRSUBSTNO(Text001);
+          Type::Icon: CurrTyp := STRSUBSTNO(Text002);
+        END;
+        Request :=
+          STRSUBSTNO('%1webforms/edit_category_file.php?pass=%2&company=%3&shop_code=%4',
+            WebshopSetup."Server Synch. Endpoint URL",
+            WebshopManagement.MD5(WebshopSetup."Server Synch. Password"),
+            WebshopManagement.URLEncode(COMPANYNAME),
+            WebshopManagement.URLEncode("Shop Code"));
+        Request +=
+          STRSUBSTNO('&language_code=%1&line_no=%2&type=%3&nav_lang=%4&rand=%5',
+            WebshopManagement.URLEncode("Language Code"),
+            "Line No.",
+            FORMAT(Type,0,'<Standard Format,2>'),
+            GLOBALLANGUAGE,
+            RANDOM(2000));
+
+        //IF ISCLEAR(ShopControl) THEN
+        //  CREATE(ShopControl);
+        //ShopControl.setSize(390,358);
+        //ShopControl.setUrl(Request);
+        //ShopControl.setMaximizeable(FALSE);
+        //ShopControl.setTitle(CurrTyp);
+        //ShopControl.runModal;
+        //CLEAR(ShopControl);
+        HYPERLINK(Request);
+
+        EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE EditCategoryDescription@1000000004(WebshopCategory@1000000000 : Record 5447303;Type@1000000005 : 'Description,PromotionDescription') : Boolean;
+    VAR
+      CurrTyp@1000000001 : Text[100];
+      Text001@1000000002 : TextConst 'DEU=Kategoriebeschreibung bearbeiten;ENU=Edit Category Description';
+      Request@1000000004 : Text[1024];
+      Text002@1000000006 : TextConst 'DEU=Aktionsbeschreibung bearbeiten;ENU=Edit Promotion Description';
+    BEGIN
+      // Beschreibung zu Kategorie oder Aktionsbeschreibung in Webform bearbeiten
+
+      WITH WebshopCategory DO BEGIN
+        TESTFIELD("Line No.");
+        WebshopSetup.GET;
+        WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+        RANDOMIZE();
+        CASE Type OF
+          Type::Description: CurrTyp := STRSUBSTNO(Text001);
+          Type::PromotionDescription: CurrTyp := STRSUBSTNO(Text002);
+        END;
+        Request :=
+          STRSUBSTNO('%1webforms/edit_category_description.php?pass=%2&company=%3&shop_code=%4',
+            WebshopSetup."Server Synch. Endpoint URL",
+            WebshopManagement.MD5(WebshopSetup."Server Synch. Password"),
+            WebshopManagement.URLEncode(COMPANYNAME),
+            WebshopManagement.URLEncode("Shop Code"));
+        Request +=
+          STRSUBSTNO('&language_code=%1&line_no=%2&type=%3&nav_lang=%4&rand=%5',
+            WebshopManagement.URLEncode("Language Code"),
+            "Line No.",
+            FORMAT(Type,0,'<Standard Format,2>'),
+            GLOBALLANGUAGE,
+            RANDOM(2000));
+        //IF ISCLEAR(ShopControl) THEN
+        //  CREATE(ShopControl);
+        //ShopControl.setSize(560,800);
+        //ShopControl.setUrl(Request);
+        //ShopControl.setMaximizeable(FALSE);
+        //ShopControl.setTitle(CurrTyp);
+        //ShopControl.runModal;
+        //CLEAR(ShopControl);
+        HYPERLINK(Request);
+
+        EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE EditItemPlaceholderImage@1000000003(Language@1000000000 : Record 5447302) : Boolean;
+    VAR
+      Text001@1000000002 : TextConst 'DEU=Platzhalter Artikelbild bearbeiten;ENU=Edit Placeholder Image';
+      Request@1000000004 : Text[1024];
+    BEGIN
+      // Platzhalter Artikelbild bearbeiten/hochladen
+
+      WITH Language DO BEGIN
+        WebshopSetup.GET;
+        WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+        RANDOMIZE();
+        Request :=
+          STRSUBSTNO('%1webforms/edit_item_placeholder_image.php?pass=%2&company=%3&shop_code=%4&language_code=%5&nav_lang=%6&rand=%7',
+            WebshopSetup."Server Synch. Endpoint URL",
+            WebshopManagement.MD5(WebshopSetup."Server Synch. Password"),
+            WebshopManagement.URLEncode(COMPANYNAME),
+            WebshopManagement.URLEncode("Shop Code"),
+            WebshopManagement.URLEncode(Code),
+            GLOBALLANGUAGE,
+            RANDOM(2000));
+        //IF ISCLEAR(ShopControl) THEN
+        //  CREATE(ShopControl);
+        //ShopControl.setSize(390,358);
+        //ShopControl.setUrl(Request);
+        //ShopControl.setMaximizeable(FALSE);
+        //ShopControl.setTitle(Text001);
+        //ShopControl.runModal;
+        //CLEAR(ShopControl);
+        HYPERLINK(Request);
+
+        EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE EditFilterImage@1000000008(AttributeOption@1000000000 : Record 5447322) : Boolean;
+    VAR
+      Text001@1000000002 : TextConst 'DEU=Platzhalter Artikelbild bearbeiten;ENU=Edit Filter Image';
+      Request@1000000004 : Text[1024];
+    BEGIN
+      // Filtericon bearbeiten/hochladen
+
+      WITH AttributeOption DO BEGIN
+        WebshopSetup.GET;
+        WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+        RANDOMIZE();
+        Request :=
+          STRSUBSTNO('%1webforms/edit_filter_image.php?pass=%2&company=%3&code=%4&attribute_code=%5&nav_lang=%6&rand=%7',
+            WebshopSetup."Server Synch. Endpoint URL",
+            WebshopManagement.MD5(WebshopSetup."Server Synch. Password"),
+            WebshopManagement.URLEncode(COMPANYNAME),
+            WebshopManagement.URLEncode(Code),
+            WebshopManagement.URLEncode("Attribute Code"),
+            GLOBALLANGUAGE,
+            RANDOM(2000));
+        //IF ISCLEAR(ShopControl) THEN
+        //  CREATE(ShopControl);
+        //ShopControl.setSize(390,358);
+        //ShopControl.setUrl(Request);
+        //ShopControl.setMaximizeable(FALSE);
+        //ShopControl.setTitle(Text001);
+        //ShopControl.runModal;
+        //CLEAR(ShopControl);
+        HYPERLINK(Request);
+
+        EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE EditItemComment@1000000009(ItemDescription@1118900000 : Record 5447306) : Boolean;
+    VAR
+      Request@1118900001 : Text[1024];
+      Text001@1118900002 : TextConst 'DEU="Artikelbeschreibung bearbeiten - ";ENU=Edit Item Description';
+    BEGIN
+      // Artikelbeschreibug in Webform bearbeiten
+
+      WITH ItemDescription DO BEGIN
+        TESTFIELD("Line No.");
+        WebshopSetup.GET;
+        WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+        RANDOMIZE();
+        Request :=
+          STRSUBSTNO('%1webforms/edit_comment.php?pass=%2&company=%3',
+            WebshopSetup."Server Synch. Endpoint URL",
+            WebshopManagement.MD5(WebshopSetup."Server Synch. Password"),
+            WebshopManagement.URLEncode(COMPANYNAME));
+        Request +=
+          STRSUBSTNO('&shop_code=%1&language_code=%2&item_no=%3&line_no=%4&nav_lang=%5&rand=%6',
+            WebshopManagement.URLEncode("Shop Code"),
+            WebshopManagement.URLEncode("Language Code"),
+            WebshopManagement.URLEncode("Item No."),
+            "Line No.",
+            GLOBALLANGUAGE,
+            RANDOM(2000));
+        //IF ISCLEAR(ShopControl) THEN
+        //  CREATE(ShopControl);
+        //ShopControl.setSize(560,800);
+        //ShopControl.setUrl(Request);
+        //ShopControl.setMaximizeable(FALSE);
+        //ShopControl.setTitle(Text001 + ItemDescription."Item No.");
+        //ShopControl.runModal;
+        //CLEAR(ShopControl);
+        HYPERLINK(Request);
+
+        EXIT(TRUE);
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

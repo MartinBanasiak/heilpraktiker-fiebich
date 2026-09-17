@@ -1,0 +1,1076 @@
+OBJECT Page 5447306 Webshop Category Setup List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Kategorie�bersicht;
+               ENU=Webshop Category List];
+    SourceTable=Table5447303;
+    DelayedInsert=Yes;
+    PopulateAllFields=Yes;
+    SourceTableView=SORTING(Shop Code,Language Code,Line No.)
+                    ORDER(Ascending);
+    PageType=List;
+    CardPageID=Webshop Category Setup Card;
+    AutoSplitKey=Yes;
+    PromotedActionCategoriesML=[DEU=Neu,Vorgang,Berichte,Sprachen,Aktualisierung;
+                                ENU=New,Process,Reports,Language,Update];
+    ShowFilter=No;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       FormatName();
+                     END;
+
+    OnNewRecord=BEGIN
+                  FormatedName := '';
+                  Name := '';
+                END;
+
+    OnInsertRecord=BEGIN
+                     FormatName();
+                   END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000018;1 ;Action    ;
+                      CaptionML=[DEU=Alle Kategorien aktualisieren;
+                                 ENU=Update all categories];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 WebshopUpdateManagement.StateIndicatorOpen(TABLECAPTION);
+                                 WebshopUpdateManagement.UpdateAllCategory(TRUE);
+                                 WebshopUpdateManagement.UpdateAllWebshopItemCategory(TRUE);
+                                 WebshopUpdateManagement.UpdateAllCategory(FALSE);
+                                 WebshopUpdateManagement.UpdateAllWebshopItemCategory(FALSE);
+                                 WebshopUpdateManagement.StateIndicatorClose();
+                                 WebshopUpdateManagement.FlushBuffer();
+                               END;
+                                }
+      { 1000000042;1 ;Action    ;
+                      CaptionML=[DEU=Kategorie aktualisieren;
+                                 ENU=Update category];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.UpdateCategoryManually(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text004);
+                               END;
+                                }
+      { 1000000004;1 ;Action    ;
+                      Name=MoveLeft;
+                      CaptionML=[DEU=Nach links;
+                                 ENU=Previous Period];
+                      ToolTipML=[DEU=Nach links verschieben;
+                                 ENU=Previous Period];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=PreviousRecord;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 TempCategory@1000000002 : Record 5447303;
+                               BEGIN
+                                 IF Level > 1 THEN BEGIN
+                                   TempCategory.SETRANGE("Shop Code","Shop Code");
+                                   TempCategory.SETRANGE("Language Code","Language Code");
+                                   TempCategory.SETFILTER("Line No.",'>%1',"Line No.");
+                                   IF TempCategory.FINDFIRST THEN BEGIN
+                                     IF TempCategory.Level <= Level THEN BEGIN
+                                       VALIDATE(Level,Level - 1);
+                                       MODIFY;
+                                       ModifyChildren;
+                                       TempCategory.ModifyChildren;
+                                       CurrPage.UPDATE;
+                                 //      WebshopUpdateManagement.SetSendNow(FALSE);
+                                 //      WebshopUpdateManagement.StateIndicatorOpen(TABLECAPTION);
+                                 //      WebshopUpdateManagement.UpdateAllCategory(TRUE);
+                                 //      WebshopUpdateManagement.UpdateAllWebshopItemCategory(TRUE);
+                                 //      WebshopUpdateManagement.UpdateAllCategory(FALSE);
+                                 //      WebshopUpdateManagement.UpdateAllWebshopItemCategory(FALSE);
+                                 //      WebshopUpdateManagement.StateIndicatorClose();
+                                 //      WebshopUpdateManagement.FlushBuffer();
+                                     END;
+                                   END ELSE BEGIN
+                                     VALIDATE(Level,Level - 1);
+                                     MODIFY;
+                                     ModifyChildren;
+                                     TempCategory.ModifyChildren;
+                                     CurrPage.UPDATE;
+                                 //    WebshopUpdateManagement.SetSendNow(FALSE);
+                                 //    WebshopUpdateManagement.StateIndicatorOpen(TABLECAPTION);
+                                 //    WebshopUpdateManagement.UpdateAllCategory(TRUE);
+                                 //    WebshopUpdateManagement.UpdateAllWebshopItemCategory(TRUE);
+                                 //    WebshopUpdateManagement.UpdateAllCategory(FALSE);
+                                 //    WebshopUpdateManagement.UpdateAllWebshopItemCategory(FALSE);
+                                 //    WebshopUpdateManagement.StateIndicatorClose();
+                                 //    WebshopUpdateManagement.FlushBuffer();
+                                   END;
+                                 END;
+                               END;
+                                }
+      { 1000000003;1 ;Action    ;
+                      Name=MoveRight;
+                      CaptionML=[DEU=Nach rechts;
+                                 ENU=Move Rights];
+                      ToolTipML=[DEU=Nach rechts;
+                                 ENU=Move Left];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=NextRecord;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 TempCategory@1000000001 : Record 5447303;
+                               BEGIN
+                                 IF Level < 5 THEN BEGIN
+                                   TempCategory.SETRANGE("Shop Code","Shop Code");
+                                   TempCategory.SETRANGE("Language Code","Language Code");
+                                   TempCategory.SETFILTER("Line No.",'<%1',"Line No.");
+                                   IF TempCategory.FINDLAST THEN BEGIN
+                                     IF Level <= TempCategory.Level THEN BEGIN
+                                       ModifyChildren;
+                                       TempCategory.ModifyChildren;
+                                       VALIDATE(Level,Level + 1);
+                                       MODIFY;
+                                       CurrPage.UPDATE;
+                                 //      WebshopUpdateManagement.SetSendNow(FALSE);
+                                 //      WebshopUpdateManagement.StateIndicatorOpen(TABLECAPTION);
+                                 //      WebshopUpdateManagement.UpdateAllCategory(TRUE);
+                                 //      WebshopUpdateManagement.UpdateAllWebshopItemCategory(TRUE);
+                                 //      WebshopUpdateManagement.UpdateAllCategory(FALSE);
+                                 //      WebshopUpdateManagement.UpdateAllWebshopItemCategory(FALSE);
+                                 //      WebshopUpdateManagement.StateIndicatorClose();
+                                 //      WebshopUpdateManagement.FlushBuffer();
+                                     END;
+                                   END;
+                                 END;
+                               END;
+                                }
+      { 1000000001;1 ;Action    ;
+                      Name=MoveUp;
+                      CaptionML=[DEU=Nach oben;
+                                 ENU=Move up];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=MoveUp;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 TempCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 TempCategory.SETRANGE("Shop Code","Shop Code");
+                                 TempCategory.SETRANGE("Language Code","Language Code");
+                                 TempCategory.SETFILTER("Line No.",'<%1',"Line No.");
+                                 IF TempCategory.FINDLAST THEN BEGIN
+                                   IF TempCategory.Level = Level THEN BEGIN
+                                     SwapCategory(TempCategory);
+                                     GET("Shop Code","Language Code",TempCategory."Line No.");
+                                     CurrPage.UPDATE(FALSE);
+                                     WebshopUpdateManagement.SetSendNow(FALSE);
+                                     WebshopUpdateManagement.StateIndicatorOpen(TABLECAPTION);
+                                     WebshopUpdateManagement.UpdateAllCategory(TRUE);
+                                     WebshopUpdateManagement.UpdateAllWebshopItemCategory(TRUE);
+                                     WebshopUpdateManagement.UpdateAllCategory(FALSE);
+                                     WebshopUpdateManagement.UpdateAllWebshopItemCategory(FALSE);
+                                     WebshopUpdateManagement.StateIndicatorClose();
+                                     WebshopUpdateManagement.FlushBuffer();
+                                   END;
+                                 END;
+                               END;
+                                }
+      { 1000000002;1 ;Action    ;
+                      Name=MoveDown;
+                      CaptionML=[DEU=Nach unten;
+                                 ENU=Move down];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=MoveDown;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 TempCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 TempCategory.SETRANGE("Shop Code","Shop Code");
+                                 TempCategory.SETRANGE("Language Code","Language Code");
+                                 TempCategory.SETFILTER("Line No.",'>%1',"Line No.");
+                                 IF TempCategory.FINDFIRST THEN BEGIN
+                                   IF TempCategory.Level = Level THEN BEGIN
+                                     SwapCategory(TempCategory);
+                                     GET("Shop Code","Language Code",TempCategory."Line No.");
+                                     CurrPage.UPDATE(FALSE);
+                                     WebshopUpdateManagement.SetSendNow(FALSE);
+                                     WebshopUpdateManagement.StateIndicatorOpen(TABLECAPTION);
+                                     WebshopUpdateManagement.UpdateAllCategory(TRUE);
+                                     WebshopUpdateManagement.UpdateAllWebshopItemCategory(TRUE);
+                                     WebshopUpdateManagement.UpdateAllCategory(FALSE);
+                                     WebshopUpdateManagement.UpdateAllWebshopItemCategory(FALSE);
+                                     WebshopUpdateManagement.StateIndicatorClose();
+                                     WebshopUpdateManagement.FlushBuffer();
+                                   END;
+                                 END;
+                               END;
+                                }
+      { 1000000010;1 ;Action    ;
+                      Name=<Action1000000010>;
+                      CaptionML=[DEU=Artikel zuordnen;
+                                 ENU=Assign Items];
+                      Image=ExchProdBOMItem;
+                      OnAction=VAR
+                                 lCategory@1000000000 : Record 5447303;
+                                 SetItemReport@1000000001 : Report 5447305;
+                               BEGIN
+                                 lCategory.SETRANGE("Shop Code","Shop Code");
+                                 lCategory.SETRANGE("Language Code","Language Code");
+                                 lCategory.SETRANGE("Line No.","Line No.");
+                                 SetItemReport.SETTABLEVIEW(lCategory);
+                                 SetItemReport.RUN;
+                               END;
+                                }
+      { 1000000046;1 ;Action    ;
+                      Name=GetMarketPlaceSubCategories;
+                      CaptionML=[DEU=Marktplatz: Unterkategorien abhol.;
+                                 ENU=Marketplace: Get Subcategories];
+                      Image=GetLines;
+                      OnAction=VAR
+                                 ParentCodeLineNo@1000000000 : Integer;
+                                 Category@1000000001 : Record 5447303;
+                                 Window@1000000003 : Dialog;
+                                 Factor@1000000004 : Decimal;
+                                 Counter@1000000005 : Decimal;
+                                 ExitLoop@1000000006 : Boolean;
+                               BEGIN
+                                 IF Shop.GET("Shop Code") THEN
+                                   WebshopUpdateManagement.UpdateShop(Shop);
+
+                                 IF Language.GET("Shop Code","Language Code") THEN
+                                   WebshopUpdateManagement.UpdateLanguage(Language);
+
+                                 Factor := 9999 / 100;
+                                 ExitLoop := FALSE;
+                                 Counter := 0;
+                                 WebshopMarketplaceManagement.QueueMktplSubCategoriesFetch("Shop Code","Language Code",Shop."Marketplace Type","Search Code");
+                                 Window.OPEN(
+                                   '#1#################################\\' +
+                                   '@2@@@@@@@@');
+                                 Window.UPDATE(1, Text008);
+
+                                 REPEAT
+                                   Counter += 100;
+                                   Window.UPDATE(2, Counter);
+                                   IF Counter = 10000 THEN BEGIN
+                                     Counter := 0;
+                                     Window.UPDATE(2, Counter);
+                                   END;
+                                   ExitLoop := WebshopMarketplaceManagement.CheckMktplSubCategoriesFetch("Shop Code","Language Code",Shop."Marketplace Type","Search Code");
+                                 UNTIL ExitLoop = TRUE;
+                                 Window.CLOSE;
+
+                                 ParentCodeLineNo := Category.GetLineNoForSearchCode("Shop Code","Language Code","Search Code");
+                                 WebshopMarketplaceManagement.StateIndicatorOpen(Text009);
+                                 WebshopMarketplaceManagement.GetAllFetchedMktplCategories("Shop Code","Language Code",TRUE,0);
+                                 WebshopMarketplaceManagement.GetAllFetchedMktplCategories("Shop Code","Language Code",FALSE,ParentCodeLineNo);
+                                 WebshopMarketplaceManagement.StateIndicatorClose();
+
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+      { 1000000044;1 ;Action    ;
+                      Name=FetchMarketplaceAttributes;
+                      CaptionML=[DEU=Marktplatzmerkmale abholen;
+                                 ENU=Fetch Marketplace Attributes];
+                      Image=ChangeToLines;
+                      OnAction=BEGIN
+                                 OnFetchMarketplaceAttributes;
+                               END;
+                                }
+      { 1000000007;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000035;1 ;ActionGroup;
+                      CaptionML=[DEU=Allgemein;
+                                 ENU=General] }
+      { 1000000009;2 ;Action    ;
+                      Name=<Action1000000009>;
+                      CaptionML=[DEU=Zugeordnete Artikel;
+                                 ENU=Linked Items];
+                      RunObject=Page 5447310;
+                      RunPageLink=Category Shop Code=FIELD(Shop Code),
+                                  Category Language Code=FIELD(Language Code),
+                                  Category Line No.=FIELD(Line No.);
+                      Image=ExplodeBOM }
+      { 1000000005;2 ;Action    ;
+                      CaptionML=[DEU=Merkmalfilter;
+                                 ENU=Attribute filter];
+                      RunObject=Page 5447325;
+                      RunPageLink=Type=CONST(Category),
+                                  Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Category Line No.=FIELD(Line No.);
+                      Image=Properties }
+      { 1000000020;1 ;ActionGroup;
+                      CaptionML=[DEU=Darstellung;
+                                 ENU=Display] }
+      { 1000000034;2 ;ActionGroup;
+                      CaptionML=[DEU=Kategoriesymbol;
+                                 ENU=Category icon];
+                      Image=Picture }
+      { 1000000033;3 ;Action    ;
+                      CaptionML=[DEU=Kategoriesymbol bearbeiten;
+                                 ENU=Edit category icon];
+                      OnAction=VAR
+                                 EditCategoryImage@1000000001 : Page 5447359;
+                                 TempCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 TESTFIELD("Line No.");
+                                 WebshopManagement.ConnectionTest;
+                                 CurrPage.UPDATE(TRUE);
+                                 WebshopUpdateManagement.UpdateCategory(Rec);
+                                 COMMIT;
+                                 CurrPage.UPDATE(TRUE);
+                                 IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                   //DynamicCommerceAddIn
+                                   CLEAR(WebshopWebform);
+                                   WebshopWebform.SetShopCode("Shop Code");
+                                   WebshopWebform.SetLanguageCode("Language Code");
+                                   WebshopWebform.SetLineNo("Line No.");
+                                   WebshopWebform.SetWebformType(WebformType::CategoryImage);
+                                   WebshopWebform.SetAttachmentType(1);
+                                   WebshopWebform.LOOKUPMODE(TRUE);
+                                   WebshopWebform.RUNMODAL();
+                                 END ELSE BEGIN
+                                   //Legacy
+                                   CLEAR(EditCategoryImage);
+                                   TempCategory.SETRANGE("Line No.","Line No.");
+                                   TempCategory.SETRANGE("Language Code","Language Code");
+                                   EditCategoryImage.SETTABLEVIEW(TempCategory);
+                                   EditCategoryImage.LOOKUPMODE(TRUE);
+                                   EditCategoryImage.SetType(2);
+                                   EditCategoryImage.RUNMODAL();
+                                 END;
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,1);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000032;3 ;Action    ;
+                      CaptionML=[DEU=Kategoriesymbol l�schen;
+                                 ENU=Delete category icon];
+                      OnAction=BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.DeleteCategoryFiles(Rec,1);
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,1);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text002);
+                               END;
+                                }
+      { 1000000031;2 ;ActionGroup;
+                      CaptionML=[DEU=Kategoriebild;
+                                 ENU=Category image];
+                      Image=Picture }
+      { 1000000030;3 ;Action    ;
+                      CaptionML=[DEU=Kategoriebild bearbeiten;
+                                 ENU=Edit category image];
+                      OnAction=VAR
+                                 EditCategoryImage@1000000001 : Page 5447359;
+                                 TempCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 TESTFIELD("Line No.");
+                                 WebshopManagement.ConnectionTest;
+                                 CurrPage.UPDATE(TRUE);
+                                 WebshopUpdateManagement.UpdateCategory(Rec);
+                                 COMMIT;
+                                 IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                   //DynamicCommerceAddIn
+                                   CLEAR(WebshopWebform);
+                                   WebshopWebform.SetShopCode("Shop Code");
+                                   WebshopWebform.SetLanguageCode("Language Code");
+                                   WebshopWebform.SetLineNo("Line No.");
+                                   WebshopWebform.SetAttachmentType(0);
+                                   WebshopWebform.SetWebformType(WebformType::CategoryImage);
+                                   WebshopWebform.LOOKUPMODE(TRUE);
+                                   WebshopWebform.RUNMODAL();
+                                 END ELSE BEGIN
+                                   //Legacy
+                                   CLEAR(EditCategoryImage);
+                                   TempCategory.SETRANGE("Shop Code","Shop Code");
+                                   TempCategory.SETRANGE("Language Code","Language Code");
+                                   TempCategory.SETRANGE("Line No.","Line No.");
+                                   EditCategoryImage.SETTABLEVIEW(TempCategory);
+                                   EditCategoryImage.LOOKUPMODE(TRUE);
+                                   EditCategoryImage.SetType(1);
+                                   EditCategoryImage.RUNMODAL();
+                                 END;
+
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,1);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000029;3 ;Action    ;
+                      CaptionML=[DEU=Kategoriebild l�schen;
+                                 ENU=Delete category image];
+                      OnAction=BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.DeleteCategoryFiles(Rec,0);
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,0);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000028;2 ;ActionGroup;
+                      CaptionML=[DEU=Beschreibungen;
+                                 ENU=Descriptions];
+                      Image=Text }
+      { 1000000038;3 ;Action    ;
+                      CaptionML=[DEU=Kategorieauszug bearbeiten;
+                                 ENU=Edit category excerpt];
+                      OnAction=VAR
+                                 EditCategoryDescription@1000000001 : Page 5447360;
+                                 TempCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 TESTFIELD("Line No.");
+                                 CLEAR(EditCategoryDescription);
+                                 WebshopManagement.ConnectionTest;
+                                 CurrPage.UPDATE(TRUE);
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.UpdateCategory(Rec);
+                                 COMMIT;
+                                 IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                   //DynamicCommerceAddIn
+                                   CLEAR(WebshopWebform);
+                                   WebshopWebform.SetShopCode("Shop Code");
+                                   WebshopWebform.SetLanguageCode("Language Code");
+                                   WebshopWebform.SetLineNo("Line No.");
+                                   WebshopWebform.SetDescriptionType(Type::Excerpt);
+                                   WebshopWebform.SetWebformType(WebformType::CategoryDesc);
+                                   WebshopWebform.LOOKUPMODE(TRUE);
+                                   WebshopWebform.RUNMODAL();
+                                 END ELSE BEGIN
+                                   //Legacy
+                                   ERROR(Text007);
+                                 END;
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,5);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000037;3 ;Action    ;
+                      CaptionML=[DEU=Kategorieauszug l�schen;
+                                 ENU=Delete category excerpt];
+                      OnAction=BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.DeleteCategoryFiles(Rec,5);
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,5);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text003);
+                               END;
+                                }
+      { 1000000027;3 ;Action    ;
+                      CaptionML=[DEU=Kategoriebeschreibung 1 bearbeiten;
+                                 ENU=Edit category description 1];
+                      OnAction=VAR
+                                 EditCategoryDescription@1000000001 : Page 5447360;
+                                 TempCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 IF ClientAddInType = ClientAddInType::Undefined THEN
+                                   ERROR(Text007);
+
+                                 TESTFIELD("Line No.");
+                                 CLEAR(EditCategoryDescription);
+                                 WebshopManagement.ConnectionTest;
+                                 CurrPage.UPDATE(TRUE);
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.UpdateCategory(Rec);
+                                 COMMIT;
+                                 IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                   //DynamicCommerceAddIn
+                                   CLEAR(WebshopWebform);
+                                   WebshopWebform.SetShopCode("Shop Code");
+                                   WebshopWebform.SetLanguageCode("Language Code");
+                                   WebshopWebform.SetLineNo("Line No.");
+                                   WebshopWebform.SetDescriptionType(Type::Description1);
+                                   WebshopWebform.SetWebformType(WebformType::CategoryDesc);
+                                   WebshopWebform.LOOKUPMODE(TRUE);
+                                   WebshopWebform.RUNMODAL();
+                                 END ELSE BEGIN
+                                   //Legacy
+                                   CLEAR(EditCategoryDescription);
+                                   TempCategory.SETRANGE("Shop Code","Shop Code");
+                                   TempCategory.SETRANGE("Line No.","Line No.");
+                                   TempCategory.SETRANGE("Language Code","Language Code");
+                                   EditCategoryDescription.SETTABLEVIEW(TempCategory);
+                                   EditCategoryDescription.SetType(0);
+                                   EditCategoryDescription.LOOKUPMODE(TRUE);
+                                   EditCategoryDescription.RUNMODAL();
+                                 END;
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,2);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000026;3 ;Action    ;
+                      CaptionML=[DEU=Kategoriebeschreibung 1 l�schen;
+                                 ENU=Delete category description 1];
+                      OnAction=BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.DeleteCategoryFiles(Rec,2);
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,2);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text003);
+                               END;
+                                }
+      { 1000000025;3 ;Action    ;
+                      CaptionML=[DEU=Kategoriebeschreibung 2 bearbeiten;
+                                 ENU=Edit category description 2];
+                      OnAction=VAR
+                                 EditCategoryDescription@1000000001 : Page 5447360;
+                                 TempCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 TESTFIELD("Line No.");
+                                 CLEAR(EditCategoryDescription);
+                                 WebshopManagement.ConnectionTest;
+                                 CurrPage.UPDATE(TRUE);
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.UpdateCategory(Rec);
+                                 COMMIT;
+                                 IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                   //DynamicCommerceAddIn
+                                   CLEAR(WebshopWebform);
+                                   WebshopWebform.SetShopCode("Shop Code");
+                                   WebshopWebform.SetLanguageCode("Language Code");
+                                   WebshopWebform.SetLineNo("Line No.");
+                                   WebshopWebform.SetDescriptionType(Type::Description2);
+                                   WebshopWebform.SetWebformType(WebformType::CategoryDesc);
+                                   WebshopWebform.LOOKUPMODE(TRUE);
+                                   WebshopWebform.RUNMODAL();
+                                 END ELSE BEGIN
+                                   //Legacy
+                                   CLEAR(EditCategoryDescription);
+                                   TempCategory.SETRANGE("Shop Code","Shop Code");
+                                   TempCategory.SETRANGE("Line No.","Line No.");
+                                   TempCategory.SETRANGE("Language Code","Language Code");
+                                   EditCategoryDescription.SETTABLEVIEW(TempCategory);
+                                   EditCategoryDescription.SetType(2);
+                                   EditCategoryDescription.LOOKUPMODE(TRUE);
+                                   EditCategoryDescription.RUNMODAL();
+                                 END;
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,4);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000024;3 ;Action    ;
+                      CaptionML=[DEU=Kategoriebeschreibung 2 l�schen;
+                                 ENU=Delete category description 2];
+                      OnAction=BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.DeleteCategoryFiles(Rec,4);
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,4);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text005);
+                               END;
+                                }
+      { 1000000023;3 ;Action    ;
+                      CaptionML=[DEU=Aktionsbeschreibung bearbeiten;
+                                 ENU=Edit promotion description];
+                      OnAction=VAR
+                                 EditCategoryDescription@1000000001 : Page 5447360;
+                                 TempCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 TESTFIELD("Line No.");
+                                 CLEAR(EditCategoryDescription);
+                                 WebshopManagement.ConnectionTest;
+                                 CurrPage.UPDATE(TRUE);
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.UpdateCategory(Rec);
+                                 COMMIT;
+                                 IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+                                   //DynamicCommerceAddIn
+                                   CLEAR(WebshopWebform);
+                                   WebshopWebform.SetShopCode("Shop Code");
+                                   WebshopWebform.SetLanguageCode("Language Code");
+                                   WebshopWebform.SetLineNo("Line No.");
+                                   WebshopWebform.SetDescriptionType(Type::Promotion);
+                                   WebshopWebform.SetWebformType(WebformType::CategoryDesc);
+                                   WebshopWebform.LOOKUPMODE(TRUE);
+                                   WebshopWebform.RUNMODAL();
+                                 END ELSE BEGIN
+                                   //Legacy
+                                   CLEAR(EditCategoryDescription);
+                                   TempCategory.SETRANGE("Shop Code","Shop Code");
+                                   TempCategory.SETRANGE("Line No.","Line No.");
+                                   TempCategory.SETRANGE("Language Code","Language Code");
+                                   EditCategoryDescription.SETTABLEVIEW(TempCategory);
+                                   EditCategoryDescription.SetType(1);
+                                   EditCategoryDescription.LOOKUPMODE(TRUE);
+                                   EditCategoryDescription.RUNMODAL();
+                                 END;
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,3);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000022;3 ;Action    ;
+                      CaptionML=[DEU=Aktionsbeschreibung l�schen;
+                                 ENU=Delete promotion description];
+                      OnAction=BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.DeleteCategoryFiles(Rec,3);
+                                 WebshopUpdateManagement.CheckCategoryFiles(Rec,3);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text006);
+                               END;
+                                }
+      { 1000000036;1 ;ActionGroup;
+                      CaptionML=[DEU=Berechtigungen;
+                                 ENU=Permissions] }
+      { 1000000021;2 ;Action    ;
+                      CaptionML=[DEU=Gruppenberechtigungen;
+                                 ENU=Group permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(CategoryGroup),
+                                  Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Line No.=FIELD(Line No.);
+                      Image=Permission;
+                      OnAction=BEGIN
+                                 //
+                               END;
+                                }
+      { 1000000006;2 ;Action    ;
+                      CaptionML=[DEU=Debitorberechtigungen;
+                                 ENU=Customer permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(CustomerCategory),
+                                  Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Line No.=FIELD(Line No.);
+                      Image=Permission;
+                      OnAction=BEGIN
+                                 //
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                Name=CategoryList;
+                CaptionML=[DEU=Kategorie�bersicht;
+                           ENU=Category List];
+                GroupType=Repeater }
+
+    { 1000000008;2;Field  ;
+                CaptionML=[DEU=Zeilennr.;
+                           ENU=Line No.];
+                SourceExpr="Line No.";
+                Visible=FALSE }
+
+    { 1000000016;2;Field  ;
+                CaptionML=[DEU=Name;
+                           ENU=Name];
+                SourceExpr=FormatedName;
+                Importance=Promoted;
+                Style=Strong;
+                StyleExpr=NameEmphasize;
+                OnValidate=BEGIN
+                             IF STRPOS(FormatedName,' ') = 1 THEN REPEAT
+                               FormatedName := COPYSTR(FormatedName,2);
+                             UNTIL STRPOS(FormatedName,' ') <> 1;
+                             Name := FormatedName;
+                             FormatName();
+                           END;
+                            }
+
+    { 1000000019;2;Field  ;
+                CaptionML=[DEU=Suchcode;
+                           ENU=Search Code];
+                SourceExpr="Search Code" }
+
+    { 1000000041;2;Field  ;
+                SourceExpr=Active }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Show Sub Categorys";
+                Visible=FALSE }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="No of Campain Items";
+                Visible=FALSE }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Show Campain Items";
+                Visible=FALSE }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Show All Items";
+                Visible=FALSE }
+
+    { 1000000039;2;Field  ;
+                SourceExpr="Sort Items";
+                Visible=FALSE }
+
+    { 1000000040;2;Field  ;
+                SourceExpr="User Sorting";
+                Visible=FALSE }
+
+    { 1000000012;2;Field  ;
+                CaptionML=[DEU=Ebene;
+                           ENU=Level];
+                SourceExpr=Level;
+                Visible=FALSE }
+
+    { 1000000014;2;Field  ;
+                CaptionML=[DEU=Anzahl Artikel;
+                           ENU=No of Items];
+                SourceExpr="No of Items" }
+
+    { 1000000043;2;Field  ;
+                Name=Relative Path;
+                CaptionML=[DEU=Relative Kategorie-URL;
+                           ENU=Relative category URL];
+                SourceExpr=GetCategoryURL;
+                Editable=False }
+
+  }
+  CODE
+  {
+    VAR
+      LanguageCode@1000000000 : Code[10];
+      WebshopSetup@1000000001 : Record 5447300;
+      WebshopManagement@1000000002 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000005 : Codeunit 5447301;
+      NameEmphasize@19018670 : Boolean INDATASET;
+      FormatedName@1000000003 : Text[60];
+      ShopFilter@1000000004 : Code[10];
+      LanguageFilter@1000000006 : Code[10];
+      Shop@1000000007 : Record 5447301;
+      Language@1000000008 : Record 5447302;
+      Text001@1000000012 : TextConst 'DEU=Kategoriebild wurde gel�scht;ENU=Category image has been deleted';
+      Text002@1000000011 : TextConst 'DEU=Kategoriesymbol wurde gel�scht;ENU=Category icon has been deleted';
+      Text003@1000000010 : TextConst 'DEU=Kategoriebeschreibung wurde gel�scht;ENU=Category description has been deleted';
+      Text004@1000000009 : TextConst 'DEU=Kategorie aktualisiert;ENU=Category has been updated';
+      Text005@1000000013 : TextConst 'DEU=Kategiebeschreibung 2 wurde gel�scht;ENU=Category description 2 has been deleted';
+      Text006@1000000014 : TextConst 'DEU=Aktionsbeschreibung wurde gel�scht;ENU=Campaign description has been deleted';
+      ClientAddInType@1000000019 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000018 : Codeunit 5447320;
+      WebshopWebform@1000000017 : Page 5447366;
+      Type@1000000016 : 'Description1,Promotion,Description2,Excerpt';
+      WebformType@1000000015 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection,ShippingOption,PaymentOption,ShippingOptionIcon,PaymentOptionIcon,Marketplace';
+      Text007@1000000020 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+      WebshopShop@1000000021 : Record 5447301;
+      Text008@1000000022 : TextConst 'DEU=Anfrage wird verarbeitet...;ENU=Request is processed';
+      Text009@1000000023 : TextConst 'DEU=Kategorien werden abgeholt;ENU=Categories are being fetched';
+      WebshopMarketplaceManagement@1000000024 : Codeunit 5447312;
+      Text010@1000000025 : TextConst 'DEU=Merkmale werden abgeholt;ENU=Attributes are being fetched';
+
+    LOCAL PROCEDURE FormatName@19039177();
+    VAR
+      TempLevel@1000000000 : Integer;
+    BEGIN
+      FormatedName := '';
+      NameEmphasize := Level = 1;
+      IF Level > 1 THEN BEGIN
+        TempLevel := 2;
+        REPEAT
+          FormatedName += '   ';
+          TempLevel := TempLevel + 1;
+        UNTIL TempLevel > (Level);
+      END;
+      FormatedName += Name;
+    END;
+
+    PROCEDURE SwapCategory@1000000004(ToCategory@1000000001 : Record 5447303);
+    VAR
+      TempCategory@1000000008 : Record 5447303;
+      TempItemCategory@1000000006 : Record 5447305;
+      SwapToCategory@1000000005 : TEMPORARY Record 5447303;
+      SwapFromCategory@1000000004 : TEMPORARY Record 5447303;
+      SwapToItemCategory@1000000003 : TEMPORARY Record 5447305;
+      SwapFromItemCategory@1000000002 : TEMPORARY Record 5447305;
+      SwapFromWebshopItem@1000000009 : TEMPORARY Record 5447304;
+      SwapToWebshopItem@1000000010 : TEMPORARY Record 5447304;
+      WebshopItem@1000000011 : Record 5447304;
+      SwapFromAttributeLink@1000000012 : TEMPORARY Record 5447321;
+      SwapToAttributeLink@1000000013 : TEMPORARY Record 5447321;
+      AttributeLink@1000000014 : Record 5447321;
+      SwapToLineNoChildren@1000000015 : Integer;
+      SwapFromLineNoChildren@1000000007 : Integer;
+      SwapToLineNo@1000000000 : Integer;
+      SwapFromLineNo@1000000016 : Integer;
+    BEGIN
+      // Kategorien nach oben oder unter verschieben
+
+      SwapFromLineNo := "Line No.";
+      SwapToLineNo := ToCategory."Line No.";
+
+      //Artikel-Hauptkategorien �ndern
+      WebshopItem.SETRANGE("Shop Code","Shop Code");
+      WebshopItem.SETRANGE("Language Code","Language Code");
+      WebshopItem.SETRANGE("Main Category Line No.",SwapFromLineNo);
+      IF WebshopItem.FINDSET THEN REPEAT
+        SwapFromWebshopItem.INIT;
+        SwapFromWebshopItem.TRANSFERFIELDS(WebshopItem);
+        SwapFromWebshopItem."Main Category Line No." := SwapToLineNo;
+        SwapFromWebshopItem.INSERT(FALSE);
+      UNTIL WebshopItem.NEXT = 0;
+
+      WebshopItem.INIT;
+      WebshopItem.SETRANGE("Shop Code","Shop Code");
+      WebshopItem.SETRANGE("Language Code","Language Code");
+      WebshopItem.SETRANGE("Main Category Line No.",SwapToLineNo);
+      IF WebshopItem.FINDSET THEN REPEAT
+        SwapToWebshopItem.INIT;
+        SwapToWebshopItem.TRANSFERFIELDS(WebshopItem);
+        SwapToWebshopItem."Main Category Line No." := SwapFromLineNo;
+        SwapToWebshopItem.INSERT(FALSE);
+      UNTIL WebshopItem.NEXT = 0;
+
+      IF SwapFromWebshopItem.FINDSET THEN REPEAT
+      IF WebshopItem.GET(SwapFromWebshopItem."Shop Code",SwapFromWebshopItem."Language Code",SwapFromWebshopItem."Item No.") THEN BEGIN
+        WebshopItem."Main Category Line No." := SwapFromWebshopItem."Main Category Line No.";
+        WebshopItem.MODIFY(TRUE);
+      END;
+      UNTIL SwapFromWebshopItem.NEXT = 0;
+
+      IF SwapToWebshopItem.FINDSET THEN REPEAT
+      IF WebshopItem.GET(SwapToWebshopItem."Shop Code",SwapToWebshopItem."Language Code",SwapToWebshopItem."Item No.") THEN BEGIN
+        WebshopItem."Main Category Line No." := SwapToWebshopItem."Main Category Line No.";
+        WebshopItem.MODIFY(TRUE);
+      END;
+      UNTIL SwapToWebshopItem.NEXT = 0;
+
+
+      // Kateogorie-Attribute �ber temp. Tabellen verschieben
+      AttributeLink.RESET;
+      AttributeLink.SETRANGE(Type,AttributeLink.Type::Category);
+      AttributeLink.SETRANGE("Shop Code","Shop Code");
+      AttributeLink.SETRANGE("Language Code","Language Code");
+      AttributeLink.SETRANGE("Category Line No.",SwapFromLineNo);
+      IF AttributeLink.FINDSET THEN REPEAT
+        SwapFromAttributeLink.INIT;
+        SwapFromAttributeLink.TRANSFERFIELDS(AttributeLink);
+        SwapFromAttributeLink."Category Line No." := SwapToLineNo;
+        SwapFromAttributeLink.INSERT;
+      UNTIL AttributeLink.NEXT = 0;
+
+      AttributeLink.RESET;
+      AttributeLink.SETRANGE(Type,AttributeLink.Type::Category);
+      AttributeLink.SETRANGE("Shop Code","Shop Code");
+      AttributeLink.SETRANGE("Language Code","Language Code");
+      AttributeLink.SETRANGE("Category Line No.",SwapToLineNo);
+      IF AttributeLink.FINDSET THEN REPEAT
+        SwapToAttributeLink.INIT;
+        SwapToAttributeLink.TRANSFERFIELDS(AttributeLink);
+        SwapToAttributeLink."Category Line No." := SwapFromLineNo;
+        SwapToAttributeLink.INSERT;
+      UNTIL AttributeLink.NEXT = 0;
+
+      AttributeLink.RESET;
+      AttributeLink.SETRANGE(Type,AttributeLink.Type::Category);
+      AttributeLink.SETRANGE("Shop Code","Shop Code");
+      AttributeLink.SETRANGE("Language Code","Language Code");
+      AttributeLink.SETFILTER("Category Line No.",'%1|%2',SwapFromLineNo,SwapToLineNo);
+      AttributeLink.DELETEALL(FALSE);
+
+      AttributeLink.RESET;
+      IF SwapFromAttributeLink.FINDSET THEN REPEAT
+        AttributeLink.INIT;
+        AttributeLink.TRANSFERFIELDS(SwapFromAttributeLink);
+        AttributeLink.INSERT;
+      UNTIL SwapFromAttributeLink.NEXT = 0;
+
+      AttributeLink.RESET;
+      IF SwapToAttributeLink.FINDSET THEN REPEAT
+        AttributeLink.INIT;
+        AttributeLink.TRANSFERFIELDS(SwapToAttributeLink);
+        AttributeLink.INSERT;
+      UNTIL SwapToAttributeLink.NEXT = 0;
+
+
+      // Gew�hlte Kategorie in tempor�re Tabelle schreiben und l�schen
+      SwapFromCategory.INIT;
+      SwapFromCategory.TRANSFERFIELDS(Rec);
+      SwapFromCategory."Line No." := SwapToLineNo;
+      SwapFromCategory.INSERT(FALSE);
+
+      IF Shop.GET("Shop Code") THEN BEGIN
+
+        IF Shop."Use Items from Shop Code" <> '' THEN
+          TempItemCategory.SETRANGE("Item Shop Code",Shop."Use Items from Shop Code")
+        ELSE
+          TempItemCategory.SETRANGE("Item Shop Code","Shop Code");
+
+        IF Shop."Use Categories from Shop Code" <> '' THEN
+          TempItemCategory.SETRANGE("Category Shop Code",Shop."Use Categories from Shop Code")
+        ELSE
+          TempItemCategory.SETRANGE("Category Shop Code","Shop Code");
+
+        TempItemCategory.SETRANGE("Item Language Code","Language Code");
+        TempItemCategory.SETRANGE("Category Language Code","Language Code");
+        TempItemCategory.SETRANGE("Category Line No.",SwapFromLineNo);
+        IF TempItemCategory.FINDSET THEN REPEAT
+          SwapFromItemCategory.INIT;
+          SwapFromItemCategory.TRANSFERFIELDS(TempItemCategory);
+          SwapFromItemCategory."Category Line No." := SwapToLineNo;
+          SwapFromItemCategory.INSERT(FALSE);
+          TempItemCategory.DELETE(FALSE);
+        UNTIL TempItemCategory.NEXT = 0;
+        DELETE(FALSE);
+
+        // Zu tauschende Kategorie in tempor�re Tabelle schreiben und l�schen
+        SwapToCategory.INIT;
+        SwapToCategory.TRANSFERFIELDS(ToCategory);
+        SwapToCategory."Line No." := SwapFromLineNo;
+        SwapToCategory.INSERT(FALSE);
+
+        IF Shop."Use Items from Shop Code" <> '' THEN
+          TempItemCategory.SETRANGE("Item Shop Code",Shop."Use Items from Shop Code")
+        ELSE
+          TempItemCategory.SETRANGE("Item Shop Code","Shop Code");
+
+        IF Shop."Use Categories from Shop Code" <> '' THEN
+          TempItemCategory.SETRANGE("Category Shop Code",Shop."Use Categories from Shop Code")
+        ELSE
+          TempItemCategory.SETRANGE("Category Shop Code","Shop Code");
+
+
+        TempItemCategory.SETRANGE("Item Language Code","Language Code");
+        TempItemCategory.SETRANGE("Category Language Code","Language Code");
+        TempItemCategory.SETRANGE("Category Line No.",SwapToLineNo);
+        IF TempItemCategory.FINDSET THEN REPEAT
+          SwapToItemCategory.INIT;
+          SwapToItemCategory.TRANSFERFIELDS(TempItemCategory);
+          SwapToItemCategory."Category Line No." := SwapFromLineNo;
+          SwapToItemCategory.INSERT(FALSE);
+          TempItemCategory.DELETE(FALSE);
+        UNTIL TempItemCategory.NEXT = 0;
+        ToCategory.DELETE(FALSE);
+
+        // Gew�hlte Kategorie mit neuer Zeilennr. anlegen
+        TempCategory.INIT;
+        TempCategory.TRANSFERFIELDS(SwapFromCategory);
+        TempCategory.INSERT(FALSE);
+        IF SwapFromItemCategory.FINDSET THEN REPEAT
+          TempItemCategory.INIT;
+          TempItemCategory.TRANSFERFIELDS(SwapFromItemCategory);
+          TempItemCategory.INSERT(FALSE);
+        UNTIL SwapFromItemCategory.NEXT = 0;
+
+        TempCategory.ModifyChildren;
+
+        // Zu tauschende Kategorie mit neuer Zeilennr. anlegen
+        TempCategory.INIT;
+        TempCategory.TRANSFERFIELDS(SwapToCategory);
+        TempCategory.INSERT(FALSE);
+        IF SwapToItemCategory.FINDSET THEN REPEAT
+          TempItemCategory.INIT;
+          TempItemCategory.TRANSFERFIELDS(SwapToItemCategory);
+          TempItemCategory.INSERT(FALSE);
+        UNTIL SwapToItemCategory.NEXT = 0;
+
+        TempCategory.ModifyChildren;
+
+        // Datens�tze im Web tauschen
+        WebshopUpdateManagement.SetSendNow(TRUE);
+        WebshopUpdateManagement.SwapCategory("Shop Code","Language Code",SwapFromLineNo,SwapToLineNo);
+        WebshopUpdateManagement.SetSendNow(FALSE);
+
+        //Berechtigungen NAV und WEB tauschen
+        WebshopUpdateManagement.SetSendNow(TRUE);
+        WebshopUpdateManagement.SwapCategoryPermissions("Shop Code","Language Code",SwapFromLineNo,SwapToLineNo);
+        WebshopUpdateManagement.SetSendNow(FALSE);
+
+        COMMIT;
+      END;
+    END;
+
+    PROCEDURE OnFetchMarketplaceAttributes@1000000000();
+    VAR
+      Window@1000000004 : Dialog;
+      Factor@1000000003 : Decimal;
+      Counter@1000000002 : Decimal;
+      ExitLoop@1000000001 : Boolean;
+      EntryId@1000000000 : Integer;
+    BEGIN
+      IF Shop.GET("Shop Code") THEN
+        WebshopUpdateManagement.UpdateShop(Shop);
+
+      IF Language.GET("Shop Code","Language Code") THEN
+        WebshopUpdateManagement.UpdateLanguage(Language);
+
+      Factor := 9999 / 100;
+      ExitLoop := FALSE;
+      Counter := 0;
+      IF Shop."Marketplace Type" = Shop."Marketplace Type"::Amazon THEN
+        EntryId := WebshopMarketplaceManagement.QueueMktplAttributesFetch("Shop Code","Language Code",Shop."Marketplace Type","Marketplace Root Category Code")
+      ELSE IF Shop."Marketplace Type" = Shop."Marketplace Type"::eBay THEN
+        EntryId := WebshopMarketplaceManagement.QueueMktplAttributesFetch("Shop Code","Language Code",Shop."Marketplace Type","Search Code")
+      ELSE
+        EXIT;
+      Window.OPEN(
+        '#1#################################\\' +
+        '@2@@@@@@@@');
+      Window.UPDATE(1, Text008);
+
+      REPEAT
+        Counter += 100;
+        Window.UPDATE(2, Counter);
+        IF Counter = 10000 THEN BEGIN
+          Counter := 0;
+          Window.UPDATE(2, Counter);
+        END;
+        IF Shop."Marketplace Type" = Shop."Marketplace Type"::Amazon THEN
+          ExitLoop := WebshopMarketplaceManagement.CheckMktplAttributesFetch("Shop Code","Language Code",Shop."Marketplace Type","Marketplace Root Category Code",EntryId)
+        ELSE IF Shop."Marketplace Type" = Shop."Marketplace Type"::eBay THEN
+          ExitLoop := WebshopMarketplaceManagement.CheckMktplAttributesFetch("Shop Code","Language Code",Shop."Marketplace Type","Search Code",EntryId);
+      UNTIL ExitLoop = TRUE;
+      Window.CLOSE;
+      WebshopMarketplaceManagement.StateIndicatorOpen(Text010);
+      WebshopMarketplaceManagement.FetchCategoryAttributes(Rec,TRUE);
+      WebshopMarketplaceManagement.FetchCategoryAttributes(Rec,FALSE);
+      WebshopMarketplaceManagement.StateIndicatorClose();
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

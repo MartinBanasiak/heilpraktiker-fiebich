@@ -1,0 +1,2873 @@
+OBJECT Codeunit 5447300 Webshop Management
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Permissions=TableData 36=rimd,
+                TableData 110=rimd,
+                TableData 112=rimd,
+                TableData 114=rimd;
+    OnRun=VAR
+            CurrRec@1000000000 : Text[1024];
+            GetRec@1000000001 : Text[1024];
+            DecVar@1000000002 : Decimal;
+            DateVar@1000000003 : Date;
+            IntVar@1000000004 : Integer;
+            DateTimeVar@1000000005 : DateTime;
+            ItemFile@1000000006 : Record 5447307;
+            WebClient@1000000007 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebClient";
+            Stream@1000000008 : InStream;
+            F1@1000000009 : File;
+            OStream@1000000010 : OutStream;
+          BEGIN
+            //UploadAttachmentTest;
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000014 : Record 5447300;
+      Window@1000000015 : Dialog;
+      Text55000@1000000020 : TextConst 'DEU=Konvertiere Daten;ENU=Converting data';
+      Text55001@1000000019 : TextConst 'DEU=Gesamtfortschritt;ENU=Total progress';
+      Text55002@1000000018 : TextConst 'DEU=Tabelle;ENU=Table';
+      Text55003@1000000017 : TextConst 'DEU=Anzahl Datens�tze;ENU=Number of records';
+      Text55004@1000000016 : TextConst 'DEU=Fortschritt;ENU=Progress';
+      MainTableCaption@1000000013 : ARRAY [100] OF Text[250];
+      MainTableCount@1000000012 : ARRAY [100] OF Integer;
+      NoOfMainTable@1000000011 : Integer;
+      NoOfMainRecord@1000000010 : Integer;
+      NoOfMainRecord2@1000000009 : Integer;
+      NoOfMainRecord3@1000000008 : Integer;
+      MainRecord@1000000007 : Boolean;
+      NoOfRecords@1000000006 : Integer;
+      RecordNo@1000000005 : Integer;
+      NewProgress@1000000004 : Integer;
+      OldProgress@1000000003 : Integer;
+      NewProgress2@1000000002 : Integer;
+      OldProgress2@1000000001 : Integer;
+      NextRecordNo@1000000000 : Integer;
+
+    PROCEDURE "--- Verbindung ---"@1000000007();
+    BEGIN
+    END;
+
+    PROCEDURE ConnectionTest@1000000000() Ok : Boolean;
+    VAR
+      Data@1000000000 : Text[30];
+    BEGIN
+      // Verbindungstest
+      WebshopSetup.GET;
+      IF WebshopSetup."Server Synch. Endpoint URL" <> '' THEN
+        Ok := SendRequest('connection_test','')
+      ELSE
+        Ok := FALSE;
+    END;
+
+    PROCEDURE IdentifyServer@1000000063();
+    VAR
+      URLString@1000000000 : Text[1024];
+      Servername@1000000001 : Text[50];
+      i@1000000002 : Integer;
+      text001@1000000003 : TextConst 'DEU=Ihre lokalen Einstellungen haben sich ge�ndert oder Sie versuchen den Webshop von einem anderen System aus zu aktualisieren. Setzen Sie die Systemeigenschaften in der Webshop Einrichtung zur�ck oder kontaktieren Sie Ihren Systemadministrator.;ENU=Your local settings have changed or you are attempting to synchronize the webshop from a different system. Reset system settings in Webshop Setup or contact your system administrator';
+    BEGIN
+      // Sicherheitsfunktion vor dem Verbinden
+
+      IF NOT ISSERVICETIER THEN BEGIN
+        WebshopSetup.GET;
+        URLString := CONTEXTURL;
+        i := STRPOS(URLString, 'servername=');
+        URLString := DELSTR(URLString,1,i+10);
+        i := STRPOS(URLString,'&');
+        Servername := COPYSTR(DELSTR(URLString,i),1,50);
+
+        IF (WebshopSetup.Servername <> '') AND (WebshopSetup."Company Name" <> '') THEN BEGIN
+          IF (Servername <> WebshopSetup.Servername) OR (COMPANYNAME <> WebshopSetup."Company Name") THEN
+            ERROR(text001);
+        END ELSE BEGIN
+          WebshopSetup.Servername := Servername;
+          WebshopSetup."Company Name" := COMPANYNAME;
+          WebshopSetup.MODIFY;
+        END;
+      END;
+    END;
+
+    PROCEDURE AddVar@1000000004(VAR Data@1000000000 : Text[1024];VarName@1000000001 : Text[100];VarValue@1000000002 : Variant);
+    VAR
+      VarValueInteger@1000000003 : Integer;
+      VarValueDecimal@1000000004 : Decimal;
+      VarValueText@1000000005 : Text[1024];
+      VarValueDate@1000000006 : Date;
+      VarValueDateTime@1000000007 : DateTime;
+      VarValueTime@1000000008 : Time;
+      VarValueBoolean@1000000009 : Boolean;
+      TempStr@1000000010 : Text[1024];
+    BEGIN
+      // Variable einem zu sendenden Datensatz hinzuf�gen
+
+      IF VarValue.ISBOOLEAN THEN BEGIN
+        VarValueBoolean := VarValue;
+        IF VarValueBoolean THEN
+          VarValueText := '1'
+        ELSE
+          VarValueText := '0';
+        Data := Data + ConvertText(VarName,TRUE) + '=' + VarValueText + '&';
+      END;
+
+      IF VarValue.ISCODE OR VarValue.ISTEXT THEN BEGIN
+        VarValueText := VarValue;
+        Data := Data + ConvertText(VarName,TRUE) + '=' + URLEncode(VarValueText) + '&';
+      END;
+
+      IF VarValue.ISINTEGER OR VarValue.ISOPTION THEN BEGIN
+        VarValueInteger := VarValue;
+        Data := Data + ConvertText(VarName,TRUE) + '=' + FORMAT(VarValueInteger) + '&';
+      END;
+
+      IF VarValue.ISDECIMAL THEN BEGIN
+        VarValueDecimal := VarValue;
+        TempStr := CONVERTSTR(FORMAT(VarValueDecimal,0,'<Precision,2:2><Standard Format,1>'),',','.');
+        Data := Data + ConvertText(VarName,TRUE) + '=' + TempStr + '&';
+      END;
+
+      IF VarValue.ISDATE THEN BEGIN
+        VarValueDate := VarValue;
+        IF VarValueDate <> 0D THEN BEGIN
+          VarValueText := FORMAT(VarValueDate,0,'<Year4>-<Month,2>-<Day,2>');
+        END ELSE BEGIN
+          VarValueText := 'NULL';
+        END;
+        Data := Data + ConvertText(VarName,TRUE) + '=' + VarValueText + '&';
+      END;
+
+      IF VarValue.ISTIME THEN BEGIN
+        VarValueTime := VarValue;
+        Data := Data + ConvertText(VarName,TRUE) + '=' + FORMAT(VarValueTime) + '&';
+      END;
+    END;
+
+    PROCEDURE AddDTVar@1000000009(VAR Data@1000000000 : Text[1024];VarName@1000000001 : Text[100];VarValue@1000000002 : DateTime);
+    VAR
+      VarValueInteger@1000000003 : Integer;
+      VarValueDecimal@1000000004 : Decimal;
+      VarValueText@1000000005 : Text[1024];
+      VarValueDate@1000000006 : Date;
+      VarValueDateTime@1000000007 : DateTime;
+      VarValueTime@1000000008 : Time;
+      VarValueBoolean@1000000009 : Boolean;
+      TempStr@1000000010 : Text[1024];
+    BEGIN
+      // Datetime Variable einem zu sendenden Datensatz hinzuf�gen
+
+      Data := Data + ConvertText(VarName,TRUE) + '=';
+      Data := Data + FORMAT(VarValue,0,'<Year4>-<Month,2>-<Day,2> <Hours24,2>:<Minutes,2>:<Seconds,2>') + '&';
+    END;
+
+    PROCEDURE SendRequest@1000000015(Action@1000000001 : Text[100];Data@1000000002 : Text) Response : Boolean;
+    VAR
+      Request@1000000003 : Text;
+      Error200@1000000004 : TextConst 'DEU=Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1;ENU=Connection to Webshop could not be established\Action: %1';
+      Error300@1000000005 : TextConst 'DEU=Keine Antwort vom Webshop erhalten\Aktion: %1;ENU=No response from webshop\Action: %1';
+      BigTextResponse@1000000008 : Text;
+      LogFile@1000000009 : File;
+      Error400@1000000013 : TextConst 'DEU=Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2;ENU=Invalid resopnse from webshop\Action: %1\Response: %2';
+      Error500@1000000020 : TextConst 'DEU="Konnte Daten nicht senden. Request: %1; Daten: %2; Ready State: %3.";ENU="Could not send data. Request: %1; Daten: %2; Ready State: %3."';
+      Error501@1000000021 : TextConst 'DEU=Konnte keine Logdatei unter dem angegebenen Pfad erstellen.;ENU=Could not create logfile at specified location.';
+      Error502@1000000022 : TextConst 'DEU=Konnte bestehende Logdatei nicht lesen.;ENU=Could not read existing logfile.';
+      Error503@1000000023 : TextConst 'DEU="%1 - Konnte Daten nicht senden. Request: %2; Data: %3 Ready State: %3.";ENU="%1 - Could not send Data. Request: %2; Data: %3 Ready State: %3."';
+      Error504@1000000024 : TextConst 'DEU=Keine Pfad f�r Logdatei angegeben.;ENU=No path specified for logfile.';
+      Error505@1000000025 : TextConst 'DEU="%1 - Server-seitiger Fehler. Request: %1; Data: %2; Response-Code: %3; Response-Text: %4.";ENU="%1 - Serverside Error Response. Request: %1; Data: %2; Response-Code: %3; Response-Text: %4."';
+      Log001@1000000010 : TextConst 'DEU=### SendRequest: %1 - %2 ###;ENU=### SendRequest: %1 - %2 ###';
+      Log002@1000000011 : TextConst 'DEU="--> ";ENU="--> "';
+      Log003@1000000012 : TextConst 'DEU="<-- ";ENU="<-- "';
+      LogResponse@1000000016 : Text;
+      i@1000000015 : Integer;
+      ResponseText@1000000017 : Text;
+      HTTPRequest@1000 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequestClass";
+      Counter1@1001 : Integer;
+      Counter2@1002 : Integer;
+      ReqReadyState@1003 : Integer;
+      SleepDuration@1004 : Duration;
+      SleepUntilDateTime@1005 : DateTime;
+      DataSent@1006 : Boolean;
+      ResponseAsText@1007 : Text;
+      LogResponseText@1008 : Text;
+      HTTPWebRequest@1000000014 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebRequest" RUNONCLIENT;
+      HTTPWebResponse@1000000007 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebResponse" RUNONCLIENT;
+      InStream@1000000006 : InStream;
+      OutStream@1000000000 : OutStream;
+      DotNetStream1@1000000018 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Stream";
+      DotNetStream2@1000000019 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Stream";
+    BEGIN
+      // Datensatz senden (Antwort TRUE/FALSE)
+
+      WebshopSetup.GET;
+      IF WebshopSetup."Server Synch. Endpoint URL" <> '' THEN BEGIN
+        Request := WebshopSetup."Server Synch. Endpoint URL" + 'navconnect.php?action=' + Action;
+        IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+            LogFile.CREATE(WebshopSetup."Connection Log File Path")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Connection Log File Path");
+          LogFile.SEEK(LogFile.LEN);
+          LogFile.WRITE(STRSUBSTNO(Log001,Action,CURRENTDATETIME));
+          IF Data <> '' THEN
+            LogFile.WRITE(Log002 + COPYSTR(Data,1,1020));
+          LogFile.CLOSE;
+        END;
+        Data := Data + 'pass=' + WebshopSetup."Server Synch. Password";
+
+        HTTPRequest := HTTPRequest.XMLHTTPRequestClass;
+
+        HTTPRequest.open('POST',Request,TRUE,'','');
+        HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        HTTPRequest.ToString();
+        HTTPRequest.send(Data);
+
+        Counter1 := 0;
+        SleepDuration := 200;   //200 Millisekunden Wartezeit
+        WHILE (HTTPRequest.readyState<>4) AND (Counter1<801) DO BEGIN
+          ReqReadyState := HTTPRequest.readyState;
+          Counter2 := 0;
+          IF (Counter1=800) AND (ReqReadyState<>4) THEN BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(STRSUBSTNO(Error500,Request,Data,FORMAT(HTTPRequest.readyState)))
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error501);
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR(Error502);
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(STRSUBSTNO(Error503,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.readyState)));
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(STRSUBSTNO(Error503,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.readyState)));
+                EXIT(TRUE);
+              END ELSE
+                ERROR(Error504);
+            END;
+          END;
+          IF (ReqReadyState=0) THEN BEGIN
+            SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+            WHILE (CURRENTDATETIME <= SleepUntilDateTime) AND (ReqReadyState<>4) DO BEGIN
+              Counter2 += 1;
+            END;
+            SleepUntilDateTime := 0DT;
+              HTTPRequest.open('POST',Request,TRUE,'','');
+            HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            HTTPRequest.ToString();
+            HTTPRequest.send(Data);
+            ReqReadyState := HTTPRequest.readyState;
+          END;
+          SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+          WHILE (CURRENTDATETIME <= SleepUntilDateTime) AND (ReqReadyState<>4) DO BEGIN
+            Counter2 += 1;
+          END;
+          SleepUntilDateTime := 0DT;
+          Counter1 += 1;
+        END;
+
+        //Vollst�ndige Antwort
+        IF (HTTPRequest.status <> 200) THEN BEGIN
+          IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN BEGIN
+            ERROR(STRSUBSTNO(Error505,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.status),HTTPRequest.statusText));
+          END ELSE BEGIN
+            IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+              LogFile.TEXTMODE(TRUE);
+              LogFile.WRITEMODE(TRUE);
+              IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+               IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                ERROR(Error501);
+              END ELSE BEGIN
+                IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error502);
+              END;
+              LogFile.SEEK(LogFile.LEN);
+              LogFile.WRITE(STRSUBSTNO(Error505,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.status),HTTPRequest.statusText));
+              LogFile.CLOSE;
+              IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                MESSAGE(STRSUBSTNO(Error505,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.status),HTTPRequest.statusText));
+              EXIT(TRUE);
+            END ELSE
+              ERROR(Error504);
+          END;
+        END;
+
+        ResponseAsText := HTTPRequest.responseText;
+        IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+            LogFile.CREATE(WebshopSetup."Connection Log File Path")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Connection Log File Path");
+          LogFile.SEEK(LogFile.LEN);
+          i := 1;
+          REPEAT
+            LogResponseText := COPYSTR(ResponseAsText,i,1020);
+            LogFile.WRITE(Log003 + LogResponseText);
+            i += 1020;
+          UNTIL i > STRLEN(ResponseAsText);
+
+          LogFile.WRITE('');
+          LogFile.CLOSE;
+        END;
+
+        IF ResponseAsText = '100' THEN BEGIN
+          Response := TRUE;
+        END ELSE BEGIN
+          IF ResponseText <> '' THEN BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(Error400,Action,ResponseText)
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error501);
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR(Error502);
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(STRSUBSTNO(Error400,Action,ResponseText));
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(STRSUBSTNO(Error400,Action,ResponseText));
+                Response := TRUE;
+              END ELSE
+                ERROR(Error504);
+            END;
+          END ELSE BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(Error300,Action)
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error501);
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR(Error502);
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(STRSUBSTNO(Error300,Action));
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(STRSUBSTNO(Error300,Action));
+                Response := TRUE;
+              END ELSE
+                ERROR(Error504);
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE SendRequestHelp@1000000011(Request@1000000001 : Text;Data@1000000002 : Text) Response : Text;
+    VAR
+      Error200@1000000004 : TextConst 'DEU=Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1;ENU=Connection to webshop could not be established\Action: %1';
+      Error300@1000000005 : TextConst 'DEU=Keine Antwort vom Webshop erhalten\Aktion: %1;ENU=No response from webshop\Action: %1';
+      ResponseAsText@1000000000 : Text;
+      InStreamResponse@1000000007 : InStream;
+      OutStreamResponse@1000000014 : OutStream;
+      BigTextResponse@1000000008 : Text;
+      LogFile@1000000009 : File;
+      Error400@1000000013 : TextConst 'DEU=Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2;ENU=Invalid response from webshop\Action: %1\Response: %2';
+      Log001@1000000010 : TextConst 'DEU=### SendRequest: %1 - %2 ###;ENU=### SendRequest: %1 - %2 ###';
+      Log002@1000000011 : TextConst 'DEU="--> ";ENU="--> "';
+      Log003@1000000012 : TextConst 'DEU="<-- ";ENU="<-- "';
+      LogResponse@1000000016 : Text;
+      i@1000000015 : Integer;
+      ResponseText@1000000017 : Text;
+      LogResponseText@1000000018 : Text;
+      HTTPRequest@1000 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequestClass";
+      Counter1@1001 : Integer;
+      Counter2@1002 : Integer;
+      ReqReadyState@1003 : Integer;
+      DataSent@1000000006 : Boolean;
+      SleepDuration@1000000019 : Duration;
+      SleepUntilDateTime@1000000020 : DateTime;
+    BEGIN
+      // Datensatz senden (Antwort "TRUE"/"FALSE:ERROR REPORT")
+      {
+      HTTPRequest := HTTPRequest.XMLHTTPRequestClass;
+
+      HTTPRequest.open('POST',Request,TRUE,'','');
+      HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+      HTTPRequest.ToString();
+      HTTPRequest.send(Data);
+
+      Counter1 := 0;
+      ReqReadyState := HTTPRequest.readyState;
+      DataSent := FALSE;
+      SleepDuration := 25;   //25 Millisekunden Wartezeit
+
+      WHILE (ReqReadyState<>4) AND (Counter1<41) DO BEGIN
+
+        Counter2 := 0;
+
+        //Abbrechen beim 41. Durchlauf
+        IF (Counter1 = 40) THEN BEGIN
+          HTTPRequest.abort();
+          EXIT('FALSE:WebRequest-Error. HTTP-Request konnte nicht abgeschlossen werden. ReadyState: '+FORMAT(ReqReadyState));
+        END;
+
+        //Request wurde nach Fehler zur�ckgesetzt
+        IF (ReqReadyState=0) THEN BEGIN
+          HTTPRequest.abort();
+
+          SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+          WHILE (CURRENTDATETIME <= SleepUntilDateTime) DO BEGIN
+          END;
+          SleepUntilDateTime := 0DT;
+
+          HTTPRequest.open('POST',Request,TRUE,'','');
+          HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+          HTTPRequest.ToString();
+          HTTPRequest.send(Data);
+          DataSent := TRUE;
+          ReqReadyState := HTTPRequest.readyState;
+        END;
+
+        //Wenn die send-methode aufgerufen wurde, aber noch keine Informationen empfangen wurden und mindestens 5 Durchl�ufe bereits stattfanden
+        IF (ReqReadyState=2) AND (Counter1>4) THEN BEGIN
+          SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+          WHILE (CURRENTDATETIME < SleepUntilDateTime) DO BEGIN
+          END;
+          SleepUntilDateTime := 0DT;
+        END;
+
+        //Wenn die send-methode aufgerufen wurde, aber noch keine Informationen empfangen wurden und mindestens 5 Durchl�ufe bereits stattfanden
+        IF (ReqReadyState=3) THEN BEGIN
+          SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+          WHILE (CURRENTDATETIME < SleepUntilDateTime) DO BEGIN
+          END;
+          SleepUntilDateTime := 0DT;
+        END;
+
+        Counter1 += 1;
+
+      END;
+
+      Counter2 := 0;
+      //Vollst�ndige Antwort
+      WHILE (HTTPRequest.status <> 200) AND (Counter2<41) DO BEGIN
+
+        IF Counter2=40 THEN
+          EXIT('FALSE:WebRequest-Error. HTTP-Status Not 200: '+FORMAT(HTTPRequest.status)+' Code: '+HTTPRequest.statusText);
+
+        SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+        WHILE (CURRENTDATETIME < SleepUntilDateTime) DO BEGIN
+        END;
+        SleepUntilDateTime := 0DT;
+        Counter2 += 1;
+
+      END;
+
+
+
+      ResponseAsText := HTTPRequest.responseText;
+      //MESSAGE(ResponseAsText);
+      //IF HTTPRequest.waitForResponse(20000) THEN BEGIN
+
+      //  InStreamResponse := HTTPRequest.responseStream;
+      //  BigTextResponse.READ(InStreamResponse);
+      //  BigTextResponse.GETSUBTEXT(ResponseText,1,1000);
+      //  ResponseText := ConvertText(ResponseText,FALSE);
+        IF WebshopSetup."Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Log File") THEN
+            LogFile.CREATE(WebshopSetup."Log File")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Log File");
+          LogFile.SEEK(LogFile.LEN);
+          i := 1;
+      //    REPEAT
+      //      BigTextResponse.GETSUBTEXT(LogResponse,i,1020);
+      //      LogFile.WRITE(Log003 + LogResponse);
+      //      i += 1020;
+      //    UNTIL i > BigTextResponse.LENGTH;
+          REPEAT
+            LogResponseText := COPYSTR(ResponseAsText,i,1020);
+            LogFile.WRITE(Log003 + LogResponseText);
+            i += 1020;
+          UNTIL i > STRLEN(ResponseAsText);
+
+          LogFile.WRITE('');
+          LogFile.CLOSE;
+        END;
+        //IF ResponseText = '100' THEN BEGIN
+        IF ResponseAsText = '100' THEN BEGIN
+          Response := 'TRUE'
+        END ELSE BEGIN
+          Response := 'FALSE:WebRequest-Error. ResponseText: ';
+          IF ResponseText <> '' THEN
+            Response += STRSUBSTNO(Error400,ACTION,ResponseText)
+          ELSE
+             Response += STRSUBSTNO(Error300,ACTION);
+        END;
+      //END ELSE BEGIN
+      //  ERROR(Error200,Action);
+      //  Response := FALSE;
+      //END;
+      //CLEAR(HTTPRequest);
+      }
+      Response := 'TRUE';
+    END;
+
+    PROCEDURE SendXMLRequest@1000000013(Action@1000000001 : Text[100];XMLFileName@1000000000 : Text[1024]) Response : Boolean;
+    VAR
+      XMLDoc@1000000012 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.DOMDocument";
+      WinHTTPRequest@1000000011 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequestClass";
+      Node@1000000010 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.IXMLDOMNode";
+      StreamSupported@1000000009 : Boolean;
+      Request@1000000008 : Text[1024];
+      InS@1000000007 : InStream;
+      InStreamVar@1000000016 : InStream;
+      Resp@1000000006 : Text[1024];
+      NoofSign@1000000005 : Integer;
+      ErrorFile@1000000004 : File;
+      ErrorFileName@1000000003 : Text[500];
+      ErrorText@1000000002 : Text[1024];
+      Error200@1000000014 : TextConst 'DEU=Verbindung zum Webserver konnte nicht aufgebaut werden;ENU=Connection to webserver could not be established';
+      Error300@1000000013 : TextConst 'DEU=Keine Antwort vom Webserver erhalten;ENU=No response from webserver';
+      xmlDOMConstructor@1000000015 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.DOMDocumentClass";
+      XMLHTTP@1000000017 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequest";
+      XMLHTTPConstructor@1000000018 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequestClass";
+      Environment@1000000019 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Environment";
+    BEGIN
+      // XML senden (Antwort TRUE/FALSE)
+
+      WebshopSetup.GET;
+      IF WebshopSetup."Server Synch. Endpoint URL" <> '' THEN BEGIN
+
+        StreamSupported := (NOT ISSERVICETIER);
+        ErrorFileName := Environment.GetEnvironmentVariable('temp') + '\NavConnectError.log';
+
+        Request := WebshopSetup."Server Synch. Endpoint URL" + 'navconnect.php?action=' + Action;
+
+        XMLDoc := xmlDOMConstructor.DOMDocumentClass;
+        XMLDoc.async := FALSE;
+        XMLDoc.load(XMLFileName);
+
+        XMLHTTP := XMLHTTPConstructor.XMLHTTPRequestClass;
+        XMLHTTP.open('POST',Request,FALSE,'','');
+        XMLHTTP.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+
+        XMLHTTP.send(XMLDoc);
+
+        IF (StreamSupported) THEN BEGIN
+          InStreamVar := XMLHTTP.responseStream;
+          NoofSign := InStreamVar.READ(Resp); //Read first 1024 Sign
+        END ELSE BEGIN
+          NoofSign := 0;
+          Resp := XMLHTTP.responseText;
+        END;
+
+        IF Resp = '100' THEN BEGIN
+          Response := TRUE
+        END ELSE BEGIN
+          Response := FALSE;
+
+          IF Resp <> '' THEN BEGIN
+            ErrorText := Resp;
+
+            IF (StreamSupported) THEN BEGIN
+              IF EXISTS(ErrorFileName) THEN
+                ERASE(ErrorFileName);
+              ErrorFile.CREATE(ErrorFileName);
+              ErrorFile.WRITEMODE(TRUE);
+              ErrorFile.TEXTMODE(TRUE);
+              WHILE (NoofSign > 0) DO BEGIN
+                ErrorFile.WRITE(Resp);
+                NoofSign := InS.READ(Resp);
+              END;
+              ErrorFile.CLOSE;
+            END;
+
+            ERROR(ErrorText);
+          END ELSE
+            ERROR(Error300);
+        END;
+      END;
+    END;
+
+    PROCEDURE SendRequest2@5(Action@1000000001 : Text[100];Data@1000000002 : Text) Response : Boolean;
+    VAR
+      Request@1000000003 : Text;
+      Error200@1000000004 : TextConst 'DEU=Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1;ENU=Connection to webshop could not be established\Action: %1';
+      Error300@1000000005 : TextConst 'DEU=Keine Antwort vom Webshop erhalten\Aktion: %1;ENU=No response from webshop\Action: %1';
+      BigTextResponse@1000000008 : Text;
+      LogFile@1000000009 : File;
+      Error400@1000000013 : TextConst 'DEU=Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2;ENU=Invalid response from webshop\Action: %1\Response: %2';
+      Error500@1000000000 : TextConst 'DEU=WebRequest-Fehler. HTTP-Request konnte nicht abgeschlossen werden. ReadyState: %1.;ENU=WebRequest-Error. HTTP-Request could not be completed. ReadyState: %1';
+      Log001@1000000010 : TextConst 'DEU=### SendRequest: %1 - %2 ###;ENU=### SendRequest: %1 - %2 ###';
+      Log002@1000000011 : TextConst 'DEU="--> ";ENU="--> "';
+      Log003@1000000012 : TextConst 'DEU="<-- ";ENU="<-- "';
+      LogResponse@1000000016 : Text;
+      i@1000000015 : Integer;
+      ResponseText@1000000017 : Text;
+      HTTPRequest@1000 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequestClass";
+      Counter1@1001 : Integer;
+      Counter2@1002 : Integer;
+      ReqReadyState@1003 : Integer;
+      SleepDuration@1004 : Duration;
+      SleepUntilDateTime@1005 : DateTime;
+    BEGIN
+      // Datensatz senden (Antwort TRUE/FALSE)
+
+      WebshopSetup.GET;
+      IF WebshopSetup."Server Synch. Endpoint URL" <> '' THEN BEGIN
+        Request := WebshopSetup."Server Synch. Endpoint URL" + 'navconnect.php?action=' + Action;
+        IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+            LogFile.CREATE(WebshopSetup."Connection Log File Path")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Connection Log File Path");
+          LogFile.SEEK(LogFile.LEN);
+          LogFile.WRITE(STRSUBSTNO(Log001,Action,CURRENTDATETIME));
+          IF Data <> '' THEN
+            LogFile.WRITE(Log002 + COPYSTR(Data,1,1020));
+          LogFile.CLOSE;
+        END;
+        Data := Data + 'pass=' + WebshopSetup."Server Synch. Password";
+        //CREATE(HTTPRequest);
+        //ResponseText := SendRequestHelp(Request,Data);
+        HTTPRequest := HTTPRequest.XMLHTTPRequestClass;
+
+        HTTPRequest.open('POST',Request,TRUE,'','');
+        HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        HTTPRequest.ToString();
+        HTTPRequest.send(Data);
+
+        Counter1 := 0;
+        ReqReadyState := HTTPRequest.readyState;
+        SleepDuration := 25;   //25 Millisekunden Wartezeit
+
+        WHILE (ReqReadyState<>4) AND (Counter1<41) DO BEGIN
+
+          Counter2 := 0;
+
+          //Abbrechen beim 41. Durchlauf
+          IF (Counter1 = 40) THEN BEGIN
+            HTTPRequest.abort();
+            ERROR(STRSUBSTNO(Error500,FORMAT(ReqReadyState)));
+          END;
+
+          SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+          WHILE (CURRENTDATETIME <= SleepUntilDateTime) DO BEGIN
+            Counter2 += 1;
+          END;
+          SleepUntilDateTime := 0DT;
+
+          Counter1 += 1;
+
+        END;
+        IF (HTTPRequest.status = 200) AND (HTTPRequest.responseText = '100') THEN
+          ResponseText := 'TRUE';
+
+        IF ResponseText <> 'TRUE' THEN BEGIN
+          IF STRLEN(ResponseText) >0 THEN
+            ERROR(COPYSTR(ResponseText,7))
+        END ELSE
+          Response := TRUE;
+      END;
+    END;
+
+    PROCEDURE GetRequest@2(Action@1000000001 : Text[100];Data@1000000002 : Text) Response : Text;
+    VAR
+      Request@1000000003 : Text;
+      Error200@1000000004 : TextConst 'DEU=Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1;ENU=Connection to Webshop could not be established\Action: %1';
+      Error300@1000000005 : TextConst 'DEU=Keine Antwort vom Webshop erhalten\Aktion: %1;ENU=No response from webshop\Action: %1';
+      BigTextResponse@1000000008 : Text;
+      LogFile@1000000009 : File;
+      Error400@1000000013 : TextConst 'DEU=Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2;ENU=Invalid response from webshop\Action: %1\Response: %2';
+      Error500@1000000019 : TextConst 'DEU="Konnte Daten nicht senden. Request: %1; Daten: %2; Ready State: %3.";ENU="Could not send Data. Request: %1; Data: %2; Ready State: %3."';
+      Error501@1000000018 : TextConst 'DEU=Konnte keine Logdatei unter dem angegebenen Pfad erstellen.;ENU=Could not create logfile at specified location.';
+      Error502@1000000014 : TextConst 'DEU=Konnte bestehende Logdatei nicht lesen.;ENU=Could not read existing logfile.';
+      Error503@1000000007 : TextConst 'DEU="%1 - Konnte Daten nicht senden. Request: %2; Data: %3 Ready State: %3.";ENU="%1 - Could not send Data. Request: %2; Data: %3 Ready State: %3."';
+      Error504@1000000006 : TextConst 'DEU=Keine Pfad f�r Logdatei angegeben.;ENU=No path specified for logfile.';
+      Error505@1000000000 : TextConst 'DEU="%1 - Server-seitiger Fehler. Request: %1; Data: %2; Response-Code: %3; Response-Text: %4.";ENU="%1 - Serverside Error Response. Request: %1; Data: %2; Response-Code: %3; Response-Text: %4."';
+      Log001@1000000010 : TextConst 'DEU=### SendRequest: %1 - %2 ###;ENU=### SendRequest: %1 - %2 ###';
+      Log002@1000000011 : TextConst 'DEU="--> ";ENU="--> "';
+      Log003@1000000012 : TextConst 'DEU="<-- ";ENU="<-- "';
+      LogResponse@1000000016 : Text;
+      i@1000000015 : Integer;
+      ResponseText@1000000017 : Text;
+      HTTPRequest@1000 : DotNet "'Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.MSXML.XMLHTTPRequestClass";
+      Counter1@1001 : Integer;
+      Counter2@1002 : Integer;
+      ReqReadyState@1003 : Integer;
+      SleepDuration@1004 : Duration;
+      SleepUntilDateTime@1005 : DateTime;
+      DataSent@1006 : Boolean;
+      ResponseAsText@1007 : Text;
+      LogResponseText@1008 : Text;
+    BEGIN
+      // Datensatz senden (Antwort TRUE/FALSE)
+
+      WebshopSetup.GET;
+      IF WebshopSetup."Server Synch. Endpoint URL" <> '' THEN BEGIN
+        Request := WebshopSetup."Server Synch. Endpoint URL" + 'navconnect.php?action=' + Action;
+        IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+            LogFile.CREATE(WebshopSetup."Connection Log File Path")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Connection Log File Path");
+          LogFile.SEEK(LogFile.LEN);
+          LogFile.WRITE(STRSUBSTNO(Log001,Action,CURRENTDATETIME));
+          IF Data <> '' THEN
+            LogFile.WRITE(Log002 + COPYSTR(Data,1,1020));
+          LogFile.CLOSE;
+        END;
+        Data := Data + 'pass=' + WebshopSetup."Server Synch. Password";
+        //CREATE(HTTPRequest);
+        //ResponseText := SendRequestHelp(Request,Data);
+        HTTPRequest := HTTPRequest.XMLHTTPRequestClass;
+
+        HTTPRequest.open('POST',Request,TRUE,'','');
+        HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        HTTPRequest.ToString();
+        HTTPRequest.send(Data);
+
+        Counter1 := 0;
+        SleepDuration := 100;   //100 Millisekunden Wartezeit
+        WHILE (HTTPRequest.readyState<>4) AND (Counter1<421) DO BEGIN
+          ReqReadyState := HTTPRequest.readyState;
+          Counter2 := 0;
+          IF (Counter1=420) AND (ReqReadyState<>4) THEN BEGIN
+            IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN
+              ERROR(STRSUBSTNO(Error500,Request,Data,FORMAT(HTTPRequest.readyState)))
+            ELSE BEGIN
+              IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+                LogFile.TEXTMODE(TRUE);
+                LogFile.WRITEMODE(TRUE);
+                IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+                 IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error501);
+                END ELSE BEGIN
+                  IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                    ERROR(Error502);
+                END;
+                LogFile.SEEK(LogFile.LEN);
+                LogFile.WRITE(STRSUBSTNO(Error503,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.readyState)));
+                LogFile.CLOSE;
+                IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                  MESSAGE(STRSUBSTNO(Error503,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.readyState)));
+              END ELSE
+                ERROR(Error504);
+            END;
+          END;
+          IF (ReqReadyState=0) THEN BEGIN
+            SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+            WHILE (CURRENTDATETIME <= SleepUntilDateTime) AND (ReqReadyState<>4) DO BEGIN
+              Counter2 += 1;
+            END;
+            SleepUntilDateTime := 0DT;
+              HTTPRequest.open('POST',Request,TRUE,'','');
+            HTTPRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            HTTPRequest.ToString();
+            HTTPRequest.send(Data);
+            ReqReadyState := HTTPRequest.readyState;
+          END;
+          SleepUntilDateTime := CURRENTDATETIME + SleepDuration;
+          WHILE (CURRENTDATETIME <= SleepUntilDateTime) AND (ReqReadyState<>4) DO BEGIN
+            Counter2 += 1;
+          END;
+          SleepUntilDateTime := 0DT;
+          Counter1 += 1;
+        END;
+
+        //Vollst�ndige Antwort
+        IF (HTTPRequest.status <> 200) THEN BEGIN
+          IF NOT WebshopSetup."Catch & Log WebRequest Errors" THEN BEGIN
+            ERROR(STRSUBSTNO(Error505,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.status),HTTPRequest.statusText));
+          END ELSE BEGIN
+            IF STRLEN(WebshopSetup."Connection Log File Path")>0 THEN BEGIN
+              LogFile.TEXTMODE(TRUE);
+              LogFile.WRITEMODE(TRUE);
+              IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN BEGIN
+               IF NOT LogFile.CREATE(WebshopSetup."Connection Log File Path") THEN
+                ERROR(Error501);
+              END ELSE BEGIN
+                IF NOT LogFile.OPEN(WebshopSetup."Connection Log File Path") THEN
+                  ERROR(Error502);
+              END;
+              LogFile.SEEK(LogFile.LEN);
+              LogFile.WRITE(STRSUBSTNO(Error505,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.status),HTTPRequest.statusText));
+              LogFile.CLOSE;
+              IF GUIALLOWED AND WebshopSetup."Show Errors as Messages" THEN
+                MESSAGE(STRSUBSTNO(Error505,FORMAT(CURRENTDATETIME),Request,Data,FORMAT(HTTPRequest.status),HTTPRequest.statusText));
+            END ELSE
+              ERROR(Error504);
+          END;
+        END;
+
+
+        ResponseAsText := HTTPRequest.responseText;
+        IF WebshopSetup."Is Connection Log Active" THEN BEGIN
+          LogFile.TEXTMODE(TRUE);
+          LogFile.WRITEMODE(TRUE);
+          IF NOT FILE.EXISTS(WebshopSetup."Connection Log File Path") THEN
+            LogFile.CREATE(WebshopSetup."Connection Log File Path")
+          ELSE
+            LogFile.OPEN(WebshopSetup."Connection Log File Path");
+          LogFile.SEEK(LogFile.LEN);
+          i := 1;
+          REPEAT
+            LogResponseText := COPYSTR(ResponseAsText,i,1020);
+            LogFile.WRITE(Log003 + LogResponseText);
+            i += 1020;
+          UNTIL i > STRLEN(ResponseAsText);
+
+          LogFile.WRITE('');
+          LogFile.CLOSE;
+        END;
+
+        Response := ResponseAsText;
+      END;
+    END;
+
+    PROCEDURE GeneralWebRequest@1000000017(Payload@1000000000 : Text;URI@1000000001 : Text) : Text;
+    VAR
+      StringBuilder@1000000002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Text.StringBuilder";
+      URIObj@1000000003 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Uri";
+      Request@1000000004 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebRequest";
+      StreamWriter@1000000005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.StreamWriter";
+      Response@1000000006 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.HttpWebResponse";
+      Stream@1000000007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Stream";
+      XmlTextReader@1000000008 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlTextReader";
+      XmlDocument@1000000009 : DotNet "'System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Xml.XmlDocument";
+      TextEncoding@1000000010 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Text.Encoding";
+      CredentialCache@1000000011 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.CredentialCache";
+    BEGIN
+    END;
+
+    PROCEDURE "--- Dokumente"@1000000010();
+    BEGIN
+    END;
+
+    PROCEDURE CreateDocumentPDF@1000000070(Type@1000000003 : 'SalesOrder,SalesInvoice,SalesShipment,SalesCrMemoHeader';ShopCode@1000000004 : Code[10];LanguageCode@1000000007 : Code[10];DocumentNo@1000000001 : Code[20]) FileName : Text[100];
+    VAR
+      CurrLanguageId@1000000011 : Integer;
+      CurrPrinterName@1000000012 : Text[250];
+      Reportid@1000000014 : Integer;
+      PrinterSelection@1000000013 : Record 78;
+      Language@1000000009 : Record 5447302;
+      NAVLanguage@1000000010 : Record 8;
+      SalesHeader@1000000005 : Record 36;
+      SalesInvoiceHeader@1000000002 : Record 112;
+      SalesShipmentHeader@1000000008 : Record 110;
+      NotDeletePrinterSelection@1000000015 : Boolean;
+      i@1000000006 : Integer;
+      OK@1000000000 : Boolean;
+      SalesCrMemoHeader@1000000016 : Record 114;
+    BEGIN
+      // PDF-Datei aus Beleg (Verkaufsauftrag, Verkaufsrechnung, Verkaufslieferung) erstellen (PDF Writer - bioPDF erforderlich)
+
+      IF Language.GET(ShopCode,LanguageCode) AND (DocumentNo <> '') THEN BEGIN
+
+        Language.TESTFIELD("PDF Temp File Path");
+
+        // Systemsprache f�r mehrsprachige Belege umstellen
+        NAVLanguage.GET(LanguageCode);
+        IF NAVLanguage."Windows Language ID" <> 0 THEN BEGIN
+          CurrLanguageId := GLOBALLANGUAGE();
+          GLOBALLANGUAGE(NAVLanguage."Windows Language ID");
+        END;
+
+        // Beleg ausw�hlen und Dateinamen festlegen
+        CASE Type OF
+          Type::SalesOrder: BEGIN
+            Reportid := Language."Report PDF Order Confirmation";
+            IF SalesHeader.GET(SalesHeader."Document Type"::Order,DocumentNo) THEN
+              //FileName := FORMAT(SalesHeader."Document Type") + '_' + DocumentNo + '.pdf';
+              FileName := DocumentNo + '.pdf';
+          END;
+          Type::SalesInvoice: BEGIN
+            Reportid := Language."Report PDF Invoice";
+            IF SalesInvoiceHeader.GET(DocumentNo) THEN
+              //FileName := SalesInvoiceHeader.TABLECAPTION + '_' + DocumentNo + '.pdf';
+              FileName := DocumentNo + '.pdf';
+          END;
+          Type::SalesShipment: BEGIN
+            Reportid := Language."Report PDF Shipment";
+            IF SalesShipmentHeader.GET(DocumentNo) THEN
+              //FileName := SalesShipmentHeader.TABLECAPTION + '_' + DocumentNo + '.pdf';
+              FileName := DocumentNo + '.pdf';
+          END;
+          Type::SalesCrMemoHeader: BEGIN
+            Reportid := Language."Report PDF Cr.Memo";
+            IF SalesCrMemoHeader.GET(DocumentNo) THEN
+              //FileName := SalesShipmentHeader.TABLECAPTION + '_' + DocumentNo + '.pdf';
+              FileName := DocumentNo + '.pdf';
+          END;
+        END;
+
+        // PDF Einstellungen festlegen
+        IF FileName <> '' THEN BEGIN
+          IF EXISTS(Language."PDF Temp File Path" + FileName) THEN
+            ERASE(Language."PDF Temp File Path" + FileName);
+
+          // PDF drucken
+          CASE Type OF
+            Type::SalesOrder: BEGIN
+              SalesHeader.SETRANGE("Document Type",SalesHeader."Document Type");
+              SalesHeader.SETRANGE("No.",SalesHeader."No.");
+              OK := REPORT.SAVEASPDF(Reportid,Language."PDF Temp File Path" + FileName,SalesHeader);
+            END;
+            Type::SalesInvoice: BEGIN
+              SalesInvoiceHeader.SETRANGE("No.",SalesInvoiceHeader."No.");
+              OK := REPORT.SAVEASPDF(Reportid,Language."PDF Temp File Path" + FileName,SalesInvoiceHeader);
+            END;
+            Type::SalesShipment: BEGIN
+              SalesShipmentHeader.SETRANGE("No.",SalesShipmentHeader."No.");
+              OK := REPORT.SAVEASPDF(Reportid,Language."PDF Temp File Path" + FileName,SalesShipmentHeader);
+            END;
+            Type::SalesCrMemoHeader: BEGIN
+              SalesCrMemoHeader.SETRANGE("No.",SalesCrMemoHeader."No.");
+              OK := REPORT.SAVEASPDF(Reportid,Language."PDF Temp File Path" + FileName,SalesCrMemoHeader);
+            END;
+          END;
+
+          IF OK THEN BEGIN
+            // PDF auf Webserver laden
+            i := 1;
+            WHILE i < 100 DO BEGIN
+              IF EXISTS(Language."PDF Temp File Path"+FileName) THEN BEGIN
+                UploadAttachment(Language."PDF Temp File Path"+FileName,FileName);
+                i := 100;
+              END ELSE BEGIN
+                SLEEP(500);
+                i += 1;
+              END;
+            END;
+
+            // Lokale PDF-Datei l�schen
+            IF EXISTS(Language."PDF Temp File Path"+FileName) THEN
+              ERASE(Language."PDF Temp File Path"+FileName);
+
+          END;
+          // Sprache zur�cksetzten
+          IF CurrLanguageId <> 0 THEN
+            GLOBALLANGUAGE(CurrLanguageId);
+
+        END;
+      END;
+    END;
+
+    PROCEDURE UploadAttachment@1000000067(Filename@1000000008 : Text[200];ServerFileName@1000000010 : Text[200]);
+    VAR
+      InputFile@1000000000 : File;
+      ConvertedFile@1000000001 : File;
+      InputFileInStr@1000000002 : InStream;
+      ConvertedFileOutStr@1000000004 : OutStream;
+      ConvertedFileInStr@1000000003 : InStream;
+      Data@1000000005 : Text[1024];
+      i@1000000006 : Integer;
+      TempData@1000000007 : Text[600];
+      FileRecord@1000000009 : Text[1024];
+      XMLHeader@1000000012 : Text[1024];
+      TempFilePath@1000000011 : Text[200];
+      LongText@1000000013 : Text;
+      Int@1000000014 : Integer;
+      Convert@1000000015 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      ClientFile@1000000016 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      Environment@1000000017 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Environment";
+    BEGIN
+      // Datei in tempor�res Webverzeichnis laden
+      {
+      InputFile.OPEN(Filename);
+      InputFile.CREATEINSTREAM(InputFileInStr);
+      ConvertedFile.CREATETEMPFILE;
+      ConvertedFile.CREATEOUTSTREAM(ConvertedFileOutStr);
+      Base64EncodeStream(InputFileInStr,ConvertedFileOutStr);
+      ConvertedFile.CREATEINSTREAM(ConvertedFileInStr);
+
+      CLEAR(FileRecord);
+      AddVar(FileRecord,'filename',ServerFileName);
+      AddVar(FileRecord,'action','create');
+      SendRequest('upload_attachment',FileRecord);
+
+      WHILE NOT (ConvertedFileInStr.EOS) DO BEGIN
+        CLEAR(FileRecord);
+        CLEAR(Data);
+        FOR i := 1 TO 8 DO BEGIN
+          ConvertedFileInStr.READTEXT(TempData);
+          Data += TempData;
+        END;
+        AddVar(FileRecord,'filename',ServerFileName);
+        AddVar(FileRecord,'action','write');
+        AddVar(FileRecord,'filedata',Data);
+        SendRequest('upload_attachment',FileRecord);
+      END;
+
+      CLEAR(FileRecord);
+      AddVar(FileRecord,'filename',ServerFileName);
+      AddVar(FileRecord,'action','convert');
+      SendRequest('upload_attachment',FileRecord);
+      }
+
+      // Neue Funktion von TH implementiert: FK 19.06.2012
+      WebshopSetup.GET;
+      //InputFile.OPEN(Filename);
+      //InputFile.CREATEINSTREAM(InputFileInStr);
+
+      TempFilePath := Environment.GetEnvironmentVariable('temp') + '\' + 'nav_attachment_' + FORMAT(RANDOM(10000000)) + '.xml';
+      ConvertedFile.CREATE(TempFilePath);
+
+      ConvertedFile.CREATEOUTSTREAM(ConvertedFileOutStr);
+
+      ConvertedFileOutStr.WRITETEXT('<?xml version="1.0" ?><file><pass>'+WebshopSetup."Server Synch. Password"+'</pass>');
+      ConvertedFileOutStr.WRITETEXT('<action>write</action>');
+      ConvertedFileOutStr.WRITETEXT('<filename>'+ServerFileName+'</filename>' + '<filedata>');
+
+      //Base64EncodeStream(InputFileInStr,ConvertedFileOutStr);
+      LongText := Convert.ToBase64String(ClientFile.ReadAllBytes(Filename));
+      ConvertedFileOutStr.WRITETEXT(LongText);
+      ConvertedFileOutStr.WRITETEXT('</filedata></file>');
+
+      ConvertedFile.CREATEINSTREAM(ConvertedFileInStr);
+      ConvertedFile.CLOSE;
+
+      CLEAR(FileRecord);
+      AddVar(FileRecord,'filename',ServerFileName);
+      AddVar(FileRecord,'action','create');
+      SendRequest('upload_attachment',FileRecord);
+
+
+      SendXMLRequest('upload_attachment',TempFilePath);
+
+      CLEAR(FileRecord);
+      AddVar(FileRecord,'filename',ServerFileName);
+      AddVar(FileRecord,'action','convert');
+      SendRequest('upload_attachment',FileRecord);
+
+      IF EXISTS(TempFilePath) THEN
+        ERASE(TempFilePath);
+    END;
+
+    PROCEDURE "--- Allgemein ---"@1000000008();
+    BEGIN
+    END;
+
+    PROCEDURE GetItemLink@1000000074(WebshopItem@1000000000 : Record 5447304) Link : Text[250];
+    VAR
+      CurrRec@1000000001 : Text[1024];
+      Shop@1000000002 : Record 5447301;
+      Language@1000000004 : Record 5447302;
+      Customer@1000000003 : Record 18;
+      CustomerNo@1000000005 : Code[20];
+    BEGIN
+      // Link auf einen Webshopartikel erzeugen
+
+      WITH WebshopItem DO BEGIN
+        Shop.GET("Shop Code");
+        Language.GET("Shop Code","Language Code");
+        Shop.TESTFIELD("Webshop URL");
+        IF (Shop."Shop Type" = Shop."Shop Type"::b2b) OR (Shop."Shop Type" = Shop."Shop Type"::salesperson) THEN BEGIN
+          Shop.TESTFIELD("Default Customer No. Login");
+          Customer.GET(Shop."Default Customer No. Login");
+          Customer.TESTFIELD("Has Webshop Login");
+          CustomerNo := Customer."No.";
+        END;
+        WebshopItem.TESTFIELD("Date Last Updated");
+        WebshopItem.TESTFIELD("Is Active");
+        AddVar(CurrRec,'company',COMPANYNAME);
+        AddVar(CurrRec,'shop_code',"Shop Code");
+        AddVar(CurrRec,'language_code',"Language Code");
+        IF CustomerNo <> '' THEN
+          AddVar(CurrRec,'customer_no',CustomerNo);
+        AddVar(CurrRec,'item_no',"Item No.");
+        Link := Shop."Webshop URL" + GetRequest('get_item_link',CurrRec);
+      END;
+    END;
+
+    PROCEDURE InsertSalesLine@1000000041(SalesHeader@1000000001 : Record 36;VAR SalesLine@1000000009 : Record 37;Typ@1000000003 : 'Text,Item,G/L Account,Resource,Charge';No@1000000005 : Code[20];VariantCode@1000000007 : Code[10];Quantity@1000000006 : Decimal;UnitPrice@1000000008 : Decimal;Description@1000000002 : Text[50];IsCouponItem@1000000010 : Boolean;LineDiscount@1000000011 : Decimal;UnitOfMeasureCode@1000000012 : Code[10];ToShip@1000000013 : Boolean;ToInvoice@1000000014 : Boolean);
+    VAR
+      LastSalesLine@1000000000 : Record 37;
+      NewLineNo@1000000004 : Integer;
+      TransferExtendedText@1000000015 : Codeunit 378;
+    BEGIN
+      // Einf�gen einer Verkaufszeile
+
+      LastSalesLine.SETRANGE("Document Type",SalesHeader."Document Type");
+      LastSalesLine.SETRANGE("Document No.",SalesHeader."No.");
+      IF LastSalesLine.FINDLAST THEN
+        NewLineNo := LastSalesLine."Line No." + 10000
+      ELSE
+        NewLineNo := 10000;
+
+      SalesLine.INIT;
+      SalesLine.VALIDATE("Document Type",SalesHeader."Document Type");
+      SalesLine.VALIDATE("Document No.",SalesHeader."No.");
+      SalesLine.VALIDATE("Line No.",NewLineNo);
+      SalesLine.INSERT(TRUE);
+
+      CASE Typ OF
+        Typ::Text: BEGIN
+          SalesLine.VALIDATE(Type,SalesLine.Type::" ");
+          SalesLine.VALIDATE("No.",No);
+          IF Description <> '' THEN
+            SalesLine.VALIDATE(Description,Description);
+          IF TransferExtendedText.SalesCheckIfAnyExtText(SalesLine,TRUE) THEN
+            TransferExtendedText.InsertSalesExtText(SalesLine);
+        END;
+        Typ::Item: BEGIN
+          SalesLine.VALIDATE(Type,SalesLine.Type::Item);
+          SalesLine.VALIDATE("No.",No);
+          SalesLine.VALIDATE("Unit of Measure",UnitOfMeasureCode);
+          IF Description <> '' THEN
+            SalesLine.VALIDATE(Description,Description);
+          IF VariantCode <> '' THEN
+            SalesLine.VALIDATE("Variant Code",VariantCode);
+          SalesLine.VALIDATE(Quantity,Quantity);
+          //MB 2015.10.30 - Kampagnenmodul - Immer Wert aus Web nehmen!
+          //IF UnitPrice <> 0 THEN
+          SalesLine.VALIDATE("Unit Price",UnitPrice);
+          IF IsCouponItem=TRUE THEN
+            SalesLine.VALIDATE("Line Discount %",100)
+          ELSE IF LineDiscount > 0 THEN
+            SalesLine.VALIDATE("Line Discount %",LineDiscount);
+          IF ToInvoice THEN
+            SalesLine."Qty. to Invoice" := Quantity;
+          IF ToShip THEN
+            SalesLine."Qty. to Ship" := Quantity;
+        END;
+        Typ::"G/L Account": BEGIN
+          SalesLine.VALIDATE(Type,SalesLine.Type::"G/L Account");
+          SalesLine.VALIDATE("No.",No);
+          IF Description <> '' THEN
+            SalesLine.VALIDATE(Description,Description);
+          SalesLine.VALIDATE(Quantity,Quantity);
+          IF UnitPrice <> 0 THEN
+            SalesLine.VALIDATE("Unit Price",UnitPrice);
+          IF ToInvoice THEN
+            SalesLine."Qty. to Invoice" := Quantity;
+          IF ToShip THEN
+            SalesLine."Qty. to Ship" := Quantity;
+        END;
+        Typ::Resource: BEGIN
+          SalesLine.VALIDATE(Type,SalesLine.Type::Resource);
+          SalesLine.VALIDATE("No.",No);
+          IF Description <> '' THEN
+            SalesLine.VALIDATE(Description,Description);
+          SalesLine.VALIDATE(Quantity,Quantity);
+          IF UnitPrice <> 0 THEN
+            SalesLine.VALIDATE("Unit Price",UnitPrice);
+          IF ToInvoice THEN
+            SalesLine."Qty. to Invoice" := Quantity;
+          IF ToShip THEN
+            SalesLine."Qty. to Ship" := Quantity;
+        END;
+        Typ::Charge: BEGIN
+          SalesLine.VALIDATE(Type,SalesLine.Type::"Charge (Item)");
+          SalesLine.VALIDATE("No.",No);
+          IF Description <> '' THEN
+            SalesLine.VALIDATE(Description,Description);
+          SalesLine.VALIDATE(Quantity,Quantity);
+          IF UnitPrice <> 0 THEN
+            SalesLine.VALIDATE("Unit Price",UnitPrice);
+          IF ToInvoice THEN
+            SalesLine."Qty. to Invoice" := Quantity;
+          IF ToShip THEN
+            SalesLine."Qty. to Ship" := Quantity;
+        END;
+      END;
+
+      SalesLine.MODIFY(TRUE);
+    END;
+
+    PROCEDURE CalculateOnlineDiscount@1000000052(SalesHeader@1000000000 : Record 36);
+    VAR
+      Shop@1000000002 : Record 5447301;
+      ShopLanguage@1000000006 : Record 5447302;
+      SalesLine@1000000001 : Record 37;
+      StandardText@1000000003 : Record 7;
+      OnlineDiscountAmount@1000000004 : Decimal;
+      OrderAmount@1000000005 : Decimal;
+    BEGIN
+      // Online-Rabatt berechnen
+      {
+      OnlineDiscountAmount := 0;
+      OrderAmount := 0;
+      WebshopSetup.GET;
+      IF Shop.GET(SalesHeader."Webshop Shop Code") THEN BEGIN
+        IF ShopLanguage.GET(SalesHeader."Webshop Shop Code",SalesHeader."Webshop Language Code") THEN BEGIN
+          SalesLine.SETRANGE("Document Type",SalesHeader."Document Type");
+          SalesLine.SETRANGE("Document No.",SalesHeader."No.");
+          SalesLine.SETRANGE(Type,SalesLine.Type::Item);
+          IF SalesLine.FINDSET THEN REPEAT
+            IF SalesLine."Qty. to Invoice" <> 0 THEN
+              OrderAmount += SalesLine."Line Amount" / SalesLine.Quantity * SalesLine."Qty. to Invoice";
+          UNTIL SalesLine.NEXT = 0;
+          SalesLine.SETRANGE(Type,SalesLine.Type::"G/L Account");
+          SalesLine.SETRANGE("No.",Shop."Online Discount");
+          SalesLine.SETFILTER("Outstanding Quantity",'<>0');
+          StandardText.GET(ShopLanguage."Online Discount Text");
+          OnlineDiscountAmount := -ROUND(OrderAmount/100*Shop."Weborder Typ");
+          IF SalesLine.FINDFIRST THEN BEGIN
+            SalesLine.VALIDATE(Description,STRSUBSTNO(StandardText.Description,Shop."Weborder Typ"));
+            SalesLine.VALIDATE(Quantity,1);
+            SalesLine.VALIDATE("Unit Price",OnlineDiscountAmount);
+            SalesLine.MODIFY(TRUE);
+          END ELSE BEGIN
+            IF Shop."Weborder Typ" <> 0 THEN BEGIN
+              InsertSalesLine(SalesHeader,SalesLine,2,Shop."Online Discount",1,OnlineDiscountAmount,
+                              STRSUBSTNO(StandardText.Description,Shop."Weborder Typ"));
+            END;
+          END;
+        END;
+      END;
+      }
+    END;
+
+    PROCEDURE SetWebshopItemModified@1000000061(ItemNo@1000000000 : Code[20];UpdateAllWebshopItem@1000000006 : Boolean;UpdateParentItem@1000000004 : Boolean;UpdateVariants@1000000005 : Boolean);
+    VAR
+      WebshopItem@1000000001 : Record 5447304;
+      WebshopItemLink@1000000002 : Record 5447308;
+      WebshopItem2@1000000003 : Record 5447304;
+      WebshopItem3@1000000007 : Record 5447304;
+    BEGIN
+      // �nderungsdatum f�r Artikelaktualisierung setzten
+
+      WebshopItem.SETRANGE("Item No.",ItemNo);
+
+      IF NOT UpdateAllWebshopItem THEN BEGIN
+        IF WebshopItem.FINDFIRST THEN BEGIN
+          WebshopItem.SETRANGE("Shop Code",WebshopItem."Shop Code");
+          WebshopItem.SETRANGE("Language Code",WebshopItem."Language Code");
+        END;
+      END;
+
+      IF WebshopItem.FINDSET(FALSE,FALSE) THEN REPEAT
+        WebshopItem3.GET(WebshopItem."Shop Code",WebshopItem."Language Code",WebshopItem."Item No.");
+        WebshopItem3."Date Last Modified" := CURRENTDATETIME();
+        WebshopItem3."User Last Modification" := USERID;
+        WebshopItem3.MODIFY(FALSE);
+
+        // Zugeh�rige Varianten Aktualisieren
+        IF UpdateVariants THEN BEGIN
+          WebshopItemLink.SETRANGE("Item No.",WebshopItem."Item No.");
+          WebshopItemLink.SETRANGE("Shop Code",WebshopItem."Shop Code");
+          WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::Variant);
+          IF WebshopItemLink.FINDSET THEN REPEAT
+            WebshopItem2.SETRANGE("Shop Code",WebshopItemLink."Shop Code");
+            WebshopItem2.SETRANGE("Item No.",WebshopItemLink."Linked Item No.");
+            IF WebshopItem2.FINDSET THEN REPEAT
+              WebshopItem2."Date Last Modified" := CURRENTDATETIME();
+              WebshopItem2."User Last Modification" := USERID;
+              WebshopItem2.MODIFY;
+            UNTIL WebshopItem2.NEXT = 0;
+          UNTIL WebshopItemLink.NEXT = 0;
+        END;
+
+        // Zugeh�rigen Mutterartikel aktualisieren
+        IF UpdateParentItem THEN BEGIN
+          WebshopItemLink.SETRANGE("Item No.");
+          WebshopItemLink.SETRANGE(Type,WebshopItemLink.Type::Variant);
+          WebshopItemLink.SETRANGE("Shop Code",WebshopItem."Shop Code");
+          WebshopItemLink.SETRANGE("Linked Item No.",WebshopItem."Item No.");
+          IF WebshopItemLink.FINDSET THEN REPEAT
+            WebshopItem2.SETRANGE("Shop Code",WebshopItemLink."Shop Code");
+            WebshopItem2.SETRANGE("Item No.",WebshopItemLink."Item No.");
+            IF WebshopItem2.FINDSET THEN REPEAT
+              WebshopItem2."Date Last Modified" := CURRENTDATETIME();
+              WebshopItem2."User Last Modification" := USERID;
+              WebshopItem2.MODIFY;
+            UNTIL WebshopItem2.NEXT = 0;
+          UNTIL WebshopItemLink.NEXT = 0;
+        END;
+
+      UNTIL WebshopItem.NEXT = 0;
+    END;
+
+    PROCEDURE SetWebshopCategoryModified@1000000025(ShopCode@1000000000 : Code[20];LanguageCode@1000000008 : Code[20];LineNo@1000000009 : Integer);
+    VAR
+      WebshopCategory@1000000001 : Record 5447303;
+      WebshopCategory2@1000000003 : Record 5447303;
+      WebshopCategory3@1000000007 : Record 5447303;
+    BEGIN
+      // �nderungsdatum f�r Artikelaktualisierung setzten
+
+      WebshopCategory.SETRANGE("Shop Code",ShopCode);
+      WebshopCategory.SETRANGE("Language Code",LanguageCode);
+      WebshopCategory.SETRANGE("Line No.",LineNo);
+
+      IF WebshopCategory.FINDSET(FALSE,FALSE) THEN REPEAT
+        WebshopCategory3.GET(WebshopCategory."Shop Code",WebshopCategory."Language Code",WebshopCategory."Line No.");
+        WebshopCategory3."Last Date Modified" := CURRENTDATETIME();
+        WebshopCategory3.MODIFY(FALSE);
+
+      UNTIL WebshopCategory.NEXT = 0;
+    END;
+
+    PROCEDURE SetCustomerModified@5447301("CustomerNo."@1000000000 : Code[20]);
+    VAR
+      Customer@1000000001 : Record 18;
+      Customer2@1000000003 : Record 18;
+    BEGIN
+      // �nderungsdatum f�r Aktualisierung setzten
+
+      IF Customer.GET("CustomerNo.") THEN BEGIN
+        Customer2.GET("CustomerNo.");
+        Customer2."Date Last Modified (Webshop)" := CURRENTDATETIME;
+        Customer2.MODIFY(FALSE);
+      END;
+    END;
+
+    PROCEDURE GetNextWorkday@1000000021(Date@1000000001 : Date;Direction@1000000000 : '>,<') NewDate : Date;
+    VAR
+      DateFormulaString@1000000002 : Text[10];
+      CompanyInfo@1000000003 : Record 79;
+      CalendarManagement@1000000004 : Codeunit 7600;
+      NonWorkday@1000000005 : Boolean;
+      DateDscr@1000000006 : Text[30];
+      DateFormula@1000000007 : DateFormula;
+    BEGIN
+      //Gibt n�chsten oder letzen Werktag von Referenzdatum aus zur�ck
+      NewDate := Date;
+
+      IF Direction = Direction::">" THEN
+        DateFormulaString := '<+1D>'
+      ELSE
+        DateFormulaString := '<-1D>';
+
+      EVALUATE(DateFormula,DateFormulaString);
+
+      CompanyInfo.GET;
+      NonWorkday := CalendarManagement.CheckDateStatus(CompanyInfo."Base Calendar Code",NewDate,DateDscr);
+      WHILE NonWorkday DO BEGIN
+        NewDate := CALCDATE(DateFormula,NewDate);
+        NonWorkday := CalendarManagement.CheckDateStatus(CompanyInfo."Base Calendar Code",NewDate,DateDscr);
+      END;
+      EXIT(NewDate);
+    END;
+
+    PROCEDURE CalculateWebshopShippingOption@1000000026(ParaSalesHeader@1000000000 : Record 36;ParaShop@5447301 : Record 5447301;ParaLanguage@5447303 : Record 5447302);
+    VAR
+      WebshopShop@1000000001 : Record 5447301;
+      WebshopLanguage@1000000010 : Record 5447302;
+      WebshopItem@1000000002 : Record 5447304;
+      WebshopShippingOption@1000000003 : Record 5447311;
+      SalesHeader@1000000004 : Record 36;
+      SalesLine@1000000005 : Record 37;
+      Item@1000000009 : Record 27;
+      CountryRegion@1000000013 : Record 9;
+      PostCode@1000000018 : Record 225;
+      Customer@1000000019 : Record 18;
+      ItemAmount@1000000006 : Decimal;
+      ItemWeight@1000000007 : Decimal;
+      FilterString@1000000008 : Text;
+      ItemUnitOfMeasure@1000000011 : Record 5404;
+      BestPriceShippingLineNo@1000000012 : Integer;
+      BestPriceShipping@1000000015 : Decimal;
+      MaxShippingCategory@1000000014 : Integer;
+      SalesLineTyp@1000000016 : Integer;
+      CountryCode@1000000017 : Text;
+      AddLine@1000000020 : Boolean;
+      Text001@1000000021 : TextConst 'DEU=G�nstigste Versandoption ohne Versandkosten. Trotzdem einf�gen?;ENU=Cheapest Shipping Option without shipping cost. Insert Line?';
+      Text002@1000000022 : TextConst 'DEU=Summe Artikel �ber Freibetrag. Trotzdem einf�gen?;ENU=Item Amount greater than exemption. Insert Line?';
+      WebshopShippingOptions@5447300 : Page 5447355;
+      ShippingCost@5447302 : Decimal;
+      OptionString@5447305 : Text;
+      SelectedOption@5447304 : Integer;
+      DefaultNumber@5447307 : Integer;
+      i@5447306 : Integer;
+      Text003@5447308 : TextConst 'DEU=Versandoption w�hlen;ENU=Choose Shipping Option';
+      ShippingAmountText@5447309 : Text;
+    BEGIN
+
+      WITH SalesHeader DO BEGIN
+        IF GET(ParaSalesHeader."Document Type",ParaSalesHeader."No.") THEN BEGIN
+          IF WebshopShop.GET(ParaShop.Code) THEN BEGIN
+            IF WebshopLanguage.GET(ParaShop.Code,ParaLanguage.Code) THEN BEGIN
+              SalesLine.SETRANGE(SalesLine."Document Type","Document Type");
+              SalesLine.SETRANGE(SalesLine."Document No.","No.");
+              SalesLine.SETRANGE(SalesLine.Type,SalesLine.Type::Item);
+              ItemAmount := 0;
+              ItemWeight := 0;
+              MaxShippingCategory := 0;
+              IF SalesLine.FINDSET(FALSE,FALSE) THEN REPEAT
+                IF WebshopShop."Display Prices Incl. VAT" THEN BEGIN
+                  ItemAmount += (SalesLine."Amount Including VAT");
+                END ELSE
+                  ItemAmount += SalesLine."Line Amount";
+                IF Item.GET(SalesLine."No.") THEN BEGIN
+                  IF WebshopItem.GET(WebshopShop.Code,WebshopLanguage.Code,Item."No.") THEN BEGIN
+                    IF WebshopItem."Shipping Category" > MaxShippingCategory THEN
+                      MaxShippingCategory := WebshopItem."Shipping Category";
+                    IF ItemUnitOfMeasure.GET(Item."No.",WebshopItem."Unit of Measure Code") THEN BEGIN
+                      IF ItemUnitOfMeasure.Weight <> 0 THEN
+                        ItemWeight += (SalesLine.Quantity * ItemUnitOfMeasure.Weight)
+                      ELSE
+                        ItemWeight += (SalesLine.Quantity * Item."Gross Weight");
+                    END ELSE
+                      ItemWeight += (SalesLine.Quantity * Item."Gross Weight");
+                  END;
+                END;
+              UNTIL SalesLine.NEXT = 0;
+              IF (ItemAmount > 0) OR (ItemWeight > 0) THEN BEGIN
+                CountryCode := '';
+                Customer.GET("Sell-to Customer No.");
+
+                IF (PostCode.GET(Customer."Post Code",Customer.City)) AND (PostCode."Country/Region Code" <> '') THEN
+                  CountryCode := PostCode."Country/Region Code";
+
+                IF Customer."Country/Region Code" <> '' THEN
+                  CountryCode := Customer."Country/Region Code";
+
+                IF "Ship-to Country/Region Code" <> '' THEN
+                  CountryCode := "Ship-to Country/Region Code";
+
+                IF WebshopShop."Order Options Sorting" = WebshopShop."Order Options Sorting"::sorting THEN
+                  WebshopShippingOption.SETCURRENTKEY("Shop Code","Language Code",Sorting)
+                ELSE
+                  WebshopShippingOption.SETCURRENTKEY("Shop Code","Language Code","Shipping Cost");
+                WebshopShippingOption.FILTERGROUP(2);
+                WebshopShippingOption.SETRANGE(WebshopShippingOption."Is Active",TRUE);
+                WebshopShippingOption.SETRANGE(WebshopShippingOption."Shop Code",WebshopShop.Code);
+                WebshopShippingOption.SETRANGE(WebshopShippingOption."Language Code",WebshopLanguage.Code);
+                WebshopShippingOption.SETFILTER(WebshopShippingOption."Country Code",'%1|%2',CountryCode,'');
+                WebshopShippingOption.SETFILTER(WebshopShippingOption."Weight from",'<=%1|%2',ItemWeight,0);
+                WebshopShippingOption.SETFILTER(WebshopShippingOption."Weight to",'>=%1|%2',ItemWeight,0);
+                WebshopShippingOption.SETFILTER(WebshopShippingOption."Amount from",'<=%1|%2',ItemAmount,0);
+                WebshopShippingOption.SETFILTER(WebshopShippingOption."Amount to",'>=%1|%2',ItemAmount,0);
+                IF MaxShippingCategory = 0 THEN BEGIN
+                  WebshopShippingOption.SETFILTER(WebshopShippingOption."Max. Shipping Category",'%1',MaxShippingCategory);
+                END ELSE BEGIN
+                  WebshopShippingOption.SETFILTER(WebshopShippingOption."Max. Shipping Category",'>=%1',MaxShippingCategory);
+                END;
+                WebshopShippingOption.SETFILTER(WebshopShippingOption."Campaign Code",'%1','');
+                WebshopShippingOption.FILTERGROUP(0);
+                IF GUIALLOWED THEN BEGIN
+                  DefaultNumber := 1;
+                  IF WebshopShippingOption.COUNT > 1 THEN BEGIN
+                    i := 1;
+                    IF WebshopShippingOption.FINDSET THEN REPEAT
+                      IF i <> 1 THEN
+                        OptionString += ',';
+                      ShippingAmountText := CONVERTSTR(FORMAT(WebshopShippingOption."Shipping Cost",0,'<Precision,2:2><Standard Format,0>'),',','.');
+                      OptionString += WebshopShippingOption.Description + ' (+' + ShippingAmountText + ' �)';
+                      i += 1;
+                    UNTIL WebshopShippingOption.NEXT = 0;
+                    SelectedOption := DIALOG.STRMENU(OptionString,DefaultNumber,Text003);
+                  END ELSE BEGIN
+                    SelectedOption := 1;
+                  END;
+
+                  IF SelectedOption > 0 THEN BEGIN
+                    IF SelectedOption = 1 THEN
+                      WebshopShippingOption.FINDFIRST
+                    ELSE BEGIN
+                      WebshopShippingOption.RESET;
+                      IF WebshopShop."Order Options Sorting" = WebshopShop."Order Options Sorting"::sorting THEN
+                        WebshopShippingOption.SETCURRENTKEY("Shop Code","Language Code",Sorting)
+                      ELSE
+                        WebshopShippingOption.SETCURRENTKEY("Shop Code","Language Code","Shipping Cost");
+                      WebshopShippingOption.FILTERGROUP(2);
+                      WebshopShippingOption.SETRANGE(WebshopShippingOption."Shop Code",WebshopShop.Code);
+                      WebshopShippingOption.SETRANGE(WebshopShippingOption."Language Code",WebshopLanguage.Code);
+                      WebshopShippingOption.SETFILTER(WebshopShippingOption."Country Code",'%1|%2',CountryCode,'');
+                      WebshopShippingOption.SETFILTER(WebshopShippingOption."Weight from",'<=%1|%2',ItemWeight,0);
+                      WebshopShippingOption.SETFILTER(WebshopShippingOption."Weight to",'>=%1|%2',ItemWeight,0);
+                      WebshopShippingOption.SETFILTER(WebshopShippingOption."Amount from",'<=%1|%2',ItemAmount,0);
+                      WebshopShippingOption.SETFILTER(WebshopShippingOption."Amount to",'>=%1|%2',ItemAmount,0);
+                      IF MaxShippingCategory = 0 THEN BEGIN
+                        WebshopShippingOption.SETFILTER(WebshopShippingOption."Max. Shipping Category",'%1',MaxShippingCategory);
+                      END ELSE BEGIN
+                        WebshopShippingOption.SETFILTER(WebshopShippingOption."Max. Shipping Category",'>=%1',MaxShippingCategory);
+                      END;
+                      WebshopShippingOption.SETFILTER(WebshopShippingOption."Campaign Code",'%1','');
+                      WebshopShippingOption.FILTERGROUP(0);
+                      i := 1;
+                      IF WebshopShippingOption.FINDSET THEN REPEAT
+                        i += 1;
+                      UNTIL (SelectedOption=i) OR (WebshopShippingOption.NEXT = 0);
+                    END;
+                    ShippingCost := WebshopShippingOption."Shipping Cost";
+                    IF (ItemAmount >= WebshopShippingOption.Exemption) AND (WebshopShippingOption.Exemption > 0) THEN
+                      ShippingCost := 0;
+                    CASE WebshopShop."Posting Type Disc. / Markups" OF
+                      WebshopShop."Posting Type Disc. / Markups"::Item: SalesLineTyp := 1;
+                      WebshopShop."Posting Type Disc. / Markups"::"G/L Account": SalesLineTyp := 2;
+                      WebshopShop."Posting Type Disc. / Markups"::Resource: SalesLineTyp := 3;
+                      WebshopShop."Posting Type Disc. / Markups"::Charge: SalesLineTyp := 4;
+                    END;
+                    WebshopShop.TESTFIELD("Sales No. Shipping Cost");
+                    //Leerzeile
+                    SalesLine.RESET;
+                    InsertSalesLine(SalesHeader,SalesLine,0,'','',0,0,'',FALSE,0,'',FALSE,FALSE);
+                    InsertSalesLine(SalesHeader,SalesLine,SalesLineTyp,WebshopShop."Sales No. Shipping Cost",'',1,
+                                  ShippingCost,WebshopShippingOption.Description,FALSE,0,'',TRUE,TRUE);
+                  END;
+      //            IF PAGE.RUNMODAL(5447355,WebshopShippingOption) = ACTION::LookupOK THEN BEGIN
+      //              ShippingCost := WebshopShippingOption."Shipping Cost";
+      //              IF ItemAmount >= WebshopShippingOption.Exemption THEN
+      //                ShippingCost := 0;
+      //              CASE WebshopShop."Typ Discounts/Costs" OF
+      //                WebshopShop."Typ Discounts/Costs"::Item: SalesLineTyp := 1;
+      //                WebshopShop."Typ Discounts/Costs"::"G/L Account": SalesLineTyp := 2;
+      //                WebshopShop."Typ Discounts/Costs"::Resource: SalesLineTyp := 3;
+      //                WebshopShop."Typ Discounts/Costs"::Charge: SalesLineTyp := 4;
+      //              END;
+      //              WebshopShop.TESTFIELD("Sales No. Shipping Cost");
+      //              //Leerzeile
+      //              SalesLine.RESET;
+      //              InsertSalesLine(SalesHeader,SalesLine,0,'','',0,0,'',FALSE,0,'',FALSE,FALSE);
+      //              InsertSalesLine(SalesHeader,SalesLine,SalesLineTyp,WebshopShop."Sales No. Shipping Cost",'',1,
+      //                            ShippingCost,WebshopShippingOption.Description,FALSE,0,'',TRUE,TRUE);
+      //            END;
+                END ELSE BEGIN
+                  IF WebshopShippingOption.FINDFIRST THEN BEGIN
+                    ShippingCost := WebshopShippingOption."Shipping Cost";
+                    IF ItemAmount >= WebshopShippingOption.Exemption THEN
+                      ShippingCost := 0;
+                    CASE WebshopShop."Posting Type Disc. / Markups" OF
+                      WebshopShop."Posting Type Disc. / Markups"::Item: SalesLineTyp := 1;
+                      WebshopShop."Posting Type Disc. / Markups"::"G/L Account": SalesLineTyp := 2;
+                      WebshopShop."Posting Type Disc. / Markups"::Resource: SalesLineTyp := 3;
+                      WebshopShop."Posting Type Disc. / Markups"::Charge: SalesLineTyp := 4;
+                    END;
+                    WebshopShop.TESTFIELD("Sales No. Shipping Cost");
+                    //Leerzeile
+                    SalesLine.RESET;
+                    InsertSalesLine(SalesHeader,SalesLine,0,'','',0,0,'',FALSE,0,'',FALSE,FALSE);
+                    InsertSalesLine(SalesHeader,SalesLine,SalesLineTyp,WebshopShop."Sales No. Shipping Cost",'',1,
+                                  ShippingCost,WebshopShippingOption.Description,FALSE,0,'',TRUE,TRUE);
+                  END;
+                END;
+              END;
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE "--- Fortschrittsbalken ---"@1000000001();
+    BEGIN
+    END;
+
+    PROCEDURE StateIndicatorOpen@1000000014(Title@1000 : Text[250]);
+    VAR
+      MaxTextLength@1001 : Integer;
+    BEGIN
+      IF GUIALLOWED THEN BEGIN
+        CLEAR(MainTableCount);
+        NoOfMainTable := 0;
+        NoOfMainRecord := 0;
+        NoOfMainRecord2 := 0;
+        NoOfMainRecord3 := 0;
+        NoOfRecords := 0;
+        RecordNo := 0;
+        NewProgress := 0;
+        OldProgress := 0;
+        NewProgress2 := 0;
+        OldProgress2 := 0;
+        NextRecordNo := 0;
+        Title := DELCHR(Title,'>',' .');
+        Title := DELCHR(Title,'<',' ');
+        IF Title = '' THEN
+          Title := Text55000;
+        MaxTextLength := STRLEN(Text55001);
+        IF STRLEN(Text55002) > MaxTextLength THEN
+          MaxTextLength := STRLEN(Text55002);
+        IF STRLEN(Text55003) > MaxTextLength THEN
+          MaxTextLength := STRLEN(Text55003);
+        IF STRLEN(Text55004) > MaxTextLength THEN
+          MaxTextLength := STRLEN(Text55004);
+        Window.OPEN(
+          Title +'...\\' +
+          PADSTR(Text55001,MaxTextLength,' ') + '  @1@@@@@@@@@@@@@\' +
+          PADSTR(Text55002,MaxTextLength,' ') + '  #2#######################\' +
+          PADSTR(Text55003,MaxTextLength,' ') + '  #3######\' +
+          PADSTR(Text55004,MaxTextLength,' ') + '  @4@@@@@@@@@@@@@');
+      END;
+    END;
+
+    PROCEDURE StateIndicatorNewTable@75(TableCaption@1000 : Text[250];RecordCount@1001 : Integer);
+    VAR
+      i@1002 : Integer;
+    BEGIN
+      IF GUIALLOWED THEN BEGIN
+        IF MainRecord THEN BEGIN
+          NoOfMainRecord2 := NoOfMainRecord2 + NoOfMainRecord3;
+          MainRecord := FALSE;
+        END;
+        Window.UPDATE(2,TableCaption);
+        Window.UPDATE(3,RecordCount);
+        Window.UPDATE(4,0);
+        OldProgress := 0;
+        RecordNo := 0;
+        NoOfRecords := RecordCount;
+        NextRecordNo := 0;
+        IF (NoOfMainRecord <> 0) AND (RecordCount <> 0) THEN
+          FOR i := 1 TO NoOfMainTable DO
+            IF MainTableCaption[i] = TableCaption THEN BEGIN
+              MainRecord := TRUE;
+              NoOfMainRecord3 := MainTableCount[i];
+              MainTableCaption[i] := '';
+              EXIT;
+            END;
+      END;
+    END;
+
+    PROCEDURE StateIndicatorUpdate@76();
+    BEGIN
+      IF GUIALLOWED THEN BEGIN
+        IF RecordNo >= NoOfRecords THEN
+          EXIT;
+        RecordNo := RecordNo + 1;
+        IF RecordNo < NextRecordNo THEN
+          EXIT;
+        NextRecordNo := NextRecordNo + ROUND(NoOfRecords / 100,1);
+        NewProgress := ROUND(RecordNo / NoOfRecords * 100,1);
+        IF NewProgress <> OldProgress THEN BEGIN
+          OldProgress := NewProgress;
+          Window.UPDATE(4,NewProgress * 100);
+          IF MainRecord THEN BEGIN
+            NewProgress2 := ROUND((NoOfMainRecord2 + RecordNo) / NoOfMainRecord * 100,1);
+            IF (NewProgress2 > OldProgress2) AND (NewProgress2 <= 100) THEN BEGIN
+              OldProgress2 := NewProgress2;
+              Window.UPDATE(1,NewProgress2 * 100);
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE StateIndicatorRegisterTable@77(TableCaption@1000 : Text[250];RecordCount@1001 : Integer);
+    BEGIN
+      IF GUIALLOWED THEN BEGIN
+        NoOfMainTable := NoOfMainTable + 1;
+        MainTableCaption[NoOfMainTable] := TableCaption;
+        MainTableCount[NoOfMainTable] := RecordCount;
+        NoOfMainRecord := NoOfMainRecord + RecordCount;
+      END;
+    END;
+
+    PROCEDURE StateIndicatorClose@1();
+    BEGIN
+      IF GUIALLOWED THEN BEGIN
+        Window.CLOSE;
+        CLEAR(MainTableCount);
+        NoOfMainTable := 0;
+        NoOfMainRecord := 0;
+        NoOfMainRecord2 := 0;
+        NoOfMainRecord3 := 0;
+        NoOfRecords := 0;
+        RecordNo := 0;
+        NewProgress := 0;
+        OldProgress := 0;
+        NewProgress2 := 0;
+        OldProgress2 := 0;
+        NextRecordNo := 0;
+      END;
+    END;
+
+    PROCEDURE "--- Stingkonvertierung ---"@1000000005();
+    BEGIN
+    END;
+
+    PROCEDURE Explode@1000000042(VAR TextRecord@1000000000 : Text[1024];Delimiter@1000000003 : Text[30]) TextField : Text[1024];
+    VAR
+      Pos@1000000001 : Integer;
+    BEGIN
+      Pos := STRPOS(TextRecord,Delimiter);
+      IF Pos <> 0 THEN BEGIN
+        TextField := (COPYSTR(TextRecord,1,Pos-1));
+        TextRecord := (COPYSTR(TextRecord,Pos+STRLEN(Delimiter)));
+      END ELSE BEGIN
+        TextField := TextRecord;
+        TextRecord := '';
+      END;
+    END;
+
+    PROCEDURE ExplodeByLenght@1000000024(VAR TextRecord@1000000000 : Text[1024];Pos@1000000003 : Integer) TextField : Text[1024];
+    BEGIN
+      IF Pos < STRLEN(TextRecord) THEN BEGIN
+        TextField := (COPYSTR(TextRecord,1,Pos-1));
+        TextRecord := (COPYSTR(TextRecord,Pos));
+      END ELSE BEGIN
+        TextField := TextRecord;
+        TextRecord := '';
+      END;
+    END;
+
+    PROCEDURE URLEncode@1000000003(ASCIIText@1000000000 : Text[1024]) HTTPText : Text[1024];
+    VAR
+      Char@1000000001 : Char;
+      CharInt@1000000002 : Integer;
+      i@1000000003 : Integer;
+    BEGIN
+      CLEAR(HTTPText);
+      //ASCIIText := ConvertText(ASCIIText,TRUE);
+      FOR i := 1 TO STRLEN(ASCIIText) DO BEGIN
+        Char := ASCIIText[i];
+        CharInt := Char;
+        HTTPText := HTTPText + URLEncodeCharset(CharInt);
+      END;
+    END;
+
+    PROCEDURE URLEncodeCharset@1000000002(Int@1000000000 : Integer) Hex : Text[10];
+    BEGIN
+      CASE Int OF
+        0:Hex:='';
+        1:Hex:='%E2%98%BA';
+        2:Hex:='%E2%98%BB';
+        3:Hex:='%E2%99%A5';
+        4:Hex:='%E2%99%A6';
+        5:Hex:='%E2%99%A3';
+        6:Hex:='%E2%99%A0';
+        7:Hex:='%E2%80%A2';
+        8:Hex:='%E2%97%98';
+        9:Hex:='%E2%97%8B';
+        10:Hex:='%E2%97%99';
+        11:Hex:='%E2%99%82';
+        12:Hex:='%E2%99%80';
+        13:Hex:='%E2%99%AA';
+        14:Hex:='%E2%99%AB';
+        15:Hex:='%E2%98%BC';
+        16:Hex:='%E2%96%BA';
+        17:Hex:='%E2%97%84';
+        18:Hex:='%E2%86%95';
+        19:Hex:='%E2%80%BC';
+        20:Hex:='%C2%B6';
+        21:Hex:='%C2%A7';
+        22:Hex:='%E2%96%AC';
+        23:Hex:='%E2%86%A8';
+        24:Hex:='%E2%86%91';
+        25:Hex:='%E2%86%93';
+        26:Hex:='%E2%86%92';
+        27:Hex:='%E2%86%90';
+        28:Hex:='%E2%88%9F';
+        29:Hex:='%E2%86%94';
+        30:Hex:='%E2%96%B2';
+        31:Hex:='%E2%96%BC';
+        32:Hex:='+';
+        33:Hex:='%21';
+        34:Hex:='%22';
+        35:Hex:='%23';
+        36:Hex:='%24';
+        37:Hex:='%25';
+        38:Hex:='%26';
+        39:Hex:='%27';
+        40:Hex:='%28';
+        41:Hex:='%29';
+        42:Hex:='%2A';
+        43:Hex:='%2B';
+        44:Hex:=',';
+        45:Hex:='-';
+        46:Hex:='%2E';
+        47:Hex:='%2F';
+        48:Hex:='0';
+        49:Hex:='1';
+        50:Hex:='2';
+        51:Hex:='3';
+        52:Hex:='4';
+        53:Hex:='5';
+        54:Hex:='6';
+        55:Hex:='7';
+        56:Hex:='8';
+        57:Hex:='9';
+        58:Hex:='%3A';
+        59:Hex:=';';
+        60:Hex:='%3C';
+        61:Hex:='%3D';
+        62:Hex:='%3E';
+        63:Hex:='%3F';
+        64:Hex:='@';
+        65:Hex:='A';
+        66:Hex:='B';
+        67:Hex:='C';
+        68:Hex:='D';
+        69:Hex:='E';
+        70:Hex:='F';
+        71:Hex:='G';
+        72:Hex:='H';
+        73:Hex:='I';
+        74:Hex:='J';
+        75:Hex:='K';
+        76:Hex:='L';
+        77:Hex:='M';
+        78:Hex:='N';
+        79:Hex:='O';
+        80:Hex:='P';
+        81:Hex:='Q';
+        82:Hex:='R';
+        83:Hex:='S';
+        84:Hex:='T';
+        85:Hex:='U';
+        86:Hex:='V';
+        87:Hex:='W';
+        88:Hex:='X';
+        89:Hex:='Y';
+        90:Hex:='Z';
+        91:Hex:='[';
+        92:Hex:='%5C';
+        93:Hex:=']';
+        94:Hex:='%5E';
+        95:Hex:='_';
+        96:Hex:='%60';
+        97:Hex:='a';
+        98:Hex:='b';
+        99:Hex:='c';
+        100:Hex:='d';
+        101:Hex:='e';
+        102:Hex:='f';
+        103:Hex:='g';
+        104:Hex:='h';
+        105:Hex:='i';
+        106:Hex:='j';
+        107:Hex:='k';
+        108:Hex:='l';
+        109:Hex:='m';
+        110:Hex:='n';
+        111:Hex:='o';
+        112:Hex:='p';
+        113:Hex:='q';
+        114:Hex:='r';
+        115:Hex:='s';
+        116:Hex:='t';
+        117:Hex:='u';
+        118:Hex:='v';
+        119:Hex:='w';
+        120:Hex:='x';
+        121:Hex:='y';
+        122:Hex:='z';
+        123:Hex:='%7B';
+        124:Hex:='%7C';
+        125:Hex:='%7D';
+        126:Hex:='%7E';
+        127:Hex:='';
+        128:Hex:='%E2%82%AC';
+        129:Hex:='';
+        130:Hex:='%E2%80%9A';
+        131:Hex:='%C6%92';
+        132:Hex:='%E2%80%9E';
+        133:Hex:='%E2%80%A6';
+        134:Hex:='%E2%80%A0';
+        135:Hex:='%E2%80%A1';
+        136:Hex:='%CB%86';
+        137:Hex:='%E2%80%B0';
+        138:Hex:='%C5%A0';
+        139:Hex:='%E2%80%B9';
+        140:Hex:='%C5%92';
+        141:Hex:='';
+        142:Hex:='';
+        143:Hex:='';
+        144:Hex:='%C2%90';
+        145:Hex:='%E2%80%98';
+        146:Hex:='%E2%80%99';
+        147:Hex:='%E2%80%9C';
+        148:Hex:='%E2%80%9D';
+        149:Hex:='%E2%80%A2';
+        150:Hex:='-';
+        151:Hex:='%E2%80%94';
+        152:Hex:='%CB%9C';
+        153:Hex:='%E2%84%A2';
+        154:Hex:='%C5%A1';
+        155:Hex:='%E2%80%BA';
+        156:Hex:='%C5%93';
+        157:Hex:='';
+        158:Hex:='%C5%BE';
+        159:Hex:='%C5%B8';
+        160:Hex:='';
+        161:Hex:='%C2%A1';
+        162:Hex:='%%C2%A2';
+        163:Hex:='%C2%A3';
+        164:Hex:='%C2%A4';
+        165:Hex:='%C2%A5';
+        166:Hex:='%C2%A6';
+        167:Hex:='%C2%A7';
+        168:Hex:='%C2%A8';
+        169:Hex:='%C2%A9';
+        170:Hex:='%C2%AA';
+        171:Hex:='%C2%AB';
+        172:Hex:='%C2%AC';
+        173:Hex:='';
+        174:Hex:='%C2%AE';
+        175:Hex:='%C2%AF';
+        176:Hex:='%C2%B0';
+        177:Hex:='%C2%B1';
+        178:Hex:='%C2%B2';
+        179:Hex:='%C2%B3';
+        180:Hex:='%C2%B4';
+        181:Hex:='%C2%B5';
+        182:Hex:='%C25B6';
+        183:Hex:='%C2%B7';
+        184:Hex:='%C2%B8';
+        185:Hex:='%C2%B9';
+        186:Hex:='%C2%BA';
+        187:Hex:='%C2%BB';
+        188:Hex:='%C2%BC';
+        189:Hex:='%C2%BD';
+        190:Hex:='%C2%BE';
+        191:Hex:='%C2%BF';
+        192:Hex:='%C3%80';
+        193:Hex:='%C3%81';
+        194:Hex:='%C3%82';
+        195:Hex:='%C3%83';
+        196:Hex:='%C3%84';
+        197:Hex:='%C3%85';
+        198:Hex:='%C3%86';
+        199:Hex:='%C3%87';
+        200:Hex:='%C3%88';
+        201:Hex:='%C3%89';
+        202:Hex:='%C3%8A';
+        203:Hex:='%C3%8B';
+        204:Hex:='%C3%8C';
+        205:Hex:='%C3%8D';
+        206:Hex:='%C3%8E';
+        207:Hex:='%C3%8F';
+        208:Hex:='%C3%90';
+        209:Hex:='%C3%91';
+        210:Hex:='%C3%92';
+        211:Hex:='%C3%93';
+        212:Hex:='%C3%94';
+        213:Hex:='%C3%95';
+        214:Hex:='%C3%96';
+        215:Hex:='%C3%97';
+        216:Hex:='%C3%98';
+        217:Hex:='%C3%99';
+        218:Hex:='%C3%9A';
+        219:Hex:='%C3%9B';
+        220:Hex:='%C3%9C';
+        221:Hex:='%C3%9D';
+        222:Hex:='%C3%9E';
+        223:Hex:='%C3%9F';
+        224:Hex:='%C3%A0';
+        225:Hex:='%C3%A1';
+        226:Hex:='%C3%A2';
+        227:Hex:='%C3%A3';
+        228:Hex:='%C3%A4';
+        229:Hex:='%C3%A5';
+        230:Hex:='%C3%A6';
+        231:Hex:='%C3%A7';
+        232:Hex:='%C3%A8';
+        233:Hex:='%C3%A9';
+        234:Hex:='%C3%AA';
+        235:Hex:='%C3%AB';
+        236:Hex:='%C3%AC';
+        237:Hex:='%C3%AD';
+        238:Hex:='%C3%AE';
+        239:Hex:='%C3%AF';
+        240:Hex:='%C3%B0';
+        241:Hex:='%C3%B1';
+        242:Hex:='%C3%B2';
+        243:Hex:='%C3%B3';
+        244:Hex:='%C3%B4';
+        245:Hex:='%C3%B5';
+        246:Hex:='%C3%B6';
+        247:Hex:='%C3%B7';
+        248:Hex:='%C3%B8';
+        249:Hex:='%C3%B9';
+        250:Hex:='%C3%BA';
+        251:Hex:='%C3%BB';
+        252:Hex:='%C3%BC';
+        253:Hex:='%C3%BD';
+        254:Hex:='%C3%BE';
+        255:Hex:='%C3%BF';
+        7838:Hex:='%E1%BA%9E';
+        8364:Hex:='%E2%82%AC';
+      END;
+    END;
+
+    PROCEDURE InitCharAscii@7(VAR Text@1002 : Text[191]);
+    VAR
+      Counter@1000 : Integer;
+      Char@1001 : Char;
+    BEGIN
+      Text := '';
+
+      FOR Counter := 1 TO 191 DO BEGIN
+        Char := Counter + 64;
+        Text[Counter] := Char;
+      END;
+    END;
+
+    PROCEDURE InitCharAnsi@8(VAR Text@1002 : Text[191]);
+    VAR
+      Counter@1001 : Integer;
+      Char@1000 : Char;
+    BEGIN
+      Text := '';
+
+      FOR Counter := 1 TO 63 DO BEGIN
+        Char := Counter + 64;
+        Text[Counter] := Char;
+      END;
+
+      Text[64] := 199;
+      Text[65] := 252;
+      Text[66] := 233;
+      Text[67] := 226;
+      Text[68] := 228;
+      Text[69] := 224;
+      Text[70] := 229;
+      Text[71] := 231;
+      Text[72] := 234;
+      Text[73] := 235;
+      Text[74] := 232;
+      Text[75] := 239;
+      Text[76] := 238;
+      Text[77] := 236;
+      Text[78] := 196;
+      Text[79] := 197;
+      Text[80] := 201;
+      Text[81] := 230;
+      Text[82] := 198;
+      Text[83] := 244;
+      Text[84] := 246;
+      Text[85] := 242;
+      Text[86] := 251;
+      Text[87] := 249;
+      Text[88] := 255;
+      Text[89] := 214;
+      Text[90] := 220;
+      Text[91] := 248;
+      Text[92] := 163;
+      Text[93] := 216;
+      Text[94] := 215;
+      Text[95] := 131;
+      Text[96] := 225;
+      Text[97] := 237;
+      Text[98] := 243;
+      Text[99] := 250;
+      Text[100] := 241;
+      Text[101] := 209;
+      Text[102] := 170;
+      Text[103] := 186;
+      Text[104] := 191;
+      Text[105] := 174;
+      Text[106] := 172;
+      Text[107] := 189;
+      Text[108] := 188;
+      Text[109] := 161;
+      Text[110] := 171;
+      Text[111] := 187;
+      Text[112] := 128;
+      Text[113] := 129;
+      Text[114] := 130;
+      Text[115] := 132;
+      Text[116] := 133;
+      Text[117] := 193;
+      Text[118] := 194;
+      Text[119] := 192;
+      Text[120] := 169;
+      Text[121] := 134;
+      Text[122] := 135;
+      Text[123] := 136;
+      Text[124] := 137;
+      Text[125] := 162;
+      Text[126] := 165;
+      Text[127] := 138;
+      Text[128] := 139;
+      Text[129] := 140;
+      Text[130] := 141;
+      Text[131] := 142;
+      Text[132] := 143;
+      Text[133] := 144;
+      Text[134] := 227;
+      Text[135] := 195;
+      Text[136] := 145;
+      Text[137] := 146;
+      Text[138] := 147;
+      Text[139] := 148;
+      Text[140] := 149;
+      Text[141] := 150;
+      Text[142] := 151;
+      Text[143] := 164;
+      Text[144] := 240;
+      Text[145] := 208;
+      Text[146] := 202;
+      Text[147] := 203;
+      Text[148] := 200;
+      Text[149] := 152;
+      Text[150] := 205;
+      Text[151] := 206;
+      Text[152] := 207;
+      Text[153] := 153;
+      Text[154] := 154;
+      Text[155] := 155;
+      Text[156] := 156;
+      Text[157] := 166;
+      Text[158] := 204;
+      Text[159] := 157;
+      Text[160] := 211;
+      Text[161] := 223;
+      Text[162] := 212;
+      Text[163] := 210;
+      Text[164] := 245;
+      Text[165] := 213;
+      Text[166] := 181;
+      Text[167] := 254;
+      Text[168] := 222;
+      Text[169] := 218;
+      Text[170] := 219;
+      Text[171] := 217;
+      Text[172] := 253;
+      Text[173] := 221;
+      Text[174] := 175;
+      Text[175] := 180;
+      Text[176] := 173;
+      Text[177] := 177;
+      Text[178] := 158;
+      Text[179] := 190;
+      Text[180] := 182;
+      Text[181] := 167;
+      Text[182] := 247;
+      Text[183] := 184;
+      Text[184] := 176;
+      Text[185] := 168;
+      Text[186] := 183;
+      Text[187] := 185;
+      Text[188] := 179;
+      Text[189] := 178;
+      Text[190] := 159;
+      Text[191] := 160;
+    END;
+
+    PROCEDURE ConvertText@12(Text@1001 : Text[1024];DosToWindows@1004 : Boolean) ConvertedText : Text[1024];
+    VAR
+      Ascii@1003 : Text[191];
+      Ansi@1000 : Text[191];
+    BEGIN
+      InitCharAscii(Ascii);
+      InitCharAnsi(Ansi);
+
+      IF DosToWindows THEN
+        ConvertedText := CONVERTSTR(Text,Ascii,Ansi)
+      ELSE
+        ConvertedText := CONVERTSTR(Text,Ansi,Ascii);
+    END;
+
+    PROCEDURE MD5@1112400000(Text@1112400001 : Text[1024]) : Text[32];
+    VAR
+      HashCalc@1000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Security.Cryptography.MD5";
+      Encoding@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Text.Encoding";
+      BitConverter@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.BitConverter";
+      ByteArray@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Array";
+      i@1004 : Integer;
+      HashStr@1005 : Text;
+    BEGIN
+      //HashCalc := HashCalc.Create;
+      //EXIT(Encoding.ASCII.GetString(HashCalc.ComputeHash(Encoding.UTF8.GetBytes(Text))));
+    END;
+
+    PROCEDURE Base64EncodeStream@1112400001(VAR inStr@1112400000 : InStream;VAR outStr@1112400001 : OutStream);
+    VAR
+      b@1112400002 : Binary[3];
+      nRead@1112400003 : Integer;
+      c@1112400004 : ARRAY [4] OF Char;
+      nWritten@1112400005 : Integer;
+      txt64Chars@1112400006 : Text[64];
+    BEGIN
+      {
+      txt64Chars := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      txt64Chars += 'abcdefghijklmnopqrstuvwxyz';
+      txt64Chars += '0123456789+/';
+
+      WHILE NOT inStr.EOS DO BEGIN
+        // read up to 3 bytes...
+        nRead := inStr.READ(b);
+
+        // zero out bytes not read...
+        IF nRead < 3 THEN
+          b[3] := 0;
+        IF nRead < 2 THEN
+          b[2] := 0;
+
+        // c[1] is high 6 bits of b[1]...
+        c[1] := b[1] DIV 4;
+
+        // c[2] is low 2 bits of b[1] and high 4 bits of b[2]...
+        c[2] := ((b[1] MOD 4) * 16) + (b[2] DIV 16);
+
+        // c[3] is low 4 bits of b[2] and high 2 bits of b[3]...
+        c[3] := ((b[2] MOD 16) * 4) + (b[3] DIV 64);
+
+        // c[4] is low 6 bits of b[3]...
+        c[4] := b[3] MOD 64;
+
+        // convert c[1..4] to the Base64Encoded char...
+        //c[1] := txt64Chars[c[1] + 1];
+        //c[2] := txt64Chars[c[2] + 1];
+        //IF nRead > 1 THEN
+        //  c[3] := txt64Chars[c[3] + 1]
+        //ELSE
+        //  c[3] := '=';
+        //IF nRead > 2 THEN
+        //  c[4] := txt64Chars[c[4] + 1]
+        //ELSE
+        //  c[4] := '=';
+
+        // write 'em out...
+        outStr.WRITE(c[1]);
+        outStr.WRITE(c[2]);
+        outStr.WRITE(c[3]);
+        outStr.WRITE(c[4]);
+        nWritten += 1;
+
+        // write a cr/lf every 72 chars...
+        IF nWritten = 18 THEN BEGIN
+          c[1] := 13;
+          outStr.WRITE(c[1]);
+          c[1] := 10;
+          outStr.WRITE(c[1]);
+          nWritten := 0;
+        END;
+      END;
+
+      // write the trailing cr/lf...
+      IF nWritten <> 0 THEN BEGIN
+        c[1] := 13;
+        outStr.WRITE(c[1]);
+        c[1] := 10;
+        outStr.WRITE(c[1]);
+      END;
+      }
+    END;
+
+    PROCEDURE Base64DecodeStream@1112400002(VAR inStr@1112400001 : InStream;VAR outStr@1112400000 : OutStream);
+    VAR
+      b@1112400002 : Binary[3];
+      c@1112400003 : ARRAY [4] OF Char;
+      idxChar@1112400004 : Integer;
+      inPos@1112400005 : Integer;
+      nEqualSigns@1112400006 : Integer;
+      txt64Chars@1112400007 : Text[64];
+      Text000@1112400008 : TextConst 'DEU=Ung�ltiges Zeichen "%1" an Position %2 festgestellt.;ENU=Invalid character ''''%1'''' encountered at position %2.';
+      Text001@1112400009 : TextConst 'DEU=Unerwarteten End-Of-Stream an Position %1 festgestellt.;ENU=Unexpected end-of-stream encountered at position %1.';
+    BEGIN
+      {
+      txt64Chars := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      txt64Chars += 'abcdefghijklmnopqrstuvwxyz';
+      txt64Chars += '0123456789+/';
+
+      inPos := 0;
+      WHILE NOT inStr.EOS DO BEGIN
+        // read 1st char (ignore leading white space)...
+        inStr.READ(c[1],1);
+        inPos += 1;
+        WHILE (c[1] IN [9, 10, 13, 32]) AND (NOT inStr.EOS) DO BEGIN
+          inStr.READ(c[1],1);
+          inPos += 1;
+        END;
+
+        IF NOT inStr.EOS THEN BEGIN
+          // check 1st char...
+          idxChar := STRPOS(txt64Chars, FORMAT(c[1]));
+          IF idxChar = 0 THEN
+            ERROR(Text000, FORMAT(c[1]), inPos);
+          c[1] := idxChar - 1;
+
+          // get/check 2nd char...
+          inStr.READ(c[2],1);
+          inPos += 1;
+          idxChar := STRPOS(txt64Chars, FORMAT(c[2]));
+          IF idxChar = 0 THEN
+            ERROR(Text000, FORMAT(c[2]), inPos);
+          c[2] := idxChar - 1;
+
+          // get/check 3rd char...
+          IF inStr.EOS THEN
+            ERROR(Text001, inPos);
+          inStr.READ(c[3],1);
+          inPos += 1;
+          nEqualSigns := 0;
+          IF c[3] = '=' THEN BEGIN
+            c[3] := 0;
+            nEqualSigns += 1;
+          END ELSE BEGIN
+            idxChar := STRPOS(txt64Chars, FORMAT(c[3]));
+            IF idxChar = 0 THEN
+              ERROR(Text000, FORMAT(c[3]), inPos);
+            c[3] := idxChar - 1;
+          END;
+
+          // get/check 4th char...
+          IF inStr.EOS THEN
+            ERROR(Text001, inPos);
+          inStr.READ(c[4],1);
+          inPos += 1;
+          IF (nEqualSigns > 0) AND (c[4] <> '=') THEN
+            ERROR(Text000, FORMAT(c[4]), inPos);
+          IF c[4] = '=' THEN BEGIN
+            c[4] := 0;
+            nEqualSigns += 1;
+          END ELSE BEGIN
+            idxChar := STRPOS(txt64Chars, FORMAT(c[4]));
+            IF idxChar = 0 THEN
+              ERROR(Text000, FORMAT(c[4]), inPos);
+            c[4] := idxChar - 1;
+          END;
+
+          // b[1] is c[1] and bits(5,6) of c[2]...
+          b[1] := (c[1] * 4) + (c[2] DIV 16);
+          outStr.WRITE(b[1]);
+
+          // b[2] is low 4 bits of c[2] and bits(3..6) of c[3]...
+          IF nEqualSigns < 2 THEN BEGIN
+            b[2] := ((c[2] MOD 16) * 16) + (c[3] DIV 4);
+            outStr.WRITE(b[2]);
+          END;
+
+          // b[3] is low 2 bits of c[3] and the 6 bits in c[4]...
+          IF nEqualSigns = 0 THEN BEGIN
+            b[3] := ((c[3] MOD 4) * 64) + c[4];
+            outStr.WRITE(b[3]);
+          END;
+        END;
+      END;
+      }
+    END;
+
+    PROCEDURE EncodeFF@1108800000(Text@1108800000 : Text[1024]) : Text[1024];
+    VAR
+      I@1108800001 : Integer;
+      J@1108800003 : Integer;
+      NewText@1108800002 : Text[1024];
+    BEGIN
+      FOR I := 1 TO STRLEN(Text) DO
+        IF I MOD 2 <> 0 THEN BEGIN
+          J += 1;
+          NewText[J] := 255 - Text[I];
+        END;
+      FOR I := STRLEN(Text) DOWNTO 2 DO
+        IF I MOD 2 = 0 THEN BEGIN
+          J += 1;
+          NewText[J] := 255 - Text[I];
+        END;
+      EXIT(NewText);
+    END;
+
+    PROCEDURE DecodeFF@1108800001(Text@1108800000 : Text[1024]) : Text[1024];
+    VAR
+      I@1108800001 : Integer;
+      J@1108800003 : Integer;
+      NewText@1108800002 : Text[1024];
+    BEGIN
+      FOR I := 1 TO STRLEN(Text) DO
+        IF I MOD 2 <> 0 THEN BEGIN
+          J += 1;
+          NewText[I] := 255 - Text[J];
+        END;
+      FOR I := STRLEN(Text) DOWNTO 2 DO
+        IF I MOD 2 = 0 THEN BEGIN
+          J += 1;
+          NewText[I] := 255 - Text[J];
+        END;
+      EXIT(NewText);
+    END;
+
+    PROCEDURE CodeHasSpecialChars@1000000048(Text@1000000000 : Code[20]) : Boolean;
+    VAR
+      SpecialChars@1000000001 : ARRAY [25] OF Code[1];
+      i@1000000002 : Integer;
+      Text001@1000000003 : TextConst 'DEU='';ENU=''';
+      Text002@1000000004 : TextConst 'DEU=�;ENU=�';
+    BEGIN
+      SpecialChars[1] := '�';
+      SpecialChars[2] := '�';
+      SpecialChars[3] := '�';
+      SpecialChars[4] := '�';
+      SpecialChars[5] := '�';
+      SpecialChars[6] := '\';
+      SpecialChars[7] := '/';
+      SpecialChars[8] := '$';
+      SpecialChars[9] := '�';
+      SpecialChars[10] := '!';
+      SpecialChars[11] := '(';
+      SpecialChars[12] := ')';
+      SpecialChars[13] := '%';
+      SpecialChars[14] := '<';
+      SpecialChars[15] := '>';
+      SpecialChars[16] := '|';
+      SpecialChars[17] := '.';
+      SpecialChars[18] := ',';
+      SpecialChars[19] := ';';
+      SpecialChars[20] := '#';
+      SpecialChars[21] := '?';
+      SpecialChars[22] := '&';
+      SpecialChars[23] := Text001;
+      SpecialChars[24] := Text002;
+
+      IF STRPOS(Text,' ') <> 0 THEN
+        EXIT(TRUE);
+
+      FOR i := 1 TO ARRAYLEN(SpecialChars) DO BEGIN
+        IF STRPOS(Text,SpecialChars[i]) <> 0 THEN
+          EXIT(TRUE);
+      END;
+    END;
+
+    PROCEDURE EncodeURIComponent@1200050003(uri@1200050000 : Text) encodedUri : Text;
+    VAR
+      HexDigits@1200050001 : Text[30];
+      AsciiStr@1200050006 : Text[250];
+      AnsiStr@1200050005 : Text[250];
+      i@1200050002 : Integer;
+      b@1200050003 : Char;
+      CharVar@1200050004 : ARRAY [32] OF Char;
+      by@1000000000 : Byte;
+    BEGIN
+      // No URI Encoding in NAV - we do it ourself...
+      HexDigits := '0123456789ABCDEF';
+      encodedUri := '';
+      AsciiStr := '����������������������������������������������������ݵ�����++��++--+-+��++--�-+';
+      AsciiStr := AsciiStr +'������i���++�_���������������������=�������������';
+      CharVar[1] := 196;
+      CharVar[2] := 197;
+      CharVar[3] := 201;
+      CharVar[4] := 242;
+      CharVar[5] := 220;
+      CharVar[6] := 186;
+      CharVar[7] := 191;
+      CharVar[8] := 188;
+      CharVar[9] := 187;
+      CharVar[10] := 193;
+      CharVar[11] := 194;
+      CharVar[12] := 192;
+      CharVar[13] := 195;
+      CharVar[14] := 202;
+      CharVar[15] := 203;
+      CharVar[16] := 200;
+      CharVar[17] := 205;
+      CharVar[18] := 206;
+      CharVar[19] := 204;
+      CharVar[20] := 175;
+      CharVar[21] := 223;
+      CharVar[22] := 213;
+      CharVar[23] := 254;
+      CharVar[24] := 218;
+      CharVar[25] := 219;
+      CharVar[26] := 217;
+      CharVar[27] := 180;
+      CharVar[28] := 177;
+      CharVar[29] := 176;
+      CharVar[30] := 185;
+      CharVar[31] := 179;
+      CharVar[32] := 178;
+      AnsiStr  := '��������������'+FORMAT(CharVar[1])+FORMAT(CharVar[2])+FORMAT(CharVar[3])+ '����'+FORMAT(CharVar[4]);
+      AnsiStr := AnsiStr + '����'+FORMAT(CharVar[5])+'�����ᡢ����'+FORMAT(CharVar[6])+FORMAT(CharVar[7]);
+      AnsiStr := AnsiStr + '���'+FORMAT(CharVar[8])+'��'+FORMAT(CharVar[9])+'___��' + FORMAT(CharVar[10])+FORMAT(CharVar[11]);
+      AnsiStr := AnsiStr + FORMAT(CharVar[12]) + '���++��++--+-+�' + FORMAT(CharVar[13]) + '++--�-+���';
+      AnsiStr  :=  AnsiStr +FORMAT(CharVar[14])+FORMAT(CharVar[15])+FORMAT(CharVar[16])+'i'+FORMAT(CharVar[17])+FORMAT(CharVar[18]);
+      AnsiStr  :=  AnsiStr + '�++__�' + FORMAT(CharVar[19])+FORMAT(CharVar[20])+'�'+FORMAT(CharVar[21])+'���';
+      AnsiStr  :=  AnsiStr + FORMAT(CharVar[22]) + '�' + FORMAT(CharVar[23]) + '�' + FORMAT(CharVar[24])+ FORMAT(CharVar[25]);
+      AnsiStr  :=  AnsiStr + FORMAT(CharVar[26]) + '���' + FORMAT(CharVar[27]) + '�' + FORMAT(CharVar[28]) +'=�����'+
+                             FORMAT(CharVar[29]);
+      AnsiStr  :=  AnsiStr + '��' + FORMAT(CharVar[30]) +FORMAT(CharVar[31]) +FORMAT(CharVar[32]) +'_ ';
+      uri := CONVERTSTR(uri,AsciiStr,AnsiStr);
+      FOR i:=1 TO STRLEN(uri) DO
+      BEGIN
+        by := uri[i];
+        b := uri[i];
+        IF (by IN [36,38,43,44,47,58,59,61,63,64,32,34,60,62,35,37,123,125,124,92,94,126,91,93,96]) OR
+           (by >= 128)
+        THEN BEGIN
+          encodedUri := encodedUri + '%  ';
+          encodedUri[STRLEN(encodedUri)-1] := HexDigits[(by DIV 16)+1];
+          encodedUri[STRLEN(encodedUri)] := HexDigits[(by MOD 16)+1];
+        END ELSE BEGIN
+           encodedUri := encodedUri + COPYSTR(uri,i,1);
+        END;
+      END;
+    END;
+
+    PROCEDURE StrReplace@1000000019(String@1000000002 : Text[250];Find@1000000001 : Text[250];Replace@1000000000 : Text[250]) NewString : Text[1024];
+    BEGIN
+      WHILE STRPOS(String,Find) > 0 DO
+        String := DELSTR(String,STRPOS(String,Find)) + Replace + COPYSTR(String,STRPOS(String,Find) + STRLEN(Find));
+      NewString := String;
+    END;
+
+    PROCEDURE URLEncodeReadable@1000000020(String@1000000000 : Text[800]) URLEncodedReadable : Text[1024];
+    VAR
+      ModifiedString@1000000001 : Text[1024];
+      Text001@1000000002 : TextConst 'DEU='';ENU=''';
+    BEGIN
+
+      ModifiedString := StrReplace(String,'�','Ae');
+      ModifiedString := StrReplace(ModifiedString,'�','ae');
+      ModifiedString := StrReplace(ModifiedString,'�','Oe');
+      ModifiedString := StrReplace(ModifiedString,'�','oe');
+      ModifiedString := StrReplace(ModifiedString,'�','Ue');
+      ModifiedString := StrReplace(ModifiedString,'�','ue');
+      ModifiedString := StrReplace(ModifiedString,'�','ss');
+      ModifiedString := StrReplace(ModifiedString,'%','proz');
+      ModifiedString := StrReplace(ModifiedString,'�','-Grad');
+      ModifiedString := StrReplace(ModifiedString,'/','-');
+      ModifiedString := StrReplace(ModifiedString,'\','-');
+      ModifiedString := StrReplace(ModifiedString,'.','-');
+      ModifiedString := StrReplace(ModifiedString,',','-');
+      ModifiedString := StrReplace(ModifiedString,';','-');
+      ModifiedString := StrReplace(ModifiedString,':','-');
+      ModifiedString := StrReplace(ModifiedString,'#','-');
+      ModifiedString := StrReplace(ModifiedString,' ','-');
+      ModifiedString := StrReplace(ModifiedString,Text001,'-');
+      ModifiedString := StrReplace(URLEncode(ModifiedString),'%2B','-');
+      ModifiedString := StrReplace(ModifiedString,'%21','');
+      ModifiedString := StrReplace(ModifiedString,'%22','');
+      ModifiedString := StrReplace(ModifiedString,'%24','');
+      ModifiedString := StrReplace(ModifiedString,'%26','-');
+      ModifiedString := StrReplace(ModifiedString,'%27','');
+      ModifiedString := StrReplace(ModifiedString,'%28','');
+      ModifiedString := StrReplace(ModifiedString,'%29','');
+      ModifiedString := StrReplace(ModifiedString,'%3F','');
+      ModifiedString := StrReplace(ModifiedString,'%40','');
+      ModifiedString := StrReplace(ModifiedString,'%5B','');
+      ModifiedString := StrReplace(ModifiedString,'%5D','');
+      ModifiedString := StrReplace(ModifiedString,'%5E','');
+      ModifiedString := StrReplace(ModifiedString,'%60','');
+      ModifiedString := StrReplace(ModifiedString,'%7B','');
+      ModifiedString := StrReplace(ModifiedString,'%7D','');
+      ModifiedString := StrReplace(ModifiedString,'%7E','');
+      ModifiedString := StrReplace(ModifiedString,'%7F','');
+      ModifiedString := StrReplace(ModifiedString,'%3D','');
+      ModifiedString := StrReplace(ModifiedString,'%5B','');
+      ModifiedString := StrReplace(ModifiedString,'%5D','');
+      ModifiedString := StrReplace(ModifiedString,'%5E','');
+      ModifiedString := StrReplace(ModifiedString,'%60','');
+      ModifiedString := StrReplace(ModifiedString,'%7B','');
+      ModifiedString := StrReplace(ModifiedString,'%7C','');
+      ModifiedString := StrReplace(ModifiedString,'%7D','');
+      ModifiedString := StrReplace(ModifiedString,'%7E','');
+      ModifiedString := StrReplace(ModifiedString,'%7F','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%82%AC','');
+      ModifiedString := StrReplace(ModifiedString,'%81','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%9A','');
+      ModifiedString := StrReplace(ModifiedString,'%C6%92','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%9E','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%A6','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%A0','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%A1','');
+      ModifiedString := StrReplace(ModifiedString,'%CB%86','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%B0','');
+      ModifiedString := StrReplace(ModifiedString,'%C5%A0','S');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%B9','');
+      ModifiedString := StrReplace(ModifiedString,'%C5%92','CE');
+      ModifiedString := StrReplace(ModifiedString,'%C5%8D','');
+      ModifiedString := StrReplace(ModifiedString,'%C5%BD','Z');
+      ModifiedString := StrReplace(ModifiedString,'%8F','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%90','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%98','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%99','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%9C','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%9D','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%A2','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%93','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80%94','');
+      ModifiedString := StrReplace(ModifiedString,'%CB%9C','');
+      ModifiedString := StrReplace(ModifiedString,'%E2%84','');
+      ModifiedString := StrReplace(ModifiedString,'%C5%A1','S');
+      ModifiedString := StrReplace(ModifiedString,'%E2%80','');
+      ModifiedString := StrReplace(ModifiedString,'%C5%93','ce');
+      ModifiedString := StrReplace(ModifiedString,'%9D','');
+      ModifiedString := StrReplace(ModifiedString,'%C5%BE','Z');
+      ModifiedString := StrReplace(ModifiedString,'%C5%B8','Y');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A0','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A1','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A2','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A3','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A4','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A5','Y');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A6','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A7','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A8','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%A9','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%AA','A');
+      ModifiedString := StrReplace(ModifiedString,'%C2%AB','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%AC','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%AD','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%AE','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%AF','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B0','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B1','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B2','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B3','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B4','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B5','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B6','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B7','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B8','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%B9','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%BA','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%BB','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%BC','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%BD','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%BE','');
+      ModifiedString := StrReplace(ModifiedString,'%C2%BF','');
+      ModifiedString := StrReplace(ModifiedString,'%C3%80','A');
+      ModifiedString := StrReplace(ModifiedString,'%C3%81','A');
+      ModifiedString := StrReplace(ModifiedString,'%C3%82','A');
+      ModifiedString := StrReplace(ModifiedString,'%C3%83','A');
+      ModifiedString := StrReplace(ModifiedString,'%C3%84','A');
+      ModifiedString := StrReplace(ModifiedString,'%C3%85','A');
+      ModifiedString := StrReplace(ModifiedString,'%C3%86','AE');
+      ModifiedString := StrReplace(ModifiedString,'%C3%87','C');
+      ModifiedString := StrReplace(ModifiedString,'%C3%88','E');
+      ModifiedString := StrReplace(ModifiedString,'%C3%89','E');
+      ModifiedString := StrReplace(ModifiedString,'%C3%8A','E');
+      ModifiedString := StrReplace(ModifiedString,'%C3%8B','E');
+      ModifiedString := StrReplace(ModifiedString,'%C3%8C','I');
+      ModifiedString := StrReplace(ModifiedString,'%C3%8D','I');
+      ModifiedString := StrReplace(ModifiedString,'%C3%8E','I');
+      ModifiedString := StrReplace(ModifiedString,'%C3%8F','I');
+      ModifiedString := StrReplace(ModifiedString,'%C3%90','D');
+      ModifiedString := StrReplace(ModifiedString,'%C3%91','N');
+      ModifiedString := StrReplace(ModifiedString,'%C3%92','O');
+      ModifiedString := StrReplace(ModifiedString,'%C3%93','O');
+      ModifiedString := StrReplace(ModifiedString,'%C3%94','O');
+      ModifiedString := StrReplace(ModifiedString,'%C3%95','O');
+      ModifiedString := StrReplace(ModifiedString,'%C3%96','O');
+      ModifiedString := StrReplace(ModifiedString,'%C3%97','x');
+      ModifiedString := StrReplace(ModifiedString,'%C3%98','');
+      ModifiedString := StrReplace(ModifiedString,'%C3%99','U');
+      ModifiedString := StrReplace(ModifiedString,'%C3%9A','U');
+      ModifiedString := StrReplace(ModifiedString,'%C3%9B','U');
+      ModifiedString := StrReplace(ModifiedString,'%C3%9C','U');
+      ModifiedString := StrReplace(ModifiedString,'%C3%9D','Y');
+      ModifiedString := StrReplace(ModifiedString,'%C3%9E','');
+      ModifiedString := StrReplace(ModifiedString,'%C3%9F','ss');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A0','a');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A1','a');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A2','a');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A3','a');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A4','a');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A5','a');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A6','');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A7','c');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A8','e');
+      ModifiedString := StrReplace(ModifiedString,'%C3%A9','e');
+      ModifiedString := StrReplace(ModifiedString,'%C3%AA','e');
+      ModifiedString := StrReplace(ModifiedString,'%C3%AB','e');
+      ModifiedString := StrReplace(ModifiedString,'%C3%AC','i');
+      ModifiedString := StrReplace(ModifiedString,'%C3%AD','i');
+      ModifiedString := StrReplace(ModifiedString,'%C3%AE','i');
+      ModifiedString := StrReplace(ModifiedString,'%C3%AF','i');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B0','');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B1','n');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B2','o');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B3','o');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B4','o');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B5','o');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B6','o');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B7','');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B8','');
+      ModifiedString := StrReplace(ModifiedString,'%C3%B9','u');
+      ModifiedString := StrReplace(ModifiedString,'%C3%BA','u');
+      ModifiedString := StrReplace(ModifiedString,'%C3%BB','u');
+      ModifiedString := StrReplace(ModifiedString,'%C3%BC','u');
+      ModifiedString := StrReplace(ModifiedString,'%C3%BD','y');
+      ModifiedString := StrReplace(ModifiedString,'%C3%BE','');
+      ModifiedString := StrReplace(ModifiedString,'%C3%BF','y');
+      ModifiedString := StrReplace(ModifiedString,'-----','-');
+      ModifiedString := StrReplace(ModifiedString,'----','-');
+      ModifiedString := StrReplace(ModifiedString,'---','-');
+      ModifiedString := StrReplace(ModifiedString,'--','-');
+      URLEncodedReadable := DELCHR(ModifiedString,'<>','-');
+    END;
+
+    PROCEDURE FilterChars@1000000022(Text@1000000000 : Text[250]) ReturnText : Text[250];
+    BEGIN
+      Text := CONVERTSTR(Text,'(','?');
+      Text := CONVERTSTR(Text,')','?');
+      Text := CONVERTSTR(Text,'<','?');
+      Text := CONVERTSTR(Text,'>','?');
+      Text := CONVERTSTR(Text,'@','?');
+      Text := CONVERTSTR(Text,'&','?');
+      Text := CONVERTSTR(Text,'.','?');
+      Text := CONVERTSTR(Text,'|','?');
+      Text := CONVERTSTR(Text,'{','?');
+      Text := CONVERTSTR(Text,'}','?');
+      Text := CONVERTSTR(Text,'[','?');
+      Text := CONVERTSTR(Text,']','?');
+      Text := CONVERTSTR(Text,'.','?');
+      Text := CONVERTSTR(Text,'=','?');
+      ReturnText := CONVERTSTR(Text,'=','?');
+    END;
+
+    PROCEDURE GenerateItemSlug@5447300(String@5447300 : Text[250]) ItemSlug : Text[250];
+    VAR
+      txtCharsToKeep@5447301 : Text;
+    BEGIN
+      ItemSlug := LOWERCASE(String);
+      ItemSlug := URLEncodeReadable(ItemSlug);
+      txtCharsToKeep := 'abcdefghijklmnopqrstuvwxyz1234567890+-';
+      ItemSlug := DELCHR(ItemSlug,'=',DELCHR(ItemSlug,'=',txtCharsToKeep));
+      ItemSlug := COPYSTR(ItemSlug,1,250);
+    END;
+
+    PROCEDURE "--- Zufallszahlen ---"@1000000006();
+    BEGIN
+    END;
+
+    PROCEDURE WebshopRandomize@1000000012() Seed : Integer;
+    VAR
+      bigseed@1000000000 : BigInteger;
+    BEGIN
+      //generiert auf Basis von GUID-Werten einen Seed zwischen 1 und 2.147.483.646.
+      //bigseed ist vom Typ BigInteger
+      EVALUATE(bigseed, COPYSTR(DELCHR(CREATEGUID(),'=','{}-ABCDEF'),1,10));
+      Seed:= (bigseed MOD 2147483646) +1;
+    END;
+
+    PROCEDURE WebshopRandom@1000000016(Seed@1000000000 : Integer;Number@1000000001 : Integer) Rand : Integer;
+    VAR
+      a@1000000002 : Integer;
+      m@1000000003 : Integer;
+      q@1000000004 : Integer;
+      r@1000000005 : Integer;
+      hi@1000000006 : Integer;
+      lo@1000000007 : Integer;
+      test@1000000008 : Integer;
+    BEGIN
+      //......................................................................................................
+      //Code: Minimal Standard Pseudozufallszahlengenerator (linearer Kongruenzgenerator)
+      //Quelle: Steve K. Park and Keith W. Miller "Random Number Generators: Good ones are hard to find", 1988
+      //Sprache: Navision C/AL (modifiziert von winfy)
+      //Limit: nur f�r 32 Bit signed Integer geeignet, erzeugt Pseudozufallszahlen von 1 bis Parameter "Number"
+      //......................................................................................................
+
+      //Definitionen
+      //a,m,q,r sind Variablen/Konstanten vom Typ Integer
+      //test, hi, lo sind Variablen vom Typ Integer
+      //Seed als �bergabeparameter vom Typ Integer
+
+      //Initialisierung der Werte
+      a := 16807; //alternativ a:= 48271;
+      m := 2147483647;
+      q := 127773; //alternativ q:= 44488;
+      r := 2836; //alternativ r:= 3399
+
+      //alternative "gute" Werte (L'Ecuyer)
+      //a := 39373;
+      //m := 2147483647;
+      //q := 54542;
+      //r := 1481;
+
+      //Pseudozufallszahl berechnen
+      hi := Seed DIV q;
+      lo := Seed MOD q;
+      test := a * lo - r * hi;
+
+      //positiven Wertebereich sicherstellen
+      IF test > 0 THEN Seed := test
+        ELSE Seed := test + m;
+
+      //Ergebnis im Bereich 1 bis Number erzeugen
+      IF (Number > 0) THEN EXIT((Seed MOD Number) + 1)
+        ELSE EXIT(1); //alternativ EXIT(0) oder Fehlermeldung
+    END;
+
+    PROCEDURE UploadAttachmentTest@1000000023();
+    VAR
+      InputFile@1000000000 : File;
+      ConvertedFile@1000000001 : File;
+      InputFileInStr@1000000002 : InStream;
+      ConvertedFileOutStr@1000000004 : OutStream;
+      ConvertedFileInStr@1000000003 : InStream;
+      Data@1000000005 : Text[1024];
+      i@1000000006 : Integer;
+      TempData@1000000007 : Text[600];
+      FileRecord@1000000009 : Text[1024];
+      XMLHeader@1000000012 : Text[1024];
+      TempFilePath@1000000011 : Text[200];
+      LongText@1000000013 : Text;
+      Int@1000000014 : Integer;
+      Convert@1000000015 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      ClientFile@1000000016 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      Filename@1000000008 : Text[200];
+      ServerFileName@1000000010 : Text[200];
+    BEGIN
+      // Datei in tempor�res Webverzeichnis laden
+      {
+      InputFile.OPEN(Filename);
+      InputFile.CREATEINSTREAM(InputFileInStr);
+      ConvertedFile.CREATETEMPFILE;
+      ConvertedFile.CREATEOUTSTREAM(ConvertedFileOutStr);
+      Base64EncodeStream(InputFileInStr,ConvertedFileOutStr);
+      ConvertedFile.CREATEINSTREAM(ConvertedFileInStr);
+
+      CLEAR(FileRecord);
+      AddVar(FileRecord,'filename',ServerFileName);
+      AddVar(FileRecord,'action','create');
+      SendRequest('upload_attachment',FileRecord);
+
+      WHILE NOT (ConvertedFileInStr.EOS) DO BEGIN
+        CLEAR(FileRecord);
+        CLEAR(Data);
+        FOR i := 1 TO 8 DO BEGIN
+          ConvertedFileInStr.READTEXT(TempData);
+          Data += TempData;
+        END;
+        AddVar(FileRecord,'filename',ServerFileName);
+        AddVar(FileRecord,'action','write');
+        AddVar(FileRecord,'filedata',Data);
+        SendRequest('upload_attachment',FileRecord);
+      END;
+
+      CLEAR(FileRecord);
+      AddVar(FileRecord,'filename',ServerFileName);
+      AddVar(FileRecord,'action','convert');
+      SendRequest('upload_attachment',FileRecord);
+      }
+
+      // Neue Funktion von TH implementiert: FK 19.06.2012
+      WebshopSetup.GET;
+      //InputFile.OPEN(Filename);
+      //InputFile.CREATEINSTREAM(InputFileInStr);
+
+      TempFilePath := 'C:\tmp\attachment_test.xml';
+      Filename := 'C:\tmp\testimage.jpg';
+      ServerFileName := 'testimage_uploaded.jpg';
+      ConvertedFile.CREATE(TempFilePath);
+
+      ConvertedFile.CREATEOUTSTREAM(ConvertedFileOutStr);
+
+      ConvertedFileOutStr.WRITETEXT('<?xml version="1.0" ?><file><pass>'+WebshopSetup."Server Synch. Password"+'</pass>');
+      ConvertedFileOutStr.WRITETEXT('<action>write</action>');
+      ConvertedFileOutStr.WRITETEXT('<filename>'+ServerFileName+'</filename>' + '<filedata>');
+
+      //Base64EncodeStream(InputFileInStr,ConvertedFileOutStr);
+      LongText := Convert.ToBase64String(ClientFile.ReadAllBytes(Filename));
+      ConvertedFileOutStr.WRITETEXT(LongText);
+      ConvertedFileOutStr.WRITETEXT('</filedata></file>');
+
+      ConvertedFile.CREATEINSTREAM(ConvertedFileInStr);
+      ConvertedFile.CLOSE;
+    END;
+
+    BEGIN
+    {
+      --- MysydeShop - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

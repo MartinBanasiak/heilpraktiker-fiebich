@@ -1,0 +1,108 @@
+OBJECT Page 5401 Item Variants
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.07.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Artikelvarianten;
+               ENU=Item Variants];
+    SourceTable=Table5401;
+    DataCaptionFields=Item No.;
+    PageType=List;
+    ActionList=ACTIONS
+    {
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 11      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Variante;
+                                 ENU=V&ariant];
+                      Image=ItemVariant }
+      { 12      ;2   ;Action    ;
+                      CaptionML=[DEU=�bersetzungen;
+                                 ENU=Translations];
+                      RunObject=Page 35;
+                      RunPageLink=Item No.=FIELD(Item No.),
+                                  Variant Code=FIELD(Code);
+                      Image=Translations }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                GroupType=Repeater }
+
+    { 13  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer der Artikelkarte an, von der aus Sie das Fenster "Artikelvarianten�bersetzungen" ge�ffnet haben.;
+                           ENU=Specifies the number of the item card from which you opened the Item Variant Translations window.];
+                SourceExpr="Item No.";
+                Visible=FALSE }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Code zum Kennzeichnen der Variante an.;
+                           ENU=Specifies a code to identify the variant.];
+                SourceExpr=Code }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt beschreibenden Text f�r die Artikelvariante an.;
+                           ENU=Specifies text that describes the item variant.];
+                SourceExpr=Description }
+
+    { 6   ;2   ;Field     ;
+                ToolTipML=[DEU=Beschreibt die Artikelvariante detaillierter als das Feld "Beschreibung".;
+                           ENU=Describes the item variant in more detail than the Description field.];
+                SourceExpr="Description 2";
+                Visible=FALSE }
+
+    { 1000000000;2;Field  ;
+                SourceExpr="Is Webshop Active" }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (1):
+
+          TYPE            SUBTYPE         SOURCEEXPR                      NAME                            CAPTION
+
+          Field                           "Webshop Active"                <Webshop Active>                <Webshop aktiv>
+
+
+        PAGE ACTIONS (0):
+        TRIGGERS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

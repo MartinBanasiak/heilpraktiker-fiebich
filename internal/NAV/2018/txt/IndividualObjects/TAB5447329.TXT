@@ -1,0 +1,62 @@
+OBJECT Table 5447329 Webshop Coupon Line
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14.03.18;
+    Time=16:00:00;
+    Version List=MYSW14.00,DCCW11.00;
+  }
+  PROPERTIES
+  {
+    OnDelete=BEGIN
+               WebshopUpdateManagment.DeleteWebshopCouponLine(Rec);
+             END;
+
+    CaptionML=[DEU=Webshop Gutscheinzeile;
+               ENU=Webshop Coupon Line];
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code20        ;CaptionML=[DEU=Code;
+                                                              ENU=Code] }
+    { 2   ;   ;Coupon Code         ;Code20        ;CaptionML=[DEU=Gutscheincode;
+                                                              ENU=Coupon Code] }
+    { 10  ;   ;Shop Code           ;Code10        ;CaptionML=[DEU=Shop Code;
+                                                              ENU=Shop Code] }
+    { 11  ;   ;Language Code       ;Code10        ;CaptionML=[DEU=Sprach Code;
+                                                              ENU=Language Code] }
+    { 20  ;   ;Is Category Coupon  ;Boolean       ;CaptionML=[DEU=Ist Kategoriegutschein;
+                                                              ENU=Is Category Coupon] }
+    { 21  ;   ;Category Line No.   ;Integer       ;TableRelation="Webshop Category"."Line No." WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                      Language Code=FIELD(Language Code));
+                                                   CaptionML=[DEU=Kategoriezeilennr.;
+                                                              ENU=Category Line No.];
+                                                   BlankZero=Yes }
+    { 22  ;   ;Category Name       ;Text45        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Category".Name WHERE (Line No.=FIELD(Category Line No.),
+                                                                                                     Shop Code=FIELD(Shop Code),
+                                                                                                     Language Code=FIELD(Language Code)));
+                                                   CaptionML=[DEU=Kategoriename;
+                                                              ENU=Category Name];
+                                                   Editable=No }
+  }
+  KEYS
+  {
+    {    ;Code,Coupon Code,Shop Code              ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopUpdateManagment@1000000000 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

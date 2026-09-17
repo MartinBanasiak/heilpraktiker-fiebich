@@ -1,0 +1,21 @@
+N6660-C1000000004-P8629-A1031-L999:Reklamation
+N6660-C1905885101-P8629-A1031-L999:Fakturierung
+N6660-C1906801201-P8629-A1031-L999:Lieferung
+N6660-C1-P8629-A1031-L999:Allgemein
+N6660-C3-P8629-A1031-L999:Zusteller
+N6660-C3-P8631-A1031-L999:Gibt an, welcher Zusteller verwendet wird, um die Artikel im Verkaufsbeleg zum Debitor zu transportieren.
+N6660-C42-P8629-A1031-L999:Code
+N6660-C5-P8631-A1031-L999:Gibt die Paketnummer des Zustellers an.
+N6660-C7-P8629-A1031-L999:Lieferbedingung
+N6660-P55242-G10-P8629-A1031-L999:Statistik
+N6660-P55242-G1101100001-P8629-A1031-L999:&Belegzeilenverfolgung
+N6660-P55242-G47-P8629-A1031-L999:R&ücksendung
+N6660-P55242-G49-P8629-A1031-L999:D&rucken
+N6660-P55242-G50-P8629-A1031-L999:&Navigate
+N6660-P55242-G62-P8629-A1031-L999:Genehmigungen
+N6660-P55242-G62-P8631-A1031-L999:Zeigt eine Liste der Datensätze an, die noch genehmigt werden müssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.
+N6660-P55242-G78-P8629-A1031-L999:Be&merkungen
+N6660-P55242-G80-P8629-A1031-L999:Dimensionen
+N6660-P55242-G80-P8631-A1031-L999:Anzeigen oder Bearbeiten von Dimensionen, wie etwa eines Bereichs, eines Projekts oder einer Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen können, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.
+N6660-P55242-G81-P8629-A1031-L999:&Zeile
+N6660-P8629-A1031-L999:Gebuchte Rücksendung

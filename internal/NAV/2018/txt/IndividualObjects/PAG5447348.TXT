@@ -1,0 +1,61 @@
+OBJECT Page 5447348 Webshop Cust. Pseudo Pay. List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table5447315;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Customer No." }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Type }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Card Type" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Holder / Owner Name" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr=PCNr }
+
+    { 1000000008;2;Field  ;
+                SourceExpr=CCExpire }
+
+    { 1000000009;2;Field  ;
+                SourceExpr=BIC }
+
+    { 1000000010;2;Field  ;
+                SourceExpr=PBAN }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Bank Name" }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

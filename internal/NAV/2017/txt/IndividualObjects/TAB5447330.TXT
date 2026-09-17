@@ -1,0 +1,158 @@
+OBJECT Table 5447330 Webshop Coupon Header
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnDelete=VAR
+               Confirm001@1000000000 : TextConst 'DEU=Dies veranlasst ein L�schen des Gutscheins\mitsamt aller Gutscheinzeilen auf dem Webserver.\Wollen Sie wirklich mit dem L�schen fortfahren?;ENU=This initiates a deletion of the coupon\including all coupon lines on the webserver.\Do you really wish to proceed with the deletion?';
+               WebshopUpdateManagement@1000000001 : Codeunit 5447301;
+               Confirm002@1000000004 : TextConst 'DEU=F�r diesen Wertgutschein gibt es noch Zeilen mit offenem Restbetrag. Dennoch fortfahren?;ENU=There exist coupon lines with open remaining value for this value coupon. Continue regardless?';
+               Error001@1000000002 : TextConst 'DEU=L�schvorgang abgebrochen.;ENU=Deletion aborted.';
+               IsValueCoupon@1000000005 : Boolean;
+               DiffFound@1000000003 : Boolean;
+               DoDelete@1000000006 : Boolean;
+             BEGIN
+               //Erfragt Best�tigung vor L�schen mit Hinweis, dass alle Zeilen im Web gel�scht werden.
+               //Pr�ft ob Gutschein vom Typ 'Wertgutschein ist' und Zeilen mit 0 < Restbetrag < UrsprungsBetrag existieren,
+               //wenn ja wird weitere Best�tigung angefordert.
+
+               IsValueCoupon := FALSE;
+               DiffFound := FALSE;
+               DoDelete := FALSE;
+               IF "Coupon Type" = "Coupon Type"::Wert THEN BEGIN
+                 IsValueCoupon := TRUE;
+                 CouponLine.RESET;
+                 CouponLine.SETRANGE(Code,Code);
+                 CouponLine.SETRANGE("Shop Code","Shop Code");
+                 CouponLine.SETRANGE("Language Code","Language Code");
+                 CouponLine.SETFILTER("Amount Left",'>%1',0);
+                 IF CouponLine.FINDSET THEN REPEAT
+                   IF CouponLine."Amount Left" < CouponLine.Amount THEN
+                     DiffFound := TRUE;
+                 UNTIL (DiffFound) OR (CouponLine.NEXT() = 0);
+               END;
+
+               IF (IsValueCoupon AND DiffFound) THEN BEGIN
+                 IF (CONFIRM(Confirm002)) THEN BEGIN
+                   IF (CONFIRM(Confirm001)) THEN
+                     DoDelete := TRUE;
+                 END;
+               END ELSE IF (CONFIRM(Confirm001)) THEN
+                 DoDelete := TRUE;
+
+               IF DoDelete THEN BEGIN
+                 CouponLine.RESET;
+                 CouponLine.SETRANGE(Code,Code);
+                 CouponLine.SETRANGE("Shop Code","Shop Code");
+                 CouponLine.SETRANGE("Language Code","Language Code");
+                 IF NOT CouponLine.ISEMPTY THEN BEGIN
+                   WebshopUpdateManagement.DeleteAllCouponLine(FALSE,Code,"Shop Code","Language Code");
+                   CouponLine.DELETEALL(FALSE);
+                   WebshopUpdateManagement.DeleteAllCouponLine(TRUE,Code,"Shop Code","Language Code");
+                 END;
+                 WebshopUpdateManagement.DeleteCouponHeader(Rec);
+               END ELSE
+                 ERROR(Error001);
+             END;
+
+    OnRename=BEGIN
+               CouponLine.SETRANGE(Code,xRec.Code);
+               CouponLine.SETRANGE("Shop Code",xRec."Shop Code");
+               CouponLine.SETRANGE("Language Code",xRec."Language Code");
+               IF NOT CouponLine.ISEMPTY THEN BEGIN
+                 IF xRec.Code <> Rec.Code THEN
+                   CouponLine.MODIFYALL(Code,Rec.Code);
+                 IF xRec."Shop Code" <> Rec."Shop Code" THEN
+                   CouponLine.MODIFYALL("Shop Code",Rec."Shop Code");
+                 IF xRec."Language Code" <> Rec."Language Code" THEN
+                   CouponLine.MODIFYALL("Language Code",Rec."Language Code");
+               END;
+             END;
+
+    CaptionML=[DEU=Webshop Gutscheine;
+               ENU=Webshop Coupons];
+    LookupPageID=Page5447331;
+    DrillDownPageID=Page5447331;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code20        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Description         ;Text30        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 3   ;   ;Coupon Type         ;Option        ;CaptionML=[DEU=Gutscheintyp;
+                                                              ENU=Coupon Type];
+                                                   OptionCaptionML=[DEU=Wert,Marketing;
+                                                                    ENU=Value,Marketing];
+                                                   OptionString=Wert,Marketing }
+    { 4   ;   ;Value Type          ;Option        ;CaptionML=[DEU=Wertart;
+                                                              ENU=Value Type];
+                                                   OptionCaptionML=[DEU=Betrag,Prozent,Artikel,Individualbetrag,Sonderversand;
+                                                                    ENU=Amount,Percent,Item,Individual Amount,Special Shipping];
+                                                   OptionString=Betrag,Prozent,Artikel,Individualbetrag,Sonderversand }
+    { 5   ;   ;Amount              ;Decimal       ;CaptionML=[DEU=Betrag;
+                                                              ENU=Amount] }
+    { 6   ;   ;Percentage          ;Decimal       ;CaptionML=[DEU=Rabatt %;
+                                                              ENU=Percentage] }
+    { 7   ;   ;Item No.            ;Code20        ;TableRelation="Webshop Item"."Item No.";
+                                                   CaptionML=[DEU=Artikelnummer;
+                                                              ENU=Item No.] }
+    { 8   ;   ;Starting Date       ;Date          ;CaptionML=[DEU=Startdatum;
+                                                              ENU=Starting Date] }
+    { 9   ;   ;Ending Date         ;Date          ;CaptionML=[DEU=Enddatum;
+                                                              ENU=Ending Date] }
+    { 10  ;   ;Amount From         ;Decimal       ;CaptionML=[DEU=Ab Betrag;
+                                                              ENU=Amount From] }
+    { 11  ;   ;Value Coupon        ;Boolean       ;CaptionML=[DEU=Wertgutschein;
+                                                              ENU=Value Coupon] }
+    { 12  ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shop Code;
+                                                              ENU=Shop Code] }
+    { 13  ;   ;Language Code       ;Code10        ;CaptionML=[DEU=Sprach Code;
+                                                              ENU=Language Code] }
+    { 14  ;   ;Is Category Coupon  ;Boolean       ;CaptionML=[DEU=Ist Kategoriegutschein;
+                                                              ENU=Is Category Coupon] }
+    { 15  ;   ;Category Line No.   ;Integer       ;TableRelation="Webshop Category"."Line No." WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                      Language Code=FIELD(Language Code));
+                                                   CaptionML=[DEU=Kategoriezeilennr.;
+                                                              ENU=Category Line No.] }
+    { 16  ;   ;Category Name       ;Text45        ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Category".Name WHERE (Line No.=FIELD(Category Line No.),
+                                                                                                     Shop Code=FIELD(Shop Code),
+                                                                                                     Language Code=FIELD(Language Code)));
+                                                   CaptionML=[DEU=Kategoriename;
+                                                              ENU=Category Name];
+                                                   Editable=No }
+    { 17  ;   ;No. of Coupon Codes ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Coupon Line" WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                  Language Code=FIELD(Language Code),
+                                                                                                  Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Gutscheincodes;
+                                                              ENU=No. of Coupon Codes] }
+  }
+  KEYS
+  {
+    {    ;Code,Shop Code,Language Code            ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      CouponLine@1000000000 : Record 5447329;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,7 @@
+N5401-C13-P8631-A1033-L999:Specifies the number of the item card from which you opened the Item Variant Translations window.
+N5401-C2-P8631-A1033-L999:Specifies a code to identify the variant.
+N5401-C4-P8631-A1033-L999:Specifies text that describes the item variant.
+N5401-C6-P8631-A1033-L999:Describes the item variant in more detail than the Description field.
+N5401-P55242-G11-P8629-A1033-L999:V&ariant
+N5401-P55242-G12-P8629-A1033-L999:Translations
+N5401-P8629-A1033-L999:Item Variants

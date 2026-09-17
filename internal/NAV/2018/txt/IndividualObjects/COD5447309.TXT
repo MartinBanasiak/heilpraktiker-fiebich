@@ -1,0 +1,32 @@
+OBJECT Codeunit 5447309 Webshop Admin Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+            // �ffnet das MysydeCMS System zum Webshop
+
+            WebshopSetup.GET;
+            WebshopSetup.TESTFIELD("CMS URL");
+            HYPERLINK(WebshopSetup."CMS URL")
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000000 : Record 5447300;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

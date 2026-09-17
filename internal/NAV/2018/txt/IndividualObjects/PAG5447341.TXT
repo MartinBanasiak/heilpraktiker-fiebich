@@ -1,0 +1,378 @@
+OBJECT Page 5447341 Webshop Subscr. Header Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Abonnement;
+               ENU=Webshop Subscription];
+    SourceTable=Table5447340;
+    PageType=Card;
+    OnOpenPage=VAR
+                 DF1@1000000000 : DateFormula;
+                 Date1@1000000001 : Date;
+                 Date2@1000000002 : Date;
+               BEGIN
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       SetTypeIsOrderOption;
+                       SetTypeIsSequenceItem;
+                       SetCanSetLateEntryPossible;
+                     END;
+
+    OnModifyRecord=BEGIN
+                     SetTypeIsOrderOption;
+                     SetTypeIsSequenceItem;
+                     SetCanSetLateEntryPossible;
+                   END;
+
+    OnAfterGetCurrRecord=BEGIN
+                           SetTypeIsOrderOption;
+                           SetTypeIsSequenceItem;
+                           SetCanSetLateEntryPossible;
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000050;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000049;1 ;Action    ;
+                      Name=UpdateOnline;
+                      CaptionML=[DEU=Abonnement online aktualisieren;
+                                 ENU=Synchronize Subscription];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+                                 Text001@1000000001 : TextConst 'DEU=Das Abonnement wurde mit allen verkn�pften Daten aktualisiert.;ENU=The subscription was syncronized with all linked data.';
+                               BEGIN
+                                 WebshopUpdateManagement.UpdateSubscriptionHeader(Rec);
+                                 WebshopUpdateManagement.UpdateAllSubscSeqStepForHeader(Rec);
+                                 WebshopUpdateManagement.UpdAllSubscItemLinkForHeader(Rec);
+                                 WebshopUpdateManagement.UpdAllSubscCustLinkForHeader(Rec);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000011;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000012;1 ;Action    ;
+                      Name=LinkedItems;
+                      CaptionML=[DEU=Verkn�pfte Artikel;
+                                 ENU=Linked Items];
+                      RunObject=Page 5447344;
+                      RunPageLink=Subscription Code=FIELD(Code);
+                      Image=Item }
+      { 1000000043;1 ;Action    ;
+                      Name=LinkedSeqSteps;
+                      CaptionML=[DEU=Sequenz-Schritte;
+                                 ENU=Sequence-Steps];
+                      RunObject=Page 5447342;
+                      RunPageLink=Subscription Code=FIELD(Code);
+                      Visible=TypeIsSequenceItem;
+                      Image=PickLines }
+      { 1000000048;1 ;Action    ;
+                      Name=LinkedCustomers;
+                      CaptionML=[DEU=Verkn�pfte Kunden;
+                                 ENU=Linked Customers];
+                      RunObject=Page 5447346;
+                      RunPageLink=Subscription Code=FIELD(Code);
+                      Image=CustomerList }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000053;1;Group  ;
+                Name=Abonement-Auswahl;
+                CaptionML=[DEU=Abonement Auswahl;
+                           ENU=Subscription Selection];
+                GroupType=Group }
+
+    { 1000000030;2;Field  ;
+                SourceExpr=Type;
+                OnValidate=BEGIN
+                             IF (Rec.Type <> xRec.Type) THEN
+                               IF (NOT GUIALLOWED) OR (GUIALLOWED AND CONFIRM(Text001)) THEN BEGIN
+                                 WebshopSubscriptionSeqStep.RESET;
+                                 WebshopSubscriptionSeqStep.SETFILTER("Subscription Code",Code);
+                                 WebshopSubscriptionSeqStep.DELETEALL(TRUE);
+
+                                 WebshopSubscriptionItemLink.RESET;
+                                 WebshopSubscriptionItemLink.SETFILTER("Subscription Code",Code);
+                                 WebshopSubscriptionItemLink.DELETEALL(TRUE);
+
+                                 WebshopSubscrCustomerLink.RESET;
+                                 WebshopSubscrCustomerLink.SETFILTER("Subscription Code",Code);
+                                 WebshopSubscrCustomerLink.DELETEALL(TRUE);
+
+                                 CLEAR("Item No. Subscription Item");
+                                 CLEAR("Payment Type");
+                                 CLEAR("Start Type");
+                                 CLEAR("Start Date Formula");
+                                 CLEAR("Turn Interval Formula");
+                                 CLEAR("Min. No. of Turns");
+                                 CLEAR("Max. No. of Turns");
+                                 CLEAR("Subscription Duration");
+                                 CLEAR("Is Active");
+                                 CLEAR("Starting Date Processing");
+                                 CLEAR("Ending Date Processing");
+                                 CLEAR("Cancel. Period Date Formula");
+                                 CLEAR("Price per Billing Interval");
+                                 CLEAR(Orderable);
+                                 CLEAR("Starting Date Orderability");
+                                 CLEAR("Ending Date Orderability");
+                                 MODIFY(TRUE);
+                                 COMMIT;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+
+                             SetTypeIsOrderOption;
+                             SetTypeIsSequenceItem;
+                             SetCanSetLateEntryPossible;
+                             CurrPage.UPDATE(FALSE);
+                           END;
+                            }
+
+    { 1000000001;1;Group  ;
+                Name=Allgemein;
+                GroupType=Group }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Code }
+
+    { 1000000014;2;Field  ;
+                SourceExpr=Description;
+                LookupPageID=Item List }
+
+    { 1000000035;2;Field  ;
+                SourceExpr="Shop Code" }
+
+    { 1000000036;2;Field  ;
+                SourceExpr="All Shops" }
+
+    { 1000000037;2;Field  ;
+                SourceExpr="Language Code" }
+
+    { 1000000038;2;Field  ;
+                SourceExpr="All Languages" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Payment Type";
+                Editable=TypeIsSequenceItem;
+                OnValidate=BEGIN
+                             SetCanSetLateEntryPossible;
+                           END;
+                            }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="No. of Customers";
+                Editable=FALSE }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Is Active" }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Starting Date Processing" }
+
+    { 1000000018;2;Field  ;
+                SourceExpr="Ending Date Processing" }
+
+    { 1000000024;2;Field  ;
+                SourceExpr=Orderable }
+
+    { 1000000021;2;Field  ;
+                SourceExpr="Starting Date Orderability" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Ending Date Orderability" }
+
+    { 1000000019;2;Field  ;
+                SourceExpr="Cancel. Period Date Formula" }
+
+    { 1000000051;2;Field  ;
+                SourceExpr="Max. No. of Turns Per Customer" }
+
+    { 1000000031;1;Group  ;
+                CaptionML=[DEU=Texte;
+                           ENU=Texts];
+                GroupType=Group }
+
+    { 1000000039;2;Field  ;
+                SourceExpr="Interval Description" }
+
+    { 1000000033;2;Field  ;
+                SourceExpr="Cancel. Period Description" }
+
+    { 1000000034;2;Field  ;
+                SourceExpr="Payment Type Description" }
+
+    { 1000000047;2;Field  ;
+                SourceExpr="Short Text" }
+
+    { 1000000040;2;Field  ;
+                SourceExpr="First Order Email Text" }
+
+    { 1000000041;2;Field  ;
+                SourceExpr="Shipm. Email Text" }
+
+    { 1000000042;2;Field  ;
+                SourceExpr="Last Shipm. Email Text" }
+
+    { 1000000044;2;Field  ;
+                SourceExpr="Payment Email Text" }
+
+    { 1000000045;2;Field  ;
+                SourceExpr="Pay. And Ship. Email Text" }
+
+    { 1000000046;2;Field  ;
+                SourceExpr="Cancellation Email Text" }
+
+    { 1000000022;1;Group  ;
+                Name=Abo-Bestelloption;
+                CaptionML=[DEU=Abo-Bestelloption;
+                           ENU=Subscription Order Option];
+                Visible=TypeIsOrderOption;
+                GroupType=Group }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Start Date Formula" }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Turn Interval Formula" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="No. of Items";
+                Editable=FALSE }
+
+    { 1000000032;1;Group  ;
+                Name=Abo Sequenz Artikel;
+                CaptionML=[DEU=Abo Sequenz Artikel;
+                           ENU=Subscr. Sequence Item];
+                Visible=TypeIsSequenceItem;
+                GroupType=Group }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Item No. Subscription Item" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Start Type";
+                OnValidate=BEGIN
+                             SetCanSetLateEntryPossible;
+                           END;
+                            }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="No. of Sequence Steps";
+                Editable=FALSE }
+
+    { 1000000020;2;Field  ;
+                SourceExpr="Price per Billing Interval" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Allow Late Entry";
+                Editable=CanSetLateEntryPossible }
+
+    { 1000000029;1;Part   ;
+                CaptionML=[DEU=Sequenz-Schritte;
+                           ENU=Sequence Steps];
+                SubPageLink=Subscription Code=FIELD(Code);
+                PagePartID=Page5447343;
+                Visible=TypeIsSequenceItem;
+                PartType=Page;
+                UpdatePropagation=Both }
+
+    { 1000000025;1;Part   ;
+                CaptionML=[DEU=Verkn�pfte Artikel;
+                           ENU=Activated Items];
+                SubPageLink=Subscription Code=FIELD(Code),
+                            Link to=CONST(Subscription Header);
+                PagePartID=Page5447345;
+                Visible=TypeIsOrderOption;
+                PartType=Page }
+
+    { 1000000026;1;Part   ;
+                CaptionML=[DEU=Verkn�pfte Debitoren;
+                           ENU=Subscription Customers];
+                SubPageLink=Subscription Code=FIELD(Code);
+                PagePartID=Page5447347;
+                PartType=Page }
+
+    { 1000000023;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 1000000027;1;Part   ;
+                PartType=System;
+                SystemPartID=MyNotes }
+
+    { 1000000028;1;Part   ;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+  }
+  CODE
+  {
+    VAR
+      TypeIsSequenceItem@1000000001 : Boolean INDATASET;
+      TypeIsOrderOption@1000000000 : Boolean INDATASET;
+      Text001@1000000002 : TextConst 'DEU=Der Datensatz muss zur�ckgesetzt und alle Verkn�pftungen entfernt werden. Fortfahren?;ENU=The record has to be reset and all links removed. Continue?';
+      WebshopSubscriptionSeqStep@1000000005 : Record 5447341;
+      WebshopSubscriptionItemLink@1000000004 : Record 5447342;
+      WebshopSubscrCustomerLink@1000000003 : Record 5447343;
+      CanSetLateEntryPossible@1000000006 : Boolean;
+
+    PROCEDURE SetTypeIsOrderOption@1000000000();
+    BEGIN
+      IF Type = Type::SubscriptionOrderOption THEN BEGIN
+        TypeIsSequenceItem := FALSE;
+        TypeIsOrderOption := TRUE;
+        "Payment Type" := "Payment Type"::PerTurn;
+      END ELSE BEGIN
+        TypeIsSequenceItem := TRUE;
+        TypeIsOrderOption := FALSE;
+      END;
+    END;
+
+    PROCEDURE SetTypeIsSequenceItem@1000000001();
+    BEGIN
+      IF Type = Type::SubscriptionSequenceItem THEN BEGIN
+        TypeIsOrderOption := FALSE;
+        TypeIsSequenceItem := TRUE;
+      END ELSE BEGIN
+        "Payment Type" := "Payment Type"::PerTurn;
+        TypeIsOrderOption := TRUE;
+        TypeIsSequenceItem := FALSE;
+      END;
+    END;
+
+    LOCAL PROCEDURE SetCanSetLateEntryPossible@1000000003();
+    BEGIN
+      IF (Type = Type::SubscriptionSequenceItem)
+         AND ("Start Type" = "Start Type"::Join)
+         AND ("Payment Type" = "Payment Type"::Once)  THEN BEGIN
+        CanSetLateEntryPossible := TRUE;
+      END ELSE BEGIN
+        CanSetLateEntryPossible := FALSE;
+        IF "Allow Late Entry" = TRUE THEN BEGIN
+          "Allow Late Entry" := FALSE;
+          MODIFY(FALSE);
+        END;
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

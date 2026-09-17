@@ -1,0 +1,550 @@
+OBJECT Page 5447330 Webshop Coupon Line Part
+{
+  OBJECT-PROPERTIES
+  {
+    Date=04.04.18;
+    Time=16:00:00;
+    Version List=MYSW14.00,DCCW11.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Gutscheinzeilen Part;
+               ENU=Coupon Line Part];
+    SourceTable=Table5447472;
+    PageType=ListPart;
+    OnOpenPage=BEGIN
+                 ShowEnableFields(TRUE);
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       IF WebshopCouponLine.GET(Code,"Coupon Code",ShopCode) THEN BEGIN
+                         WebshopCouponLine.CALCFIELDS("Category Name");
+                         CategoryLineNo := WebshopCouponLine."Category Line No.";
+                         CategoryName := WebshopCouponLine."Category Name";
+                         LanguageCode := WebshopCouponLine."Language Code";
+                       END ELSE BEGIN
+                         CategoryLineNo := 0;
+                         CategoryName := '';
+                         LanguageCode := '';
+                       END;
+
+                       IF WebshopCouponShippingLine.GET(Code,"Coupon Code") THEN BEGIN
+                         CouponShippingType := WebshopCouponShippingLine."Shipping Coupon Type";
+                         CouponShippingValue := WebshopCouponShippingLine."Shipping Coupon Value";
+                       END ELSE BEGIN
+                         CouponShippingType := CouponShippingType::amount;
+                         CouponShippingValue := 0;
+                       END;
+
+                       ShowEnableFields(FALSE);
+                     END;
+
+    OnInsertRecord=BEGIN
+                     "Is Posted" := FALSE;
+                   END;
+
+    OnDeleteRecord=VAR
+                     Error001@1000000000 : TextConst 'DEU=Gutschein ist bereits verbucht.;ENU=Coupon is already posted.';
+                   BEGIN
+                     IF "Is Posted" = TRUE THEN
+                       ERROR(Error001);
+                   END;
+
+    OnAfterGetCurrRecord=BEGIN
+                           IF Status = Status::Active THEN BEGIN
+                             SetActiveEnabled := FALSE;
+                             SetInactiveEnabled := NOT SetActiveEnabled;
+                             IF "Value Coupon" THEN
+                               SetValueEnabled := TRUE
+                             ELSE
+                               SetValueEnabled := FALSE;
+                             AmountVisible := TRUE;
+                             AmountEditableVisible := FALSE;
+                           END ELSE BEGIN
+                             SetActiveEnabled := TRUE;
+                             SetInactiveEnabled := NOT SetActiveEnabled;
+                             SetValueEnabled := FALSE;
+                             AmountVisible := FALSE;
+                             AmountEditableVisible := TRUE;
+                           END;
+
+                           ShowEnableFields(FALSE);
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000014;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000010;1 ;Action    ;
+                      Name=ActivateCoupon;
+                      CaptionML=[DEU=Gutschein freigeben;
+                                 ENU=Activate Coupon];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Enabled=SetActiveEnabled;
+                      PromotedIsBig=Yes;
+                      Image=CompleteLine;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 PageManagement@1000 : Codeunit 700;
+                               BEGIN
+                                 SetCouponActiveFromSource(CouponHeader);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000008;1 ;Action    ;
+                      Name=DeactivateCoupon;
+                      CaptionML=[DEU=Gutschein beenden;
+                                 ENU=Deactivate Coupon];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Enabled=SetInActiveEnabled;
+                      PromotedIsBig=Yes;
+                      Image=CancelLine;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 PageManagement@1000 : Codeunit 700;
+                               BEGIN
+                                 SetCouponInactiveFromSource(CouponHeader);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000023;1 ;Action    ;
+                      Name=AdjustCoupon;
+                      CaptionML=[DEU=Wertcoupon anpassen;
+                                 ENU=Adjust Value Coupon];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Enabled=SetValueEnabled;
+                      PromotedIsBig=Yes;
+                      Image=CashReceiptJournal;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 COMMIT;
+                                 PAGE.RUNMODAL(PAGE::"Adjust Value Coupon",Rec);
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000019;1 ;Action    ;
+                      Name=ShowLedgerEntries;
+                      CaptionML=[DEU=Posten anzeigen;
+                                 ENU=Show Ledger Entries];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=ValueLedger;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 CouponLedgerEntry@1000000000 : Record 5447473;
+                                 CouponLedgerEntries@1000000001 : Page 5447476;
+                               BEGIN
+                                 CouponLedgerEntry.SETRANGE("Coupon Header Code",Code);
+                                 CouponLedgerEntry.SETRANGE("Coupon Code","Coupon Code");
+                                 CouponLedgerEntries.SETTABLEVIEW(CouponLedgerEntry);
+                                 CouponLedgerEntries.EDITABLE(FALSE);
+                                 CouponLedgerEntries.RUN;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Coupon Code";
+                OnValidate=BEGIN
+                             CLEAR(CouponLine);
+                             CouponLine.RESET;
+                             CouponLine.SETRANGE(CouponLine."Coupon Code","Coupon Code");
+                             IF CouponLine.FINDFIRST THEN
+                               ERROR(STRSUBSTNO(Error002,CouponLine."Coupon Code"));
+
+                             "Value Type Shop" := CouponHeader."Value Type Shop";
+                             "Value Type" := CouponHeader."Value Type";
+                             "Value Coupon" := CouponHeader."Value Coupon";
+                           END;
+                            }
+
+    { 1000000006;2;Field  ;
+                SourceExpr=Status }
+
+    { 1000000020;2;Field  ;
+                CaptionML=[DEU=Versandgutschein Typ;
+                           ENU=Shipping Coupon Type];
+                OptionCaptionML=[DEU=Fixbetrag,Prozentrabatt;
+                                 ENU=Fix Amount,Percent Discount];
+                SourceExpr=CouponShippingType;
+                Visible=ShippingFieldsVisible;
+                OnValidate=BEGIN
+                             IF WebshopCouponShippingLine.GET(Code,"Coupon Code") THEN BEGIN
+                               WebshopCouponShippingLine."Shipping Coupon Type" := CouponShippingType;
+                               WebshopCouponShippingLine."Shipping Coupon Value" := CouponShippingValue;
+                               WebshopCouponShippingLine.MODIFY(TRUE);
+                             END ELSE BEGIN
+                               WebshopCouponShippingLine.INIT;
+                               WebshopCouponShippingLine.Code := Code;
+                               WebshopCouponShippingLine."Coupon Code" := "Coupon Code";
+                               WebshopCouponShippingLine."Shipping Coupon Type" := CouponShippingType;
+                               WebshopCouponShippingLine."Shipping Coupon Value" := CouponShippingValue;
+                               WebshopCouponShippingLine.INSERT(TRUE);
+                             END;
+                           END;
+                            }
+
+    { 1000000021;2;Field  ;
+                CaptionML=[DEU=Versandgutschein Wert;
+                           ENU=Shipping Coupon Value];
+                SourceExpr=CouponShippingValue;
+                Visible=ShippingFieldsVisible;
+                OnValidate=BEGIN
+                             IF WebshopCouponShippingLine.GET(Code,"Coupon Code") THEN BEGIN
+                               WebshopCouponShippingLine."Shipping Coupon Type" := CouponShippingType;
+                               WebshopCouponShippingLine."Shipping Coupon Value" := CouponShippingValue;
+                               WebshopCouponShippingLine.MODIFY(TRUE);
+                             END ELSE BEGIN
+                               WebshopCouponShippingLine.INIT;
+                               WebshopCouponShippingLine.Code := Code;
+                               WebshopCouponShippingLine."Coupon Code" := "Coupon Code";
+                               WebshopCouponShippingLine."Shipping Coupon Type" := CouponShippingType;
+                               WebshopCouponShippingLine."Shipping Coupon Value" := CouponShippingValue;
+                               WebshopCouponShippingLine.INSERT(TRUE);
+                             END;
+                           END;
+                            }
+
+    { 1000000005;2;Field  ;
+                Lookup=Yes;
+                SourceExpr="Customer No.";
+                TableRelation=Customer.No.;
+                Visible=CustomerNoVisible;
+                LookupPageID=Customer List }
+
+    { 1000000007;2;Field  ;
+                SourceExpr=Amount;
+                Visible=AmountVisible;
+                Enabled=AmountEnabled }
+
+    { 1000000022;2;Field  ;
+                SourceExpr="Amount Editable";
+                Visible=AmountVisible;
+                Enabled=AmountEditableEnabled;
+                Editable=AmountEditableEnabled }
+
+    { 1000000009;2;Field  ;
+                SourceExpr=Percentage;
+                Visible=PercentageVisible;
+                Editable=PercentageVisible }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Amount From";
+                Visible=AmountFromVisible;
+                Editable=AmountFromVisible;
+                OnValidate=BEGIN
+                             IF "Amount From" <> 0 THEN
+                               TESTFIELD("Value Coupon",FALSE);
+                           END;
+                            }
+
+    { 1000000018;2;Field  ;
+                Name=ItemNo;
+                SourceExpr="Item No.";
+                Visible=ItemNoVisible;
+                Editable=ItemNoVisible }
+
+    { 1000000016;2;Field  ;
+                Name=CategoryLineNo;
+                CaptionML=[DEU=Kategoriezeilennr.;
+                           ENU=Category Line No.];
+                SourceExpr=CategoryLineNo;
+                Visible=CategoryCouponVisible;
+                OnValidate=VAR
+                             WebshopCategory@1000000000 : Record 5447303;
+                           BEGIN
+                             IF CategoryLineNo <> 0 THEN
+                               TESTFIELD("Value Coupon",FALSE);
+
+                             WebshopCategory.SETRANGE("Shop Code",ShopCode);
+                             WebshopCategory.SETRANGE("Line No.",CategoryLineNo);
+                             IF LanguageCode <> '' THEN
+                               WebshopCategory.SETRANGE("Language Code",LanguageCode);
+
+                             IF (WebshopCategory.ISEMPTY) AND (CategoryLineNo <> 0) THEN BEGIN
+                               ERROR(Error003,
+                                   WebshopCouponLine.FIELDCAPTION("Category Line No."),
+                                   WebshopCouponLine.TABLECAPTION,
+                                   CategoryLineNo,
+                                   WebshopCategory.TABLECAPTION);
+                             END;
+
+                             IF CategoryLineNo = 0 THEN BEGIN
+                               IF WebshopCouponLine.GET(Code,"Coupon Code",ShopCode) THEN BEGIN
+                                 WebshopCouponLine."Language Code" := '';
+                                 WebshopCouponLine."Category Line No." := 0;
+                                 WebshopCouponLine."Is Category Coupon" := FALSE;
+                                 WebshopCouponLine.MODIFY(TRUE);
+                               END;
+                             END ELSE BEGIN
+                               IF WebshopCategory.COUNT > 1 THEN BEGIN
+                                 WebshopCategory.RESET;
+                                 WebshopCategory.SETRANGE("Shop Code",ShopCode);
+                                 WebshopCategory.SETRANGE("Line No.",CategoryLineNo);
+                                 IF LanguageCode <> '' THEN
+                                   WebshopCategory.SETRANGE("Language Code",LanguageCode);
+                                 IF PAGE.RUNMODAL(5447332,WebshopCategory) = ACTION::LookupOK THEN BEGIN
+                                   LanguageCode := WebshopCategory."Language Code";
+                                   CategoryLineNo := WebshopCategory."Line No.";
+                                   IF WebshopCouponLine.GET(Code,"Coupon Code",ShopCode) THEN BEGIN
+                                     WebshopCouponLine."Language Code" := LanguageCode;
+                                     WebshopCouponLine."Category Line No." := WebshopCategory."Line No.";
+                                     WebshopCouponLine."Is Category Coupon" := TRUE;
+                                     WebshopCouponLine.MODIFY(TRUE);
+                                   END ELSE BEGIN
+                                     WebshopCouponLine.INIT;
+                                     WebshopCouponLine.Code := Code;
+                                     WebshopCouponLine."Coupon Code" := "Coupon Code";
+                                     WebshopCouponLine."Shop Code" := ShopCode;
+                                     WebshopCouponLine."Language Code" := LanguageCode;
+                                     WebshopCouponLine."Is Category Coupon" := TRUE;
+                                     WebshopCouponLine."Category Line No." := WebshopCategory."Line No.";
+                                     WebshopCouponLine.INSERT(TRUE);
+                                   END;
+                                 END;
+                               END ELSE BEGIN
+                                 WebshopCategory.FINDFIRST;
+                                 LanguageCode := WebshopCategory."Language Code";
+                                 CategoryLineNo := WebshopCategory."Line No.";
+                                 IF WebshopCouponLine.GET(Code,"Coupon Code",ShopCode) THEN BEGIN
+                                   WebshopCouponLine."Category Line No." := WebshopCategory."Line No.";
+                                   WebshopCouponLine."Is Category Coupon" := TRUE;
+                                   WebshopCouponLine.MODIFY(TRUE);
+                                 END ELSE BEGIN
+                                   WebshopCouponLine.INIT;
+                                   WebshopCouponLine.Code := Code;
+                                   WebshopCouponLine."Coupon Code" := "Coupon Code";
+                                   WebshopCouponLine."Shop Code" := ShopCode;
+                                   WebshopCouponLine."Language Code" := LanguageCode;
+                                   WebshopCouponLine."Is Category Coupon" := TRUE;
+                                   WebshopCouponLine."Category Line No." := WebshopCategory."Line No.";
+                                   WebshopCouponLine.INSERT(TRUE);
+                                 END;
+                               END;
+                             END;
+                             CurrPage.UPDATE;
+                           END;
+
+                OnLookup=VAR
+                           WebshopCategory@1000000000 : Record 5447303;
+                           WebshopCategoryList@1000000001 : Page 5447307;
+                         BEGIN
+                           WebshopCategory.SETRANGE("Shop Code",ShopCode);
+                           IF LanguageCode <> '' THEN
+                             WebshopCategory.SETRANGE("Language Code",LanguageCode);
+
+                           IF PAGE.RUNMODAL(5447332,WebshopCategory) = ACTION::LookupOK THEN BEGIN
+                             LanguageCode := WebshopCategory."Language Code";
+                             IF WebshopCouponLine.GET(Code,"Coupon Code",ShopCode) THEN BEGIN
+                               WebshopCouponLine."Category Line No." := WebshopCategory."Line No.";
+                               WebshopCouponLine."Is Category Coupon" := TRUE;
+                               WebshopCouponLine.MODIFY(TRUE);
+                             END ELSE BEGIN
+                               WebshopCouponLine.INIT;
+                               WebshopCouponLine.Code := Code;
+                               WebshopCouponLine."Coupon Code" := "Coupon Code";
+                               WebshopCouponLine."Shop Code" := ShopCode;
+                               WebshopCouponLine."Language Code" := LanguageCode;
+                               WebshopCouponLine."Is Category Coupon" := TRUE;
+                               WebshopCouponLine."Category Line No." := WebshopCategory."Line No.";
+                               WebshopCouponLine.INSERT(TRUE);
+                             END;
+                           END;
+                           CurrPage.UPDATE;
+                         END;
+                          }
+
+    { 1000000012;2;Field  ;
+                Name=CategoryName;
+                CaptionML=[DEU=Kategoriename;
+                           ENU=Category Name];
+                SourceExpr=CategoryName;
+                Visible=CategoryCouponVisible;
+                Editable=FALSE }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Max No. of Uses";
+                Visible=MaxNoofUsageVisible;
+                OnValidate=BEGIN
+                             IF "Max No. of Uses" <> 0 THEN
+                               TESTFIELD("Value Coupon",FALSE);
+                           END;
+                            }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Times Used" }
+
+    { 1000000001;2;Field  ;
+                SourceExpr=Code;
+                Visible=false }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Starting Date" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Ending Date" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Date Last Used" }
+
+  }
+  CODE
+  {
+    VAR
+      Blank@1000000000 : Text[30];
+      CouponLine@1000000009 : Record 5447472;
+      CouponHeader@1000000018 : Record 5447471;
+      CustomerNoVisible@19074881 : Boolean;
+      ValueCouponVisible@1000000008 : Boolean;
+      AmountEnabled@19071318 : Boolean;
+      AmountEditableEnabled@1000000012 : Boolean;
+      AmountVisible@1000000016 : Boolean;
+      AmountEditableVisible@1000000017 : Boolean;
+      PercentageVisible@1000000002 : Boolean;
+      AmountFromVisible@1000000005 : Boolean;
+      ItemNoVisible@1000000006 : Boolean;
+      CategoryCouponVisible@1000000007 : Boolean;
+      MaxNoofUsageVisible@19015773 : Boolean;
+      MaxNoOfUsageEnabled@1000000013 : Boolean;
+      SetActiveEnabled@1000000003 : Boolean;
+      SetInactiveEnabled@1000000004 : Boolean;
+      Error001@1000000010 : TextConst 'DEU=Pro Gutscheingruppe d�rfen Gutscheine nur eine Wertart besitzten.;ENU=Only one value type per coupon group allowed.';
+      Error002@1000000011 : TextConst 'DEU=Gutscheincode %1 existiert bereits.;ENU=Coupon Code %1 already exists.';
+      SetValueEnabled@1000000014 : Boolean;
+      ValueType@1000000019 : Integer;
+      ItemNo@1000000001 : Code[20];
+      CategoryLineNo@1000000015 : Integer;
+      CategoryName@1000000020 : Text[50];
+      WebshopCouponLine@1000000021 : Record 5447329;
+      ShopCode@1000000022 : Code[20];
+      LanguageCode@1000000023 : Code[20];
+      Error003@1000000024 : TextConst 'DEU=Das Feld ''%1'' der Tabelle ''%2'' enth�lt einen Wert (%3), der in der zugeh�rigen Tabelle (%4) nicht gefunden wurde.;ENU=The field ''%1'' of the table ''%2'' contains a value (%3) wich was not found in the associated table (%4).';
+      CouponSetup@1000000025 : Record 5447470;
+      CouponShippingType@1000000027 : 'amount,percent';
+      CouponShippingValue@1000000026 : Decimal;
+      ShippingFieldsVisible@1000000028 : Boolean;
+      WebshopCouponShippingLine@1000000029 : Record 5447330;
+
+    PROCEDURE ShowEnableFields@1000000002(ResetValues@1000000000 : Boolean);
+    BEGIN
+      CASE ValueType OF
+        //Betrag
+        0:
+          BEGIN
+            CustomerNoVisible := FALSE;
+            IF ResetValues THEN
+              "Customer No." := '';
+            ValueCouponVisible := TRUE;
+            AmountVisible := TRUE;
+            AmountEditableVisible := TRUE;
+
+            IF Status = Status::Active THEN BEGIN
+              AmountEnabled := TRUE;
+              AmountEditableEnabled := FALSE;
+            END ELSE BEGIN
+              AmountEnabled := FALSE;
+              AmountEditableEnabled := TRUE;
+            END;
+
+            PercentageVisible := FALSE;
+            IF ResetValues THEN
+              Percentage := 0;
+            AmountFromVisible := TRUE;
+            CategoryCouponVisible := TRUE;
+            MaxNoofUsageVisible := TRUE;
+            ItemNoVisible := FALSE;
+            ShippingFieldsVisible := FALSE;
+          END;
+        //Prozent
+        1:
+          BEGIN
+            CustomerNoVisible := FALSE;
+            ValueCouponVisible := FALSE;
+            AmountVisible := FALSE;
+            AmountEditableVisible := FALSE;
+            PercentageVisible := TRUE;
+            AmountFromVisible := TRUE;
+            CategoryCouponVisible := TRUE;
+            MaxNoofUsageVisible := TRUE;
+            ItemNoVisible := FALSE;
+            ShippingFieldsVisible := FALSE;
+          END;
+        //Artikel
+        2:
+          BEGIN
+            CustomerNoVisible := FALSE;
+            ValueCouponVisible := FALSE;
+            AmountVisible := FALSE;
+            AmountEditableVisible := FALSE;
+            PercentageVisible := FALSE;
+            AmountFromVisible := TRUE;
+            CategoryCouponVisible := TRUE;
+            MaxNoofUsageVisible := TRUE;
+            ItemNoVisible := TRUE;
+            ShippingFieldsVisible := FALSE;
+          END;
+        //Versand
+        3:
+          BEGIN
+            CustomerNoVisible := FALSE;
+            ValueCouponVisible := FALSE;
+            AmountVisible := FALSE;
+            AmountEditableVisible := FALSE;
+            PercentageVisible := FALSE;
+            AmountFromVisible := FALSE;
+            CategoryCouponVisible := FALSE;
+            MaxNoofUsageVisible := TRUE;
+            ItemNoVisible := FALSE;
+            ShippingFieldsVisible := FALSE;
+          END;
+      END;
+      IF ResetValues THEN
+        CurrPage.UPDATE;
+    END;
+
+    PROCEDURE SetCouponHeader@1000000000(ParaCouponHeader@1000000000 : Record 5447471);
+    BEGIN
+      IF CouponHeader.GET(ParaCouponHeader.Code) THEN BEGIN
+        IF CouponSetup.GET THEN;
+        IF CouponSetup."Shop Active" THEN
+          ValueType := CouponHeader."Value Type Shop"
+        ELSE
+          ValueType := CouponHeader."Value Type";
+      END;
+    END;
+
+    PROCEDURE SetValueType@1000000003(ParaValueType@1000000000 : Integer);
+    BEGIN
+      ValueType := ParaValueType;
+    END;
+
+    PROCEDURE SetCouponCode@1000000006(ParaShopCode@1000000000 : Code[20]);
+    BEGIN
+      ShopCode := ParaShopCode;
+    END;
+
+    PROCEDURE SetShopCode@1000000001(ParaShopCode@1000000000 : Code[20]);
+    BEGIN
+      ShopCode := ParaShopCode;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

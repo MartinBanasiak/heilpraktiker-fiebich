@@ -1,0 +1,120 @@
+OBJECT Page 5447331 Webshop Coupon Header List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop Gutschein �bersicht;
+               ENU=Webshop Coupon List];
+    SourceTable=Table5447330;
+    PageType=List;
+    CardPageID=Webshop Coupon Header Card;
+    ActionList=ACTIONS
+    {
+      { 1000000016;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000015;1 ;ActionGroup;
+                      Name=Funktion;
+                      CaptionML=[DEU=Funktion;
+                                 ENU=Function] }
+      { 1000000014;2 ;Action    ;
+                      CaptionML=[DEU=Online aktualisieren;
+                                 ENU=Update Coupon];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+                               BEGIN
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.GetCouponLine();
+                                 WebshopUpdateManagement.UpdateCouponHeader(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                               END;
+                                }
+      { 1000000009;2 ;Action    ;
+                      CaptionML=[DEU=Gutscheinzeilen erzeugen;
+                                 ENU=Create Coupon Lines];
+                      Promoted=Yes;
+                      Image=PostedVoucherGroup;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ReportCreate@1000000000 : Report 5447329;
+                                 CouponHeader@1000000001 : Record 5447330;
+                               BEGIN
+                                 CouponHeader.SETRANGE(CouponHeader.Code,Code);
+                                 REPORT.RUN(5447329,TRUE,FALSE,CouponHeader);
+                               END;
+                                }
+      { 1000000012;1 ;ActionGroup;
+                      Name=Zeile;
+                      CaptionML=[DEU=Zeile;
+                                 ENU=Line];
+                      ActionContainerType=NewDocumentItems }
+      { 1000000011;2 ;Action    ;
+                      Name=Gutscheinzeilen;
+                      CaptionML=[DEU=Gutscheinzeilen;
+                                 ENU=Coupon Lines];
+                      RunObject=Page 5447332;
+                      RunPageLink=Shop Code=FIELD(Shop Code),
+                                  Language Code=FIELD(Language Code),
+                                  Code=FIELD(Code);
+                      Promoted=No;
+                      Image=VoucherDescription }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Shop Code;
+                           ENU=Shop Code];
+                SourceExpr="Shop Code" }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Sprachcode;
+                           ENU=Language Code];
+                SourceExpr="Language Code" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Code }
+
+    { 1000000005;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Coupon Type" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Starting Date" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Ending Date" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="No. of Coupon Codes" }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

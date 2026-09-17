@@ -1,0 +1,62 @@
+OBJECT Table 5447309 Webshop Text Module
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnDelete=BEGIN
+               // Web-Datensatz l�schen
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.DeleteTextModule(Rec);
+             END;
+
+    OnRename=BEGIN
+               ERROR(Text001);
+             END;
+
+    CaptionML=[DEU=Webshop Textbaustein;
+               ENU=Webshop Text-Module];
+    LookupPageID=Page5447318;
+    DrillDownPageID=Page5447318;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code30        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Description         ;Text80        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 4   ;   ;Content             ;Boolean       ;CaptionML=[DEU=Inhalt;
+                                                              ENU=Content];
+                                                   Editable=No }
+    { 5   ;   ;Attachment 1        ;Boolean        }
+    { 6   ;   ;Attachment 2        ;Boolean        }
+    { 7   ;   ;Temp Filename       ;Text100       ;CaptionML=[DEU=Tempor�rer Dateiname;
+                                                              ENU=Temp Filename] }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      Text001@1000000001 : TextConst 'DEU=Sie k�nnen den Datensatz nicht umbenennen;ENU=Row cannot be renamed';
+      WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

@@ -1,0 +1,87 @@
+OBJECT Page 5447361 Webshop Edit Item Description
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelbeschreibung bearbeiten;
+               ENU=Edit webshop item description];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    SourceTable=Table5447306;
+    DataCaptionExpr=CurrType;
+    PageType=StandardDialog;
+    ShowFilter=No;
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+               END;
+
+    OnNextRecord=BEGIN
+                   EXIT;
+                 END;
+
+    OnAfterGetRecord=VAR
+                       "^"@1000000000 : Boolean;
+                       Text001@1000000001 : TextConst 'DEU=Haben Sie alle �nderungen gespeichert?;ENU=Did you save all changes?';
+                     BEGIN
+                       CurrType := STRSUBSTNO(Text001,Description,"Item No.");
+                       RANDOMIZE();
+                       Request :=
+                         STRSUBSTNO('%1webforms/edit_description.php?pass=%2&company=%3',
+                           WebshopSetup."Server Synch. Endpoint URL",
+                           WebshopSetup."Server Synch. Password",
+                           WebshopManagement.URLEncode(COMPANYNAME));
+                       Request +=
+                         STRSUBSTNO('&shop_code=%1&language_code=%2&item_no=%3&line_no=%4&rand=%5&nav_lang=%6&rtc=TRUE',
+                           WebshopManagement.URLEncode("Shop Code"),
+                           WebshopManagement.URLEncode("Language Code"),
+                           WebshopManagement.URLEncode("Item No."),
+                           "Line No.",
+                           RANDOM(2000),
+                           GLOBALLANGUAGE);
+                     END;
+
+    OnQueryClosePage=VAR
+                       OK@1000000000 : Boolean;
+                       Text001@1000000001 : TextConst 'DEU=Haben Sie Ihre �nderungen gespeichert?;ENU=Did you save your changes?';
+                     BEGIN
+                       OK := CONFIRM(Text001);
+                       IF NOT OK THEN
+                         EXIT(FALSE);
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000004;1;Field  ;
+                Name=RequestCon;
+                SourceExpr=Request;
+                ControlAddIn=[DynamicCommerce.MysydeShop.Connect;PublicKeyToken=eb1e70a97bfaeec6] }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000001 : Record 5447300;
+      WebshopManagement@1000000005 : Codeunit 5447300;
+      Request@1000000002 : Text[1024];
+      Type@1000000000 : 'Image,Symbol';
+      CurrType@1000000003 : Text[250];
+      Text001@1000000004 : TextConst 'DEU=%1 zu Artikel %2;ENU=%1 to item %2';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

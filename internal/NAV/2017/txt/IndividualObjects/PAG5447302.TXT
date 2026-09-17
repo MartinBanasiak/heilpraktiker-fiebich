@@ -1,0 +1,192 @@
+OBJECT Page 5447302 Webshop Shop List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop�bersicht;
+               ENU=Webshop list];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    SourceTable=Table5447301;
+    PageType=List;
+    CardPageID=Webshop Shop Card;
+    OnAfterGetRecord=BEGIN
+                       CustomerLinkVisible := NOT ("Shop Type"="Shop Type"::b2c);
+                       SalespersonLinkVisible := ("Shop Type"="Shop Type"::salesperson);
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000008;  ;ActionContainer;
+                      Name=<Action1000000057>;
+                      ActionContainerType=ActionItems }
+      { 1000000009;1 ;Action    ;
+                      Name=<Action1000000060>;
+                      CaptionML=[DEU=Webshop �ffnen;
+                                 ENU=Open Webshop];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=DocInBrowser;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 FrontendLink@1000000000 : Codeunit 5447308;
+                               BEGIN
+                                 FrontendLink.SetShopCode(Code);
+                                 FrontendLink.RUN;
+                               END;
+                                }
+      { 1000000007;1 ;Action    ;
+                      Name=<Action1000000058>;
+                      CaptionML=[DEU=Grundeinrichtung aktualisieren;
+                                 ENU=Update Setup];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text002@1000000000 : TextConst 'DEU=Webshop Einrichtung aktualisieren;ENU=Update Webshop Setup';
+                                 CountRecords@1000000002 : Boolean;
+                                 i@1000000001 : Integer;
+                               BEGIN
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   WebshopUpdateManagement.StateIndicatorOpen(Text002);
+                                   CountRecords := TRUE;
+                                   WebshopUpdateManagement.SetSendNow(TRUE);
+                                   FOR i := 1 TO 2 DO BEGIN
+                                     WebshopUpdateManagement.UpdateAllWebshopSetup(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShop(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllLanguage(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllCountry(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShippingOptions(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllPaymentOptions(CountRecords);
+                                     CountRecords := FALSE;
+                                   END;
+                                   WebshopUpdateManagement.SetSendNow(FALSE);
+                                   WebshopUpdateManagement.StateIndicatorClose();
+                                 END;
+                               END;
+                                }
+      { 1000000010;1 ;Action    ;
+                      Name=<Action1000000010>;
+                      CaptionML=[DEU=Update Bewegungsdaten;
+                                 ENU=Update Dynamic Data];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateDynamicData@1000000000 : Codeunit 5447304;
+                               BEGIN
+                                 WebshopUpdateDynamicData.UpdateDynamicData;
+                               END;
+                                }
+      { 1000000011;1 ;Action    ;
+                      Name=<Action1000000011>;
+                      CaptionML=[DEU=Update Gesamtdaten;
+                                 ENU=Update All Data];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopUpdateAllData@1000000000 : Codeunit 5447303;
+                               BEGIN
+                                 WebshopUpdateAllData.UpdateAllData;
+                               END;
+                                }
+      { 1       ;    ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000018;1 ;Action    ;
+                      CaptionML=[DEU=Webshop Sprachen;
+                                 ENU=Webshop Languages];
+                      RunObject=Page 5447304;
+                      RunPageLink=Shop Code=FIELD(Code);
+                      Image=Language }
+      { 1000000017;1 ;Action    ;
+                      CaptionML=[DEU=Webshop Artikel;
+                                 ENU=Webshop Items];
+                      RunObject=Page 5447309;
+                      RunPageLink=Shop Code=FIELD(Code);
+                      Image=Web }
+      { 1000000016;1 ;Action    ;
+                      CaptionML=[DEU=Webshop Gutscheine;
+                                 ENU=Webshop Coupons];
+                      RunObject=Page 5447331;
+                      RunPageLink=Shop Code=FIELD(Code);
+                      Image=Discount }
+      { 1000000015;1 ;Action    ;
+                      CaptionML=[DEU=Webshop Kunden;
+                                 ENU=Webshop Customers];
+                      RunObject=Page 22;
+                      RunPageLink=Field50703=FIELD(Code);
+                      Visible=CustomerLinkVisible;
+                      Image=Customer }
+      { 1000000014;1 ;Action    ;
+                      CaptionML=[DEU=Webshop Vertreter;
+                                 ENU=Webshop Salespeople];
+                      RunObject=Page 14;
+                      Visible=SalespersonLinkVisible;
+                      Image=SalesPerson }
+      { 1000000013;1 ;Action    ;
+                      CaptionML=[DEU=Webshop Globale Merkmalfilter;
+                                 ENU=Webshop Global Attribute Filter];
+                      RunObject=Page 5447325;
+                      RunPageLink=Type=CONST(Shop),
+                                  Shop Code=FIELD(Code),
+                                  Language Code=CONST(),
+                                  Category Line No.=CONST(0);
+                      Image=Dimensions }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                CaptionML=DEU=Code;
+                SourceExpr=Code }
+
+    { 1000000003;2;Field  ;
+                CaptionML=DEU=Beschreibung;
+                SourceExpr=Description }
+
+    { 1000000004;2;Field  ;
+                CaptionML=DEU=Artikel von Shop verwenden;
+                SourceExpr="Use Items from Shop Code" }
+
+    { 1000000005;2;Field  ;
+                CaptionML=DEU=Kategorien von Shop verwenden;
+                SourceExpr="Use Categories from Shop Code" }
+
+    { 1000000006;2;Field  ;
+                CaptionML=DEU=Webshop Link;
+                SourceExpr="Webshop URL" }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000001 : Codeunit 5447301;
+      CustomerLinkVisible@1000 : Boolean;
+      SalespersonLinkVisible@1001 : Boolean;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

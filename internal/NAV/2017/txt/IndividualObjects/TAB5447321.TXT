@@ -1,0 +1,298 @@
+OBJECT Table 5447321 Webshop Attribute Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               // Reihenfolge beim Einf�gen setzten
+
+               CASE Type OF
+                 Type::Item: BEGIN
+                   TempAttributeLink.SETCURRENTKEY(Type,"No.",Sorting);
+                   TempAttributeLink.SETRANGE(Type,Type::Item);
+                   TempAttributeLink.SETRANGE("No.","No.");
+                   WebshopManagement.SetWebshopItemModified("No.",TRUE,FALSE,FALSE);
+                 END;
+                 Type::Category: BEGIN
+                   TempAttributeLink.SETCURRENTKEY(Type,"Shop Code","Language Code","Category Line No.",Sorting);
+                   TempAttributeLink.SETRANGE(Type,Type::Category);
+                   TempAttributeLink.SETRANGE("Shop Code","Shop Code");
+                   TempAttributeLink.SETRANGE("Language Code","Language Code");
+                   TempAttributeLink.SETRANGE("Category Line No.","Category Line No.");
+                   WebshopManagement.SetWebshopCategoryModified("Shop Code","Language Code","Category Line No.");
+                 END;
+                 Type::Shop: BEGIN
+                   TempAttributeLink.SETCURRENTKEY(Type,"Shop Code",Sorting);
+                   TempAttributeLink.SETRANGE(Type,Type::Shop);
+                   TempAttributeLink.SETRANGE("Shop Code","Shop Code");
+                 END;
+                 Type::Template: BEGIN
+                   TempAttributeLink.SETCURRENTKEY(Type,"No.",Sorting);
+                   TempAttributeLink.SETRANGE(Type,Type::Template);
+                   TempAttributeLink.SETRANGE("No.","No.");
+                 END;
+               END;
+
+               IF TempAttributeLink.FINDLAST THEN
+                 Sorting :=  TempAttributeLink.Sorting + 1
+               ELSE
+                 Sorting := 1;
+             END;
+
+    OnModify=VAR
+               WebshopItem@1000000000 : Record 5447304;
+             BEGIN
+               IF Type=Type::Item THEN
+                 WebshopManagement.SetWebshopItemModified("No.",TRUE,FALSE,FALSE);
+
+               IF Type=Type::Category THEN
+                 WebshopManagement.SetWebshopCategoryModified("Shop Code","Language Code","Category Line No.");
+             END;
+
+    OnDelete=BEGIN
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.DeleteAttributeLink(Rec);
+               AttributeTranslation.SETRANGE(AttributeTranslation.Type,AttributeTranslation.Type::"Attribute Link");
+               AttributeTranslation.SETRANGE("Attribute Code","Attribute Code");
+               AttributeTranslation.SETRANGE("Attribute Link No.","No.");
+               AttributeTranslation.DELETEALL();
+             END;
+
+    OnRename=BEGIN
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.DeleteAttributeLink(xRec);
+               AttributeTranslation.SETRANGE(AttributeTranslation.Type,AttributeTranslation.Type::"Attribute Link");
+               AttributeTranslation.SETRANGE("Attribute Code",xRec."Attribute Code");
+               AttributeTranslation.SETRANGE("Attribute Link No.",xRec."No.");
+               AttributeTranslation.DELETEALL();
+
+               IF Rec.Type=Type::Item THEN
+                 WebshopManagement.SetWebshopItemModified(Rec."No.",TRUE,FALSE,FALSE);
+
+               IF Type=Type::Category THEN
+                 WebshopManagement.SetWebshopCategoryModified("Shop Code","Language Code","Category Line No.");
+             END;
+
+    CaptionML=[DEU=Webshop Merkmalverkn�pfung;
+               ENU=Webshop Attribute Link];
+    LookupPageID=Page5447325;
+    DrillDownPageID=Page5447325;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionString=Item,Category,Shop,Template }
+    { 2   ;   ;No.                 ;Code20        ;TableRelation=IF (Type=CONST(Item)) Item.No.;
+                                                   CaptionML=[DEU=Nr.;
+                                                              ENU=No.] }
+    { 3   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code] }
+    { 4   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code] }
+    { 5   ;   ;Category Line No.   ;Integer       ;TableRelation="Webshop Category"."Line No." WHERE (Shop Code=FIELD(Shop Code),
+                                                                                                      Language Code=FIELD(Language Code));
+                                                   CaptionML=[DEU=Kategoriezeilennr.;
+                                                              ENU=Category Line No.] }
+    { 6   ;   ;Attribute Code      ;Code30        ;TableRelation="Webshop Attribute".Code;
+                                                   CaptionML=[DEU=Merkmalcode;
+                                                              ENU=Attribute Code];
+                                                   NotBlank=Yes }
+    { 7   ;   ;Sorting             ;Integer       ;CaptionML=[DEU=Reihenfolge;
+                                                              ENU=Sorting] }
+    { 10  ;   ;Value Option        ;Code30        ;TableRelation="Webshop Attribute Option".Code WHERE (Attribute Code=FIELD(Attribute Code));
+                                                   CaptionML=[DEU=Wert Option;
+                                                              ENU=Value Option] }
+    { 11  ;   ;Value Decimal       ;Decimal       ;CaptionML=[DEU=Wert Dezimalzahl;
+                                                              ENU=Value Decimal] }
+    { 12  ;   ;Value Integer       ;Integer       ;CaptionML=[DEU=Wert Ganzzahl;
+                                                              ENU=Value Integer] }
+    { 13  ;   ;Value Boolean       ;Boolean       ;CaptionML=[DEU=Wert Ja/Nein-Feld;
+                                                              ENU=Value Boolean] }
+    { 14  ;   ;Value Text          ;Text100       ;CaptionML=[DEU=Wert Text;
+                                                              ENU=Value Text] }
+    { 20  ;   ;Attribute Description;Text50       ;FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Attribute".Description WHERE (Code=FIELD(Attribute Code)));
+                                                   CaptionML=[DEU=Merkmalsbeschreibung;
+                                                              ENU=Attribute Description];
+                                                   Editable=No }
+    { 31  ;   ;Is Marketpl. Req. Attribute;Boolean;CaptionML=[DEU=Ist Marktplatz-Pflichtmerkmal;
+                                                              ENU=Is Marketpl. Req. Attribute] }
+    { 32  ;   ;Defines Marketpl. Variants;Boolean ;CaptionML=[DEU=Definiert Marktplatz-Varianten;
+                                                              ENU=Defines Marketpl. Variants] }
+  }
+  KEYS
+  {
+    {    ;Type,No.,Shop Code,Language Code,Category Line No.,Attribute Code,Value Option;
+                                                   Clustered=Yes }
+    {    ;Type,Shop Code,Language Code,Category Line No.,Sorting }
+    {    ;Type,No.,Sorting                         }
+    {    ;Type,Shop Code,Sorting                   }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      TempAttributeLink@1000000000 : Record 5447321;
+      AttributeTranslation@1000000001 : Record 5447323;
+      WebshopManagement@1000000002 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000003 : Codeunit 5447301;
+
+    PROCEDURE SaveValue@1000000000(Value@1000000001 : Text[100]);
+    VAR
+      Attribute@1000000000 : Record 5447320;
+    BEGIN
+      // Wert aus einem Textfeld speichern
+
+      IF (Type IN [Type::Item,Type::Template]) AND ValueIsEditable AND Attribute.GET("Attribute Code") THEN BEGIN
+        CASE Attribute."Data Type" OF
+          Attribute."Data Type"::Option: VALIDATE("Value Option",Value);
+          Attribute."Data Type"::Integer: EVALUATE("Value Integer",Value);
+          Attribute."Data Type"::Decimal: EVALUATE("Value Decimal",Value);
+          Attribute."Data Type"::Boolean: EVALUATE("Value Boolean",Value);
+          Attribute."Data Type"::Text: VALIDATE("Value Text",Value);
+        END;
+      END;
+    END;
+
+    PROCEDURE GetValue@1000000001() ReturnValue : Text[100];
+    VAR
+      Attribute@1000000000 : Record 5447320;
+      AttributeOption@1000000001 : Record 5447322;
+      Item@1000000002 : Record 27;
+      ItemUnitofMeasure@1000000003 : Record 5404;
+      WebshopItem@1000000004 : Record 5447304;
+      Vendor@1000000005 : Record 23;
+    BEGIN
+      // Wert in einem Textfeld anzeigen
+
+      IF (Type IN [Type::Item,Type::Template]) AND Attribute.GET("Attribute Code") THEN BEGIN
+
+        CASE Attribute."Data Type" OF
+          Attribute."Data Type"::Option: BEGIN
+            ReturnValue := "Value Option";
+            IF AttributeOption.GET(Attribute.Code,"Value Option") THEN BEGIN
+              ReturnValue := AttributeOption.Description;
+            END;
+          END;
+
+          Attribute."Data Type"::Integer: ReturnValue := FORMAT("Value Integer",0,'<Standard Format,0>');
+          Attribute."Data Type"::Decimal: ReturnValue := FORMAT("Value Decimal",0,'<Precision,2:4><Standard Format,0>');
+          Attribute."Data Type"::Boolean: ReturnValue := FORMAT("Value Boolean");
+          Attribute."Data Type"::Text: ReturnValue := "Value Text";
+        END;
+
+        IF Item.GET("No.") THEN BEGIN
+          CASE Attribute."Existing Data" OF
+            Attribute."Existing Data"::Width: BEGIN
+              IF ItemUnitofMeasure.GET(Item."No.",Item."Sales Unit of Measure") THEN
+                ReturnValue := FORMAT(ItemUnitofMeasure.Width,0,'<Precision,2:4><Standard Format,0>');
+            END;
+            Attribute."Existing Data"::Length: BEGIN
+              IF ItemUnitofMeasure.GET(Item."No.",Item."Sales Unit of Measure") THEN
+                ReturnValue := FORMAT(ItemUnitofMeasure.Length,0,'<Precision,2:4><Standard Format,0>');
+            END;
+            Attribute."Existing Data"::Height: BEGIN
+              IF ItemUnitofMeasure.GET(Item."No.",Item."Sales Unit of Measure") THEN
+                ReturnValue := FORMAT(ItemUnitofMeasure.Height,0,'<Precision,2:4><Standard Format,0>');
+            END;
+            Attribute."Existing Data"::Cubage: BEGIN
+              IF ItemUnitofMeasure.GET(Item."No.",Item."Sales Unit of Measure") THEN
+                ReturnValue := FORMAT(ItemUnitofMeasure.Cubage,0,'<Precision,2:4><Standard Format,0>');
+            END;
+            Attribute."Existing Data"::RetailPrice: BEGIN
+              WebshopItem.SETRANGE("Item No.",Item."No.");
+              IF WebshopItem.FINDFIRST THEN
+                ReturnValue := FORMAT(WebshopItem.WebshopRetailPrice,0,'<Precision,2:2><Standard Format,0>');
+            END;
+            Attribute."Existing Data"::BasePrice: BEGIN
+              WebshopItem.SETRANGE("Item No.",Item."No.");
+              IF WebshopItem.FINDFIRST THEN
+                ReturnValue := FORMAT(WebshopItem.WebshopBasePrice,0,'<Precision,2:2><Standard Format,0>');
+            END;
+            Attribute."Existing Data"::Vendor: BEGIN
+              IF Vendor.GET(Item."Vendor No.") THEN
+                ReturnValue := Vendor."No." + ' - ' + Vendor.Name;
+            END;
+            Attribute."Existing Data"::BasePrice: BEGIN
+              WebshopItem.SETRANGE("Item No.",Item."No.");
+              IF WebshopItem.FINDFIRST THEN
+                ReturnValue := FORMAT(WebshopItem.WebshopInventory(''),0,'<Precision,0:1><Standard Format,0>');
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE EditValue@1000000003();
+    VAR
+      Attribute@1000000000 : Record 5447320;
+      Menu001@1000000001 : TextConst 'DEU=Ja,Nein;ENU=Yes,No';
+      SelectedValue@1000000002 : Integer;
+      ReturnValue@1000000003 : Integer;
+      AttributeOption@1000000005 : Record 5447322;
+      Text001@1000000007 : TextConst 'DEU=: #1###########################################;ENU=: #1###########################################';
+      Text002@1000000008 : TextConst 'DEU=: #1######;ENU=: #1######';
+      PageAttibuteOptions@1000000004 : Page 5447326;
+    BEGIN
+      // Wert �ber Assist-Button bearbeiten
+
+      IF (Type IN [Type::Item,Type::Template]) AND ValueIsEditable THEN BEGIN
+        Attribute.SETRANGE(Attribute.Code,"Attribute Code");
+        IF Attribute.FINDFIRST THEN BEGIN
+          CASE Attribute."Data Type" OF
+            Attribute."Data Type"::Option: BEGIN
+              AttributeOption.SETRANGE("Attribute Code","Attribute Code");
+              PageAttibuteOptions.SETTABLEVIEW(AttributeOption);
+              PageAttibuteOptions.LOOKUPMODE := TRUE;
+              IF AttributeOption.GET("Attribute Code","Value Option") THEN
+                PageAttibuteOptions.SETRECORD(AttributeOption);
+              IF PageAttibuteOptions.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                PageAttibuteOptions.GETRECORD(AttributeOption);
+                VALIDATE("Value Option",AttributeOption.Code);
+              END;
+            END;
+            Attribute."Data Type"::Boolean: BEGIN
+              IF "Value Boolean"  THEN
+                SelectedValue := 1
+              ELSE
+                SelectedValue := 2;
+              ReturnValue := DIALOG.STRMENU(Menu001,SelectedValue);
+              IF ReturnValue = 1 THEN
+                "Value Boolean" := TRUE
+              ELSE
+                "Value Boolean" := FALSE;
+            END;
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE ValueIsEditable@1000000004() IsEditable : Boolean;
+    VAR
+      Attribute@1000000000 : Record 5447320;
+    BEGIN
+      // Pr�fen ob Wert bearbeitet werden kann
+
+      IF Attribute.GET("Attribute Code") THEN BEGIN
+        IsEditable := (Attribute."Existing Data" = Attribute."Existing Data"::" ");
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

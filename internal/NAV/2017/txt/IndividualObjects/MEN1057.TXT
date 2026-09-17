@@ -1,0 +1,398 @@
+OBJECT MenuSuite 1057 Dept - dynamic commerce
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+  }
+  MENUNODES
+  {
+    {                ;[{19A352FE-D90D-424E-B85F-CF3B8E98CF0E}] ;NextNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}] }
+    { Menu           ;[{8A6F697B-025D-4E43-8B7C-19F7A8482985}] ;Name=E-Commerce;
+                                                                CaptionML=[DEU=E-Commerce;
+                                                                           ENU=E-Commerce];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                ParentNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                Image=2;
+                                                                IsShortcut=No;
+                                                                Visible=Yes;
+                                                                Enabled=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                FirstChild=[{6349F268-1408-495C-931C-43043C0CFEA8}] }
+    { MenuGroup      ;[{6349F268-1408-495C-931C-43043C0CFEA8}] ;Name=Stammdaten;
+                                                                CaptionML=[DEU=Stammdaten;
+                                                                           ENU=Master Data];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                ParentNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{D60628F0-6ED1-400C-9DE7-A1C072904BA0}];
+                                                                FirstChild=[{5F5D5DAB-1CB4-470D-8EEC-3DEBBA5C1E80}];
+                                                                IsDepartmentPage=Yes }
+    { MenuGroup      ;[{656CB19C-4F62-45FC-82E7-5FED57B1C087}] ;Name=Einrichtung;
+                                                                CaptionML=[DEU=Einrichtung;
+                                                                           ENU=Setup];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                ParentNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{09FC39C0-A3C0-4C26-AAA2-1F836CA3ED54}];
+                                                                FirstChild=[{EAE92D66-4BF1-46A9-96B5-DC97147045EB}];
+                                                                IsDepartmentPage=Yes }
+    { MenuItem       ;[{8E29B088-E996-4BFE-99E2-B408419DAE98}] ;Name=Einrichtung;
+                                                                CaptionML=[DEU=Einrichtung;
+                                                                           ENU=Setup];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447300;
+                                                                ParentNodeID=[{656CB19C-4F62-45FC-82E7-5FED57B1C087}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{7367C30D-0143-41F8-AE83-BBF45F5FAA46}];
+                                                                DepartmentCategory=Administration }
+    { MenuItem       ;[{B0F7F7DA-DAB8-4FBD-B26F-73E31936F67E}] ;Name=Webshops;
+                                                                CaptionML=[DEU=Webshops;
+                                                                           ENU=Webshops];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447302;
+                                                                ParentNodeID=[{6349F268-1408-495C-931C-43043C0CFEA8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{C0472080-0F19-4E5C-93FC-272F52C7094D}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{05EDD1E8-B5BF-4F3C-9CDA-FFE73D2EA7D0}] ;Name=Sprachen�!;
+                                                                CaptionML=[DEU=Sprachen;
+                                                                           ENU=Languages];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447304;
+                                                                ParentNodeID=[{6349F268-1408-495C-931C-43043C0CFEA8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{B0F7F7DA-DAB8-4FBD-B26F-73E31936F67E}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{EAE92D66-4BF1-46A9-96B5-DC97147045EB}] ;Name=Webshop Textbausteine;
+                                                                CaptionML=[DEU=Text-Module;
+                                                                           ENU=Text Modules];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447318;
+                                                                ParentNodeID=[{656CB19C-4F62-45FC-82E7-5FED57B1C087}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{19394842-C836-4B22-888A-030639A62258}];
+                                                                DepartmentCategory=Administration }
+    { MenuItem       ;[{B1F100C5-C0A9-4118-AD6B-1573E379D1E1}] ;Name=Webshop Artikelmerkmale;
+                                                                CaptionML=[DEU=Artikelmerkmale;
+                                                                           ENU=Attribute List];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447320;
+                                                                ParentNodeID=[{6349F268-1408-495C-931C-43043C0CFEA8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{05EDD1E8-B5BF-4F3C-9CDA-FFE73D2EA7D0}];
+                                                                DepartmentCategory=Administration }
+    { MenuItem       ;[{19394842-C836-4B22-888A-030639A62258}] ;Name=Merkmalvorlagen;
+                                                                CaptionML=[DEU=Artikelmerkmalvorlagen;
+                                                                           ENU=Attr. Template List];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447323;
+                                                                ParentNodeID=[{656CB19C-4F62-45FC-82E7-5FED57B1C087}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{8E29B088-E996-4BFE-99E2-B408419DAE98}];
+                                                                DepartmentCategory=Administration }
+    { MenuItem       ;[{2F95AE8C-3228-4678-9C25-559F305B33E9}] ;Name=Debitoren;
+                                                                CaptionML=[DEU=Debitoren;
+                                                                           ENU=Customers];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=22;
+                                                                ParentNodeID=[{D60628F0-6ED1-400C-9DE7-A1C072904BA0}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{E85D352C-6E45-4C8F-83B8-1114BDEFA629}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{5F5D5DAB-1CB4-470D-8EEC-3DEBBA5C1E80}] ;Name=Artikel;
+                                                                CaptionML=[DEU=Artikel;
+                                                                           ENU=Items];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=31;
+                                                                ParentNodeID=[{6349F268-1408-495C-931C-43043C0CFEA8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{B1F100C5-C0A9-4118-AD6B-1573E379D1E1}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{253BE096-6A34-4817-8DB9-2E5CFD591EE9}] ;Name=Artikel einer Kategorie zuweis;
+                                                                CaptionML=[DEU=Artikel einer Kategorie zuweisen;
+                                                                           ENU=Add Items to Category];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Report;
+                                                                RunObjectID=5447305;
+                                                                ParentNodeID=[{6349F268-1408-495C-931C-43043C0CFEA8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{3095704C-88B1-466C-8714-121CE0DCDD33}];
+                                                                DepartmentCategory=Tasks }
+    {                ;[{7D6561AD-B77E-441E-BAE9-B645DA8DB8C3}] ;NextNodeID=[{9DE49D40-BCA7-44D7-A0A5-A7940F6E4573}] }
+    { MenuItem       ;[{9DE49D40-BCA7-44D7-A0A5-A7940F6E4573}] ;Name=ClientAddInList;
+                                                                CaptionML=[DEU=ClientAddInList;
+                                                                           ENU=ClientAddIn Liste];
+                                                                MemberOfMenu=[{19A352FE-D90D-424E-B85F-CF3B8E98CF0E}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447365;
+                                                                ParentNodeID=[{0179BFD5-90F4-4EC1-A29D-3C0A571F8EB2}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{2FC554D4-DBF9-48AD-A8BA-C6116663FD5C}];
+                                                                DepartmentCategory=Lists }
+    { MenuGroup      ;[{ACAFB169-5EAE-4288-AF5C-36F7796EC5C8}] ;Name=Verkauf;
+                                                                CaptionML=[DEU=Verkauf;
+                                                                           ENU=Sales];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                ParentNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{656CB19C-4F62-45FC-82E7-5FED57B1C087}];
+                                                                FirstChild=[{B1F34273-C260-4D78-9214-235125DE48A9}];
+                                                                IsDepartmentPage=Yes }
+    { MenuItem       ;[{09FC39C0-A3C0-4C26-AAA2-1F836CA3ED54}] ;Name=Webshop �ffnen;
+                                                                CaptionML=[DEU=Webshop �ffnen;
+                                                                           ENU=Open Webshop];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Codeunit;
+                                                                RunObjectID=5447308;
+                                                                ParentNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{E21CC2E2-545E-479C-BECF-4C509D8B6E7D}];
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{E21CC2E2-545E-479C-BECF-4C509D8B6E7D}] ;Name=MysydeCMS �ffnen;
+                                                                CaptionML=[DEU=CMS �ffnen;
+                                                                           ENU=Open CMS];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Codeunit;
+                                                                RunObjectID=5447309;
+                                                                ParentNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{D79F8F04-9CC3-4925-B78A-873D1403DAA7}];
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{B1F34273-C260-4D78-9214-235125DE48A9}] ;Name=Gutscheine;
+                                                                CaptionML=[DEU=Gutscheine;
+                                                                           ENU=Coupons];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447331;
+                                                                ParentNodeID=[{ACAFB169-5EAE-4288-AF5C-36F7796EC5C8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{E3624D22-7A8B-4F68-8533-67B1B5DFBD19}];
+                                                                DepartmentCategory=Lists }
+    { MenuGroup      ;[{D60628F0-6ED1-400C-9DE7-A1C072904BA0}] ;Name=Zugangsdaten;
+                                                                CaptionML=[DEU=Zugangsdaten;
+                                                                           ENU=Login Data];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                ParentNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{ACAFB169-5EAE-4288-AF5C-36F7796EC5C8}];
+                                                                FirstChild=[{2F95AE8C-3228-4678-9C25-559F305B33E9}];
+                                                                IsDepartmentPage=Yes }
+    { MenuItem       ;[{E3624D22-7A8B-4F68-8533-67B1B5DFBD19}] ;Name=Webshop Bestellungen;
+                                                                CaptionML=[DEU=Bestellungen;
+                                                                           ENU=Orders];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447319;
+                                                                ParentNodeID=[{ACAFB169-5EAE-4288-AF5C-36F7796EC5C8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{0290C98F-4D87-4FD7-83CF-7D80A5A02748}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{E85D352C-6E45-4C8F-83B8-1114BDEFA629}] ;Name=Verk�ufer;
+                                                                CaptionML=[DEU=Verk�ufer;
+                                                                           ENU=Salesperson];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=14;
+                                                                ParentNodeID=[{D60628F0-6ED1-400C-9DE7-A1C072904BA0}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{C0472080-0F19-4E5C-93FC-272F52C7094D}] ;Name=Webshop Artikel aktivieren/dea;
+                                                                CaptionML=[DEU=Artikel aktivieren/deaktivieren;
+                                                                           ENU=Activate Items];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Report;
+                                                                RunObjectID=5447306;
+                                                                ParentNodeID=[{6349F268-1408-495C-931C-43043C0CFEA8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{253BE096-6A34-4817-8DB9-2E5CFD591EE9}];
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{2FC554D4-DBF9-48AD-A8BA-C6116663FD5C}] ;Name=Online Document Storage Configuration;
+                                                                CaptionML=ENU=Online Document Storage Configuration;
+                                                                RunObjectType=Page;
+                                                                RunObjectID=9551;
+                                                                Visible=Yes;
+                                                                NextNodeID=[{2957D39E-35C5-475F-AF52-D851B97F5D1A}];
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{6C152B6F-B672-421C-BE50-83E98C8A2301}] ;Name=Account Schedule KPI Web Servi;
+                                                                CaptionML=ENU=Account Schedule KPI Web Service Setup;
+                                                                RunObjectType=Page;
+                                                                RunObjectID=195;
+                                                                Visible=Yes;
+                                                                DepartmentCategory=Administration }
+    { MenuItem       ;[{7234476B-98CB-47D4-BABA-CA8ED3D7CD56}] ;Name=Acc. Sched. KPI Web Service;
+                                                                CaptionML=ENU=Account Schedule KPI Web Service;
+                                                                RunObjectType=Page;
+                                                                RunObjectID=197;
+                                                                Visible=Yes;
+                                                                NextNodeID=[{A5339620-831B-4C45-8A54-A1191F1C9AC3}];
+                                                                DepartmentCategory=Administration }
+    { MenuItem       ;[{BB2D12FC-2EEB-4165-869B-098BBB42C6F6}] ;Name=Bank Export/Import Setup;
+                                                                CaptionML=ENU=Bank Export/Import Setup;
+                                                                RunObjectType=Page;
+                                                                RunObjectID=1200;
+                                                                Visible=Yes;
+                                                                DepartmentCategory=Tasks }
+    {                ;[{B0204305-DBF8-4E63-AA61-4A995E2E0A78}] ;NextNodeID=[{22092D04-C871-4F89-9A91-28A7B1DC4641}] }
+    { MenuItem       ;[{22092D04-C871-4F89-9A91-28A7B1DC4641}] ;Name=Payment Registration Setup;
+                                                                CaptionML=[DEU=Einrichtung der Zahlungsregistrierung;
+                                                                           ENU=Payment Registration Setup];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=982;
+                                                                Visible=Yes;
+                                                                DepartmentCategory=Administration }
+    {                ;[{B940BD97-DD17-41C1-9682-9B2188EB2300}] ;NextNodeID=[{F17F96B7-D5DF-4C82-B90E-D172A36E4942}] }
+    { MenuItem       ;[{F17F96B7-D5DF-4C82-B90E-D172A36E4942}] ;Name=Incoming Documents Setup;
+                                                                CaptionML=[DEU=Einrichtung f�r eingehende Dokumente;
+                                                                           ENU=Incoming Documents Setup];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=191;
+                                                                Visible=Yes;
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{8A92E679-90FE-4ABB-B195-0810035184EE}] ;Name=Support-Portal �ffnen;
+                                                                CaptionML=[DEU=Support-Portal �ffnen;
+                                                                           ENU=Open Support Portal];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Codeunit;
+                                                                RunObjectID=5447307;
+                                                                ParentNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{D79F8F04-9CC3-4925-B78A-873D1403DAA7}] ;Name=E-Mail Marketing �ffnen;
+                                                                CaptionML=[DEU=E-Mail Marketing �ffnen;
+                                                                           ENU=Open E-Mail Marketing];
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Codeunit;
+                                                                RunObjectID=5447305;
+                                                                ParentNodeID=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{8A92E679-90FE-4ABB-B195-0810035184EE}];
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{3095704C-88B1-466C-8714-121CE0DCDD33}] ;Name=Webshop Artikelmerkmale zuweis;
+                                                                CaptionML=[DEU=Artikelmerkmale zuweisen;
+                                                                           ENU=Add Attributes];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Report;
+                                                                RunObjectID=5447320;
+                                                                ParentNodeID=[{6349F268-1408-495C-931C-43043C0CFEA8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{0290C98F-4D87-4FD7-83CF-7D80A5A02748}] ;Name=Webshop Subscr. Header List;
+                                                                CaptionML=[DEU=Abonnements;
+                                                                           ENU=Subscriptions];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447340;
+                                                                ParentNodeID=[{ACAFB169-5EAE-4288-AF5C-36F7796EC5C8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{1843E7CC-0768-4061-9555-09B757290D14}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{1843E7CC-0768-4061-9555-09B757290D14}] ;Name=Webshop Kampagnen;
+                                                                CaptionML=[DEU=Kampagnen;
+                                                                           ENU=Campaigns];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447380;
+                                                                ParentNodeID=[{ACAFB169-5EAE-4288-AF5C-36F7796EC5C8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{5D31A3E7-1D71-4A6E-B0EE-C37F2B084FFC}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{7367C30D-0143-41F8-AE83-BBF45F5FAA46}] ;Name=Webshop Client-Addins;
+                                                                CaptionML=[DEU=Steuerelement Add-Ins;
+                                                                           ENU=Client-Addins];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447385;
+                                                                ParentNodeID=[{656CB19C-4F62-45FC-82E7-5FED57B1C087}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                DepartmentCategory=Administration }
+    { MenuItem       ;[{2957D39E-35C5-475F-AF52-D851B97F5D1A}] ;Name=Field Encryption Setup;
+                                                                AccessByPermission=System 5420=X;
+                                                                CaptionML=[DEU=Datenverschl�sselungsverwaltung;
+                                                                           ENU=Data Encryption Management];
+                                                                ApplicationArea=#Basic,#Suite;
+                                                                RunObjectType=Page;
+                                                                RunObjectID=9905;
+                                                                Visible=Yes;
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{A5339620-831B-4C45-8A54-A1191F1C9AC3}] ;Name=Import from a Data File;
+                                                                CaptionML=[DEU=Aus einer Datendatei importieren;
+                                                                           ENU=Import from a Data File];
+                                                                ApplicationArea=#Basic,#Suite;
+                                                                RunObjectType=Page;
+                                                                RunObjectID=9900;
+                                                                Visible=Yes;
+                                                                DepartmentCategory=Tasks }
+    { MenuItem       ;[{FDE09CB3-6C41-4949-83FB-92ED15DE18D5}] ;Name=Export to a Data File;
+                                                                CaptionML=[DEU=In eine Datendatei exportieren;
+                                                                           ENU=Export to a Data File];
+                                                                ApplicationArea=#Basic,#Suite;
+                                                                RunObjectType=Page;
+                                                                RunObjectID=9901;
+                                                                Visible=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                DepartmentCategory=Tasks }
+    {                ;[{DB59B1C0-087E-442B-A5E6-D30FD8F7860C}] ;NextNodeID=[{CA532485-499D-473B-B91B-CD29CC066FCF}] }
+    { MenuItem       ;[{CA532485-499D-473B-B91B-CD29CC066FCF}] ;Name=Item Register - Quantity;
+                                                                CaptionML=[DEU=Artikeljournal - Menge;
+                                                                           ENU=Item Register - Quantity];
+                                                                ApplicationArea=#Basic,#Suite;
+                                                                RunObjectType=Report;
+                                                                RunObjectID=703;
+                                                                Visible=Yes;
+                                                                DepartmentCategory=Reports and Analysis }
+    { MenuItem       ;[{5D31A3E7-1D71-4A6E-B0EE-C37F2B084FFC}] ;Name=Webshop Artikelkommentare;
+                                                                CaptionML=[DEU=Artikelkommentare;
+                                                                           ENU=Item Comments];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447335;
+                                                                ParentNodeID=[{ACAFB169-5EAE-4288-AF5C-36F7796EC5C8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{BE04B757-23C0-43D5-8E18-04F565B76F37}];
+                                                                DepartmentCategory=Lists }
+    { MenuItem       ;[{BE04B757-23C0-43D5-8E18-04F565B76F37}] ;Name=Permission Groups;
+                                                                CaptionML=[DEU=Berechtigungsgruppen;
+                                                                           ENU=Permission Groups];
+                                                                ApplicationArea=;
+                                                                MemberOfMenu=[{8A6F697B-025D-4E43-8B7C-19F7A8482985}];
+                                                                RunObjectType=Page;
+                                                                RunObjectID=5447336;
+                                                                ParentNodeID=[{ACAFB169-5EAE-4288-AF5C-36F7796EC5C8}];
+                                                                Visible=Yes;
+                                                                NextNodeID=[{00000000-0000-0000-0000-000000000000}];
+                                                                DepartmentCategory=Lists }
+  }
+}
+

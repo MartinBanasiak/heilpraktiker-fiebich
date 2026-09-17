@@ -1,0 +1,53 @@
+C5447300-Q1000000016-P26171-A1031-L999:Fortschritt
+C5447300-Q1000000017-P26171-A1031-L999:Anzahl Datensätze
+C5447300-Q1000000018-P26171-A1031-L999:Tabelle
+C5447300-Q1000000019-P26171-A1031-L999:Gesamtfortschritt
+C5447300-Q1000000020-P26171-A1031-L999:Konvertiere Daten
+C5447300-U1000000011-Q1000000004-P26171-A1031-L999:Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1
+C5447300-U1000000011-Q1000000005-P26171-A1031-L999:Keine Antwort vom Webshop erhalten\Aktion: %1
+C5447300-U1000000011-Q1000000010-P26171-A1031-L999:### SendRequest: %1 - %2 ###
+C5447300-U1000000011-Q1000000011-P26171-A1031-L999:-->
+C5447300-U1000000011-Q1000000012-P26171-A1031-L999:<--
+C5447300-U1000000011-Q1000000013-P26171-A1031-L999:Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2
+C5447300-U1000000013-Q1000000013-P26171-A1031-L999:Keine Antwort vom Webserver erhalten
+C5447300-U1000000013-Q1000000014-P26171-A1031-L999:Verbindung zum Webserver konnte nicht aufgebaut werden
+C5447300-U1000000015-Q1000000004-P26171-A1031-L999:Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1
+C5447300-U1000000015-Q1000000005-P26171-A1031-L999:Keine Antwort vom Webshop erhalten\Aktion: %1
+C5447300-U1000000015-Q1000000010-P26171-A1031-L999:### SendRequest: %1 - %2 ###
+C5447300-U1000000015-Q1000000011-P26171-A1031-L999:-->
+C5447300-U1000000015-Q1000000012-P26171-A1031-L999:<--
+C5447300-U1000000015-Q1000000013-P26171-A1031-L999:Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2
+C5447300-U1000000015-Q1000000020-P26171-A1031-L999:Konnte Daten nicht senden. Request: %1; Daten: %2; Ready State: %3.
+C5447300-U1000000015-Q1000000021-P26171-A1031-L999:Konnte keine Logdatei unter dem angegebenen Pfad erstellen.
+C5447300-U1000000015-Q1000000022-P26171-A1031-L999:Konnte bestehende Logdatei nicht lesen.
+C5447300-U1000000015-Q1000000023-P26171-A1031-L999:%1 - Konnte Daten nicht senden. Request: %2; Data: %3 Ready State: %3.
+C5447300-U1000000015-Q1000000024-P26171-A1031-L999:Keine Pfad für Logdatei angegeben.
+C5447300-U1000000015-Q1000000025-P26171-A1031-L999:%1 - Server-seitiger Fehler. Request: %1; Data: %2; Response-Code: %3; Response-Text: %4.
+C5447300-U1000000020-Q1000000002-P26171-A1031-L999:'
+C5447300-U1000000026-Q1000000021-P26171-A1031-L999:Günstigste Versandoption ohne Versandkosten. Trotzdem einfügen?
+C5447300-U1000000026-Q1000000022-P26171-A1031-L999:Summe Artikel über Freibetrag. Trotzdem einfügen?
+C5447300-U1000000026-Q5447308-P26171-A1031-L999:Versandoption wählen
+C5447300-U1000000048-Q1000000003-P26171-A1031-L999:'
+C5447300-U1000000048-Q1000000004-P26171-A1031-L999:°
+C5447300-U1000000063-Q1000000003-P26171-A1031-L999:Ihre lokalen Einstellungen haben sich geändert oder Sie versuchen den Webshop von einem anderen System aus zu aktualisieren. Setzen Sie die Systemeigenschaften in der Webshop Einrichtung zurück oder kontaktieren Sie Ihren Systemadministrator.
+C5447300-U1112400002-Q1112400008-P26171-A1031-L999:Ungültiges Zeichen "%1" an Position %2 festgestellt.
+C5447300-U1112400002-Q1112400009-P26171-A1031-L999:Unerwarteten End-Of-Stream an Position %1 festgestellt.
+C5447300-U2-Q1000000000-P26171-A1031-L999:%1 - Server-seitiger Fehler. Request: %1; Data: %2; Response-Code: %3; Response-Text: %4.
+C5447300-U2-Q1000000004-P26171-A1031-L999:Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1
+C5447300-U2-Q1000000005-P26171-A1031-L999:Keine Antwort vom Webshop erhalten\Aktion: %1
+C5447300-U2-Q1000000006-P26171-A1031-L999:Keine Pfad für Logdatei angegeben.
+C5447300-U2-Q1000000007-P26171-A1031-L999:%1 - Konnte Daten nicht senden. Request: %2; Data: %3 Ready State: %3.
+C5447300-U2-Q1000000010-P26171-A1031-L999:### SendRequest: %1 - %2 ###
+C5447300-U2-Q1000000011-P26171-A1031-L999:-->
+C5447300-U2-Q1000000012-P26171-A1031-L999:<--
+C5447300-U2-Q1000000013-P26171-A1031-L999:Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2
+C5447300-U2-Q1000000014-P26171-A1031-L999:Konnte bestehende Logdatei nicht lesen.
+C5447300-U2-Q1000000018-P26171-A1031-L999:Konnte keine Logdatei unter dem angegebenen Pfad erstellen.
+C5447300-U2-Q1000000019-P26171-A1031-L999:Konnte Daten nicht senden. Request: %1; Daten: %2; Ready State: %3.
+C5447300-U5-Q1000000000-P26171-A1031-L999:WebRequest-Fehler. HTTP-Request konnte nicht abgeschlossen werden. ReadyState: %1.
+C5447300-U5-Q1000000004-P26171-A1031-L999:Verbindung zum Webshop konnte nicht aufgebaut werden\Aktion: %1
+C5447300-U5-Q1000000005-P26171-A1031-L999:Keine Antwort vom Webshop erhalten\Aktion: %1
+C5447300-U5-Q1000000010-P26171-A1031-L999:### SendRequest: %1 - %2 ###
+C5447300-U5-Q1000000011-P26171-A1031-L999:-->
+C5447300-U5-Q1000000012-P26171-A1031-L999:<--
+C5447300-U5-Q1000000013-P26171-A1031-L999:Fehlerhafte Antwort vom Webshop erhalten\Aktion: %1\Antwort: %2

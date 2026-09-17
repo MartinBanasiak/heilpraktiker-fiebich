@@ -1,0 +1,75 @@
+OBJECT Table 5447311 Webshop Shipping Option Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=04.04.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=VAR
+               TempShippingOption@1000000000 : Record 5447311;
+             BEGIN
+             END;
+
+    OnDelete=VAR
+               WebshopUpdateManagment@1000000000 : Codeunit 5447301;
+             BEGIN
+               WebshopUpdateManagment.DeleteWebshopShippingLink(Rec);
+             END;
+
+    CaptionML=[DEU=Webshop Versandart Verkn�pfung;
+               ENU=Webshop Shipping Option Link];
+    LookupPageID=Page5447355;
+    DrillDownPageID=Page5447355;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Shop Code           ;Code10        ;CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code] }
+    { 2   ;   ;Shipping Group Code ;Code20        ;TableRelation="Shipping Groups".Code;
+                                                   OnValidate=VAR
+                                                                ShippingOptionsZones@1000000000 : Record 5447454;
+                                                                Error001@1000000001 : TextConst 'DEU=Der L�ndercode der Versandoption und der zugeordneten Zone passen nicht zusammen.;ENU=The country code of the shipping option and the associated zone do not match.';
+                                                              BEGIN
+                                                              END;
+
+                                                   CaptionML=[DEU=Versandgruppe Code;
+                                                              ENU=Shipping Group Code] }
+    { 3   ;   ;Line No.            ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.] }
+    { 5   ;   ;Campaign Code       ;Code20        ;TableRelation="Webshop Campaign Header".Code;
+                                                   CaptionML=[DEU=Webshop Kampagnen Code;
+                                                              ENU=Webshop Campaign Code] }
+    { 8   ;   ;Shipping Notice Mail Text;Code30   ;TableRelation="Webshop Text Module".Code;
+                                                   CaptionML=[DEU=E-Mail Versandbenachrichtigung;
+                                                              ENU=Mail Shipping Notice] }
+    { 9   ;   ;No. of Permission Entries;Integer  ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Permission Link" WHERE (Type=FILTER(ShippingGroup|CustomerShipping),
+                                                                                                      Shop Code=FIELD(Shop Code),
+                                                                                                      Line No.=FIELD(Line No.)));
+                                                   CaptionML=[DEU=Anzahl Berechtigungen;
+                                                              ENU=No. of Permissions] }
+    { 10  ;   ;Coupon Code         ;Code20        ;TableRelation="Coupon Line".Code;
+                                                   CaptionML=[DEU=Webshop Gutschein Code;
+                                                              ENU=Webshop Coupon Code] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Shipping Group Code,Line No.  ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

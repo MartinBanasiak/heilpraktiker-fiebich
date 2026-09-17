@@ -1,0 +1,73 @@
+OBJECT Page 5447365 Webshop Edit Txt. Mod. Attach.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop E-Mail Anhang bearbeiten;
+               ENU=Webshop Edit E-Mail Attachment];
+    SourceTable=Table5447309;
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+               END;
+
+    OnNextRecord=BEGIN
+                   EXIT;
+                 END;
+
+    OnAfterGetRecord=BEGIN
+                       CurrTyp := STRSUBSTNO(Text001,AttachmentNo,Description);
+                       RANDOMIZE();
+                       Request :=
+                         STRSUBSTNO('%1webforms/edit_attachment.php?pass=%2&company=%3&shop_code=%4',
+                           WebshopSetup."Server Synch. Endpoint URL",
+                           WebshopSetup."Server Synch. Password",
+                           WebshopManagement.URLEncode(COMPANYNAME),
+                           WebshopSetup."Default Shop Code");
+                       Request +=
+                         STRSUBSTNO('&text_module_code=%1&attachment_no=%2&nav_lang=%3&rtc=TRUE',
+                           WebshopManagement.URLEncode(Code),
+                           FORMAT(AttachmentNo),
+                           GLOBALLANGUAGE);
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Field  ;
+                Name=RequestInput;
+                SourceExpr=Request;
+                ControlAddIn=[DynamicCommerce.MysydeShop.Connect;PublicKeyToken=eb1e70a97bfaeec6] }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000004 : Record 5447300;
+      Language@1000000003 : Record 8;
+      WebshopManagement@1000000002 : Codeunit 5447300;
+      Request@1000000001 : Text[1024];
+      CurrTyp@1000000000 : Text[1024];
+      AttachmentNo@1000000005 : Integer;
+      Text001@1000000006 : TextConst 'DEU=Anhang %1 zu Textbaustein %2 bearbeiten;ENU=Edit attachment %1 for text module %2';
+
+    PROCEDURE SetAttachmentNo@1000000000(ParamAttachmentNo@1000000000 : Integer);
+    BEGIN
+      AttachmentNo := ParamAttachmentNo;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

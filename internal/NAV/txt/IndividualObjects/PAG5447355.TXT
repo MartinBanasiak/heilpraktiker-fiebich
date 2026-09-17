@@ -1,0 +1,704 @@
+OBJECT Page 5447355 Webshop Shipping Options List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=04.04.18;
+    Time=16:00:00;
+    Version List=MYSW14.00,DCSW11.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Versandoptionen;
+               ENU=Webshop Shipping Options];
+    SourceTable=Table5447453;
+    SourceTableView=SORTING(Sorting)
+                    ORDER(Ascending);
+    DataCaptionFields=Line No.,Description;
+    PageType=List;
+    AutoSplitKey=Yes;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                         CampaignCode := WebshopShippingOptionLink."Campaign Code";
+                         CouponCode := WebshopShippingOptionLink."Coupon Code";
+                         ShippingNoticeMailText := WebshopShippingOptionLink."Shipping Notice Mail Text";
+                         NoOfPermissionEntries := WebshopShippingOptionLink."No. of Permission Entries";
+                       END ELSE BEGIN
+                         CampaignCode := '';
+                         CouponCode := '';
+                         ShippingNoticeMailText := '';
+                         NoOfPermissionEntries := 0;
+                       END;
+
+                       IF HasDescription THEN
+                         ContentText := YesText
+                       ELSE
+                         ContentText := NoText;
+
+                       IF HasIcon THEN
+                         LogoText := YesText
+                       ELSE
+                         LogoText := NoText;
+
+                       IF COUNT > 1 THEN BEGIN
+                         MoveDownVisible := TRUE;
+                         MoveUpVisible := TRUE;
+                       END;
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000018;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000016;1 ;Action    ;
+                      CaptionML=[DEU=�bersetzungen;
+                                 ENU=Translations];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5447356;
+                      RunPageLink=Shipping Croup Code=FIELD(Shipping Group Code),
+                                  Shipping Option Line No.=FIELD(Line No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Translations;
+                      PromotedCategory=Process }
+      { 1000000020;1 ;Action    ;
+                      Name=MoveUp;
+                      CaptionML=[DEU=Nach oben verschieben;
+                                 ENU=Move up];
+                      Promoted=Yes;
+                      Visible=MoveUpVisible;
+                      PromotedIsBig=Yes;
+                      Image=MoveUp;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ToShippingOption@1000000003 : Record 5447453;
+                                 FromSorting@1000000002 : Integer;
+                                 ToSorting@1000000000 : Integer;
+                               BEGIN
+                                 ToShippingOption.SETCURRENTKEY(Sorting);
+                                 CurrPage.UPDATE(FALSE);
+                                 ToShippingOption.SETFILTER(Sorting,'<%1',Sorting);
+                                 IF ToShippingOption.FINDLAST THEN BEGIN
+                                   FromSorting := Sorting;
+                                   ToSorting := ToShippingOption.Sorting;
+                                   Sorting := ToSorting;
+                                   MODIFY(FALSE);
+                                   ToShippingOption.Sorting := FromSorting;
+                                   ToShippingOption.MODIFY(FALSE);
+                                 END;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+      { 1000000019;1 ;Action    ;
+                      Name=MoveDown;
+                      CaptionML=[DEU=Nach unten verschieben;
+                                 ENU=Move down];
+                      Promoted=Yes;
+                      Visible=MoveDownVisible;
+                      PromotedIsBig=Yes;
+                      Image=MoveDown;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ToShippingOption@1000000003 : Record 5447453;
+                                 FromSorting@1000000002 : Integer;
+                                 ToSorting@1000000000 : Integer;
+                               BEGIN
+                                 ToShippingOption.SETCURRENTKEY(Sorting);
+                                 CurrPage.UPDATE(FALSE);
+                                 ToShippingOption.SETFILTER(Sorting,'>%1',Sorting);
+                                 IF ToShippingOption.FINDFIRST THEN BEGIN
+                                   FromSorting := Sorting;
+                                   ToSorting := ToShippingOption.Sorting;
+                                   Sorting := ToSorting;
+                                   MODIFY(FALSE);
+                                   ToShippingOption.Sorting := FromSorting;
+                                   ToShippingOption.MODIFY(FALSE);
+                                 END;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+      { 1000000038;1 ;Action    ;
+                      Name=CopyShippingOptions;
+                      CaptionML=[DEU=Versandoption kopieren;
+                                 ENU=Copy Shipping Option];
+                      Promoted=Yes;
+                      Image=CopyItem;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 NewLineNo@1000000000 : Integer;
+                                 NewShippingOption@1000000001 : Record 5447453;
+                                 WebshopPermissionLink@1000000002 : Record 5447337;
+                                 NewWebshopPermissionLink@1000000003 : Record 5447337;
+                               BEGIN
+                                 NewLineNo := CopyShippingOption(Rec);
+                                 IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code",NewLineNo) THEN BEGIN
+                                   WebshopShippingOptionLink."Campaign Code" := CampaignCode;
+                                   WebshopShippingOptionLink."Coupon Code" := CouponCode;
+                                   WebshopShippingOptionLink."Shipping Notice Mail Text" := ShippingNoticeMailText;
+                                   WebshopShippingOptionLink.MODIFY(TRUE);
+                                 END ELSE BEGIN
+                                   WebshopShippingOptionLink.INIT;
+                                   WebshopShippingOptionLink."Shop Code" := ShopCode;
+                                   WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                                   WebshopShippingOptionLink."Line No." := NewLineNo;
+                                   WebshopShippingOptionLink."Campaign Code" := CampaignCode;
+                                   WebshopShippingOptionLink."Coupon Code" := CouponCode;
+                                   WebshopShippingOptionLink."Shipping Notice Mail Text" := ShippingNoticeMailText;
+                                   WebshopShippingOptionLink.INSERT(TRUE);
+                                 END;
+
+                                 WebshopPermissionLink.SETFILTER(Type,'%1|%2',WebshopPermissionLink.Type::CustomerShipping,WebshopPermissionLink.Type::ShippingGroup);
+                                 WebshopPermissionLink.SETRANGE("Shop Code",ShopCode);
+                                 WebshopPermissionLink.SETRANGE("Line No.","Line No.");
+                                 IF WebshopPermissionLink.FINDSET THEN REPEAT
+                                     IF NOT NewWebshopPermissionLink.GET(
+                                         WebshopPermissionLink.Type,
+                                         WebshopPermissionLink."Customer No.",
+                                         WebshopPermissionLink."Item No.",
+                                         WebshopPermissionLink."Permission Group Code",
+                                         WebshopPermissionLink."Shop Code",
+                                         WebshopPermissionLink."Language Code",
+                                         NewLineNo
+                                       ) THEN BEGIN
+                                       NewWebshopPermissionLink.INIT;
+                                       NewWebshopPermissionLink.Type := WebshopPermissionLink.Type;
+                                       NewWebshopPermissionLink."Customer No." := WebshopPermissionLink."Customer No.";
+                                       NewWebshopPermissionLink."Item No." := WebshopPermissionLink."Item No.";
+                                       NewWebshopPermissionLink."Permission Group Code" := WebshopPermissionLink."Permission Group Code";
+                                       NewWebshopPermissionLink."Shop Code" := WebshopPermissionLink."Shop Code";
+                                       NewWebshopPermissionLink."Language Code" := WebshopPermissionLink."Language Code";
+                                       NewWebshopPermissionLink."Line No." := NewLineNo;
+                                       NewWebshopPermissionLink.INSERT(TRUE);
+                                     END;
+                                 UNTIL WebshopPermissionLink.NEXT = 0;
+
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000037;1 ;ActionGroup;
+                      CaptionML=[DEU=Zus�tzliche Daten;
+                                 ENU=Additional Data] }
+      { 1000000036;2 ;ActionGroup;
+                      CaptionML=[DEU=Logo;
+                                 ENU=Logo];
+                      Image=Picture }
+      { 1000000035;3 ;Action    ;
+                      Name=EditLogo;
+                      CaptionML=[DEU=Symbol bearbeiten;
+                                 ENU=Edit icon];
+                      Image=Picture;
+                      OnAction=BEGIN
+                                 EditIcon();
+                               END;
+                                }
+      { 1000000032;3 ;Action    ;
+                      Name=DeleteLogo;
+                      CaptionML=[DEU=Symbol l�schen;
+                                 ENU=Delete icon];
+                      Image=VoidElectronicDocument;
+                      OnAction=BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.DeleteShippingOptionImage(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000034;2 ;ActionGroup;
+                      CaptionML=[DEU=Beschreibung;
+                                 ENU=Description];
+                      Image=Description }
+      { 1000000030;3 ;Action    ;
+                      Name=EditDescription;
+                      CaptionML=[DEU=Beschreibung bearbeiten;
+                                 ENU=Edit Description];
+                      Image=Description;
+                      OnAction=BEGIN
+                                 EditContent();
+                               END;
+                                }
+      { 1000000031;3 ;Action    ;
+                      Name=DeleteDescription;
+                      CaptionML=[DEU=Beschreibung l�schen;
+                                 ENU=Delete Description];
+                      Image=DeleteQtyToHandle;
+                      OnAction=VAR
+                                 WebshopLanguage@1000000006 : Record 5447302;
+                                 WebshopShop@1000000005 : Record 5447301;
+                                 DefaultNumber@1000000004 : Integer;
+                                 i@1000000003 : Integer;
+                                 OptionString@1000000002 : Text;
+                                 SelectedOption@1000000001 : Integer;
+                                 DataError@1000000000 : Boolean;
+                                 Text5447300@1000000007 : TextConst 'DEU=Webshop Sprache ausw�hlen;ENU=Select Webshop Language';
+                               BEGIN
+                                 TESTFIELD("Line No.");
+                                 WebshopUpdateManagement.SetSendNow(TRUE);
+                                 WebshopUpdateManagement.DeleteShippingOptionDescription(Rec);
+                                 WebshopUpdateManagement.SetSendNow(FALSE);
+                                 MESSAGE(Text002);
+                               END;
+                                }
+      { 1000000029;1 ;ActionGroup;
+                      CaptionML=[DEU=Berechtigungen;
+                                 ENU=Permissions] }
+      { 1000000028;2 ;Action    ;
+                      Name=GroupPermissions;
+                      CaptionML=[DEU=Gruppenberechtigungen;
+                                 ENU=Group permissions];
+                      Image=Permission;
+                      OnAction=VAR
+                                 WebshopPermissionLink@1000000001 : Record 5447337;
+                                 WebshopPermissionsGroupLink@1000000000 : Page 5447337;
+                               BEGIN
+                                 WebshopPermissionLink.SETRANGE("Shop Code",ShopCode);
+                                 WebshopPermissionLink.SETRANGE("Line No.","Line No.");
+                                 WebshopPermissionLink.SETRANGE(Type,WebshopPermissionLink.Type::ShippingGroup);
+                                 WebshopPermissionsGroupLink.SETTABLEVIEW(WebshopPermissionLink);
+                                 WebshopPermissionsGroupLink.RUN;
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+      { 1000000027;2 ;Action    ;
+                      Name=CustomerPermissions;
+                      CaptionML=[DEU=Debitorberechtigungen;
+                                 ENU=Customer permissions];
+                      Image=Permission;
+                      OnAction=VAR
+                                 WebshopPermissionLink@1000000000 : Record 5447337;
+                                 WebshopPermissionsGroupLink@1000000001 : Page 5447337;
+                               BEGIN
+                                 WebshopPermissionLink.SETRANGE("Shop Code",ShopCode);
+                                 WebshopPermissionLink.SETRANGE("Line No.","Line No.");
+                                 WebshopPermissionLink.SETRANGE(Type,WebshopPermissionLink.Type::CustomerShipping);
+                                 WebshopPermissionsGroupLink.SETTABLEVIEW(WebshopPermissionLink);
+                                 WebshopPermissionsGroupLink.RUN;
+                                 CurrPage.UPDATE;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000007;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Shipping Zone Code" }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Is Active" }
+
+    { 1000000021;2;Field  ;
+                SourceExpr="Shipping Class Code" }
+
+    { 1000000026;2;Field  ;
+                Name=CampaignCode;
+                CaptionML=[DEU=Webshop Kampagnen Code;
+                           ENU=Webshop Campaign Code];
+                SourceExpr=CampaignCode;
+                OnValidate=VAR
+                             WebshopCampaignHeader@1000000000 : Record 5447345;
+                           BEGIN
+                             IF WebshopCampaignHeader.GET(CampaignCode) THEN BEGIN
+                               IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                                 WebshopShippingOptionLink."Campaign Code" := CampaignCode;
+                                 WebshopShippingOptionLink.MODIFY(TRUE);
+                               END ELSE BEGIN
+                                 WebshopShippingOptionLink.INIT;
+                                 WebshopShippingOptionLink."Shop Code" := ShopCode;
+                                 WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                                 WebshopShippingOptionLink."Line No." := "Line No.";
+                                 WebshopShippingOptionLink."Campaign Code" := CampaignCode;
+                                 WebshopShippingOptionLink.INSERT(TRUE);
+                               END;
+                             END ELSE BEGIN
+                               IF CampaignCode <> '' THEN
+                                 ERROR(Error001,
+                                   WebshopShippingOptionLink.FIELDCAPTION("Campaign Code"),
+                                   ShippingOptions.TABLECAPTION,
+                                   CampaignCode,
+                                   WebshopCampaignHeader.TABLECAPTION)
+                               ELSE BEGIN
+                                 IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                                   WebshopShippingOptionLink."Campaign Code" := CampaignCode;
+                                   WebshopShippingOptionLink.MODIFY(TRUE);
+                                 END ELSE BEGIN
+                                   WebshopShippingOptionLink.INIT;
+                                   WebshopShippingOptionLink."Shop Code" := ShopCode;
+                                   WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                                   WebshopShippingOptionLink."Line No." := "Line No.";
+                                   WebshopShippingOptionLink."Campaign Code" := CampaignCode;
+                                   WebshopShippingOptionLink.INSERT(TRUE);
+                                 END;
+                               END;
+                             END;
+                           END;
+
+                OnLookup=VAR
+                           WebshopCampaignHeader@1000000000 : Record 5447345;
+                         BEGIN
+                           IF CampaignCode <> '' THEN
+                             WebshopCampaignHeader.Code := CampaignCode;
+                           IF PAGE.RUNMODAL(0,WebshopCampaignHeader) = ACTION::LookupOK THEN BEGIN
+                             CampaignCode := WebshopCampaignHeader.Code;
+                             IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                               WebshopShippingOptionLink."Campaign Code" := CampaignCode;
+                               WebshopShippingOptionLink.MODIFY(TRUE);
+                             END ELSE BEGIN
+                               WebshopShippingOptionLink.INIT;
+                               WebshopShippingOptionLink."Shop Code" := ShopCode;
+                               WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                               WebshopShippingOptionLink."Line No." := "Line No.";
+                               WebshopShippingOptionLink."Campaign Code" := CampaignCode;
+                               WebshopShippingOptionLink.INSERT(TRUE);
+                             END;
+                           END;
+                           CurrPage.UPDATE;
+                         END;
+                          }
+
+    { 1000000025;2;Field  ;
+                Name=CouponCode;
+                CaptionML=[DEU=Gutscheincode;
+                           ENU=Coupon Code];
+                SourceExpr=CouponCode;
+                OnValidate=VAR
+                             CouponLine@1000000000 : Record 5447472;
+                             WebshopShop@1000000001 : Record 5447301;
+                           BEGIN
+                             CouponLine.SETRANGE("Coupon Code",CouponCode);
+                             CouponLine.SETRANGE("Value Type Shop",CouponLine."Value Type Shop"::Sonderversand);
+                             IF WebshopShop.GET(ShopCode) THEN
+                               CouponLine.SETFILTER(Code,WebshopShop."Coupon Group Filter");
+                             IF CouponLine.FINDFIRST THEN BEGIN
+                               IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                                 WebshopShippingOptionLink."Coupon Code" := CouponCode;
+                                 WebshopShippingOptionLink.MODIFY(TRUE);
+                               END ELSE BEGIN
+                                 WebshopShippingOptionLink.INIT;
+                                 WebshopShippingOptionLink."Shop Code" := ShopCode;
+                                 WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                                 WebshopShippingOptionLink."Line No." := "Line No.";
+                                 WebshopShippingOptionLink."Coupon Code" := CouponCode;
+                                 WebshopShippingOptionLink.INSERT(TRUE);
+                               END;
+                             END ELSE BEGIN
+                               IF CouponCode <> '' THEN
+                                 ERROR(Error001,
+                                   WebshopShippingOptionLink.FIELDCAPTION("Coupon Code"),
+                                   ShippingOptions.TABLECAPTION,
+                                   CouponCode,
+                                   CouponLine.TABLECAPTION)
+                               ELSE BEGIN
+                                 IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                                   WebshopShippingOptionLink."Coupon Code" := CouponCode;
+                                   WebshopShippingOptionLink.MODIFY(TRUE);
+                                 END ELSE BEGIN
+                                   WebshopShippingOptionLink.INIT;
+                                   WebshopShippingOptionLink."Shop Code" := ShopCode;
+                                   WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                                   WebshopShippingOptionLink."Line No." := "Line No.";
+                                   WebshopShippingOptionLink."Coupon Code" := CouponCode;
+                                   WebshopShippingOptionLink.INSERT(TRUE);
+                                 END;
+                               END;
+                             END;
+                           END;
+
+                OnLookup=VAR
+                           CouponLine@1000000000 : Record 5447472;
+                           WebshopShop@1000000001 : Record 5447301;
+                         BEGIN
+                           IF CouponCode <> '' THEN
+                             CouponLine."Coupon Code" := CouponCode;
+                           CouponLine.SETRANGE("Value Type Shop",CouponLine."Value Type Shop"::Sonderversand);
+                           IF WebshopShop.GET(ShopCode) THEN
+                             CouponLine.SETFILTER(Code,WebshopShop."Coupon Group Filter");
+                           IF PAGE.RUNMODAL(0,CouponLine) = ACTION::LookupOK THEN BEGIN
+                             CouponCode := CouponLine."Coupon Code";
+                             IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                               WebshopShippingOptionLink."Coupon Code" := CouponCode;
+                               WebshopShippingOptionLink.MODIFY(TRUE);
+                             END ELSE BEGIN
+                               WebshopShippingOptionLink.INIT;
+                               WebshopShippingOptionLink."Shop Code" := ShopCode;
+                               WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                               WebshopShippingOptionLink."Line No." := "Line No.";
+                               WebshopShippingOptionLink."Coupon Code" := CouponCode;
+                               WebshopShippingOptionLink.INSERT(TRUE);
+                             END;
+                           END;
+                           CurrPage.UPDATE;
+                         END;
+                          }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Valid from" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Valid to" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Weight from" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Weight to" }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Amount from" }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Amount to" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr=Exemption }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Shipping Cost" }
+
+    { 1000000024;2;Field  ;
+                CaptionML=[DEU=Logo;
+                           ENU=Logo];
+                SourceExpr=LogoText;
+                Visible=false;
+                Editable=false;
+                OnAssistEdit=BEGIN
+                               EditIcon();
+                             END;
+                              }
+
+    { 1000000023;2;Field  ;
+                CaptionML=[DEU=Langbeschreibung;
+                           ENU=Long Description];
+                SourceExpr=ContentText;
+                Visible=false;
+                Editable=false;
+                OnAssistEdit=BEGIN
+                               EditContent();
+                             END;
+                              }
+
+    { 1000000033;2;Field  ;
+                SourceExpr="Sales Order Text" }
+
+    { 1000000022;2;Field  ;
+                Name=ShippingNoticeMailText;
+                CaptionML=[DEU=E-Mail Versandbenachrichtigung;
+                           ENU=Mail Shipping Notice];
+                SourceExpr=ShippingNoticeMailText;
+                OnValidate=VAR
+                             WebshopTextModule@1000000000 : Record 5447309;
+                           BEGIN
+                             IF WebshopTextModule.GET(ShippingNoticeMailText) THEN BEGIN
+                               IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                                 WebshopShippingOptionLink."Shipping Notice Mail Text" := ShippingNoticeMailText;
+                                 WebshopShippingOptionLink.MODIFY(TRUE);
+                               END ELSE BEGIN
+                                 WebshopShippingOptionLink.INIT;
+                                 WebshopShippingOptionLink."Shop Code" := ShopCode;
+                                 WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                                 WebshopShippingOptionLink."Line No." := "Line No.";
+                                 WebshopShippingOptionLink."Shipping Notice Mail Text" := ShippingNoticeMailText;
+                                 WebshopShippingOptionLink.INSERT(TRUE);
+                               END;
+                             END ELSE BEGIN
+                               IF ShippingNoticeMailText <> '' THEN
+                                 ERROR(Error001,
+                                   WebshopShippingOptionLink.FIELDCAPTION("Shipping Notice Mail Text"),
+                                   ShippingOptions.TABLECAPTION,
+                                   ShippingNoticeMailText,
+                                   WebshopTextModule.TABLECAPTION)
+                               ELSE BEGIN
+                                 IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                                   WebshopShippingOptionLink."Shipping Notice Mail Text" := ShippingNoticeMailText;
+                                   WebshopShippingOptionLink.MODIFY(TRUE);
+                                 END ELSE BEGIN
+                                   WebshopShippingOptionLink.INIT;
+                                   WebshopShippingOptionLink."Shop Code" := ShopCode;
+                                   WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                                   WebshopShippingOptionLink."Line No." := "Line No.";
+                                   WebshopShippingOptionLink."Shipping Notice Mail Text" := ShippingNoticeMailText;
+                                   WebshopShippingOptionLink.INSERT(TRUE);
+                                 END;
+                               END;
+                             END;
+                           END;
+
+                OnLookup=VAR
+                           WebshopTextModule@1000000000 : Record 5447309;
+                         BEGIN
+                           IF ShippingNoticeMailText <> '' THEN
+                             WebshopTextModule.Code := ShippingNoticeMailText;
+                           IF PAGE.RUNMODAL(0,WebshopTextModule) = ACTION::LookupOK THEN BEGIN
+                             ShippingNoticeMailText := WebshopTextModule.Code;
+                             IF WebshopShippingOptionLink.GET(ShopCode,"Shipping Group Code","Line No.") THEN BEGIN
+                               WebshopShippingOptionLink."Shipping Notice Mail Text" := ShippingNoticeMailText;
+                               WebshopShippingOptionLink.MODIFY(TRUE);
+                             END ELSE BEGIN
+                               WebshopShippingOptionLink.INIT;
+                               WebshopShippingOptionLink."Shop Code" := ShopCode;
+                               WebshopShippingOptionLink."Shipping Group Code" := "Shipping Group Code";
+                               WebshopShippingOptionLink."Line No." := "Line No.";
+                               WebshopShippingOptionLink."Shipping Notice Mail Text" := ShippingNoticeMailText;
+                               WebshopShippingOptionLink.INSERT(TRUE);
+                             END;
+                           END;
+                           CurrPage.UPDATE;
+                         END;
+                          }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Shipping Agent Code" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Shipping Agent Service Code" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Shipment Method Code" }
+
+    { 1000000017;2;Field  ;
+                Name=NoOfPermissionEntries;
+                CaptionML=[DEU=Anzahl Berechtigungen;
+                           ENU=No. of Permissions];
+                SourceExpr=NoOfPermissionEntries;
+                Visible=false;
+                Editable=False;
+                OnLookup=VAR
+                           WebshopPermissionLink@1000000000 : Record 5447337;
+                           WebshopPermissionsGroupLink@1000000002 : Page 5447337;
+                         BEGIN
+                           WebshopPermissionLink.SETRANGE("Shop Code",ShopCode);
+                           WebshopPermissionLink.SETRANGE("Line No.","Line No.");
+                           WebshopPermissionLink.SETRANGE(Type,WebshopPermissionLink.Type::CustomerShipping);
+                           WebshopPermissionsGroupLink.SETTABLEVIEW(WebshopPermissionLink);
+                           WebshopPermissionsGroupLink.RUN;
+                           CurrPage.UPDATE;
+                         END;
+                          }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopShippingOptionLink@1000000015 : Record 5447311;
+      ShippingOptions@1000000024 : Record 5447453;
+      ContentText@1000000009 : Text[30];
+      LogoText@1000000010 : Text[30];
+      WebshopUpdateManagement@1000000006 : Codeunit 5447301;
+      ClientAddInType@1000000004 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000003 : Codeunit 5447320;
+      WebshopWebform@1000000002 : Page 5447366;
+      Type@1000000001 : 'Description1,Promotion,Description2';
+      WebformType@1000000000 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection,ShippingOption,PaymentOption,ShippingOptionIcon,PaymentOptionIcon';
+      Text001@1000000013 : TextConst 'DEU=Logo gel�scht;ENU=Logo deleted';
+      Text002@1000000014 : TextConst 'DEU=Beschreibung gel�scht;ENU=Description deleted';
+      Text007@1000000005 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+      YesText@1000000008 : TextConst 'DEU=Ja;ENU=Yes';
+      NoText@1000000007 : TextConst 'DEU=Nein;ENU=No';
+      MoveUpVisible@1000000012 : Boolean INDATASET;
+      MoveDownVisible@1000000011 : Boolean INDATASET;
+      ShopCode@1000000016 : Code[20];
+      CampaignCode@1000000018 : Code[20];
+      CouponCode@1000000017 : Code[20];
+      HasIcon@1000000019 : Boolean;
+      HasDescription@1000000020 : Boolean;
+      ShippingNoticeMailText@1000000021 : Code[30];
+      NoOfPermissionEntries@1000000022 : Integer;
+      Error001@1000000023 : TextConst 'DEU=Das Feld ''%1'' der Tabelle ''%2'' enth�lt einen Wert (%3), der in der zugeh�rigen Tabelle (%4) nicht gefunden wurde.;ENU=The field ''%1'' of the table ''%2'' contains a value (%3) wich was not found in the associated table (%4).';
+
+    PROCEDURE EditContent@1000000000();
+    VAR
+      Text5447300@1000000005 : TextConst 'DEU=Webshop Sprache ausw�hlen;ENU=Select Webshop Language';
+    BEGIN
+
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD("Line No.");
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateShippingOption(Rec);
+      GET("Shipping Group Code","Line No.");
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        CLEAR(WebshopWebform);
+        //DynamicCommerceAddIn
+        WebshopWebform.SetWebformType(WebformType::ShippingOption);
+        WebshopWebform.SetRecordCode("Shipping Group Code");
+        WebshopWebform.SetLineNo("Line No.");
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+
+      END;
+
+      GET("Shipping Group Code","Line No.");
+      WebshopUpdateManagement.CheckShippingOption(Rec);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      GET("Shipping Group Code","Line No.");
+
+      IF "Has Description" THEN
+        ContentText := YesText
+      ELSE
+        ContentText := NoText;
+    END;
+
+    PROCEDURE EditIcon@1000000001();
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      TESTFIELD("Line No.");
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateShippingOption(Rec);
+      GET("Shipping Group Code","Line No.");
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        //DynamicCommerceAddIn
+        CLEAR(WebshopWebform);
+        WebshopWebform.SetWebformType(WebformType::ShippingOptionIcon);
+        WebshopWebform.SetRecordCode("Shipping Group Code");
+        WebshopWebform.SetLineNo("Line No.");
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+      END;
+
+      GET("Shipping Group Code","Line No.");
+      WebshopUpdateManagement.CheckShippingOptionIcon(Rec);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      GET("Shipping Group Code","Line No.");
+
+      IF "Has Icon"  THEN
+        LogoText := YesText
+      ELSE
+        LogoText := NoText;
+    END;
+
+    PROCEDURE SetShopCode@1000000007(ParaShopCode@1000000000 : Code[20]);
+    BEGIN
+      ShopCode := ParaShopCode;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

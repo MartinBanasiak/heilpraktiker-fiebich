@@ -128,6 +128,11 @@ iframe {
   padding: @spacer-base*2;
 }
 
+// Die Ueberschrift der Bildkacheln steht im CMS mal als <h3>, seit der
+// Barrierefreiheits-Anpassung als <h2 class="h3"> - die Ebene richtet sich
+// nach der Gliederung der Seite, das Aussehen kommt aus der Klasse. Die
+// Regeln hier gelten deshalb fuer jede Ebene: Sonst faellt der Innenabstand
+// weg, sobald jemand im Backend eine andere Ebene waehlt.
 .box__text {
   position: absolute;
   left:0;
@@ -135,7 +140,7 @@ iframe {
   width: 100%;
   background-color: fade(#ffffff,90);
   .transition(0.2s ease-in-out);
-  h3 {
+  h1, h2, h3, h4, h5, h6 {
     font-weight: @font-weight-base;
     margin-bottom: 0;
     line-height: 1em;
@@ -166,7 +171,7 @@ iframe {
 
 .box .link:hover {
   .box__text {
-    h3 {
+    h1, h2, h3, h4, h5, h6 {
       color: @brand-primary;
     }
     a {
@@ -186,7 +191,7 @@ iframe {
 
 .box.ueber-mich .link:hover {
   .box__text {
-    h3 {
+    h1, h2, h3, h4, h5, h6 {
       color: @ueber-mich;
     }
     a {
@@ -202,7 +207,7 @@ iframe {
 
 .box.behandlungsmethoden .link:hover {
   .box__text {
-    h3 {
+    h1, h2, h3, h4, h5, h6 {
       color: @behandlungsmethoden;
     }
     a {
@@ -218,7 +223,7 @@ iframe {
 
 .box.gebuehren .link:hover {
   .box__text {
-    h3 {
+    h1, h2, h3, h4, h5, h6 {
       color: @gebuehren;
     }
     a {
@@ -234,7 +239,7 @@ iframe {
 
 .box.kontakt .link:hover {
   .box__text {
-    h3 {
+    h1, h2, h3, h4, h5, h6 {
       color: @kontakt;
     }
     a {

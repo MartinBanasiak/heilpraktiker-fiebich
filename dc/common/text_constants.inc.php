@@ -1459,6 +1459,10 @@ $text_constant['de']['subnavigation_label'] = "Unterseiten";
 $text_constant['en']['subnavigation_label'] = "Subpages";
 $text_constant['de']['reviews_headline'] = "Bewertungen";
 $text_constant['en']['reviews_headline'] = "Reviews";
+$text_constant['de']['slideshow_previous_label'] = "Vorheriges Bild";
+$text_constant['en']['slideshow_previous_label'] = "Previous slide";
+$text_constant['de']['slideshow_next_label'] = "Nächstes Bild";
+$text_constant['en']['slideshow_next_label'] = "Next slide";
 
 
 $text_constant['de']['basket_error_item_not_active'] = 'Der Artikel ist derzeit nicht für den Verkauf aktiv.';

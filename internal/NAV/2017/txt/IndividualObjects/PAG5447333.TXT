@@ -1,0 +1,87 @@
+OBJECT Page 5447333 Webshop Edit Coupon Background
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Gutschein Hintergrund bearbeiten;
+               ENU=" Edit Coupon Background"];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    LinksAllowed=No;
+    SourceTable=Table5447301;
+    DataCaptionExpr=CurrTyp;
+    PageType=Card;
+    InstructionalTextML=[DEU=Test;
+                         ENU=Test];
+    ShowFilter=No;
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+               END;
+
+    OnNextRecord=BEGIN
+                   EXIT;
+                 END;
+
+    OnAfterGetRecord=BEGIN
+                       // Webhop-Textbaustein in Webform bearbeiten
+
+                       TESTFIELD(Code);
+                       WebshopSetup.TESTFIELD("Server Synch. Endpoint URL");
+                       RANDOMIZE();
+                       Request :=
+                         STRSUBSTNO('%1webforms/edit_dc_file.php?pass=%2&company=%3&shop_code=%4&code=%5&nav_lang=%6&no=%7&rand=%8',
+                           WebshopSetup."Server Synch. Endpoint URL",
+                           WebshopSetup."Server Synch. Password",
+                           WebshopManagement.URLEncode(COMPANYNAME),
+                           WebshopManagement.URLEncode(ShopCode),
+                           WebshopManagement.URLEncode(LangCode),
+                           GLOBALLANGUAGE,
+                           BackgroundNumber,
+                           RANDOM(2000));
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000004;1;Field  ;
+                Name=RequestField;
+                SourceExpr=Request;
+                ControlAddIn=[DynamicCommerce.MysydeShop.Connect;PublicKeyToken=eb1e70a97bfaeec6] }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000001 : Record 5447300;
+      Text001@1000000003 : TextConst 'DEU=%1 %2 zu Artikel %3 bearbeiten;ENU=Edit - %1 %2 for item %3';
+      WebshopManagement@1000000005 : Codeunit 5447300;
+      Request@1000000002 : Text[1024];
+      CurrTyp@5174222 : Text[1024];
+      BackgroundNumber@5174223 : Integer;
+      ShopCode@5174224 : Code[20];
+      LangCode@1000000000 : Code[20];
+
+    PROCEDURE SetNo@5174222(ParaBackground@5174222 : Integer;ParaShopCode@5174223 : Code[20];ParaLangCode@1000000000 : Code[20]);
+    BEGIN
+      BackgroundNumber := ParaBackground;
+      ShopCode := ParaShopCode;
+      LangCode := ParaLangCode;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

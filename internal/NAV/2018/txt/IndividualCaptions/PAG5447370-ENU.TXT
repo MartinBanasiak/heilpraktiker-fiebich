@@ -1,0 +1,9 @@
+N5447370-P55242-G1000000006-P55160-Q1000000003-P26171-A1033-L999:The Subscription Item Link was successfully created.\Subscription fix-price or discount has to be set manually.
+N5447370-P55242-G1000000006-P55160-Q1000000004-P26171-A1033-L999:There exists a Subscription of type 'Sequence Item' for this Item. Only Items not used as Subscription Sequence Items can be linked to Subscriptions.
+N5447370-P55242-G1000000006-P8629-A1033-L999:Add to subscription
+N5447370-P55242-G1000000007-P55160-Q1000000003-P26171-A1033-L999:Are you sure that you want to remove the item from the subscription?
+N5447370-P55242-G1000000007-P8629-A1033-L999:Remove from subscription
+N5447370-P55242-G1000000008-P55160-Q1000000001-P26171-A1033-L999:A Sequence-Subscription can only be created for the item when no other subscriptions are linked to it.
+N5447370-P55242-G1000000008-P8629-A1033-L999:Create Subscription Sequence for Item
+N5447370-P55242-G1000000009-P8629-A1033-L999:Open Subscription
+N5447370-P8629-A1033-L999:Webshop Item Subscriptions

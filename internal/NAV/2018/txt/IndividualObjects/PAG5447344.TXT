@@ -1,0 +1,113 @@
+OBJECT Page 5447344 Webshop Subsc. Item Link List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Abonnement-Artikel Verkn�pfungen;
+               ENU=Subscription-Item Links];
+    SourceTable=Table5447342;
+    PageType=List;
+    OnOpenPage=BEGIN
+                 IsSubscriptionSet := (GETFILTER("Subscription Code") <> '');
+                 IF IsSubscriptionSet THEN BEGIN
+                   WebshopSubscriptionHeader.GET(GETFILTER("Subscription Code"));
+                   IsSubscriptionSeqItem := (WebshopSubscriptionHeader.Type = WebshopSubscriptionHeader.Type::SubscriptionSequenceItem);
+                   IsSubscriptionOrderOption := NOT IsSubscriptionSeqItem;
+                 END;
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000014;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000008;1 ;Action    ;
+                      Name=AddItems;
+                      CaptionML=[DEU=Artikel hinzuf�gen;
+                                 ENU=Add Items];
+                      Image=NewItem;
+                      OnAction=VAR
+                                 WebshopAddItemstoSubscr@1000000000 : Report 5447340;
+                               BEGIN
+                                 TESTFIELD("Subscription Code");
+                                 WebshopSubscriptionHeader.GET("Subscription Code");
+                                 WebshopAddItemstoSubscr.SetSubscriptionHeader(WebshopSubscriptionHeader);
+                                 WebshopAddItemstoSubscr.RUN;
+                                 CurrPage.UPDATE(FALSE);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Subscription Code";
+                Visible=NOT(IsSubscriptionSet) }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="Link to";
+                Visible=FALSE }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Item No." }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Variant Code" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Subscr. Seq. Step Line No.";
+                Visible=IsSubscriptionSeqItem }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Fix Price";
+                Visible=IsOrderOption }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="Discount %";
+                Visible=IsOrderOption }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Fix Price Includes VAT";
+                Visible=IsOrderOption }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Min. Quantity";
+                Visible=IsSubscriptionOrderOption }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Max. Quantity";
+                Visible=IsSubscriptionOrderOption }
+
+    { 1000000007;2;Field  ;
+                SourceExpr=Quantity }
+
+  }
+  CODE
+  {
+    VAR
+      IsSeqStep@1000000000 : Boolean;
+      IsOrderOption@1000000001 : Boolean;
+      IsSubscriptionSet@1000000002 : Boolean;
+      IsSubscriptionSeqItem@1000000003 : Boolean;
+      IsSubscriptionOrderOption@1000000004 : Boolean;
+      WebshopSubscriptionHeader@1000000005 : Record 5447340;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

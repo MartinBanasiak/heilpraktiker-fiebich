@@ -1,0 +1,2216 @@
+OBJECT Page 31 Item List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.01.18;
+    Time=16:00:00;
+    Version List=NAVW111.00,NAVDACH11.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Artikel;
+               ENU=Items];
+    SourceTable=Table27;
+    PageType=List;
+    CardPageID=Item Card;
+    RefreshOnActivate=Yes;
+    PromotedActionCategoriesML=[DEU=Neu,Verarbeiten,Bericht,Artikel,Historie,Sonderpreise und Rabatte,Genehmigung anfordern,Periodische Aktivit�ten,Lager,Attribute;
+                                ENU=New,Process,Report,Item,History,Special Prices & Discounts,Request Approval,Periodic Activities,Inventory,Attributes];
+    OnOpenPage=VAR
+                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                 ClientTypeManagement@1001 : Codeunit 4;
+               BEGIN
+                 CRMIntegrationEnabled := CRMIntegrationManagement.IsCRMIntegrationEnabled;
+                 IsFoundationEnabled := ApplicationAreaSetup.IsFoundationEnabled;
+                 SetWorkflowManagementEnabledState;
+                 IsOnPhone := ClientTypeManagement.IsClientType(CLIENTTYPE::Phone);
+
+                 // Contextual Power BI FactBox: filtering available reports, setting context, loading Power BI related user settings
+                 CurrPage."Power BI Report FactBox".PAGE.SetNameFilter(CurrPage.CAPTION);
+                 CurrPage."Power BI Report FactBox".PAGE.SetContext(CurrPage.OBJECTID(FALSE));
+                 PowerBIVisible := SetPowerBIUserConfig.SetUserConfig(PowerBIUserConfiguration,CurrPage.OBJECTID(FALSE));
+               END;
+
+    OnFindRecord=VAR
+                   Found@1000 : Boolean;
+                 BEGIN
+                   IF RunOnTempRec THEN BEGIN
+                     TempFilteredItem := Rec;
+                     Found := TempFilteredItem.FIND(Which);
+                     IF Found THEN
+                       Rec := TempFilteredItem;
+                     EXIT(Found);
+                   END;
+                   EXIT(FIND(Which));
+                 END;
+
+    OnNextRecord=VAR
+                   ResultSteps@1000 : Integer;
+                 BEGIN
+                   IF RunOnTempRec THEN BEGIN
+                     TempFilteredItem := Rec;
+                     ResultSteps := TempFilteredItem.NEXT(Steps);
+                     IF ResultSteps <> 0 THEN
+                       Rec := TempFilteredItem;
+                     EXIT(ResultSteps);
+                   END;
+                   EXIT(NEXT(Steps));
+                 END;
+
+    OnAfterGetRecord=BEGIN
+                       EnableControls;
+                     END;
+
+    OnAfterGetCurrRecord=VAR
+                           CRMCouplingManagement@1001 : Codeunit 5331;
+                           WorkflowWebhookManagement@1000 : Codeunit 1543;
+                         BEGIN
+                           SetSocialListeningFactboxVisibility;
+
+                           CRMIsCoupledToRecord :=
+                             CRMCouplingManagement.IsRecordCoupledToCRM(RECORDID) AND CRMIntegrationEnabled;
+
+                           OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(RECORDID);
+
+                           CanCancelApprovalForRecord := ApprovalsMgmt.CanCancelApprovalForRecord(RECORDID);
+                           CurrPage.ItemAttributesFactBox.PAGE.LoadItemAttributesData("No.");
+
+                           WorkflowWebhookManagement.GetCanRequestAndCanCancel(RECORDID,CanRequestApprovalForFlow,CanCancelApprovalForFlow);
+
+                           SetWorkflowManagementEnabledState;
+
+                           // Contextual Power BI FactBox: send data to filter the report in the FactBox
+                           CurrPage."Power BI Report FactBox".PAGE.SetCurrentListSelection("No.",FALSE);
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 64      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Artikel;
+                                 ENU=Item];
+                      Image=DataEntry }
+      { 25      ;2   ;Action    ;
+                      CaptionML=[DEU=&Einheiten;
+                                 ENU=&Units of Measure];
+                      ToolTipML=[DEU=Richtet die verschiedenen Einheiten ein, in denen der Artikel gehandelt werden kann, wie St�ck, Karton oder Stunde.;
+                                 ENU=Set up the different units that the item can be traded in, such as piece, box, or hour.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 5404;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=UnitOfMeasure;
+                      PromotedCategory=Category4;
+                      Scope=Repeater }
+      { 137     ;2   ;Action    ;
+                      Name=Attributes;
+                      AccessByPermission=TableData 7500=R;
+                      CaptionML=[DEU=Attribute;
+                                 ENU=Attributes];
+                      ToolTipML=[DEU=Zeigt die Attribute des Artikels wie Farbe, Gr��e oder andere Eigenschaften, die bei der Beschreibung helfen, an oder bearbeitet diese.;
+                                 ENU=View or edit the item's attributes, such as color, size, or other characteristics that help to describe the item.];
+                      ApplicationArea=#Advanced;
+                      Image=Category;
+                      PromotedCategory=Category4;
+                      Scope=Repeater;
+                      OnAction=BEGIN
+                                 PAGE.RUNMODAL(PAGE::"Item Attribute Value Editor",Rec);
+                                 CurrPage.SAVERECORD;
+                                 CurrPage.ItemAttributesFactBox.PAGE.LoadItemAttributesData("No.");
+                               END;
+                                }
+      { 138     ;2   ;Action    ;
+                      Name=FilterByAttributes;
+                      AccessByPermission=TableData 7500=R;
+                      CaptionML=[DEU=Nach Attributen filtern;
+                                 ENU=Filter by Attributes];
+                      ToolTipML=[DEU=Sucht Artikel, die bestimmten Attributen entsprechen. Damit �nderungen, die vor Kurzem von anderen Benutzern vorgenommen wurden, einbezogen werden, l�schen Sie den Filter, und setzen Sie ihn anschlie�end zur�ck.;
+                                 ENU=Find items that match specific attributes. To make sure you include recent changes made by other users, clear the filter and then reset it.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Image=EditFilter;
+                      PromotedCategory=Category10;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 ItemAttributeManagement@1002 : Codeunit 7500;
+                                 TypeHelper@1006 : Codeunit 10;
+                                 CloseAction@1003 : Action;
+                                 FilterText@1001 : Text;
+                                 FilterPageID@1000 : Integer;
+                                 ParameterCount@1004 : Integer;
+                               BEGIN
+                                 FilterPageID := PAGE::"Filter Items by Attribute";
+                                 IF ClientTypeManagement.GetCurrentClientType = CLIENTTYPE::Phone THEN
+                                   FilterPageID := PAGE::"Filter Items by Att. Phone";
+
+                                 CloseAction := PAGE.RUNMODAL(FilterPageID,TempFilterItemAttributesBuffer);
+                                 IF (ClientTypeManagement.GetCurrentClientType <> CLIENTTYPE::Phone) AND (CloseAction <> ACTION::LookupOK) THEN
+                                   EXIT;
+
+                                 IF TempFilterItemAttributesBuffer.ISEMPTY THEN BEGIN
+                                   ClearAttributesFilter;
+                                   EXIT;
+                                 END;
+
+                                 ItemAttributeManagement.FindItemsByAttributes(TempFilterItemAttributesBuffer,TempFilteredItem);
+                                 FilterText := ItemAttributeManagement.GetItemNoFilterText(TempFilteredItem,ParameterCount);
+
+                                 IF ParameterCount < TypeHelper.GetMaxNumberOfParametersInSQLQuery - 100 THEN BEGIN
+                                   FILTERGROUP(0);
+                                   MARKEDONLY(FALSE);
+                                   SETFILTER("No.",FilterText);
+                                 END ELSE BEGIN
+                                   RunOnTempRec := TRUE;
+                                   CLEARMARKS;
+                                   RESET;
+                                 END;
+                               END;
+                                }
+      { 139     ;2   ;Action    ;
+                      Name=ClearAttributes;
+                      AccessByPermission=TableData 7500=R;
+                      CaptionML=[DEU=Attributefilter l�schen;
+                                 ENU=Clear Attributes Filter];
+                      ToolTipML=[DEU=Entfernt den Filter f�r bestimmte Artikelattribute.;
+                                 ENU=Remove the filter for specific item attributes.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Image=RemoveFilterLines;
+                      PromotedCategory=Category10;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 ClearAttributesFilter;
+                                 TempFilteredItem.RESET;
+                                 TempFilteredItem.DELETEALL;
+                                 RunOnTempRec := FALSE;
+                               END;
+                                }
+      { 30      ;2   ;Action    ;
+                      CaptionML=[DEU=Varia&nten;
+                                 ENU=Va&riants];
+                      ToolTipML=[DEU=Zeigt an, wie sich die Lagerebene eines Artikels im Zeitverlauf je nach ausgew�hlter Variante entwickelt.;
+                                 ENU=View how the inventory level of an item will develop over time according to the variant that you select.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 5401;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ItemVariant }
+      { 500     ;2   ;Action    ;
+                      CaptionML=[DEU=Ersat&zartikel;
+                                 ENU=Substituti&ons];
+                      ToolTipML=[DEU=Zeigen Sie Ersatzartikel an, die eingerichtet sind, um anstelle des Artikels verkauft zu werden.;
+                                 ENU=View substitute items that are set up to be sold instead of the item.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 5716;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ItemSubstitution }
+      { 121     ;2   ;Action    ;
+                      CaptionML=[DEU=Artikelbarcodes;
+                                 ENU=Identifiers];
+                      ToolTipML=[DEU=Zeigt einen eindeutigen Bezeichner f�r jeden Artikel an, der innerhalb des Lagers bei Verwendung eines mobilen Ger�tes verfolgt werden soll. Der Artikelbarcode kann die Artikelnummer, den Variantencode und die Einheit enthalten.;
+                                 ENU=View a unique identifier for each item that you want warehouse employees to keep track of within the warehouse when using handheld devices. The item identifier can include the item number, the variant code and the unit of measure.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7706;
+                      RunPageView=SORTING(Item No.,Variant Code,Unit of Measure Code);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BarCode }
+      { 82      ;2   ;Action    ;
+                      CaptionML=[DEU=Re&ferenzen;
+                                 ENU=Cross Re&ferences];
+                      ToolTipML=[DEU=Richtet eine eigene Benutzereinrichtung des Debitors oder Kreditors f�r den ausgew�hlten Artikel ein. Querverweise auf die Artikelnummer des Debitors bedeuten, dass ihre Artikelnummer automatisch anstelle der von Ihnen verwendeten Nummer auf den Verkaufsbelegen angezeigt wird.;
+                                 ENU=Set up a customer's or vendor's own identification of the selected item. Cross-references to the customer's item number means that the item number is automatically shown on sales documents instead of the number that you use.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 5721;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Change;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      Scope=Repeater }
+      { 28      ;2   ;Action    ;
+                      CaptionML=[DEU=&Textbausteine;
+                                 ENU=E&xtended Texts];
+                      ToolTipML=[DEU=W�hlt einen zus�tzlichen Text f�r die Beschreibung des Artikels aus oder verfasst diesen. Erweiterter Text kann unter dem Feld "Beschreibung" in Belegzeilen f�r den Artikel eingef�gt werden.;
+                                 ENU=Select or set up additional text for the description of the item. Extended text can be inserted under the Description field on document lines for the item.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 391;
+                      RunPageView=SORTING(Table Name,No.,Language Code,All Language Codes,Starting Date,Ending Date);
+                      RunPageLink=Table Name=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Text;
+                      Scope=Repeater }
+      { 27      ;2   ;Action    ;
+                      CaptionML=[DEU=�bersetzungen;
+                                 ENU=Translations];
+                      ToolTipML=[DEU=Richten Sie �bersetzte Artikelbeschreibungen f�r den ausgew�hlten Artikel ein. �bersetzte Artikelbeschreibungen werden automatisch gem�� dem Sprachcode in Belege eingef�gt.;
+                                 ENU=Set up translated item descriptions for the selected item. Translated item descriptions are automatically inserted on documents according to the language code.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 35;
+                      RunPageLink=Item No.=FIELD(No.),
+                                  Variant Code=CONST();
+                      Image=Translations;
+                      PromotedCategory=Category4;
+                      Scope=Repeater }
+      { 145     ;2   ;ActionGroup;
+                      Visible=False }
+      { 90      ;3   ;Action    ;
+                      Name=AdjustInventory;
+                      CaptionML=[DEU=Lager regulieren;
+                                 ENU=Adjust Inventory];
+                      ToolTipML=[DEU=Erh�hen oder senken Sie die Lagerbestandsmenge des Artikels manuell, indem Sie eine neue Menge eingeben. Das manuelle Regulieren des Lagerbestands ist m�glicherweise nach einer physischen Z�hlung relevant, oder falls keine erworbenen Mengen erfasst wurden.;
+                                 ENU=Increase or decrease the item's inventory quantity manually by entering a new quantity. Adjusting the inventory quantity manually may be relevant after a physical count or if you do not record purchased quantities.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Visible=IsFoundationEnabled;
+                      Enabled=InventoryItemEditable;
+                      Image=InventoryCalculation;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      Scope=Repeater;
+                      OnAction=VAR
+                                 AdjustInventory@1000 : Page 1327;
+                               BEGIN
+                                 COMMIT;
+                                 AdjustInventory.SetItem("No.");
+                                 AdjustInventory.RUNMODAL;
+                               END;
+                                }
+      { 94      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Dimensionen;
+                                 ENU=Dimensions];
+                      Image=Dimensions }
+      { 184     ;3   ;Action    ;
+                      Name=DimensionsSingle;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DEU=Zuordnung f�r aktuellen Datensatz;
+                                 ENU=Dimensions-Single];
+                      ToolTipML=[DEU=Zeigt den f�r den ausgew�hlten Datensatz eingerichteten einzelnen Dimensionssatz an, oder bearbeitet ihn.;
+                                 ENU=View or edit the single set of dimensions that are set up for the selected record.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 540;
+                      RunPageLink=Table ID=CONST(27),
+                                  No.=FIELD(No.);
+                      Image=Dimensions;
+                      Scope=Repeater }
+      { 93      ;3   ;Action    ;
+                      Name=DimensionsMultiple;
+                      AccessByPermission=TableData 348=R;
+                      CaptionML=[DEU=Zuordnung f�r &markierte Datens�tze;
+                                 ENU=Dimensions-&Multiple];
+                      ToolTipML=[DEU=Zeigt Standarddimensionen f�r eine Gruppe von Datens�tzen an oder erm�glicht deren Bearbeitung. Sie k�nnen Transaktionen Dimensionscodes zuweisen, um die Kosten zu verteilen und historische Informationen zu analysieren.;
+                                 ENU=View or edit dimensions for a group of records. You can assign dimension codes to transactions to distribute costs and analyze historical information.];
+                      ApplicationArea=#Suite;
+                      Image=DimensionSets;
+                      OnAction=VAR
+                                 Item@1001 : Record 27;
+                                 DefaultDimMultiple@1002 : Page 542;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Item);
+                                 DefaultDimMultiple.SetMultiItem(Item);
+                                 DefaultDimMultiple.RUNMODAL;
+                               END;
+                                }
+      { 56      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Historie;
+                                 ENU=History];
+                      Image=History }
+      { 84      ;2   ;ActionGroup;
+                      CaptionML=[DEU=&Posten;
+                                 ENU=E&ntries];
+                      Image=Entries }
+      { 14      ;3   ;Action    ;
+                      ShortCutKey=Ctrl+F7;
+                      CaptionML=[DEU=&Posten;
+                                 ENU=Ledger E&ntries];
+                      ToolTipML=[DEU=Zeigt die Historie der Transaktionen an, die f�r den ausgew�hlten Datensatz gebucht wurden.;
+                                 ENU=View the history of transactions that have been posted for the selected record.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 38;
+                      RunPageView=SORTING(Item No.)
+                                  ORDER(Descending);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ItemLedger;
+                      PromotedCategory=Category5;
+                      Scope=Repeater }
+      { 23      ;3   ;Action    ;
+                      CaptionML=[DEU=&Inventurposten;
+                                 ENU=&Phys. Inventory Ledger Entries];
+                      ToolTipML=[DEU=Zeigt an, wie viele Einheiten des Artikels bei der letzten physischen Z�hlung auf Lager waren.;
+                                 ENU=View how many units of the item you had in stock at the last physical count.];
+                      ApplicationArea=#Warehouse;
+                      RunObject=Page 390;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=PhysicalInventoryLedger;
+                      PromotedCategory=Category5;
+                      Scope=Repeater }
+      { 120     ;1   ;ActionGroup;
+                      Name=PricesandDiscounts;
+                      CaptionML=[DEU=Preise und Rabatte;
+                                 ENU=Prices and Discounts] }
+      { 1901240604;2 ;Action    ;
+                      Name=Prices_Prices;
+                      CaptionML=[DEU=Sonderpreise;
+                                 ENU=Special Prices];
+                      ToolTipML=[DEU=Richten Sie verschiedene Preise f�r den ausgew�hlten Artikel ein. Ein Artikelpreis wird automatisch in Rechnungszeilen verwendet, wenn die angegebenen Kriterien erf�llt sind, wie Debitor, Menge oder Enddatum.;
+                                 ENU=Set up different prices for the selected item. An item price is automatically used on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7002;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Price;
+                      PromotedCategory=Category6;
+                      Scope=Repeater }
+      { 1900869004;2 ;Action    ;
+                      Name=Prices_LineDiscounts;
+                      CaptionML=[DEU=Sonderrabatte;
+                                 ENU=Special Discounts];
+                      ToolTipML=[DEU=Richten Sie verschiedene Rabatte f�r den ausgew�hlten Artikel ein. Ein Artikelrabatt wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Debitor, Menge oder Enddatum.;
+                                 ENU=Set up different discounts for the selected item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7004;
+                      RunPageView=SORTING(Type,Code);
+                      RunPageLink=Type=CONST(Item),
+                                  Code=FIELD(No.);
+                      Image=LineDiscount;
+                      PromotedCategory=Category6;
+                      Scope=Repeater }
+      { 133     ;2   ;Action    ;
+                      Name=PricesDiscountsOverview;
+                      CaptionML=[DEU=�bersicht �ber Sonderpreise und -rabatte;
+                                 ENU=Special Prices & Discounts Overview];
+                      ToolTipML=[DEU=Zeigt die Sonderpreise und Zeilenrabatte an, die Sie f�r diesen Artikel gew�hren, wenn bestimmte Kriterien erf�llt sind, wie etwa Kreditor, Menge oder Enddatum.;
+                                 ENU=View the special prices and line discounts that you grant for this item when certain criteria are met, such as vendor, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      Image=PriceWorksheet;
+                      PromotedCategory=Category6;
+                      OnAction=VAR
+                                 SalesPriceAndLineDiscounts@1000 : Page 1345;
+                               BEGIN
+                                 SalesPriceAndLineDiscounts.InitPage(TRUE);
+                                 SalesPriceAndLineDiscounts.LoadItem(Rec);
+                                 SalesPriceAndLineDiscounts.RUNMODAL;
+                               END;
+                                }
+      { 92      ;2   ;Action    ;
+                      CaptionML=[DEU=VK-Preisvorschlag;
+                                 ENU=Sales Price Worksheet];
+                      ToolTipML=[DEU=Nimmt �nderungen am VK-Preis f�r den Artikel vor oder gibt an, wie �nderungen an den Preisvereinbarungen f�r einen Debitor, eine Debitorengruppe oder alle Debitoren eingegeben werden sollen.;
+                                 ENU=Change to the unit price for the item or specify how you want to enter changes in the price agreement for one customer, a group of customers, or all customers.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7023;
+                      Promoted=Yes;
+                      Visible=NOT IsOnPhone;
+                      Image=PriceWorksheet;
+                      PromotedCategory=Category6 }
+      { 117     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Periodische Aktivit�ten;
+                                 ENU=Periodic Activities] }
+      { 1907108104;2 ;Action    ;
+                      CaptionML=[DEU=Lagerreg. fakt. Einst. Preise;
+                                 ENU=Adjust Cost - Item Entries];
+                      ToolTipML=[DEU=Reguliert Lagerwerte in Wertposten, sodass Sie f�r das Aktualisieren der Finanzbuchhaltung die richtigen regulierten Lagerwerte verwenden k�nnen und die Verkaufs- und Gewinnstatistiken auf dem neuesten Stand sind.;
+                                 ENU=Adjust inventory values in value entries so that you use the correct adjusted cost for updating the general ledger and so that sales and profit statistics are up to date.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 795;
+                      Image=AdjustEntries;
+                      PromotedCategory=Category8 }
+      { 96      ;2   ;Action    ;
+                      CaptionML=[DEU=Lagerreg. buchen;
+                                 ENU=Post Inventory Cost to G/L];
+                      ToolTipML=[DEU=Buchen Sie die Mengen- und Wert�nderungen des Lagerbestands in den Artikelposten bzw. Wertposten, wenn Sie Lagerbestandstransaktionen wie Verkaufslieferungen oder Einkaufslieferungen buchen.;
+                                 ENU=Post the quantity and value changes to the inventory in the item ledger entries and the value entries when you post inventory transactions, such as sales shipments or purchase receipts.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 1002;
+                      Image=PostInventoryToGL;
+                      PromotedCategory=Category8 }
+      { 98      ;2   ;Action    ;
+                      CaptionML=[DEU=Inventur Buch.-Blatt;
+                                 ENU=Physical Inventory Journal];
+                      ToolTipML=[DEU=W�hlen Sie aus, wie Sie eine aktuelle Erfassung Ihres Lagerbestand in unterschiedlichen Lagerorten erreichen m�chten.;
+                                 ENU=Select how you want to maintain an up-to-date record of your inventory at different locations.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 392;
+                      Image=PhysicalInventory;
+                      PromotedCategory=Category8 }
+      { 119     ;2   ;Action    ;
+                      CaptionML=[DEU=Neubewertung Buch.-Blatt;
+                                 ENU=Revaluation Journal];
+                      ToolTipML=[DEU=Zeigen Sie den Lagerwert von Artikeln an, den Sie z.�B. nach einer Inventur �ndern k�nnen, oder bearbeiten Sie ihn.;
+                                 ENU=View or edit the inventory value of items, which you can change, such as after doing a physical inventory.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5803;
+                      Image=Journal;
+                      PromotedCategory=Category8 }
+      { 88      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Genehmigungsanforderung;
+                                 ENU=Request Approval];
+                      Image=SendApprovalRequest }
+      { 87      ;2   ;Action    ;
+                      Name=SendApprovalRequest;
+                      CaptionML=[DEU=&Genehmigungsanforderung senden;
+                                 ENU=Send A&pproval Request];
+                      ToolTipML=[DEU=Fordert die Genehmigung zum �ndern des Datensatzes an.;
+                                 ENU=Request approval to change the record.];
+                      ApplicationArea=#Advanced;
+                      Promoted=Yes;
+                      Enabled=(NOT OpenApprovalEntriesExist) AND EnabledApprovalWorkflowsExist AND CanRequestApprovalForFlow;
+                      Image=SendApprovalRequest;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                               BEGIN
+                                 IF ApprovalsMgmt.CheckItemApprovalsWorkflowEnabled(Rec) THEN
+                                   ApprovalsMgmt.OnSendItemForApproval(Rec);
+                               END;
+                                }
+      { 86      ;2   ;Action    ;
+                      Name=CancelApprovalRequest;
+                      CaptionML=[DEU=&Genehmigungsanforderung stornieren;
+                                 ENU=Cancel Approval Re&quest];
+                      ToolTipML=[DEU=Storniert die Genehmigungsanforderung.;
+                                 ENU=Cancel the approval request.];
+                      ApplicationArea=#Advanced;
+                      Promoted=Yes;
+                      Enabled=CanCancelApprovalForRecord OR CanCancelApprovalForFlow;
+                      Image=CancelApprovalRequest;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                                 WorkflowWebhookManagement@1000 : Codeunit 1543;
+                               BEGIN
+                                 ApprovalsMgmt.OnCancelItemApprovalRequest(Rec);
+                                 WorkflowWebhookManagement.FindAndCancel(RECORDID);
+                               END;
+                                }
+      { 135     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Workflow;
+                                 ENU=Workflow] }
+      { 134     ;2   ;Action    ;
+                      Name=CreateApprovalWorkflow;
+                      CaptionML=[DEU=Genehmigungsworkflow erstellen;
+                                 ENU=Create Approval Workflow];
+                      ToolTipML=[DEU=Richten Sie einen Genehmigungsworkflow f�r das Erstellen oder �ndern von Artikeln ein, in dem Sie einige Seiten zur Anleitung durchgehen.;
+                                 ENU=Set up an approval workflow for creating or changing items, by going through a few pages that will guide you.];
+                      ApplicationArea=#Suite;
+                      Enabled=NOT EnabledApprovalWorkflowsExist;
+                      Image=CreateWorkflow;
+                      OnAction=BEGIN
+                                 PAGE.RUNMODAL(PAGE::"Item Approval WF Setup Wizard");
+                               END;
+                                }
+      { 20      ;2   ;Action    ;
+                      Name=ManageApprovalWorkflow;
+                      CaptionML=[DEU=Genehmigungsworkflow verwalten;
+                                 ENU=Manage Approval Workflow];
+                      ToolTipML=[DEU=Zeigen Sie vorhandene Genehmigungsworkflows f�r das Erstellen oder �ndern von Artikeln an, oder bearbeiten Sie sie.;
+                                 ENU=View or edit existing approval workflows for creating or changing items.];
+                      ApplicationArea=#Suite;
+                      Enabled=EnabledApprovalWorkflowsExist;
+                      Image=WorkflowSetup;
+                      OnAction=VAR
+                                 WorkflowManagement@1000 : Codeunit 1501;
+                               BEGIN
+                                 WorkflowManagement.NavigateToWorkflows(DATABASE::Item,EventFilter);
+                               END;
+                                }
+      { 110     ;1   ;ActionGroup;
+                      CaptionML=[DEU=F&unktion;
+                                 ENU=F&unctions];
+                      Image=Action }
+      { 111     ;2   ;Action    ;
+                      AccessByPermission=TableData 5700=R;
+                      CaptionML=[DEU=&Lagerhaltungsdaten erstellen;
+                                 ENU=&Create Stockkeeping Unit];
+                      ToolTipML=[DEU=Erstellt eine Instanz des Artikels an jedem eingerichtetem Standort.;
+                                 ENU=Create an instance of the item at each location that is set up.];
+                      ApplicationArea=#Warehouse;
+                      Image=CreateSKU;
+                      OnAction=VAR
+                                 Item@1001 : Record 27;
+                               BEGIN
+                                 Item.SETRANGE("No.","No.");
+                                 REPORT.RUNMODAL(REPORT::"Create Stockkeeping Unit",TRUE,FALSE,Item);
+                               END;
+                                }
+      { 7380    ;2   ;Action    ;
+                      AccessByPermission=TableData 7380=R;
+                      CaptionML=[DEU=&Inventurh�ufigkeit berechnen;
+                                 ENU=C&alculate Counting Period];
+                      ToolTipML=[DEU=Bereitet eine physische Inventur vor, indem berechnet wird, welche Artikel oder Lagerhaltungsdaten in der aktuellen Periode gez�hlt werden m�ssen.;
+                                 ENU=Prepare for a physical inventory by calculating which items or SKUs need to be counted in the current period.];
+                      ApplicationArea=#Warehouse;
+                      Image=CalculateCalendar;
+                      OnAction=VAR
+                                 Item@1001 : Record 27;
+                                 PhysInvtCountMgt@1000 : Codeunit 7380;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Item);
+                                 PhysInvtCountMgt.UpdateItemPhysInvtCount(Item);
+                               END;
+                                }
+      { 1000000 ;2   ;Action    ;
+                      Name=CopyItem;
+                      CaptionML=[DEU=Artikel k&opieren;
+                                 ENU=C&opy Item];
+                      ToolTipML=[DEU=Die Informationen von einer anderen Artikelkarte auf diese Artikelkarte kopieren.;
+                                 ENU=Copy the information on another item card to this item card.];
+                      ApplicationArea=#Basic,#Suite;
+                      OnAction=VAR
+                                 CopyItem@1000001 : Report 11511;
+                                 ReturnItem@1000000 : Record 27;
+                               BEGIN
+                                 CopyItem.ItemDef(Rec);
+                                 CopyItem.RUNMODAL;
+                                 IF CopyItem.ItemReturn(ReturnItem) THEN
+                                   IF CONFIRM(Text11500,TRUE) THEN BEGIN
+                                     Rec := ReturnItem;
+                                     PAGE.RUNMODAL(PAGE::"Item Card",ReturnItem);
+                                   END;
+                               END;
+                                }
+      { 1905370404;1 ;Action    ;
+                      CaptionML=[DEU=Bestellvorschlag;
+                                 ENU=Requisition Worksheet];
+                      ToolTipML=[DEU=Berechnet einen Beschaffungsplan zur Erf�llung der Nachfrage f�r einen Artikel mit Eink�ufen und Umlagerungen.;
+                                 ENU=Calculate a supply plan to fulfill item demand with purchases or transfers.];
+                      ApplicationArea=#Planning;
+                      RunObject=Page 291;
+                      Image=Worksheet }
+      { 1904344904;1 ;Action    ;
+                      CaptionML=[DEU=Artikel Buch.-Blatt;
+                                 ENU=Item Journal];
+                      ToolTipML=[DEU=�ffnet eine Liste der Buchungsbl�tter, in der Sie die physische Menge der Artikel im Lager regulieren k�nnen.;
+                                 ENU=Open a list of journals where you can adjust the physical quantity of items on inventory.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 40;
+                      Promoted=Yes;
+                      Image=Journals;
+                      PromotedCategory=Process }
+      { 1906716204;1 ;Action    ;
+                      CaptionML=[DEU=Artikel Umlag. Buch.-Blatt;
+                                 ENU=Item Reclassification Journal];
+                      ToolTipML=[DEU=�ndert Informationen �ber Artikelposten, wie Dimensionen, Standortcodes, Lagerplatzcodes und Serien- oder Chargennummern.;
+                                 ENU=Change information on item ledger entries, such as dimensions, location codes, bin codes, and serial or lot numbers.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 393;
+                      Promoted=Yes;
+                      Image=Journals;
+                      PromotedCategory=Process }
+      { 1902532604;1 ;Action    ;
+                      CaptionML=[DEU=Artikelablaufverfolgung;
+                                 ENU=Item Tracing];
+                      ToolTipML=[DEU=Verfolgt nach, wo eine Chargen- oder Seriennummer, die dem Artikel zugewiesen wurde, verwendet wurde. So k�nnen Sie beispielsweise herausfinden, von welcher Charge eine fehlerhafte Komponente herr�hrte, oder Sie k�nnen herausfinden, welche Debitoren Artikel mit der fehlerhaften Komponente erhalten haben.;
+                                 ENU=Trace where a lot or serial number assigned to the item was used, for example, to find which lot a defective component came from or to find all the customers that have received items containing the defective component.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 6520;
+                      Image=ItemTracing }
+      { 1900805004;1 ;Action    ;
+                      CaptionML=[DEU=Artikelpreise justieren;
+                                 ENU=Adjust Item Cost/Price];
+                      ToolTipML=[DEU=Passt die Felder "Direkte Kosten (neueste)", "Einstandspreis (fest)", "VK-Preis", "DB %" oder "Indirekte Kosten %" auf ausgew�hlten Artikel- oder Lagerhaltungsdatenkarten und f�r ausgew�hlte Filter an. Sie k�nnen z.�B. die letzten direkten Kosten bei allen Artikeln eines bestimmten Lieferanten um 5�% �ndern.;
+                                 ENU=Adjusts the Last Direct Cost, Standard Cost, Unit Price, Profit %, or Indirect Cost % fields on selected item or stockkeeping unit cards and for selected filters. For example, you can change the last direct cost by 5% on all items from a specific vendor.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 794;
+                      Image=AdjustItemCost }
+      { 147     ;1   ;Action    ;
+                      Name=ApplyTemplate;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Vorlage anwenden;
+                                 ENU=Apply Template];
+                      ToolTipML=[DEU=Wenden Sie eine Vorlage zum Aktualisieren einer oder mehrerer Einheiten mit Ihren Standardeinstellungen f�r einen bestimmten Einheitentyp an.;
+                                 ENU=Apply a template to update one or more entities with your standard settings for a certain type of entity.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=ApplyTemplate;
+                      OnAction=VAR
+                                 Item@1000 : Record 27;
+                                 ItemTemplate@1001 : Record 1301;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Item);
+                                 ItemTemplate.UpdateItemsFromTemplate(Item);
+                               END;
+                                }
+      { 142     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Bildschirm;
+                                 ENU=Display] }
+      { 141     ;2   ;Action    ;
+                      Name=ReportFactBoxVisibility;
+                      CaptionML=[DEU=Power BI-Berichte anzeigen/ausblenden;
+                                 ENU=Show/Hide Power BI Reports];
+                      ToolTipML=[DEU=W�hlt aus, ob die Power BI-Infobox angezeigt wird oder nicht.;
+                                 ENU=Select if the Power BI FactBox is visible or not.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=Report;
+                      OnAction=BEGIN
+                                 IF PowerBIVisible THEN
+                                   PowerBIVisible := FALSE
+                                 ELSE
+                                   PowerBIVisible := TRUE;
+                                 // save visibility value into the table
+                                 CurrPage."Power BI Report FactBox".PAGE.SetFactBoxVisibility(PowerBIVisible);
+                               END;
+                                }
+      { 1000000003;1 ;ActionGroup;
+                      CaptionML=[DEU=E-Commerce;
+                                 ENU=E-Commerce] }
+      { 1000000000;2 ;Action    ;
+                      Name=Webshop Item;
+                      CaptionML=[DEU=Webshop Artikel;
+                                 ENU=Webshop];
+                      RunObject=Page 5447308;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Web;
+                      PromotedCategory=Process }
+      { 1900000006;0 ;ActionContainer;
+                      ActionContainerType=Reports }
+      { 127     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Montage/Produktion;
+                                 ENU=Assembly/Production] }
+      { 18      ;2   ;Action    ;
+                      CaptionML=[DEU=Auftragsmontage - Verkauf;
+                                 ENU=Assemble to Order - Sales];
+                      ToolTipML=[DEU=Zeigt wichtige Verkaufszahlen f�r Montagekomponenten, die als Teil der Montageartikel in Auftragsmontageverk�ufen oder als separate Artikel direkt aus dem Lagerbestand verkauft werden k�nnen, an. Mit diesem Bericht k�nnen Sie die Menge, die Kosten sowie die Verkaufs- und DB-Zahlen von Montagekomponenten analysieren, um bessere Entscheidungen bez�glich beispielsweise dem Preis von Kits oder der Verwendung bestimmter Artikel in Baugruppen treffen zu k�nnen.;
+                                 ENU=View key sales figures for assembly components that may be sold either as part of assembly items in assemble-to-order sales or as separate items directly from inventory. Use this report to analyze the quantity, cost, sales, and profit figures of assembly components to support decisions, such as whether to price a kit differently or to stop or start using a particular item in assemblies.];
+                      ApplicationArea=#Assembly;
+                      RunObject=Report 915;
+                      Image=Report }
+      { 1902353206;2 ;Action    ;
+                      CaptionML=[DEU=Teileverwendung (Struktur);
+                                 ENU=Where-Used (Top Level)];
+                      ToolTipML=[DEU=Zeigt an, wo und in welchen Mengen der Artikel in der Produktstruktur verwendet wird. Der Bericht zeigt nur Informationen f�r den Artikel der obersten Ebene an. Wenn zum Beispiel Artikel "A" verwendet wird, um Artikel "B" zu fertigen und "B" verwendet wird, um Artikel "C" zu fertigen, zeigt der Bericht Artikel "B" an, wenn Sie diesen Bericht f�r Artikel "A" ausf�hren. Wenn Sie den Bericht f�r Artikel "B" ausf�hren, wird Artikel "C" in der Verwendung angezeigt.;
+                                 ENU=View where and in what quantities the item is used in the product structure. The report only shows information for the top-level item. For example, if item "A" is used to produce item "B", and item "B" is used to produce item "C", the report will show item B if you run this report for item A. If you run this report for item B, then item C will be shown as where-used.];
+                      ApplicationArea=#Assembly;
+                      RunObject=Report 99000757;
+                      Image=Report }
+      { 1907778006;2 ;Action    ;
+                      CaptionML=[DEU=Strukturst�ckliste;
+                                 ENU=Quantity Explosion of BOM];
+                      ToolTipML=[DEU=Zeigt eine einger�ckte St�ckliste f�r den oder die Artikel an, die Sie in den Filtern angeben. Die Fertigungsst�ckliste ist f�r alle Ebenen aufgel�st.;
+                                 ENU=View an indented BOM listing for the item or items that you specify in the filters. The production BOM is completely exploded for all levels.];
+                      ApplicationArea=#Assembly;
+                      RunObject=Report 99000753;
+                      Image=Report }
+      { 132     ;2   ;ActionGroup;
+                      CaptionML=[DEU=Bewertung;
+                                 ENU=Costing];
+                      Image=ItemCosts }
+      { 1907928706;3 ;Action    ;
+                      CaptionML=[DEU=Lagerbewertung - Aktiviert;
+                                 ENU=Inventory Valuation - WIP];
+                      ToolTipML=[DEU=Zeigt die Lagerbewertung ausgew�hlter Fertigungsauftr�ge in Ihrem Lager f�r unfertige Arbeit an. Der Bericht enth�lt au�erdem Informationen �ber den Wert von Verbrauch, Kapazit�tsauslastung und Ausgabe im WIP an. Der gedruckte Bericht zeigt nur fakturierte Betr�ge, d.�h. Einstandspreise von Posten, die als fakturiert gebucht wurden.;
+                                 ENU=View inventory valuation for selected production orders in your WIP inventory. The report also shows information about the value of consumption, capacity usage and output in WIP. The printed report only shows invoiced amounts, that is, the cost of entries that have been posted as invoiced.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 5802;
+                      Image=Report }
+      { 1905889606;3 ;Action    ;
+                      CaptionML=[DEU=Kostenanteilsanalyse;
+                                 ENU=Cost Shares Breakdown];
+                      ToolTipML=[DEU=Zeigt den Einstandspreis des Artikels im Lagerbestand, WIP oder Lagerverbrauch entsprechend den Einkaufs- und Materialkosten, Kapazit�tskosten, Kapazit�tsgemeinkosten, Produktionsgemeinkosten, Fremdarbeitskosten, Abweichung, indirekten Kosten, der Neubewertung und Rundung an. Der Bericht berechnet Kosten auf St�cklistenebene allerdings nicht den Kostenanteil der Artikel, bei denen die Lagerabgangsmethode "Durchschnitt" verwendet wird.;
+                                 ENU=View the item's cost broken down in inventory, WIP, or COGS, according to purchase and material cost, capacity cost, capacity overhead cost, manufacturing overhead cost, subcontracted cost, variance, indirect cost, revaluation, and rounding. The report breaks down cost at a single BOM level and does not roll up the costs from lower BOM levels. The report does not calculate the cost share from items that use the Average costing method.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 5848;
+                      Image=Report }
+      { 1901374406;3 ;Action    ;
+                      CaptionML=[DEU=Detailkalkulation;
+                                 ENU=Detailed Calculation];
+                      ToolTipML=[DEU=Zeigt die Liste aller Kosten f�r den Artikel unter Ber�cksichtigung des Produktionsausschusses an.;
+                                 ENU=View the list of all costs for the item taking into account any scrap during production.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 99000756;
+                      Image=Report }
+      { 1900812706;3 ;Action    ;
+                      CaptionML=[DEU=Kosten der Strukturst�ckliste;
+                                 ENU=Rolled-up Cost Shares];
+                      ToolTipML=[DEU=Zeigt die Kostenanteile aller Artikel in der Produktstruktur der �bergeordneten Artikel an, deren Menge und deren Kostenanteil, angegeben in Materialkosten, Kapazit�tskosten, Gemeinkosten sowie Gesamtkosten. Materialkosten werden als die Kosten aller Artikel in der Produktstruktur des �bergeordneten Artikels berechnet. Kapazit�ts- und Fremdbearbeitungskosten werden als Kosten im Zusammenhang mit der Fertigung aller Artikel in der Produktstruktur des �bergeordneten Artikels berechnet. Materialkosten werden als Kosten aller Artikel in der Produktstruktur des Artikels berechnet. Kapazit�ts- und Fremdbearbeitungskosten sind die Kosten, die nur im Zusammenhang mit dem �bergeordneten Artikel stehen.;
+                                 ENU=View the cost shares of all items in the parent item's product structure, their quantity and their cost shares specified in material, capacity, overhead, and total cost. Material cost is calculated as the cost of all items in the parent item's product structure. Capacity and subcontractor costs are calculated as the costs related to produce all of the items in the parent item's product structure. Material cost is calculated as the cost of all items in the item's product structure. Capacity and subcontractor costs are the cost related to the parent item only.];
+                      ApplicationArea=#Manufacturing;
+                      RunObject=Report 99000754;
+                      Image=Report }
+      { 1901316306;3 ;Action    ;
+                      CaptionML=[DEU=Kosten pro Artikel;
+                                 ENU=Single-Level Cost Shares];
+                      ToolTipML=[DEU=Zeigt die Kostenanteile aller Artikel in der Produktstruktur des Artikels an, deren Menge und deren Kostenanteil, angegeben in Materialkosten, Kapazit�tskosten, Gemeinkosten sowie Gesamtkosten. Materialkosten werden als die Kosten aller Artikel in der Produktstruktur des �bergeordneten Artikels berechnet. Kapazit�ts- und Fremdbearbeitungskosten werden als Kosten im Zusammenhang mit der Fertigung aller Artikel in der Produktstruktur des �bergeordneten Artikels berechnet.;
+                                 ENU=View the cost shares of all items in the item's product structure, their quantity and their cost shares specified in material, capacity, overhead, and total cost. Material cost is calculated as the cost of all items in the parent item's product structure. Capacity and subcontractor costs are calculated as the costs related to produce all of the items in the parent item's product structure.];
+                      ApplicationArea=#Manufacturing;
+                      RunObject=Report 99000755;
+                      Image=Report }
+      { 128     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Lagerbestand;
+                                 ENU=Inventory] }
+      { 1900907306;2 ;Action    ;
+                      CaptionML=[DEU=Lager - Liste;
+                                 ENU=Inventory - List];
+                      ToolTipML=[DEU=Zeigt eine Reihe von Informationen zum Artikel an, wie Name, Einheit, Buchungsgruppe, Regalnummer, Kred.-Artikelnummer, Beschaffungszeit, Minimalbestand und alternative Artikelnummer. Sie k�nnen zudem sehen, ob ein Artikel gesperrt ist.;
+                                 ENU=View various information about the item, such as name, unit of measure, posting group, shelf number, vendor's item number, lead time calculation, minimum inventory, and alternate item number. You can also see if the item is blocked.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 701;
+                      Image=Report }
+      { 1906212206;2 ;Action    ;
+                      CaptionML=[DEU=Lager - Verf�gbarkeitsplan;
+                                 ENU=Inventory - Availability Plan];
+                      ToolTipML=[DEU=Zeigt eine Liste mit der Menge eines jeden Artikels in Debitorenauftr�gen, Bestellungen und Umlagerungsauftr�gen sowie die verf�gbare Menge im Lagerbestand an. Die Liste ist in Spalten unterteilt, die sechs Perioden mit dem jeweiligen Start- und Enddatum sowie die Zeitr�ume vor und nach diesen Perioden abdecken. Es empfiehlt sich, diese Liste bei der Lagereinkaufsplanung zu verwenden.;
+                                 ENU=View a list of the quantity of each item in customer, purchase, and transfer orders and the quantity available in inventory. The list is divided into columns that cover six periods with starting and ending dates as well as the periods before and after those periods. The list is useful when you are planning your inventory purchases.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 707;
+                      Image=ItemAvailability }
+      { 1900430206;2 ;Action    ;
+                      CaptionML=[DEU=Artikel/Lieferanten Katalog;
+                                 ENU=Item/Vendor Catalog];
+                      ToolTipML=[DEU=Zeigt eine Liste der Kreditoren f�r die ausgew�hlten Artikel an: F�r jede Kombination von Artikel und Kreditor zeigt sie den EK-Preis, die Beschaffungszeit und die Artikelnummer des Kreditors an.;
+                                 ENU=View a list of the vendors for the selected items. For each combination of item and vendor, it shows direct unit cost, lead time calculation and the vendor's item number.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 720;
+                      Image=Report }
+      { 1907644006;2 ;Action    ;
+                      CaptionML=[DEU=Inventurliste;
+                                 ENU=Phys. Inventory List];
+                      ToolTipML=[DEU=Eine Liste der Zeilen anzeigen, die im Fenster "Inventur Buch.-Blatt" berechnet wurden. Diesen Bericht k�nnen Sie bei einer Inventurz�hlung verwenden, um die tats�chlich am Lager vorhanden Mengen zu notieren und diese Werte mit den Werten zu vergleichen, die in der Anwendung erfasst sind.;
+                                 ENU=View a list of the lines that you have calculated in the Phys. Inventory Journal window. You can use this report during the physical inventory count to mark down actual quantities on hand in the warehouse and compare them to what is recorded in the program.];
+                      ApplicationArea=#Warehouse;
+                      RunObject=Report 722;
+                      Image=Report }
+      { 1907253406;2 ;Action    ;
+                      CaptionML=[DEU=Katalogartikel Verkauf;
+                                 ENU=Nonstock Item Sales];
+                      ToolTipML=[DEU=Zeigt eine Liste der Artikelverk�ufe f�r jeden Katalogartikel w�hrend eines ausgew�hlten Zeitraums an. Sie kann dazu verwendet werden, um die Verk�ufe von Katalogartikeln eines Unternehmens zu �berpr�fen.;
+                                 ENU=View a list of item sales for each nonstock item during a selected time period. It can be used to review a company's sale of nonstock items.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 5700;
+                      Image=Report }
+      { 1905753506;2 ;Action    ;
+                      CaptionML=[DEU=Ersatzartikel;
+                                 ENU=Item Substitutions];
+                      ToolTipML=[DEU=Zeigt oder bearbeitet eingerichtete Ersatzartikel, die gegen den Artikel ausgetauscht werden, falls er nicht verf�gbar ist.;
+                                 ENU=View or edit any substitute items that are set up to be traded instead of the item in case it is not available.];
+                      ApplicationArea=#Suite;
+                      RunObject=Report 5701;
+                      Image=Report }
+      { 1905572506;2 ;Action    ;
+                      CaptionML=[DEU=VK-Preisliste;
+                                 ENU=Price List];
+                      ToolTipML=[DEU=Zeigen Sie eine Liste Ihrer Artikel und deren Preise an, drucken oder speichern Sie sie, um sie beispielsweise an Debitoren zu senden. Sie k�nnen die Liste f�r spezifische Debitoren, Kampagnen, W�hrungen oder andere Kriterien erstellen.;
+                                 ENU=View, print, or save a list of your items and their prices, for example, to send to customers. You can create the list for specific customers, campaigns, currencies, or other criteria.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 715;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Category9 }
+      { 1900128906;2 ;Action    ;
+                      CaptionML=[DEU=Lager - EK-/VK-Preisliste;
+                                 ENU=Inventory Cost and Price List];
+                      ToolTipML=[DEU=Zeigen Sie eine Liste Ihrer Artikel und Informationen zu deren VK/EK an, drucken oder speichern Sie sie. Der Bericht gibt Einstandspreis, EK-Preis (neuester), VK-Preis, Deckungsbeitrag in Prozent und Deckungsbeitrag an.;
+                                 ENU=View, print, or save a list of your items and their price and cost information. The report specifies direct unit cost, last direct cost, unit price, profit percentage, and profit.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 716;
+                      Image=Report }
+      { 1901091106;2 ;Action    ;
+                      CaptionML=[DEU=Lager - Verf�gbarkeit;
+                                 ENU=Inventory Availability];
+                      ToolTipML=[DEU=Zeigen Sie eine Zusammenfassung der historischen Lagertransaktionen mit ausgew�hlten Artikeln an, drucken oder speichern Sie sie, um beispielsweise zu entscheiden, wann die Artikel gekauft werden sollen. Der Bericht gibt Folgendes an: Menge in Verkaufsauftr�gen, Menge in Einkaufsbestellungen, Bestellr�ckstand bei Kreditoren, Minimalbestand und ob eine Wiederbestellung vorliegt.;
+                                 ENU=View, print, or save a summary of historical inventory transactions with selected items, for example, to decide when to purchase the items. The report specifies quantity on sales order, quantity on purchase order, back orders from vendors, minimum inventory, and whether there are reorders.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 705;
+                      Image=Report }
+      { 131     ;2   ;ActionGroup;
+                      CaptionML=[DEU=Artikeljournal;
+                                 ENU=Item Register];
+                      Image=ItemRegisters }
+      { 1907629906;3 ;Action    ;
+                      CaptionML=[DEU=Artikeljournal - Menge;
+                                 ENU=Item Register - Quantity];
+                      ToolTipML=[DEU=Zeigt einen oder mehrere ausgew�hlte Artikeljournale an, die Mengen enthalten. Der Bericht kann verwendet werden, um den Inhalt der Journale f�r interne oder externe Buchpr�fungen zu dokumentieren.;
+                                 ENU=View one or more selected item registers showing quantity. The report can be used to document a register's contents for internal or external audits.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 703;
+                      Image=Report }
+      { 1902962906;3 ;Action    ;
+                      CaptionML=[DEU=Artikeljournal - Wert;
+                                 ENU=Item Register - Value];
+                      ToolTipML=[DEU=Zeigt einen oder mehrere ausgew�hlte Artikeljournale an, die Werte enthalten. Der Bericht kann verwendet werden, um den Inhalt eines Journals f�r interne oder externe Buchpr�fungen zu dokumentieren.;
+                                 ENU=View one or more selected item registers showing value. The report can be used to document the contents of a register for internal or external audits.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 5805;
+                      Image=Report }
+      { 130     ;2   ;ActionGroup;
+                      CaptionML=[DEU=Bewertung;
+                                 ENU=Costing];
+                      Image=ItemCosts }
+      { 1900730006;3 ;Action    ;
+                      CaptionML=[DEU=Lager - Einst.-Preisabweichung;
+                                 ENU=Inventory - Cost Variance];
+                      ToolTipML=[DEU=Zeigt Informationen �ber ausgew�hlte Artikel an - Einheit, Einstandspreis (fest) und Lagerabgangsmethode - sowie zus�tzliche Informationen �ber Artikelposten: St�ckpreis, Einstandspreis, Abweichung pro Einheit (Differenz zwischen St�ckpreis und Einstandspreis), fakturierte Menge und Totalbetrag Abweichung (Menge * Abweichung pro Einheit). Der Bericht kann haupts�chlich dann verwendet werden, wenn Sie die Lagerabgangsmethode "Standard" auf der Artikelkarte gew�hlt haben.;
+                                 ENU=View information about selected items, unit of measure, standard cost, and costing method, as well as additional information about item entries: unit amount, direct unit cost, unit cost variance (the difference between the unit amount and unit cost), invoiced quantity, and total variance amount (quantity * unit cost variance). The report can be used primarily if you have chosen the Standard costing method on the item card.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 721;
+                      Image=ItemCosts }
+      { 1904299906;3 ;Action    ;
+                      CaptionML=[DEU=Lagerbew.-Einst.-Pr.-Ermittl.;
+                                 ENU=Invt. Valuation - Cost Spec.];
+                      ToolTipML=[DEU="Zeigt einen �berblick �ber den aktuellen Lagerwert ausgew�hlter Artikel an und gibt die Einstandspreise dieser Artikel zum Datum im Feld ""Bewertungsdatum"" an. Der Bericht enth�lt alle Kosten; sowohl die fakturierten Kosten als auch die Soll-Kosten. F�r alle beim Einrichten des Berichts angegebenen Artikel zeigt der Bericht die Menge im Lagerbestand, den Einstandspreis pro Einheit und den Gesamtbetrag an. F�r jede dieser Spalten gibt der Bericht den Lagerwert als die Postenarten der Wertposten an.";
+                                 ENU=View an overview of the current inventory value of selected items and specifies the cost of these items as of the date specified in the Valuation Date field. The report includes all costs, both those posted as invoiced and those posted as expected. For each of the items that you specify when setting up the report, the printed report shows quantity on stock, the cost per unit and the total amount. For each of these columns, the report specifies the cost as the various value entry types.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 5801;
+                      Image=Report }
+      { 1907846806;3 ;Action    ;
+                      CaptionML=[DEU=Vergleichsliste;
+                                 ENU=Compare List];
+                      ToolTipML=[DEU=Zeigt die Komponenten zweier Artikel im Vergleich an. Der Ausdruck vergleicht die Komponenten, deren Einstandspreis, Kostenanteil und Kosten je Komponente.;
+                                 ENU=View a comparison of components for two items. The printout compares the components, their unit cost, cost share and cost per component.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 99000758;
+                      Image=Report }
+      { 100     ;2   ;ActionGroup;
+                      CaptionML=[DEU=Lagerbestand;
+                                 ENU=Inventory Details];
+                      Image=Report }
+      { 1904068306;3 ;Action    ;
+                      CaptionML=[DEU=Lager - Kontoblatt;
+                                 ENU=Inventory - Transaction Detail];
+                      ToolTipML=[DEU=Zeigt Kontobl�tter mit Posten ausgew�hlter Artikel in einer ausgew�hlten Periode. Der Bericht zeigt den Lagerbestand am Anfang der Periode, alle Lagerzugangs- und -abgangsposten w�hrend der Periode mit laufender Aktualisierung des Lagerbestandes und den Lagerbestand am Ende der Periode an. Dieser Bericht kann z. B. beim Abschluss einer Buchhaltungsperiode verwendet werden oder bei einer Pr�fung.;
+                                 ENU=View transaction details with entries for the selected items for a selected period. The report shows the inventory at the beginning of the period, all of the increase and decrease entries during the period with a running update of the inventory, and the inventory at the close of the period. The report can be used at the close of an accounting period, for example, or for an audit.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 704;
+                      Image=Report }
+      { 1900461506;3 ;Action    ;
+                      CaptionML=[DEU=Artikel Zu-/Abschl. - Spezif.;
+                                 ENU=Item Charges - Specification];
+                      ToolTipML=[DEU="Zeigt eine Spezifikation der direkten Kosten an, die Ihr Unternehmen als Artikelzuschl�ge/-abschl�ge zugewiesen und gebucht hat. Der Bericht zeigt die verschiedenen Wertposten, die als Artikelzuschl�ge/-abschl�ge gebucht wurden. Er enth�lt alle Kosten; sowohl die fakturierten Kosten als auch die Soll-Kosten.";
+                                 ENU=View a specification of the direct costs that your company has assigned and posted as item charges. The report shows the various value entries that have been posted as item charges. It includes all costs, both those posted as invoiced and those posted as expected.];
+                      ApplicationArea=#ItemCharges;
+                      RunObject=Report 5806;
+                      Image=Report }
+      { 1900111206;3 ;Action    ;
+                      CaptionML=[DEU=Artikellagerzeit - Menge;
+                                 ENU=Item Age Composition - Qty.];
+                      ToolTipML=[DEU=Zeigen Sie einen �berblick �ber die aktuelle Lagerzeit von ausgew�hlten Artikeln in Ihrem Lager an, drucken oder speichern Sie sie.;
+                                 ENU=View, print, or save an overview of the current age composition of selected items in your inventory.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 5807;
+                      Image=Report }
+      { 1906747006;3 ;Action    ;
+                      CaptionML=[DEU=Artikelablauf - Menge;
+                                 ENU=Item Expiration - Quantity];
+                      ToolTipML=[DEU=Gibt einen �berblick dar�ber, in welchen Mengen die ausgew�hlten Artikel, deren Ablaufdaten in eine bestimmte Periode fallen, im Lagerbestand vorhanden sind. Die Liste zeigt, wie viele Einheiten des ausgew�hlten Artikels, der in der angegebenen Periode abl�uft, vorhanden sind. F�r jeden Artikel, den Sie beim Einrichten des Berichts angegeben haben, zeigt der Bericht die Anzahl der Einheiten, die innerhalb jeder von drei gleichlangen Perioden ablaufen, sowie die gesamte Lagerbestandsmenge des ausgew�hlten Artikels.;
+                                 ENU=View an overview of the quantities of selected items in your inventory whose expiration dates fall within a certain period. The list shows the number of units of the selected item that will expire in a given time period. For each of the items that you specify when setting up the report, the printed document shows the number of units that will expire during each of three periods of equal length and the total inventory quantity of the selected item.];
+                      ApplicationArea=#ItemTracking;
+                      RunObject=Report 5809;
+                      Image=Report }
+      { 102     ;2   ;ActionGroup;
+                      Name=Reports;
+                      CaptionML=[DEU=Lagerstatistik;
+                                 ENU=Inventory Statistics];
+                      Image=Report }
+      { 1900762706;3 ;Action    ;
+                      CaptionML=[DEU=Lager - Verkaufsstatistik;
+                                 ENU=Inventory - Sales Statistics];
+                      ToolTipML=[DEU=Zeigen Sie eine Zusammenfassung der Verk�ufe der ausgew�hlten Artikel pro Debitor an, um beispielsweise den Deckungsbeitrag f�r einzelne Artikel oder Trends bei Einnahmen und Deckungsbeitrag zu analysieren. Der Bericht gibt Einstandspreis, Verkaufspreis, Verkaufsmenge, Verk�ufe in MW, Deckungsbeitrag in Prozent und Deckungsbeitrag an.;
+                                 ENU=View, print, or save a summary of selected items' sales per customer, for example, to analyze the profit on individual items or trends in revenues and profit. The report specifies direct unit cost, unit price, sales quantity, sales in LCY, profit percentage, and profit.];
+                      ApplicationArea=#Suite;
+                      RunObject=Report 712;
+                      Image=Report }
+      { 1904034006;3 ;Action    ;
+                      CaptionML=[DEU=Lager - Debitorenverk�ufe;
+                                 ENU=Inventory - Customer Sales];
+                      ToolTipML=[DEU=Zeigen Sie eine Liste der Debitoren an, drucken oder speichern Sie sie, die ausgew�hlte Artikel innerhalb einer ausgew�hlten Periode gekauft haben, um beispielsweise Kaufmuster der Kunden zu analysieren. Der Bericht gibt Menge, Betrag, Rabatt, Deckungsbeitrag in Prozent und Deckungsbeitrag an.;
+                                 ENU=View, print, or save a list of customers that have purchased selected items within a selected period, for example, to analyze customers' purchasing patterns. The report specifies quantity, amount, discount, profit percentage, and profit.];
+                      ApplicationArea=#Suite;
+                      RunObject=Report 713;
+                      Image=Report }
+      { 1907930606;3 ;Action    ;
+                      CaptionML=[DEU=Artikel - Top 10 Liste;
+                                 ENU=Inventory - Top 10 List];
+                      ToolTipML=[DEU=Zeigt Informationen zu den Artikeln mit den h�chsten oder niedrigsten Verk�ufen innerhalb eines ausgew�hlten Zeitraums an. Sie k�nnen zudem ausw�hlen, dass Artikel, die nicht am Lager sind oder noch nie verkauft wurden, nicht im Bericht ber�cksichtigt werden sollen. Die Artikel werden nach Auftragsvolumen in der ausgew�hlten Periode sortiert. Die Liste liefert einen schnellen �berblick �ber die Artikel, die am besten oder am schlechtesten verkauft wurden oder die die meisten oder wenigsten Einheiten am Lager haben.;
+                                 ENU=View information about the items with the highest or lowest sales within a selected period. You can also choose that items that are not on hand or have not been sold are not included in the report. The items are sorted by order size within the selected period. The list gives a quick overview of the items that have sold either best or worst, or the items that have the most or fewest units on inventory.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 711;
+                      Image=Report }
+      { 104     ;2   ;ActionGroup;
+                      CaptionML=[DEU=Finanzberichte;
+                                 ENU=Finance Reports];
+                      Image=Report }
+      { 1906316306;3 ;Action    ;
+                      CaptionML=[DEU=Lagerwert berechnen;
+                                 ENU=Inventory Valuation];
+                      ToolTipML=[DEU=Zeigen Sie eine Liste der Werte des Lagerbestands f�r jeden Lagerartikel an, drucken oder speichern Sie sie.;
+                                 ENU=View, print, or save a list of the values of the on-hand quantity of each inventory item.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 1001;
+                      Image=Report }
+      { 1901254106;3 ;Action    ;
+                      CaptionML=[DEU=Status;
+                                 ENU=Status];
+                      ToolTipML=[DEU=Zeigen Sie den Status teilweise erf�llter oder nicht erf�llter Auftr�ge an, drucken oder speichern Sie ihn, sodass Sie bestimmen k�nnen, wie sich die Erf�llung dieser Auftr�ge auf den Lagerbestand auswirkt.;
+                                 ENU=View, print, or save the status of partially filled or unfilled orders so you can determine what effect filling these orders may have on your inventory.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 706;
+                      Image=Report }
+      { 1903496006;3 ;Action    ;
+                      CaptionML=[DEU=Artikellagerzeit - Wert;
+                                 ENU=Item Age Composition - Value];
+                      ToolTipML=[DEU=Zeigen Sie einen �berblick �ber die aktuelle Lagerzeit von ausgew�hlten Artikeln in Ihrem Lager an, drucken oder speichern Sie sie.;
+                                 ENU=View, print, or save an overview of the current age composition of selected items in your inventory.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 5808;
+                      Image=Report }
+      { 129     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Auftr�ge;
+                                 ENU=Orders] }
+      { 1903262806;2 ;Action    ;
+                      CaptionML=[DEU=Lager - Auftragsbestand;
+                                 ENU=Inventory Order Details];
+                      ToolTipML=[DEU=Zeigt eine Liste der Auftr�ge an, deren Warenein- oder -ausgang noch nicht gebucht wurde, sowie die Artikel in Auftr�gen. Die Auftragsnummer, der Name des Debitors, das Warenausgangsdatum, die Menge, die Menge in R�ckstand, die Restauftragsmenge und der Verkaufspreis sowie ein m�glicher Rabattprozentsatz und -betrag werden angezeigt. Die Menge in R�ckstand und die Restauftragsmenge sowie der Betrag werden f�r jeden Artikel summiert. Dieser Bericht kann verwendet werden, um herauszufinden, ob es zurzeit Lieferprobleme gibt oder ob Lieferprobleme zu erwarten sind.;
+                                 ENU=View a list of the orders that have not yet been shipped or received and the items in the orders. It shows the order number, customer's name, shipment date, order quantity, quantity on back order, outstanding quantity and unit price, as well as possible discount percentage and amount. The quantity on back order and outstanding quantity and amount are totaled for each item. The report can be used to find out whether there are currently shipment problems or any can be expected.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 708;
+                      Image=Report }
+      { 1904739806;2 ;Action    ;
+                      CaptionML=[DEU=Lager - Bestellungen;
+                                 ENU=Inventory Purchase Orders];
+                      ToolTipML=[DEU=Zeigt eine Liste von Artikeln an, die sich in Bestellungen bei Kreditoren befinden. Sie zeigt dar�ber hinaus das erwartete Wareneingangsdatum und die Menge und den Betrag im Auftragsr�ckstand an. Der Bericht kann z. B. dazu verwendet werden, sich anzeigen zu lassen, wann der Wareneingang von Artikeln erfolgen sollte und ob eine Mahnung aufgrund einer Menge in R�ckstand registriert werden sollte.;
+                                 ENU=View a list of items on order from vendors. It also shows the expected receipt date and the quantity and amount on back orders. The report can be used, for example, to see when items should be received and whether a reminder of a back order should be issued.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 709;
+                      Image=Report }
+      { 1906231806;2 ;Action    ;
+                      CaptionML=[DEU=Lager - Kreditoreneink�ufe;
+                                 ENU=Inventory - Vendor Purchases];
+                      ToolTipML=[DEU=Zeigt eine Liste der Kreditoren an, von denen Ihr Unternehmen in der ausgew�hlten Periode Artikel gekauft hat. Die fakturierte Menge, der Betrag und der Rabatt werden angezeigt. Der Bericht kann dazu verwendet werden, die Eink�ufe eines Unternehmens zu analysieren.;
+                                 ENU=View a list of the vendors that your company has purchased items from within a selected period. It shows invoiced quantity, amount and discount. The report can be used to analyze a company's item purchases.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 714;
+                      Image=Report }
+      { 1906101206;2 ;Action    ;
+                      CaptionML=[DEU=Lager - Wiederbestellung;
+                                 ENU=Inventory - Reorders];
+                      ToolTipML=[DEU=Zeigt eine Liste von Artikeln mit negativem Lagerbestand an, die nach Kreditoren sortiert ist. Sie k�nnen diesen Bericht verwenden, um zu entscheiden, welche Artikel wiederbestellt werden m�ssen. Der Bericht f�hrt die Menge der eingehenden Artikel in Bestellungen oder Umlagerungsauftr�gen sowie die Menge der Artikel im Lagerbestand auf. Auf Grundlage dieser Informationen und der definierten Bestellmenge f�r den Artikel wird ein Vorschlagswert in das Feld "Beschaffungsmenge" eingef�gt.;
+                                 ENU=View a list of items with negative inventory that is sorted by vendor. You can use this report to help decide which items have to be reordered. The report shows how many items are inbound on purchase orders or transfer orders and how many items are in inventory. Based on this information and any defined reorder quantity for the item, a suggested value is inserted in the Qty. to Order field.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 717;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1900210306;2 ;Action    ;
+                      CaptionML=[DEU=Lager - Verkaufsr�ckst�nde;
+                                 ENU=Inventory - Sales Back Orders];
+                      ToolTipML=[DEU=Zeigt eine Liste mit Auftragszeilen mit Datumsangaben zu �berschrittenen Warenausg�ngen an. Der Bericht zeigt auch andere Artikelr�ckst�nde f�r den Debitor an.;
+                                 ENU=Shows a list of order lines with shipment dates that are exceeded. The report also shows if there are other items for the customer on back order.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 718;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 126     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Artikel;
+                                 ENU=Item] }
+      { 123     ;2   ;Action    ;
+                      Name=ApprovalEntries;
+                      AccessByPermission=TableData 454=R;
+                      CaptionML=[DEU=Genehmigungen;
+                                 ENU=Approvals];
+                      ToolTipML=[DEU=Zeigt eine Liste der Datens�tze an, die noch genehmigt werden m�ssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.;
+                                 ENU=View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Image=Approvals;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 ApprovalsMgmt.OpenApprovalEntriesPage(RECORDID);
+                               END;
+                                }
+      { 10      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Verf�gbarkeit;
+                                 ENU=Availability];
+                      Image=Item }
+      { 73      ;2   ;Action    ;
+                      AccessByPermission=TableData 14=R;
+                      CaptionML=[DEU=&Artikel nach Lagerort;
+                                 ENU=Items b&y Location];
+                      ToolTipML=[DEU=Zeigt eine Liste der Elemente an, angeordnet nach Speicherort.;
+                                 ENU=Show a list of items grouped by location.];
+                      ApplicationArea=#Location;
+                      Image=ItemAvailbyLoc;
+                      OnAction=BEGIN
+                                 PAGE.RUN(PAGE::"Items by Location",Rec);
+                               END;
+                                }
+      { 79      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Artikelverf�&gbarkeit nach;
+                                 ENU=&Item Availability by];
+                      Image=ItemAvailability }
+      { 5       ;3   ;Action    ;
+                      Name=<Action5>;
+                      CaptionML=[DEU=Ereignis;
+                                 ENU=Event];
+                      ToolTipML=[DEU=Zeigt an, wie sich die tats�chliche und voraussichtliche verf�gbare Menge eines Artikels im Laufe der Zeit gem�� den Angebots- und Nachfrageereignissen entwickelt.;
+                                 ENU=View how the actual and the projected available balance of an item will develop over time according to supply and demand events.];
+                      ApplicationArea=#Advanced;
+                      Image=Event;
+                      OnAction=BEGIN
+                                 ItemAvailFormsMgt.ShowItemAvailFromItem(Rec,ItemAvailFormsMgt.ByEvent);
+                               END;
+                                }
+      { 21      ;3   ;Action    ;
+                      CaptionML=[DEU=Periode;
+                                 ENU=Period];
+                      ToolTipML=[DEU=Zeigt die voraussichtliche Menge des Artikels im Lauf der Zeit f�r Zeitr�ume an, wie etwa nach Tag, Woche oder Monat.;
+                                 ENU=Show the projected quantity of the item over time according to time periods, such as day, week, or month.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 157;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Period }
+      { 80      ;3   ;Action    ;
+                      CaptionML=[DEU=Variante;
+                                 ENU=Variant];
+                      ToolTipML=[DEU=Zeigt die Varianten des Artikels an, oder erm�glicht deren Bearbeitung. Anstatt jede Farbe eines Artikels als separaten Artikel anzulegen, k�nnen Sie die verschiedenen Farben als Varianten des Artikels einrichten.;
+                                 ENU=View or edit the item's variants. Instead of setting up each color of an item as a separate item, you can set up the various colors as variants of the item.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 5414;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=ItemVariant }
+      { 78      ;3   ;Action    ;
+                      CaptionML=[DEU=Lagerort;
+                                 ENU=Location];
+                      ToolTipML=[DEU=Zeigt die tats�chliche und die voraussichtliche Menge eines Artikels nach Lagerort an.;
+                                 ENU=View the actual and projected quantity of the item per location.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 492;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Warehouse }
+      { 13      ;3   ;Action    ;
+                      CaptionML=[DEU=St�cklistenebene;
+                                 ENU=BOM Level];
+                      ToolTipML=[DEU=Zeigt die Verf�gbarkeitszahlen f�r St�cklistenartikel an, die angeben, wie viele Einheiten eines �bergeordneten Elements Sie auf Basis der Verf�gbarkeit von untergeordneten Elementen erstellen k�nnen.;
+                                 ENU=View availability figures for items on bills of materials that show how many units of a parent item you can make based on the availability of child items.];
+                      ApplicationArea=#Assembly;
+                      Image=BOMLevel;
+                      OnAction=BEGIN
+                                 ItemAvailFormsMgt.ShowItemAvailFromItem(Rec,ItemAvailFormsMgt.ByBOM);
+                               END;
+                                }
+      { 19      ;3   ;Action    ;
+                      CaptionML=[DEU=Zeitachse;
+                                 ENU=Timeline];
+                      ToolTipML=[DEU=Ruft eine grafische Ansicht des voraussichtlichen Lagerbestands eines Artikels auf Grundlage k�nftiger Angebots- und Nachfrageereignisse mit oder ohne Planungsvorschl�ge ab. Das Ergebnis ist eine grafische Darstellung des Lagerprofils.;
+                                 ENU=Get a graphical view of an item's projected inventory based on future supply and demand events, with or without planning suggestions. The result is a graphical representation of the inventory profile.];
+                      ApplicationArea=#Advanced;
+                      Image=Timeline;
+                      OnAction=BEGIN
+                                 ShowTimelineFromItem(Rec);
+                               END;
+                                }
+      { 83      ;1   ;ActionGroup;
+                      Name=ActionGroupCRM;
+                      CaptionML=[DEU=Dynamics 365 for Sales;
+                                 ENU=Dynamics 365 for Sales];
+                      Visible=CRMIntegrationEnabled }
+      { 75      ;2   ;Action    ;
+                      Name=CRMGoToProduct;
+                      CaptionML=[DEU=Produkt;
+                                 ENU=Product];
+                      ToolTipML=[DEU=�ffnet das gekoppelte Dynamics 365 for Sales-Produkt.;
+                                 ENU=Open the coupled Dynamics 365 for Sales product.];
+                      ApplicationArea=#Suite;
+                      Image=CoupledItem;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.ShowCRMEntityFromRecordID(RECORDID);
+                               END;
+                                }
+      { 72      ;2   ;Action    ;
+                      Name=CRMSynchronizeNow;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Synchronisieren;
+                                 ENU=Synchronize];
+                      ToolTipML=[DEU=Sendet aktualisierte Daten an Dynamics 365 for Sales.;
+                                 ENU=Send updated data to Dynamics 365 for Sales.];
+                      ApplicationArea=#Suite;
+                      Image=Refresh;
+                      OnAction=VAR
+                                 Item@1000 : Record 27;
+                                 CRMIntegrationManagement@1001 : Codeunit 5330;
+                                 ItemRecordRef@1003 : RecordRef;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Item);
+                                 Item.NEXT;
+
+                                 IF Item.COUNT = 1 THEN
+                                   CRMIntegrationManagement.UpdateOneNow(Item.RECORDID)
+                                 ELSE BEGIN
+                                   ItemRecordRef.GETTABLE(Item);
+                                   CRMIntegrationManagement.UpdateMultipleNow(ItemRecordRef);
+                                 END
+                               END;
+                                }
+      { 70      ;2   ;ActionGroup;
+                      Name=Coupling;
+                      CaptionML=[@@@=Coupling is a noun;
+                                 DEU=Kopplung;
+                                 ENU=Coupling];
+                      ToolTipML=[DEU=Erstellt, �ndert oder l�scht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Dynamics 365 for Sales-Datensatz.;
+                                 ENU=Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Dynamics 365 for Sales record.];
+                      Image=LinkAccount }
+      { 68      ;3   ;Action    ;
+                      Name=ManageCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Kopplung einrichten;
+                                 ENU=Set Up Coupling];
+                      ToolTipML=[DEU=Erstellt oder �ndert die Kopplung mit einem Dynamics 365 for Sales-Produkt.;
+                                 ENU=Create or modify the coupling to a Dynamics 365 for Sales product.];
+                      ApplicationArea=#Suite;
+                      Image=LinkAccount;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.DefineCoupling(RECORDID);
+                               END;
+                                }
+      { 66      ;3   ;Action    ;
+                      Name=DeleteCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Kopplung l�schen;
+                                 ENU=Delete Coupling];
+                      ToolTipML=[DEU=L�scht die Kopplung mit einem Dynamics 365 for Sales-Produkt.;
+                                 ENU=Delete the coupling to a Dynamics 365 for Sales product.];
+                      ApplicationArea=#Suite;
+                      Enabled=CRMIsCoupledToRecord;
+                      Image=UnLinkAccount;
+                      OnAction=VAR
+                                 CRMCouplingManagement@1000 : Codeunit 5331;
+                               BEGIN
+                                 CRMCouplingManagement.RemoveCoupling(RECORDID);
+                               END;
+                                }
+      { 54      ;1   ;ActionGroup;
+                      Name=Assembly/Production;
+                      CaptionML=[DEU=Montage/Produktion;
+                                 ENU=Assembly/Production];
+                      Image=Production }
+      { 52      ;2   ;Action    ;
+                      CaptionML=[DEU=Struktur;
+                                 ENU=Structure];
+                      ToolTipML=[DEU=Zeigt an, welche untergeordneten Artikel in der Montagest�ckliste oder Fertigungsst�ckliste eines Artikels verwendet werden. Jede Artikelebene kann erweitert oder reduziert werden, um eine �bersicht oder eine detaillierte Ansicht zu erhalten.;
+                                 ENU=View which child items are used in an item's assembly BOM or production BOM. Each item level can be collapsed or expanded to obtain an overview or detailed view.];
+                      ApplicationArea=#Assembly;
+                      Image=Hierarchy;
+                      OnAction=VAR
+                                 BOMStructure@1000 : Page 5870;
+                               BEGIN
+                                 BOMStructure.InitItem(Rec);
+                                 BOMStructure.RUN;
+                               END;
+                                }
+      { 50      ;2   ;Action    ;
+                      CaptionML=[DEU=Kostenanteile;
+                                 ENU=Cost Shares];
+                      ToolTipML=[DEU=Zeigt an, wie die Kosten der zugrunde liegenden Artikel in der St�ckliste zu den �bergeordneten Artikeln berechnet werden. Diese Informationen sind gem�� der St�cklistenstruktur unterteilt, um zu zeigen, welche Kosten auf den jeweiligen Ebenen entstehen. Jede Artikelebene kann erweitert oder reduziert werden, um eine �bersicht oder eine detaillierte Ansicht zu erhalten.;
+                                 ENU=View how the costs of underlying items in the BOM roll up to the parent item. The information is organized according to the BOM structure to reflect at which levels the individual costs apply. Each item level can be collapsed or expanded to obtain an overview or detailed view.];
+                      ApplicationArea=#Advanced;
+                      Image=CostBudget;
+                      OnAction=VAR
+                                 BOMCostShares@1000 : Page 5872;
+                               BEGIN
+                                 BOMCostShares.InitItem(Rec);
+                                 BOMCostShares.RUN;
+                               END;
+                                }
+      { 49      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Mo&ntage;
+                                 ENU=Assemb&ly];
+                      Image=AssemblyBOM }
+      { 48      ;3   ;Action    ;
+                      Name=<Action32>;
+                      CaptionML=[DEU=Montagest�ckliste;
+                                 ENU=Assembly BOM];
+                      ToolTipML=[DEU=Zeigt die St�ckliste an, die die f�r den Zusammenbau des Montageartikels erforderlichen Artikel und Ressourcen angibt und erm�glicht deren Bearbeitung.;
+                                 ENU=View or edit the bill of material that specifies which items and resources are required to assemble the assembly item.];
+                      ApplicationArea=#Assembly;
+                      RunObject=Page 36;
+                      RunPageLink=Parent Item No.=FIELD(No.);
+                      Image=BOM }
+      { 47      ;3   ;Action    ;
+                      CaptionML=[DEU=Verwendung;
+                                 ENU=Where-Used];
+                      ToolTipML=[DEU=Zeigt eine Liste der St�cklisten an, in denen der Artikel verwendet wird.;
+                                 ENU=View a list of BOMs in which the item is used.];
+                      ApplicationArea=#Assembly;
+                      RunObject=Page 37;
+                      RunPageView=SORTING(Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Track }
+      { 46      ;3   ;Action    ;
+                      AccessByPermission=TableData 90=R;
+                      CaptionML=[DEU=St�ckl. Einst.-Preis &berechnen;
+                                 ENU=Calc. Stan&dard Cost];
+                      ToolTipML=[DEU=Berechnet den Einstandspreis des Artikels durch die Berechnung des Einstandspreises jeder Komponente und Ressource in der Montagest�ckliste oder der Fertigungsst�ckliste des Artikels. Der Einstandspreis eines �bergeordneten Artikels muss immer gleich der Summe des Gesamtpreises der Komponenten, Halbfabrikate und Ressourcen sein.;
+                                 ENU=Calculate the unit cost of the item by rolling up the unit cost of each component and resource in the item's assembly BOM or production BOM. The unit cost of a parent item must always equals the total of the unit costs of its components, subassemblies, and any resources.];
+                      ApplicationArea=#Assembly;
+                      Image=CalculateCost;
+                      OnAction=BEGIN
+                                 CalculateStdCost.CalcItem("No.",TRUE);
+                               END;
+                                }
+      { 44      ;3   ;Action    ;
+                      AccessByPermission=TableData 90=R;
+                      CaptionML=[DEU=Ber. VK-Preis;
+                                 ENU=Calc. Unit Price];
+                      ToolTipML=[DEU=Berechnet den VK-Preis basierend auf dem Einstandspreis und dem Deckungsbeitrag in Prozent.;
+                                 ENU=Calculate the unit price based on the unit cost and the profit percentage.];
+                      ApplicationArea=#Assembly;
+                      Image=SuggestItemPrice;
+                      OnAction=BEGIN
+                                 CalculateStdCost.CalcAssemblyItemPrice("No.");
+                               END;
+                                }
+      { 41      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Produktion;
+                                 ENU=Production];
+                      Image=Production }
+      { 32      ;3   ;Action    ;
+                      CaptionML=[DEU=Fertigungsst�ckliste;
+                                 ENU=Production BOM];
+                      ToolTipML=[DEU=�ffnet die Fertigungsst�ckliste des Artikels, um dessen Komponenten anzuzeigen oder zu bearbeiten.;
+                                 ENU=Open the item's production bill of material to view or edit its components.];
+                      ApplicationArea=#Manufacturing;
+                      RunObject=Page 99000786;
+                      RunPageLink=No.=FIELD(Production BOM No.);
+                      Image=BOM }
+      { 29      ;3   ;Action    ;
+                      AccessByPermission=TableData 90=R;
+                      CaptionML=[DEU=Verwendung;
+                                 ENU=Where-Used];
+                      ToolTipML=[DEU=Zeigt eine Liste der St�cklisten an, in denen der Artikel verwendet wird.;
+                                 ENU=View a list of BOMs in which the item is used.];
+                      ApplicationArea=#Advanced;
+                      Image=Where-Used;
+                      OnAction=VAR
+                                 ProdBOMWhereUsed@1001 : Page 99000811;
+                               BEGIN
+                                 ProdBOMWhereUsed.SetItem(Rec,WORKDATE);
+                                 ProdBOMWhereUsed.RUNMODAL;
+                               END;
+                                }
+      { 24      ;3   ;Action    ;
+                      AccessByPermission=TableData 99000771=R;
+                      CaptionML=[DEU=St�ckl. Einst.-Preis &berechnen;
+                                 ENU=Calc. Stan&dard Cost];
+                      ToolTipML=[DEU=Berechnet den Einstandspreis des Artikels durch die Berechnung des Einstandspreises jeder Komponente und Ressource in der Montagest�ckliste oder der Fertigungsst�ckliste des Artikels. Der Einstandspreis eines �bergeordneten Artikels muss immer gleich der Summe des Gesamtpreises der Komponenten, Halbfabrikate und Ressourcen sein.;
+                                 ENU=Calculate the unit cost of the item by rolling up the unit cost of each component and resource in the item's assembly BOM or production BOM. The unit cost of a parent item must always equals the total of the unit costs of its components, subassemblies, and any resources.];
+                      ApplicationArea=#Assembly;
+                      Image=CalculateCost;
+                      OnAction=BEGIN
+                                 CalculateStdCost.CalcItem("No.",FALSE);
+                               END;
+                                }
+      { 77      ;3   ;Action    ;
+                      CaptionML=[DEU=&Reservierungsposten;
+                                 ENU=&Reservation Entries];
+                      ToolTipML=[DEU=Zeigt die Posten f�r alle manuell oder automatisch durchgef�hrten Reservierungen an.;
+                                 ENU=View all reservations that are made for the item, either manually or automatically.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 497;
+                      RunPageView=SORTING(Item No.,Variant Code,Location Code,Reservation Status);
+                      RunPageLink=Reservation Status=CONST(Reservation),
+                                  Item No.=FIELD(No.);
+                      Image=ReservationLedger }
+      { 5800    ;3   ;Action    ;
+                      CaptionML=[DEU=&Wertposten;
+                                 ENU=&Value Entries];
+                      ToolTipML=[DEU=Zeigt die Historie der gebuchten Betr�ge an, die den Wert des Artikels beeinflussen. Wertposten werden f�r jede Transaktionen des Artikels erstellt.;
+                                 ENU=View the history of posted amounts that affect the value of the item. Value entries are created for every transaction with the item.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 5802;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ValueLedger }
+      { 6500    ;3   ;Action    ;
+                      CaptionML=[DEU=Artikel&verfolgungsposten;
+                                 ENU=Item &Tracking Entries];
+                      ToolTipML=[DEU=Zeigt Seriennummern oder Chargennummern an, die Artikel zugeordnet sind.;
+                                 ENU=View serial or lot numbers that are assigned to items.];
+                      ApplicationArea=#ItemTracking;
+                      Image=ItemTrackingLedger;
+                      OnAction=VAR
+                                 ItemTrackingDocMgt@1000 : Codeunit 6503;
+                               BEGIN
+                                 ItemTrackingDocMgt.ShowItemTrackingForMasterData(3,'',"No.",'','','','');
+                               END;
+                                }
+      { 7       ;3   ;Action    ;
+                      CaptionML=[DEU=&Lagerplatzposten;
+                                 ENU=&Warehouse Entries];
+                      ToolTipML=[DEU="Zeigt die Historie der Mengen an, die f�r den Artikel in Lageraktivit�ten registriert werden. ";
+                                 ENU="View the history of quantities that are registered for the item in warehouse activities. "];
+                      ApplicationArea=#Warehouse;
+                      RunObject=Page 7318;
+                      RunPageView=SORTING(Item No.,Bin Code,Location Code,Variant Code,Unit of Measure Code,Lot No.,Serial No.,Entry Type,Dedicated);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BinLedger }
+      { 85      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      Image=Statistics }
+      { 16      ;3   ;Action    ;
+                      ShortCutKey=F7;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      ToolTipML=[DEU=Zeigt statistische Informationen f�r den Datensatz an, wie etwa den Wert der gebuchten Posten.;
+                                 ENU=View statistical information, such as the value of posted entries, for the record.];
+                      ApplicationArea=#Advanced;
+                      Image=Statistics;
+                      OnAction=VAR
+                                 ItemStatistics@1001 : Page 5827;
+                               BEGIN
+                                 ItemStatistics.SetItem(Rec);
+                                 ItemStatistics.RUNMODAL;
+                               END;
+                                }
+      { 17      ;3   ;Action    ;
+                      CaptionML=[DEU=Buchungsstatistik;
+                                 ENU=Entry Statistics];
+                      ToolTipML=[DEU=Zeigt die Statistik f�r Artikelposten an.;
+                                 ENU=View statistics for item ledger entries.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 304;
+                      RunPageLink=No.=FIELD(No.),
+                                  Date Filter=FIELD(Date Filter),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=EntryStatistics }
+      { 22      ;3   ;Action    ;
+                      CaptionML=[DEU=&Umsatz;
+                                 ENU=T&urnover];
+                      ToolTipML=[DEU=Zeigt eine detaillierte Aufstellung des Artikelumsatzes nach Perioden an, nachdem Sie die gew�nschten Filter f�r Lagerort und Variante festgelegt haben.;
+                                 ENU=View a detailed account of item turnover by periods after you have set the relevant filters for location and variant.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 158;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Turnover }
+      { 15      ;2   ;Action    ;
+                      CaptionML=[DEU=Be&merkungen;
+                                 ENU=Co&mments];
+                      ToolTipML=[DEU=Zeigt Bemerkungen f�r den Datensatz an oder f�gt welche hinzu.;
+                                 ENU=View or add comments for the record.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 124;
+                      RunPageLink=Table Name=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ViewComments }
+      { 33      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Verkauf;
+                                 ENU=S&ales];
+                      Image=Sales }
+      { 36      ;2   ;Action    ;
+                      Name=Sales_Prices;
+                      CaptionML=[DEU=Preise;
+                                 ENU=Prices];
+                      ToolTipML=[DEU=Zeigt verschiedene Preise f�r den Artikel an oder richtet diese ein. Ein Artikelpreis wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Kreditor, Menge oder Enddatum.;
+                                 ENU=View or set up different prices for the item. An item price is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7002;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Price }
+      { 34      ;2   ;Action    ;
+                      Name=Sales_LineDiscounts;
+                      CaptionML=[DEU=Zeilenrabatte;
+                                 ENU=Line Discounts];
+                      ToolTipML=[DEU=Zeigt verschiedene Rabatte f�r den Artikel an oder richtet diese ein. Ein Artikelrabatt wird automatisch bei Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Kreditor, Menge oder Enddatum.;
+                                 ENU=View or set up different discounts for the item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7004;
+                      RunPageView=SORTING(Type,Code);
+                      RunPageLink=Type=CONST(Item),
+                                  Code=FIELD(No.);
+                      Image=LineDiscount }
+      { 124     ;2   ;Action    ;
+                      CaptionML=[DEU=&Vorauszahlungsprozents�tze;
+                                 ENU=Prepa&yment Percentages];
+                      ToolTipML=[DEU="Zeigt die Prozents�tze des Preises an, oder erm�glicht deren Bearbeitung, die als Vorauszahlung beglichen werden k�nnen. ";
+                                 ENU="View or edit the percentages of the price that can be paid as a prepayment. "];
+                      ApplicationArea=#Prepayments;
+                      RunObject=Page 664;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=PrepaymentPercentages }
+      { 37      ;2   ;Action    ;
+                      CaptionML=[DEU=Auftr�ge;
+                                 ENU=Orders];
+                      ToolTipML=[DEU=Zeigt eine Liste laufender Bestellungen f�r den Artikel.;
+                                 ENU=View a list of ongoing orders for the item.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 48;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Document }
+      { 114     ;2   ;Action    ;
+                      CaptionML=[DEU=Reklamationen;
+                                 ENU=Returns Orders];
+                      ToolTipML=[DEU=Zeigt laufende Verkaufs- oder Einkaufsreklamationen f�r den Artikel an.;
+                                 ENU=View ongoing sales or purchase return orders for the item.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 6633;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ReturnOrder }
+      { 38      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Einkauf;
+                                 ENU=&Purchases];
+                      Image=Purchasing }
+      { 118     ;2   ;Action    ;
+                      CaptionML=[DEU=&Lieferanten;
+                                 ENU=Ven&dors];
+                      ToolTipML=[DEU=Zeigt die Liste der Kreditoren an, die den Artikel liefern k�nnen, und die jeweilige Vorlaufzeit.;
+                                 ENU=View the list of vendors who can supply the item, and at which lead time.];
+                      ApplicationArea=#Planning;
+                      RunObject=Page 114;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Vendor }
+      { 39      ;2   ;Action    ;
+                      CaptionML=[DEU=Preise;
+                                 ENU=Prices];
+                      ToolTipML=[DEU=Zeigt verschiedene Preise f�r den Artikel an oder richtet diese ein. Ein Artikelpreis wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Kreditor, Menge oder Enddatum.;
+                                 ENU=View or set up different prices for the item. An item price is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7012;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Price }
+      { 42      ;2   ;Action    ;
+                      CaptionML=[DEU=Zeilenrabatte;
+                                 ENU=Line Discounts];
+                      ToolTipML=[DEU=Zeigt verschiedene Rabatte f�r den Artikel an oder richtet diese ein. Ein Artikelrabatt wird automatisch bei Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Kreditor, Menge oder Enddatum.;
+                                 ENU=View or set up different discounts for the item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7014;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=LineDiscount }
+      { 125     ;2   ;Action    ;
+                      CaptionML=[DEU=&Vorauszahlungsprozents�tze;
+                                 ENU=Prepa&yment Percentages];
+                      ToolTipML=[DEU="Zeigt die Prozents�tze des Preises an, oder erm�glicht deren Bearbeitung, die als Vorauszahlung beglichen werden k�nnen. ";
+                                 ENU="View or edit the percentages of the price that can be paid as a prepayment. "];
+                      ApplicationArea=#Prepayments;
+                      RunObject=Page 665;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=PrepaymentPercentages }
+      { 40      ;2   ;Action    ;
+                      CaptionML=[DEU=Bestellungen;
+                                 ENU=Orders];
+                      ToolTipML=[DEU=Zeigt eine Liste laufender Bestellungen f�r den Artikel.;
+                                 ENU=View a list of ongoing orders for the item.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 56;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Document }
+      { 115     ;2   ;Action    ;
+                      CaptionML=[DEU=Reklamationen;
+                                 ENU=Return Orders];
+                      ToolTipML=[DEU=�ffnet die Liste laufender Reklamationen f�r den Artikel.;
+                                 ENU=Open the list of ongoing return orders for the item.];
+                      ApplicationArea=#SalesReturnOrder;
+                      RunObject=Page 6643;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ReturnOrder }
+      { 76      ;2   ;Action    ;
+                      CaptionML=[DEU=&Katalogartikel;
+                                 ENU=Nonstoc&k Items];
+                      ToolTipML=[DEU="Zeigt die Liste der Artikel an, die Sie nicht im Lager f�hren. ";
+                                 ENU="View the list of items that you do not carry in inventory. "];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5726;
+                      Image=NonStockItem }
+      { 146     ;1   ;ActionGroup;
+                      Name=PurchPricesandDiscounts;
+                      CaptionML=[DEU=Sondereinkaufspreise und -rabatte;
+                                 ENU=Special Purchase Prices & Discounts] }
+      { 144     ;2   ;Action    ;
+                      CaptionML=[DEU=Sonderpreise festlegen;
+                                 ENU=Set Special Prices];
+                      ToolTipML=[DEU=Richten Sie verschiedene Preise f�r den Artikel ein. Ein Artikelpreis wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Kreditor, Menge oder Enddatum.;
+                                 ENU=Set up different prices for the item. An item price is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 7012;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Price }
+      { 143     ;2   ;Action    ;
+                      CaptionML=[DEU=Sonderrabatte festlegen;
+                                 ENU=Set Special Discounts];
+                      ToolTipML=[DEU=Richtet verschiedene Rabatte f�r den Artikel ein. Ein Artikelrabatt wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Kreditor, Menge oder Enddatum.;
+                                 ENU=Set up different discounts for the item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as vendor, quantity, or ending date.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 7014;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=LineDiscount }
+      { 107     ;2   ;Action    ;
+                      Name=PurchPricesDiscountsOverview;
+                      CaptionML=[DEU=�bersicht �ber Sonderpreise und -rabatte;
+                                 ENU=Special Prices & Discounts Overview];
+                      ToolTipML=[DEU=Zeigt die Sonderpreise und Zeilenrabatte an, die Sie f�r diesen Artikel gew�hren, wenn bestimmte Kriterien erf�llt sind, wie etwa Kreditor, Menge oder Enddatum.;
+                                 ENU=View the special prices and line discounts that you grant for this item when certain criteria are met, such as vendor, quantity, or ending date.];
+                      ApplicationArea=#Suite;
+                      Image=PriceWorksheet;
+                      OnAction=VAR
+                                 PurchasesPriceAndLineDisc@1000 : Page 1346;
+                               BEGIN
+                                 PurchasesPriceAndLineDisc.LoadItem(Rec);
+                                 PurchasesPriceAndLineDisc.RUNMODAL;
+                               END;
+                                }
+      { 58      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Lager;
+                                 ENU=Warehouse];
+                      Image=Warehouse }
+      { 116     ;2   ;Action    ;
+                      CaptionML=[DEU=Lagerplatzin&halt;
+                                 ENU=&Bin Contents];
+                      ToolTipML=[DEU=Zeigt die Mengen des Artikels in jedem Lagerplatz an, wenn vorhanden. Hier sehen Sie alle wichtigen Parameter f�r den Lagerplatzinhalt. Au�erdem k�nnen Sie in diesem Fenster auch gewisse Parameter f�r den Lagerplatzinhalt �ndern.;
+                                 ENU=View the quantities of the item in each bin where it exists. You can see all the important parameters relating to bin content, and you can modify certain bin content parameters in this window.];
+                      ApplicationArea=#Warehouse;
+                      RunObject=Page 7379;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BinContent }
+      { 81      ;2   ;Action    ;
+                      CaptionML=[DEU=Lagerhalt&ungsdaten;
+                                 ENU=Stockkeepin&g Units];
+                      ToolTipML=[DEU="�ffnet die Lagerhaltungsdaten des Artikels zum Anzeigen oder Bearbeiten von Instanzen des Artikels an unterschiedlichen Lagerorten oder mit verschiedenen Varianten. ";
+                                 ENU="Open the item's SKUs to view or edit instances of the item at different locations or with different variants. "];
+                      ApplicationArea=#Warehouse;
+                      RunObject=Page 5701;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=SKU }
+      { 60      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Service;
+                                 ENU=Service];
+                      Image=ServiceItem }
+      { 103     ;2   ;Action    ;
+                      CaptionML=[DEU=Ser&viceartikel;
+                                 ENU=Ser&vice Items];
+                      ToolTipML=[DEU="Zeigt Instanzen des Artikels als Serviceartikel an, wie z. B. Maschinen, die Sie f�r Debitoren �ber Serviceauftr�ge warten oder reparieren. ";
+                                 ENU="View instances of the item as service items, such as machines that you maintain or repair for customers through service orders. "];
+                      ApplicationArea=#Service;
+                      RunObject=Page 5988;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ServiceItem }
+      { 11      ;2   ;Action    ;
+                      AccessByPermission=TableData 5900=R;
+                      CaptionML=[DEU=L�sungsanleitung;
+                                 ENU=Troubleshooting];
+                      ToolTipML=[DEU=Zeigt Informationen �ber technische Probleme bei einem Serviceartikel an, oder erm�glicht deren Bearbeitung.;
+                                 ENU=View or edit information about technical problems with a service item.];
+                      ApplicationArea=#Service;
+                      Image=Troubleshoot;
+                      OnAction=VAR
+                                 TroubleshootingHeader@1000 : Record 5943;
+                               BEGIN
+                                 TroubleshootingHeader.ShowForItem(Rec);
+                               END;
+                                }
+      { 105     ;2   ;Action    ;
+                      CaptionML=[DEU=L�sungsanleitung Einrichtung;
+                                 ENU=Troubleshooting Setup];
+                      ToolTipML=[DEU=Zeigt Ihre Einstellungen f�r die Problembehandlung bei Serviceartikeln an, oder erm�glicht deren Bearbeitung.;
+                                 ENU=View or edit your settings for troubleshooting service items.];
+                      ApplicationArea=#Service;
+                      RunObject=Page 5993;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Troubleshoot }
+      { 62      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Ressourcen;
+                                 ENU=Resources];
+                      Image=Resource }
+      { 108     ;2   ;Action    ;
+                      CaptionML=[DEU=&Ressourcenqualifikationen;
+                                 ENU=Resource &Skills];
+                      ToolTipML=[DEU=Zeigt die Zuweisung von Qualifikationen zu Ressourcen, Artikeln, Serviceartikelgruppen und Serviceartikeln an. Sie k�nnen Qualifikationscodes verwenden, um den Serviceartikeln oder Artikeln, f�r deren Wartung spezielle Qualifikationen erforderlich sind, qualifizierte Ressourcen zuzuordnen.;
+                                 ENU=View the assignment of skills to resources, items, service item groups, and service items. You can use skill codes to allocate skilled resources to service items or items that need special skills for servicing.];
+                      ApplicationArea=#Jobs;
+                      RunObject=Page 6019;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ResourceSkills }
+      { 109     ;2   ;Action    ;
+                      AccessByPermission=TableData 5900=R;
+                      CaptionML=[DEU=&Qualifizierte Ressourcen;
+                                 ENU=Skilled R&esources];
+                      ToolTipML=[DEU=Zeigt eine �bersicht aller Ressourcen mit Informationen dar�ber an, ob sie �ber die erforderlichen Qualifikationen verf�gen, um die bestimmte Serviceartikelgruppe, den Artikel oder den Serviceartikel zu bearbeiten.;
+                                 ENU=View a list of all registered resources with information about whether they have the skills required to service the particular service item group, item, or service item.];
+                      ApplicationArea=#Jobs;
+                      Image=ResourceSkills;
+                      OnAction=VAR
+                                 ResourceSkill@1001 : Record 5956;
+                               BEGIN
+                                 CLEAR(SkilledResourceList);
+                                 SkilledResourceList.Initialize(ResourceSkill.Type::Item,"No.",Description);
+                                 SkilledResourceList.RUNMODAL;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                CaptionML=[DEU=Artikel;
+                           ENU=Item];
+                GroupType=Repeater }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Artikels an.;
+                           ENU=Specifies the number of the item.];
+                ApplicationArea=#All;
+                SourceExpr="No." }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Beschreibung des Artikels an.;
+                           ENU=Specifies a description of the item.];
+                ApplicationArea=#All;
+                SourceExpr=Description }
+
+    { 106 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob die Artikelkarte einen physischen Artikel (Inventory) oder Service (Service) repr�sentiert.;
+                           ENU=Specifies if the item card represents a physical item (Inventory) or a service (Service).];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Type;
+                Visible=IsFoundationEnabled }
+
+    { 113 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wie viele Einheiten (z.�B. St�ck, Schachteln oder Dosen) eines Artikels am Lager verf�gbar sind.;
+                           ENU=Specifies how many units, such as pieces, boxes, or cans, of the item are in inventory.];
+                ApplicationArea=#Basic,#Suite,#Invoicing;
+                SourceExpr=Inventory;
+                HideValue=IsService }
+
+    { 95  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, dass der Artikel aus einem Katalogartikel erstellt wurde.;
+                           ENU=Specifies that the item was created from a nonstock item.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Created From Nonstock Item";
+                Visible=FALSE }
+
+    { 97  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, dass ein Ersatzartikel f�r diesen Artikel vorhanden ist.;
+                           ENU=Specifies that a substitute exists for this item.];
+                ApplicationArea=#Suite;
+                SourceExpr="Substitutes Exist" }
+
+    { 112 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, dass Lagerhaltungsdaten f�r diesen Artikel vorhanden sind.;
+                           ENU=Specifies that a stockkeeping unit exists for this item.];
+                ApplicationArea=#Warehouse;
+                SourceExpr="Stockkeeping Unit Exists";
+                Visible=FALSE }
+
+    { 8   ;2   ;Field     ;
+                AccessByPermission=TableData 90=R;
+                ToolTipML=[DEU=Gibt an, ob der Artikel eine Montagest�ckliste ist.;
+                           ENU=Specifies if the item is an assembly BOM.];
+                ApplicationArea=#Assembly;
+                SourceExpr="Assembly BOM" }
+
+    { 99  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des Artikels in der Fertigungsst�ckliste an.;
+                           ENU=Specifies the number of the production BOM that the item represents.];
+                ApplicationArea=#Manufacturing;
+                SourceExpr="Production BOM No." }
+
+    { 101 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer der Produktionsbestellung an, in der der Artikel verwendet wird.;
+                           ENU=Specifies the number of the production routing that the item is used in.];
+                ApplicationArea=#Manufacturing;
+                SourceExpr="Routing No." }
+
+    { 6   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Basiseinheit an, in der der Artikel gemessen wird, beispielsweise St�ck, Kiste oder Palette. Die Basiseinheit dient auch als Konvertierungsbasis f�r alternative Einheiten.;
+                           ENU=Specifies the base unit used to measure the item, such as piece, box, or pallet. The base unit of measure also serves as the conversion basis for alternate units of measure.];
+                ApplicationArea=#Basic,#Suite,#Invoicing;
+                SourceExpr="Base Unit of Measure" }
+
+    { 43  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wo der Artikel im Lager zu finden ist. Dies dient nur Informationszwecken.;
+                           ENU=Specifies where to find the item in the warehouse. This is informational only.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Shelf No.";
+                Visible=FALSE }
+
+    { 45  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wie der Kostenfluss des Artikels erfasst ist und ob ein tats�chlicher oder budgetierter Wert gebucht und in der Kostenberechnung verwendet wird.;
+                           ENU=Specifies how the item's cost flow is recorded and whether an actual or budgeted value is capitalized and used in the cost calculation.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Costing Method";
+                Visible=FALSE }
+
+    { 122 ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, ob der Einstandspreis des Artikels automatisch oder manuell reguliert wurde.;
+                           ENU=Specifies whether the item's unit cost has been adjusted, either automatically or manually.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Cost is Adjusted" }
+
+    { 51  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Einstandspreis an, der als Sch�tzung verwendet und zu einem sp�teren Zeitpunkt mit Abweichung angepasst wird. Er wird in der Regel in Montage oder Fertigung verwendet, wenn Kosten abweichen k�nnen.;
+                           ENU=Specifies the unit cost that is used as an estimation to be adjusted with variances later. It is typically used in assembly and production where costs can vary.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Standard Cost";
+                Visible=FALSE }
+
+    { 53  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Lagerwert pro Einheit des Artikels an.;
+                           ENU=Specifies the cost per unit of the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Unit Cost" }
+
+    { 55  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den letzten EK-Preis an, der f�r diesen Artikel bezahlt wurde.;
+                           ENU=Specifies the most recent direct unit cost that was paid for the item.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Last Direct Cost";
+                Visible=FALSE }
+
+    { 57  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Beziehung zwischen den Feldern "Einstandspreis", "VK-Preis" und "DB�%" f�r diesen Artikel an.;
+                           ENU=Specifies the relationship between the Unit Cost, Unit Price, and Profit Percentage fields associated with this item.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Price/Profit Calculation";
+                Visible=FALSE }
+
+    { 59  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Gewinnspanne an, mit der Sie den Artikel verkaufen m�chten. Sie k�nnen einen Deckungsbeitrag in Prozent manuell eingeben oder ihn entsprechend dem Feld "VK-Preis/DB - Berechnung" eingeben lassen.;
+                           ENU=Specifies the profit margin that you want to sell the item at. You can enter a profit percentage manually or have it entered according to the Price/Profit Calculation field];
+                ApplicationArea=#Advanced;
+                SourceExpr="Profit %";
+                Visible=FALSE }
+
+    { 61  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Preis einer Einheit des Artikels in MW an.;
+                           ENU=Specifies the price for one unit of the item, in LCY.];
+                ApplicationArea=#Basic,#Suite,#Invoicing;
+                SourceExpr="Unit Price" }
+
+    { 63  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt Verkn�pfungen zwischen den Gesch�ftstransaktionen, die f�r den Artikel gebucht wurden, und einem Lagerkonto in der Finanzbuchhaltung an, um Betr�ge f�r diese Artikelart zu gruppieren.;
+                           ENU=Specifies links between business transactions made for the item and an inventory account in the general ledger, to group amounts for that item type.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Inventory Posting Group";
+                Visible=FALSE }
+
+    { 12  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Produkttyp des Artikels an, um Transaktionen f�r diesen Artikel mit dem entsprechenden Sachkonto entsprechend der Buchungsmatrix Einrichtung zu verkn�pfen.;
+                           ENU=Specifies the item's product type to link transactions made for this item with the appropriate general ledger account according to the general posting setup.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Gen. Prod. Posting Group";
+                Visible=FALSE }
+
+    { 74  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die MwSt.-Produktbuchungsgruppe an. Verkn�pft Gesch�ftstransaktionen f�r den Artikel, die Ressource oder den Betrag im Hauptbuch mit der Finanzbuchhaltung, um die MwSt.-Betr�ge zu erfassen, die sich aus dem Handel mit dem betreffenden Datensatz ergeben.;
+                           ENU=Specifies the VAT product posting group. Links business transactions made for the item, resource, or G/L account with the general ledger, to account for VAT amounts resulting from trade with that record.];
+                ApplicationArea=#Advanced;
+                SourceExpr="VAT Prod. Posting Group";
+                Visible=FALSE }
+
+    { 35  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Artikelgruppencode an, der als Kriterium verwendet werden kann, um einen Rabatt zu gew�hren, wenn der Artikel an einen bestimmten Debitor verkauft wird.;
+                           ENU=Specifies an item group code that can be used as a criterion to grant a discount when the item is sold to a certain customer.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Item Disc. Group";
+                Visible=FALSE }
+
+    { 65  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code des Kreditors an, der diesen Artikel standardm��ig liefert.;
+                           ENU=Specifies the vendor code of who supplies this item by default.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Vendor No." }
+
+    { 67  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer an, die der Kreditor f�r diesen Artikel verwendet.;
+                           ENU=Specifies the number that the vendor uses for this item.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Vendor Item No.";
+                Visible=FALSE }
+
+    { 69  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Code f�r die Zollposition des Artikels an.;
+                           ENU=Specifies a code for the item's tariff number.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Tariff No.";
+                Visible=FALSE }
+
+    { 71  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Suchbegriff an, mit dem der Artikel in Listen zu finden ist.;
+                           ENU=Specifies a search description that you use to find the item in lists.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Search Description" }
+
+    { 91  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die indirekten Kosten des Artikels als absoluten Betrag an.;
+                           ENU=Specifies the item's indirect cost as an absolute amount.];
+                ApplicationArea=#Manufacturing;
+                SourceExpr="Overhead Rate";
+                Visible=FALSE }
+
+    { 89  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Prozentsatz des letzten Einkaufspreises des Artikels an, aus dem indirekte Kosten entstehen, wie Frachtkosten, die mit dem Kauf des Artikels verkn�pft sind.;
+                           ENU=Specifies the percentage of the item's last purchase cost that includes indirect costs, such as freight that is associated with the purchase of the item.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Indirect Cost %";
+                Visible=FALSE }
+
+    { 1102601000;2;Field  ;
+                ToolTipML=[DEU=Gibt die Kategorie an, zu der der Artikel geh�rt. Artikelkategorien enthalten auch alle zugeordneten Artikelattribute.;
+                           ENU=Specifies the category that the item belongs to. Item categories also contain any assigned item attributes.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Item Category Code";
+                Visible=FALSE }
+
+    { 1102601002;2;Field  ;
+                ToolTipML=[DEU=Gibt einen Produktgruppencode an, der der Artikelkategorie zugeordnet ist.;
+                           ENU=Specifies a product group code associated with the item category.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Product Group Code";
+                Visible=FALSE }
+
+    { 1102601004;2;Field  ;
+                ToolTipML=[DEU=Gibt an, dass Transaktionen mit dem Artikel nicht gebucht werden k�nnen, z.�B. weil sich der Artikel in Quarant�ne befindet.;
+                           ENU=Specifies that transactions with the item cannot be posted, for example, because the item is in quarantine.];
+                ApplicationArea=#Advanced;
+                SourceExpr=Blocked;
+                Visible=FALSE }
+
+    { 1102601006;2;Field  ;
+                ToolTipML=[DEU=Gibt an, wann die Artikelkarte zuletzt ge�ndert wurde.;
+                           ENU=Specifies when the item card was last modified.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Last Date Modified";
+                Visible=FALSE }
+
+    { 1102601010;2;Field  ;
+                ToolTipML=[DEU=Gibt den beim Verkauf des Artikels verwendeten Einheitencode an.;
+                           ENU=Specifies the unit of measure code used when you sell the item.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Sales Unit of Measure";
+                Visible=FALSE }
+
+    { 1102601012;2;Field  ;
+                ToolTipML=[DEU=Gibt die Art des Beschaffungsauftrags an, der vom Planungssystem erstellt wird, wenn der Artikel aufgef�llt werden muss.;
+                           ENU=Specifies the type of supply order created by the planning system when the item needs to be replenished.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Replenishment System";
+                Visible=FALSE }
+
+    { 1102601016;2;Field  ;
+                ToolTipML=[DEU=Gibt den beim Kauf des Artikels verwendeten Einheitencode an.;
+                           ENU=Specifies the unit of measure code used when you purchase the item.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Purch. Unit of Measure";
+                Visible=FALSE }
+
+    { 1102601018;2;Field  ;
+                ToolTipML=[DEU=Gibt eine Datumsformel f�r die Beschaffungszeit des Artikels an.;
+                           ENU=Specifies a date formula for the amount of time it takes to replenish the item.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Lead Time Calculation";
+                Visible=FALSE }
+
+    { 1102601020;2;Field  ;
+                ToolTipML=[DEU=Gibt an, ob zus�tzliche Auftr�ge f�r verkn�pfte Komponenten berechnet werden.;
+                           ENU=Specifies if additional orders for any related components are calculated.];
+                ApplicationArea=#Manufacturing;
+                SourceExpr="Manufacturing Policy";
+                Visible=FALSE }
+
+    { 1102601024;2;Field  ;
+                ToolTipML=[DEU=Gibt an, wie der Verbrauch des Artikels (Komponente) berechnet und in Produktionsprozessen abgewickelt wird. Manuell: Geben Sie den Verbrauch manuell in das Verbrauchs Buch.-Blatt ein, und buchen Sie ihn. Vorw�rts: Bucht den Verbrauch automatisch entsprechend den Fertigungsauftragskomponentenzeilen zu Beginn des ersten Arbeitsgangs. R�ckw�rts: Berechnet und bucht automatisch den Verbrauch entsprechend den Fertigungsauftragskomponentenzeilen am Ende des Fertigungsauftrags. Kommiss. + Vorw�rts/Kommiss. + R�ckw�rts: Variationen mit Logistik.;
+                           ENU=Specifies how consumption of the item (component) is calculated and handled in production processes. Manual: Enter and post consumption in the consumption journal manually. Forward: Automatically posts consumption according to the production order component lines when the first operation starts. Backward: Automatically calculates and posts consumption according to the production order component lines when the production order is finished. Pick + Forward / Pick + Backward: Variations with warehousing.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Flushing Method";
+                Visible=FALSE }
+
+    { 9   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, welcher Standardbestellfluss verwendet wird, um diesen Montageartikel zu liefern.;
+                           ENU=Specifies which default order flow is used to supply this assembly item.];
+                ApplicationArea=#Assembly;
+                SourceExpr="Assembly Policy";
+                Visible=FALSE }
+
+    { 1102601026;2;Field  ;
+                ToolTipML=[DEU=Gibt an, wie Artikel in der Lieferkette nachverfolgt werden.;
+                           ENU=Specifies how items are tracked in the supply chain.];
+                ApplicationArea=#ItemTracking;
+                SourceExpr="Item Tracking Code";
+                Visible=FALSE }
+
+    { 31  ;2   ;Field     ;
+                CaptionML=[DEU=Standard-Abgrenzungsvorlage;
+                           ENU=Default Deferral Template];
+                ToolTipML=[DEU=Gibt die Standardvorlage an, die regelt, wie Einnahmen und Ausgaben von den Perioden des Auftretens abgegrenzt werden.;
+                           ENU=Specifies the default template that governs how to defer revenues and expenses to the periods when they occurred.];
+                ApplicationArea=#Suite;
+                SourceExpr="Default Deferral Template Code";
+                Importance=Additional }
+
+    { 1000000001;2;Field  ;
+                SourceExpr="Is Webshop Item" }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 140 ;1   ;Part      ;
+                Name=Power BI Report FactBox;
+                CaptionML=[DEU=Power BI-Berichte;
+                           ENU=Power BI Reports];
+                ApplicationArea=#Basic,#Suite;
+                PagePartID=Page6306;
+                Visible=PowerBIVisible;
+                PartType=Page }
+
+    { 3   ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Source Type=CONST(Item),
+                            Source No.=FIELD(No.);
+                PagePartID=Page875;
+                Visible=SocialListeningVisible;
+                PartType=Page }
+
+    { 26  ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Source Type=CONST(Item),
+                            Source No.=FIELD(No.);
+                PagePartID=Page876;
+                Visible=SocialListeningSetupVisible;
+                PartType=Page;
+                UpdatePropagation=Both }
+
+    { 1901314507;1;Part   ;
+                ApplicationArea=#Advanced;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Bin Filter=FIELD(Bin Filter),
+                            Variant Filter=FIELD(Variant Filter),
+                            Lot No. Filter=FIELD(Lot No. Filter),
+                            Serial No. Filter=FIELD(Serial No. Filter);
+                PagePartID=Page9089;
+                PartType=Page }
+
+    { 1903326807;1;Part   ;
+                ApplicationArea=#Advanced;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Bin Filter=FIELD(Bin Filter),
+                            Variant Filter=FIELD(Variant Filter),
+                            Lot No. Filter=FIELD(Lot No. Filter),
+                            Serial No. Filter=FIELD(Serial No. Filter);
+                PagePartID=Page9090;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1906840407;1;Part   ;
+                ApplicationArea=#Advanced;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Bin Filter=FIELD(Bin Filter),
+                            Variant Filter=FIELD(Variant Filter),
+                            Lot No. Filter=FIELD(Lot No. Filter),
+                            Serial No. Filter=FIELD(Serial No. Filter);
+                PagePartID=Page9091;
+                PartType=Page }
+
+    { 1901796907;1;Part   ;
+                ApplicationArea=#Advanced;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Bin Filter=FIELD(Bin Filter),
+                            Variant Filter=FIELD(Variant Filter),
+                            Lot No. Filter=FIELD(Lot No. Filter),
+                            Serial No. Filter=FIELD(Serial No. Filter);
+                PagePartID=Page9109;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 136 ;1   ;Part      ;
+                Name=ItemAttributesFactBox;
+                ApplicationArea=#Basic,#Suite;
+                PagePartID=Page9110;
+                PartType=Page }
+
+    { 1900383207;1;Part   ;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      TempFilterItemAttributesBuffer@1014 : TEMPORARY Record 7506;
+      TempFilteredItem@1022 : TEMPORARY Record 27;
+      ApplicationAreaSetup@1015 : Record 9178;
+      PowerBIUserConfiguration@1021 : Record 6304;
+      SetPowerBIUserConfig@1020 : Codeunit 6305;
+      CalculateStdCost@1018 : Codeunit 5812;
+      ItemAvailFormsMgt@1000 : Codeunit 353;
+      ApprovalsMgmt@1016 : Codeunit 1535;
+      ClientTypeManagement@1024 : Codeunit 4;
+      SkilledResourceList@1013 : Page 6023;
+      IsFoundationEnabled@1012 : Boolean;
+      SocialListeningSetupVisible@1011 : Boolean INDATASET;
+      SocialListeningVisible@1010 : Boolean INDATASET;
+      CRMIntegrationEnabled@1009 : Boolean;
+      CRMIsCoupledToRecord@1008 : Boolean;
+      OpenApprovalEntriesExist@1007 : Boolean;
+      IsService@1006 : Boolean INDATASET;
+      InventoryItemEditable@1005 : Boolean INDATASET;
+      EnabledApprovalWorkflowsExist@1004 : Boolean;
+      CanCancelApprovalForRecord@1003 : Boolean;
+      IsOnPhone@1002 : Boolean;
+      RunOnTempRec@1027 : Boolean;
+      EventFilter@1001 : Text;
+      PowerBIVisible@1017 : Boolean;
+      Text11500@1140000 : TextConst 'DEU=M�chten Sie den neuen Artikel bearbeiten?;ENU=Do you want to edit the new item?';
+      CanRequestApprovalForFlow@1019 : Boolean;
+      CanCancelApprovalForFlow@1023 : Boolean;
+
+    [External]
+    PROCEDURE GetSelectionFilter@3() : Text;
+    VAR
+      Item@1001 : Record 27;
+      SelectionFilterManagement@1002 : Codeunit 46;
+    BEGIN
+      CurrPage.SETSELECTIONFILTER(Item);
+      EXIT(SelectionFilterManagement.GetSelectionFilterForItem(Item));
+    END;
+
+    [External]
+    PROCEDURE SetSelection@1(VAR Item@1000 : Record 27);
+    BEGIN
+      CurrPage.SETSELECTIONFILTER(Item);
+    END;
+
+    LOCAL PROCEDURE SetSocialListeningFactboxVisibility@2();
+    VAR
+      SocialListeningMgt@1000 : Codeunit 871;
+    BEGIN
+      SocialListeningMgt.GetItemFactboxVisibility(Rec,SocialListeningSetupVisible,SocialListeningVisible);
+    END;
+
+    LOCAL PROCEDURE EnableControls@4();
+    BEGIN
+      IsService := (Type = Type::Service);
+      InventoryItemEditable := Type = Type::Inventory;
+    END;
+
+    LOCAL PROCEDURE SetWorkflowManagementEnabledState@9();
+    VAR
+      WorkflowManagement@1001 : Codeunit 1501;
+      WorkflowEventHandling@1000 : Codeunit 1520;
+    BEGIN
+      EventFilter := WorkflowEventHandling.RunWorkflowOnSendItemForApprovalCode + '|' +
+        WorkflowEventHandling.RunWorkflowOnItemChangedCode;
+
+      EnabledApprovalWorkflowsExist := WorkflowManagement.EnabledWorkflowExist(DATABASE::Item,EventFilter);
+    END;
+
+    LOCAL PROCEDURE ClearAttributesFilter@5();
+    BEGIN
+      CLEARMARKS;
+      MARKEDONLY(FALSE);
+      TempFilterItemAttributesBuffer.RESET;
+      TempFilterItemAttributesBuffer.DELETEALL;
+      FILTERGROUP(0);
+      SETRANGE("No.");
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (1):
+
+          TYPE            SUBTYPE         SOURCEEXPR                      NAME                            CAPTION
+
+          Field                           "Is Webshop Item"               <Is Webshop Item>               <Webshopartikel>
+
+
+        PAGE ACTIONS (2):
+
+          NAME                            CAPTION                         TYPE                 SUBTYPE
+
+          <Action26>                      <E-Commerce>                    ActionGroup
+          Webshop Item                    Webshop Artikel                 Action
+
+
+        TRIGGERS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

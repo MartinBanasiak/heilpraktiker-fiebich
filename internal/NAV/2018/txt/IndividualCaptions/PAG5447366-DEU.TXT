@@ -1,0 +1,7 @@
+N5447366-P55142-Q1000000001-P26171-A1031-L999:Haben Sie alle Änderungen gespeichert?
+N5447366-P8629-A1031-L999:Webshop Webform
+N5447366-Q1000000003-P26171-A1031-L999:Fehler beim Speichern
+N5447366-Q1000000006-P26171-A1031-L999:Änderungen gespeichert. Seite schließen?
+N5447366-Q1000000014-P26171-A1031-L999:Anhang %1 zu Textbaustein %2 bearbeiten
+N5447366-Q1000000019-P26171-A1031-L999:Ungespeicherte Änderungen gefunden. Seite trotzdem schließen?
+N5447366-Q1000000023-P26171-A1031-L999:Möchten Sie Ihre Änderungen speichern?

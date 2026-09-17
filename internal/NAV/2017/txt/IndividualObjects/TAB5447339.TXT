@@ -1,0 +1,44 @@
+OBJECT Table 5447339 Webshop Imp./Exp. Buffer Line
+{
+  OBJECT-PROPERTIES
+  {
+    Date=23.08.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Row No.             ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Row No.] }
+    { 3   ;   ;Column No.          ;Integer       ;OnValidate=VAR
+                                                                x@1000 : Integer;
+                                                                i@1001 : Integer;
+                                                                y@1003 : Integer;
+                                                                c@1002 : Char;
+                                                                t@1102601000 : Text[30];
+                                                              BEGIN
+                                                              END;
+
+                                                   CaptionML=[DEU=Spaltennr.;
+                                                              ENU=Column No.] }
+    { 4   ;   ;Line No.            ;Integer        }
+    { 5   ;   ;Value               ;Text250        }
+  }
+  KEYS
+  {
+    {    ;Row No.,Column No.,Line No.             ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

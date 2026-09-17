@@ -1,0 +1,225 @@
+OBJECT Table 5447343 Webshop Subscr. Customer Link
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnInsert=BEGIN
+               "Last Date Modified" := CURRENTDATETIME;
+             END;
+
+    OnModify=BEGIN
+               "Last Date Modified" := CURRENTDATETIME;
+             END;
+
+    OnDelete=BEGIN
+               WebshopUpdateManagement.DeleteSubscriptionCustLink(Rec);
+             END;
+
+    CaptionML=[DEU=Webshop Abonnement Debitor Verkn�pfung;
+               ENU=Webshop Subscription Customer Link];
+  }
+  FIELDS
+  {
+    { 1   ;   ;Subscription Code   ;Code30        ;TableRelation="Webshop Subscription Header".Code;
+                                                   CaptionML=[DEU=Abo Code;
+                                                              ENU=Subscription Code] }
+    { 2   ;   ;Customer No.        ;Code30        ;TableRelation=Customer.No.;
+                                                   CaptionML=[DEU=Debitor Nr.;
+                                                              ENU=Customer No.] }
+    { 3   ;   ;Webshop Order Email ;Text100       ;CaptionML=[DEU=E-Mail Adresse Webshop-Bestellung;
+                                                              ENU=Email address webshop order] }
+    { 4   ;   ;Line No.            ;Integer       ;AutoIncrement=Yes;
+                                                   CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.] }
+    { 5   ;   ;Bill-to Name        ;Text50        ;CaptionML=[DEU=Rech. an Name;
+                                                              ENU=Bill-to Name] }
+    { 6   ;   ;Bill-to Name 2      ;Text50        ;CaptionML=[DEU=Rech. an Name 2;
+                                                              ENU=Bill-to Name 2] }
+    { 7   ;   ;Bill-to Address     ;Text50        ;CaptionML=[DEU=Rech. an Adresse;
+                                                              ENU=Bill-to Address] }
+    { 8   ;   ;Bill-to Address 2   ;Text50        ;CaptionML=[DEU=Rech. an Adresse 2;
+                                                              ENU=Bill-to Address 2] }
+    { 9   ;   ;Bill-to City        ;Text30        ;TableRelation="Post Code".City;
+                                                   OnValidate=BEGIN
+                                                                PostCode.ValidateCity(
+                                                                  "Bill-to City","Bill-to Post Code","Bill-to County","Bill-to Country/Region Code",(CurrFieldNo <> 0) AND GUIALLOWED);
+                                                              END;
+
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Rech. an Ort;
+                                                              ENU=Bill-to City] }
+    { 13  ;   ;Ship-to Name        ;Text50        ;CaptionML=[DEU=Lief. an Name;
+                                                              ENU=Ship-to Name] }
+    { 14  ;   ;Ship-to Name 2      ;Text50        ;CaptionML=[DEU=Lief. an Name 2;
+                                                              ENU=Ship-to Name 2] }
+    { 15  ;   ;Ship-to Address     ;Text50        ;CaptionML=[DEU=Lief. an Adresse;
+                                                              ENU=Ship-to Address] }
+    { 16  ;   ;Ship-to Address 2   ;Text50        ;CaptionML=[DEU=Lief. an Adresse 2;
+                                                              ENU=Ship-to Address 2] }
+    { 17  ;   ;Ship-to City        ;Text30        ;TableRelation="Post Code".City;
+                                                   OnValidate=BEGIN
+                                                                PostCode.ValidateCity(
+                                                                  "Ship-to City","Ship-to Post Code","Ship-to County","Ship-to Country/Region Code",(CurrFieldNo <> 0) AND GUIALLOWED);
+                                                              END;
+
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Lief. an Ort;
+                                                              ENU=Ship-to City] }
+    { 32  ;   ;Currency Code       ;Code10        ;TableRelation=Currency;
+                                                   CaptionML=[DEU=W�hrungscode;
+                                                              ENU=Currency Code] }
+    { 85  ;   ;Bill-to Post Code   ;Code20        ;TableRelation="Post Code";
+                                                   OnValidate=BEGIN
+                                                                PostCode.ValidatePostCode(
+                                                                  "Bill-to City","Bill-to Post Code","Bill-to County","Bill-to Country/Region Code",(CurrFieldNo <> 0) AND GUIALLOWED);
+                                                              END;
+
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Rech. an PLZ-Code;
+                                                              ENU=Bill-to Post Code] }
+    { 86  ;   ;Bill-to County      ;Text30        ;CaptionML=[DEU=Rech. an Bundesregion;
+                                                              ENU=Bill-to County] }
+    { 87  ;   ;Bill-to Country/Region Code;Code10 ;TableRelation=Country/Region;
+                                                   CaptionML=[DEU=Rech. an L�nder-/Regionscode;
+                                                              ENU=Bill-to Country/Region Code] }
+    { 91  ;   ;Ship-to Post Code   ;Code20        ;TableRelation="Post Code";
+                                                   OnValidate=BEGIN
+                                                                PostCode.ValidatePostCode(
+                                                                  "Ship-to City","Ship-to Post Code","Ship-to County","Ship-to Country/Region Code",(CurrFieldNo <> 0) AND GUIALLOWED);
+                                                              END;
+
+                                                   ValidateTableRelation=No;
+                                                   TestTableRelation=No;
+                                                   CaptionML=[DEU=Lief. an PLZ-Code;
+                                                              ENU=Ship-to Post Code] }
+    { 92  ;   ;Ship-to County      ;Text30        ;CaptionML=[DEU=Lief. an Bundesregion;
+                                                              ENU=Ship-to County] }
+    { 93  ;   ;Ship-to Country/Region Code;Code10 ;TableRelation=Country/Region;
+                                                   CaptionML=[DEU=Lief. an L�nder-/Regionscode;
+                                                              ENU=Ship-to Country/Region Code] }
+    { 5447303;;Webshop Shop Code   ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Webshop Code;
+                                                              ENU=Webshop Shop Code] }
+    { 5447304;;Webshop Language Code;Code10       ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Webshop Shop Code));
+                                                   CaptionML=[DEU=Webshop Sprachcode;
+                                                              ENU=Webshop Language Code] }
+    { 5447316;;Webshop Pay. Opt. Line No.;Integer ;TableRelation="Webshop Payment Option"."Line No." WHERE (Shop Code=FIELD(Webshop Shop Code),
+                                                                                                            Language Code=FIELD(Webshop Language Code));
+                                                   CaptionML=[DEU=Zahlungsart Zeilennr.;
+                                                              ENU=Webshop Pay. Opt. Line No.] }
+    { 5447317;;Webshop Pay. Opt. Description;Text50;
+                                                   FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Payment Option".Description WHERE (Shop Code=FIELD(Webshop Shop Code),
+                                                                                                                  Language Code=FIELD(Webshop Language Code),
+                                                                                                                  Line No.=FIELD(Webshop Pay. Opt. Line No.)));
+                                                   CaptionML=[DEU=Zahlungsart Beschreibung;
+                                                              ENU=Webshop Pay. Opt. Description];
+                                                   Editable=No }
+    { 5447318;;Webshop Ship. Opt. Line No.;Integer;TableRelation="Webshop Shipping Option"."Line No." WHERE (Shop Code=FIELD(Webshop Shop Code),
+                                                                                                             Language Code=FIELD(Webshop Language Code));
+                                                   CaptionML=[DEU=Versandart Zeilennr.;
+                                                              ENU=Webshop Ship. Opt. Line No.] }
+    { 5447319;;Webshop Ship. Opt. Description;Text50;
+                                                   FieldClass=FlowField;
+                                                   CalcFormula=Lookup("Webshop Shipping Option".Description WHERE (Shop Code=FIELD(Webshop Shop Code),
+                                                                                                                   Language Code=FIELD(Webshop Language Code),
+                                                                                                                   Line No.=FIELD(Webshop Ship. Opt. Line No.)));
+                                                   CaptionML=[DEU=Versandart Beschreibung;
+                                                              ENU=Webshop Ship. Opt. Description];
+                                                   Editable=No }
+    { 5447340;;Customer Pseudo-Pay. Line No.;Integer;
+                                                   TableRelation="Webshop Cust. Pseudo Pay. Data"."Line No." WHERE (Customer No.=FIELD(Customer No.));
+                                                   CaptionML=[DEU=Kunden Pseudo-Zahlungs Zeilennr.;
+                                                              ENU=Customer Pseudo Payment Line No.] }
+    { 5447341;;No. of Sales Orders ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Sales Header" WHERE (Document Type=CONST(Order),
+                                                                                           Webshop Subscription Code=FIELD(Subscription Code),
+                                                                                           Posting Date=FILTER(>01.01.01),
+                                                                                           Sell-to Customer No.=FIELD(Customer No.)));
+                                                   CaptionML=[DEU=Anzahl Verkaufsauftr�ge;
+                                                              ENU=No. of Sales Orders] }
+    { 5447342;;No. of Sales Invoices;Integer      ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Sales Invoice Header" WHERE (Webshop Subscription Code=FIELD(Subscription Code),
+                                                                                                   Sell-to Customer No.=FIELD(Customer No.),
+                                                                                                   Posting Date=FILTER(>01.01.01)));
+                                                   CaptionML=[DEU=Anzahl Verkaufsrechnungen;
+                                                              ENU=No. of Sales Invoices] }
+    { 5447343;;No. of Sales Shipments;Integer     ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Sales Shipment Header" WHERE (Webshop Subscription Code=FIELD(Subscription Code),
+                                                                                                    Sell-to Customer No.=FIELD(Customer No.),
+                                                                                                    Posting Date=FILTER(>01.01.01)));
+                                                   CaptionML=[DEU=Anzahl Verkaufslieferungen;
+                                                              ENU=No. of Sales Shipments] }
+    { 5447344;;No. of Credit Memos ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Sales Cr.Memo Header" WHERE (Webshop Subscription Code=FIELD(Subscription Code),
+                                                                                                   Sell-to Customer No.=FIELD(Customer No.),
+                                                                                                   Posting Date=FILTER(>01.01.01)));
+                                                   CaptionML=[DEU=Anzahl Verkaufsgutschriften;
+                                                              ENU=No. of Sales Credit Memos] }
+    { 5447345;;No. of Return Orders;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Sales Header" WHERE (Document Type=CONST(Return Order),
+                                                                                           Webshop Subscription Code=FIELD(Subscription Code),
+                                                                                           Sell-to Customer No.=FIELD(Customer No.),
+                                                                                           Posting Date=FILTER(>01.01.01)));
+                                                   CaptionML=[DEU=Anzahl Verkaufsreklamationen;
+                                                              ENU=No. of Sales Return Orders] }
+    { 5447346;;Signup Date         ;Date          ;CaptionML=[DEU=Beigetreten am;
+                                                              ENU=Signup Date] }
+    { 5447347;;Cancellation Date   ;Date          ;CaptionML=[DEU=Ausgetreten am;
+                                                              ENU=Cancellation Date] }
+    { 5447348;;Next Order Creation Date;Date      ;CaptionML=[DEU=Datum n�chster Verkaufskopf;
+                                                              ENU=Date Next Sales Order] }
+    { 5447349;;Next Order w. Payment Date;Date    ;CaptionML=[DEU=Datum n�chster Verkaufskopf mit Rechnung;
+                                                              ENU=Date next Sales Order with Invoice] }
+    { 5447352;;No. of turns processed;Integer     ;CaptionML=[DEU=Anzahl verarbeitete Turni;
+                                                              ENU=No. of turns processed] }
+    { 5447354;;User Name           ;Text50        ;CaptionML=[DEU=Benutzername;
+                                                              ENU=User Name] }
+    { 5447355;;Subscription Item No.;Code30       ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Abo-Artikelnummer;
+                                                              ENU=Subscription Item No.] }
+    { 5447356;;Next Sequence Step Line No.;Integer;TableRelation="Webshop Subscription Seq. Step"."Line No." WHERE (Subscription Code=FIELD(Subscription Code));
+                                                   CaptionML=[DEU=Zeilennr. n�chster Sequenz-Schritt;
+                                                              ENU=Line No. next Sequence Step] }
+    { 5447357;;Subscription Qty. Per Turn;Decimal ;CaptionML=[DEU=Artikelmenge pro Intervall;
+                                                              ENU=Item Qty. per turn] }
+    { 5447400;;Last Date Modified  ;DateTime      ;CaptionML=[DEU=Zuletzt ge�ndert am;
+                                                              ENU=Last modified at] }
+    { 5447401;;Last Date Updated   ;DateTime      ;CaptionML=[DEU=Zuletzt �bertragen am;
+                                                              ENU=Last updated at] }
+    { 5447402;;Next Planned Delivery Date;Date    ;CaptionML=[DEU=N�chstes geplantes Lieferdatum;
+                                                              ENU=Next Planned Delivery Date] }
+    { 5447403;;Webshop Initial Order No.;Code20    }
+  }
+  KEYS
+  {
+    {    ;Subscription Code,Customer No.,Webshop Order Email,Line No.;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      PostCode@1000000000 : Record 225;
+      WebshopUpdateManagement@1000000001 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+
+      NOTICE: Field Numbering is to Facilitate TRANSFERFIELDS to Sales Header
+    }
+    END.
+  }
+}
+

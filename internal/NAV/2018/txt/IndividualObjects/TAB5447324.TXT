@@ -1,0 +1,59 @@
+OBJECT Table 5447324 Webshop Attribute Template
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnDelete=BEGIN
+               AttributeLink.SETRANGE(AttributeLink.Type,AttributeLink.Type::Template);
+               AttributeLink.SETRANGE("No.",Code);
+               AttributeLink.DELETEALL();
+               AttributeTranslation.SETRANGE(AttributeTranslation.Type,AttributeTranslation.Type::"Attribute Template");
+               AttributeTranslation.SETRANGE("Attribute Link No.",Code);
+               AttributeTranslation.DELETEALL();
+             END;
+
+    CaptionML=[DEU=Webshop Merkmalvorlage;
+               ENU=Webshop Attribute Template];
+    LookupPageID=Page5447323;
+    DrillDownPageID=Page5447323;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code20        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 10  ;   ;No. of Attributes   ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Attribute Link" WHERE (Type=CONST(Template),
+                                                                                                     No.=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Merkmale;
+                                                              ENU=No. of Attributes];
+                                                   Editable=No }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      AttributeTranslation@1000000000 : Record 5447323;
+      AttributeLink@1000000001 : Record 5447321;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

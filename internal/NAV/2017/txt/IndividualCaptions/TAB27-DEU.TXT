@@ -1,0 +1,251 @@
+T27-F1001-P8629-A1031-L999:Menge in Projektauftrag
+T27-F1002-P8629-A1031-L999:Res. Menge in Projektauftrag
+T27-F100-P8629-A1031-L999:Reservieren
+T27-F100-P8632-A1031-L999:Nie,Optional,Immer
+T27-F101-P8629-A1031-L999:Reservierte Menge am Lager
+T27-F102-P8629-A1031-L999:Reservierte Menge in Bestell.
+T27-F103-P8629-A1031-L999:Reservierte Menge in Aufträgen
+T27-F105-P8629-A1031-L999:Globaler Dimensionscode 1
+T27-F106-P8629-A1031-L999:Globaler Dimensionscode 2
+T27-F107-P8629-A1031-L999:Res. Menge in ausgeh. Umlag.
+T27-F108-P8629-A1031-L999:Res. Menge in eingeh. Umlag.
+T27-F109-P8629-A1031-L999:Res. Menge aus Retouren
+T27-F10-P8629-A1031-L999:Art
+T27-F10-P8632-A1031-L999:Lagerbestand,Service
+T27-F110-P8629-A1031-L999:Res. Menge aus Rücklieferungen
+T27-F11-P8629-A1031-L999:Lagerbuchungsgruppe
+T27-F120-P8629-A1031-L999:Bestandswarnung
+T27-F120-P8632-A1031-L999:Standard,Nein,Ja
+T27-F1217-P8629-A1031-L999:GTIN
+T27-F121-P8629-A1031-L999:Negativen Lagerbestand verhindern
+T27-F121-P8632-A1031-L999:Standard,Nein,Ja
+T27-F12-P8629-A1031-L999:Regalnr.
+T27-F14-P8629-A1031-L999:Artikelrabattgruppe
+T27-F15-P8629-A1031-L999:Rech.-Rabatt zulassen
+T27-F16-P8629-A1031-L999:Statistikgruppe
+T27-F1700-P8629-A1031-L999:Standard-Abgrenzungsvorlagencode
+T27-F17-P8629-A1031-L999:Provisionsgruppe
+T27-F18-P8629-A1031-L999:VK-Preis
+T27-F19-P8629-A1031-L999:VK-Preis/DB - Berechnung
+T27-F19-P8632-A1031-L999:DB = VK - EP,VK = EP + DB,kein Bezug
+T27-F1-P8629-A1031-L999:Nr.
+T27-F200-P8629-A1031-L999:Kosten für offene Fertigungsaufträge
+T27-F20-P8629-A1031-L999:DB %
+T27-F21-P8629-A1031-L999:Lagerabgangsmethode
+T27-F21-P8632-A1031-L999:FIFO,LIFO,Ausgewählt,Durchschnitt,Standard
+T27-F22-P8629-A1031-L999:Einstandspreis
+T27-F24-P8629-A1031-L999:Einstandspreis (fest)
+T27-F25-P8629-A1031-L999:Direkte Kosten (neueste)
+T27-F28-P8629-A1031-L999:Indirekte Kosten %
+T27-F29-P8629-A1031-L999:Einstandspreis ist reguliert
+T27-F2-P8629-A1031-L999:Nummer 2
+T27-F30-P8629-A1031-L999:Onlineregulierung zulassen
+T27-F31-P8629-A1031-L999:Kreditorennr.
+T27-F32-P8629-A1031-L999:Kred.-Artikelnr.
+T27-F33-P8629-A1031-L999:Beschaffungszeit
+T27-F34-P8629-A1031-L999:Minimalbestand
+T27-F35-P8629-A1031-L999:Maximalbestand
+T27-F36-P8629-A1031-L999:Bestellmenge
+T27-F37-P8629-A1031-L999:Alternative Artikelnr.
+T27-F38-P8629-A1031-L999:Richtpreis
+T27-F39-P8629-A1031-L999:Abgabenteil %
+T27-F3-P8629-A1031-L999:Beschreibung
+T27-F40-P8629-A1031-L999:Abgabencode
+T27-F41-P8629-A1031-L999:Bruttogewicht
+T27-F42-P8629-A1031-L999:Nettogewicht
+T27-F43-P8629-A1031-L999:Anzahl pro Paket
+T27-F44-P8629-A1031-L999:Volumen
+T27-F45-P8629-A1031-L999:Haltbarkeit
+T27-F46-P8629-A1031-L999:Frachtform
+T27-F47-P8629-A1031-L999:Zollpos.
+T27-F48-P8629-A1031-L999:Zollfaktor
+T27-F49-P8629-A1031-L999:Herkunftsland/-region
+T27-F4-P8629-A1031-L999:Suchbegriff
+T27-F50-P8629-A1031-L999:Budgetierte Menge
+T27-F51-P8629-A1031-L999:Budgetierter Betrag
+T27-F521-P8629-A1031-L999:Benutzer-ID für Ausgleichsvorschlag
+T27-F52-P8629-A1031-L999:Budgetierter DB
+T27-F53-P8629-A1031-L999:Bemerkung
+T27-F5400-P8629-A1031-L999:Stücklistenebene
+T27-F5401-P8629-A1031-L999:Losgröße
+T27-F5402-P8629-A1031-L999:Seriennummern
+T27-F5403-P8629-A1031-L999:Datum letzte Einst.-Preisber.
+T27-F5404-P8629-A1031-L999:Mehrstufige Materialkosten
+T27-F5405-P8629-A1031-L999:Mehrstufige Kapazitätskosten
+T27-F5407-P8629-A1031-L999:Ausschuss %
+T27-F5409-P8629-A1031-L999:Ohne Lagerbewertung
+T27-F5410-P8629-A1031-L999:Anzahl Zyklen zusammenfassen
+T27-F5411-P8629-A1031-L999:Minimale Losgröße
+T27-F5412-P8629-A1031-L999:Maximale Losgröße
+T27-F5413-P8629-A1031-L999:Sicherheitsbestand
+T27-F5414-P8629-A1031-L999:Losgrößenrundungsfaktor
+T27-F5415-P8629-A1031-L999:Sicherh.-Zuschl. Beschaff.-Zt.
+T27-F5417-P8629-A1031-L999:Buchungsmethode
+T27-F5417-P8632-A1031-L999:Manuell,Vorwärts,Rückwärts,Kommiss. + Vorwärts,Kommiss. + Rückwärts
+T27-F5419-P8629-A1031-L999:Beschaffungsmethode
+T27-F5419-P8632-A1031-L999:Einkauf,Fertigungsauftrag,,Montage
+T27-F5420-P8629-A1031-L999:Geplanter Zugang (Menge)
+T27-F5421-P8629-A1031-L999:Geplanter Bedarf (Menge)
+T27-F5422-P8629-A1031-L999:Rundungspräzision
+T27-F5423-P8629-A1031-L999:Lagerplatzfilter
+T27-F5424-P8629-A1031-L999:Variantenfilter
+T27-F5425-P8629-A1031-L999:Verkaufseinheitencode
+T27-F5426-P8629-A1031-L999:Einkaufseinheitencode
+T27-F5428-P8629-A1031-L999:Zeitrahmen
+T27-F5429-P8629-A1031-L999:Reservierte Menge in FA
+T27-F5430-P8629-A1031-L999:Reserv. Menge in FA-Komponente
+T27-F5431-P8629-A1031-L999:Res. Mge. in Best.-Vorschl.-Z.
+T27-F5440-P8629-A1031-L999:Wiederbeschaffungsverfahren
+T27-F5440-P8632-A1031-L999: ,Feste Bestellmenge,Auffüllen auf Maximalbestand,Auftragsmenge,Los-für-Los
+T27-F5441-P8629-A1031-L999:Lagerbestand berücksichtigen
+T27-F5442-P8629-A1031-L999:Produktionsart
+T27-F5442-P8632-A1031-L999:Lagerfertigung,Auftragsfertigung
+T27-F5443-P8629-A1031-L999:Neuplanungsperiode
+T27-F5444-P8629-A1031-L999:Loskumulierungsperiode
+T27-F5445-P8629-A1031-L999:Toleranzperiode
+T27-F5446-P8629-A1031-L999:Toleranzmenge
+T27-F5447301-P8629-A1031-L999:Ist Webshopartikel
+T27-F5447-P8629-A1031-L999:Überlauflevel
+T27-F5449-P8629-A1031-L999:Planung, Umlagerungsausgang (Menge).
+T27-F5450-P8629-A1031-L999:Planungsvorschlag (Menge)
+T27-F54-P8629-A1031-L999:Gesperrt
+T27-F55-P8629-A1031-L999:Einstandspreis ist auf Sachkonten gebucht
+T27-F5700-P8629-A1031-L999:Lagerhaltungsdaten vorhanden
+T27-F5701-P8629-A1031-L999:Herstellercode
+T27-F5702-P8629-A1031-L999:Artikelkategoriencode
+T27-F5703-P8629-A1031-L999:Aus Katalogartikel erstellt
+T27-F5704-P8629-A1031-L999:Produktgruppencode
+T27-F5706-P8629-A1031-L999:Ersatzartikel vorhanden
+T27-F5707-P8629-A1031-L999:Menge in Transit
+T27-F5708-P8629-A1031-L999:Umlag.-Auftrag Eingang (Menge)
+T27-F5709-P8629-A1031-L999:Umlag.-Auftrag Ausgang (Menge)
+T27-F5776-P8629-A1031-L999:Zugewiesen für Warenausgang
+T27-F5777-P8629-A1031-L999:Menge kommissioniert
+T27-F5900-P8629-A1031-L999:Serviceartikelgruppe
+T27-F5901-P8629-A1031-L999:Menge in Serviceauftrag
+T27-F5902-P8629-A1031-L999:Res. Menge in Serviceaufträgen
+T27-F5-P8629-A1031-L999:Beschreibung 2
+T27-F62-P8629-A1031-L999:Korrigiert am
+T27-F63-P8629-A1031-L999:Korrigiert um
+T27-F64-P8629-A1031-L999:Datumsfilter
+T27-F6500-P8629-A1031-L999:Artikelverfolgungscode
+T27-F6501-P8629-A1031-L999:Chargennummern
+T27-F6502-P8629-A1031-L999:Ablaufdatumsformel
+T27-F6503-P8629-A1031-L999:Chargennr. Filter
+T27-F6504-P8629-A1031-L999:Seriennr. Filter
+T27-F65-P8629-A1031-L999:Globaler Dimensionsfilter 1
+T27-F6650-P8629-A1031-L999:Menge in Rücklieferung
+T27-F6660-P8629-A1031-L999:Menge in Verkaufsreklamation
+T27-F66-P8629-A1031-L999:Globaler Dimensionsfilter 2
+T27-F67-P8629-A1031-L999:Lagerortfilter
+T27-F68-P8629-A1031-L999:Lagerbestand
+T27-F69-P8629-A1031-L999:Fakturierter Bestand
+T27-F6-P8629-A1031-L999:Montagestückliste
+T27-F70-P8629-A1031-L999:Bewegung
+T27-F7171-P8629-A1031-L999:Anzahl Ersatzartikel
+T27-F71-P8629-A1031-L999:Einkauf (Menge)
+T27-F72-P8629-A1031-L999:Verkauf (Menge)
+T27-F7300-P8629-A1031-L999:Lagerklassencode
+T27-F7301-P8629-A1031-L999:Lagerhilfsmittelcode
+T27-F7302-P8629-A1031-L999:Einlagerungsvorlagencode
+T27-F7307-P8629-A1031-L999:Einlagerungseinheitencode
+T27-F7380-P8629-A1031-L999:Inventurhäufigkeitscode
+T27-F7381-P8629-A1031-L999:Letzte Aktual. Inv.-Häufigkeit
+T27-F7383-P8629-A1031-L999:Letztes Inventurdatum
+T27-F7384-P8629-A1031-L999:Zuordnung verwenden
+T27-F7385-P8629-A1031-L999:Startdatum der nächsten Inventur
+T27-F7386-P8629-A1031-L999:Enddatum der nächsten Inventur
+T27-F73-P8629-A1031-L999:Zugang (Menge)
+T27-F74-P8629-A1031-L999:Abgang (Menge)
+T27-F7700-P8629-A1031-L999:Artikelbarcode
+T27-F77-P8629-A1031-L999:Einkauf (MW)
+T27-F78-P8629-A1031-L999:Verkauf (MW)
+T27-F79-P8629-A1031-L999:Zugang (MW)
+T27-F80-P8629-A1031-L999:Abgang (MW)
+T27-F83-P8629-A1031-L999:Verbrauch (MW)
+T27-F84-P8629-A1031-L999:Menge in Bestellung
+T27-F85-P8629-A1031-L999:Menge in Auftrag
+T27-F87-P8629-A1031-L999:VK-Preis inkl. MwSt.
+T27-F89-P8629-A1031-L999:Direktlieferungfilter
+T27-F8-P8629-A1031-L999:Basiseinheitencode
+T27-F90-P8629-A1031-L999:MwSt.-Geschäftsbuch.-G.(Preis)
+T27-F910-P8629-A1031-L999:Montagerichtlinie
+T27-F910-P8632-A1031-L999:Lagerfertigung,Programmfertigung
+T27-F91-P8629-A1031-L999:Produktbuchungsgruppe
+T27-F929-P8629-A1031-L999:Res. Menge in Montageauftrag
+T27-F92-P8629-A1031-L999:Bild
+T27-F930-P8629-A1031-L999:Res. Menge in Montagekomp.
+T27-F93-P8629-A1031-L999:Umgelagert (Menge)
+T27-F94-P8629-A1031-L999:Umgelagert (MW)
+T27-F95-P8629-A1031-L999:Ursprungsland/-region
+T27-F96-P8629-A1031-L999:Automat. Textbaustein
+T27-F977-P8629-A1031-L999:Menge in Montageauftrag
+T27-F978-P8629-A1031-L999:Menge in Montagekomponente
+T27-F97-P8629-A1031-L999:Nummernserie
+T27-F98-P8629-A1031-L999:Steuergruppencode
+T27-F99000750-P8629-A1031-L999:Arbeitsplannr.
+T27-F99000751-P8629-A1031-L999:Fert.-Stücklistennr.
+T27-F99000752-P8629-A1031-L999:Einstufige Materialkosten
+T27-F99000753-P8629-A1031-L999:Einstufige Kapazitätskosten
+T27-F99000754-P8629-A1031-L999:Einstufige Fremdarbeitskosten
+T27-F99000755-P8629-A1031-L999:Einstufige Kap.-Gemeinkosten
+T27-F99000756-P8629-A1031-L999:Einstufige Prod.-Gemeinkosten
+T27-F99000757-P8629-A1031-L999:Gemeinkostensatz
+T27-F99000758-P8629-A1031-L999:Mehrstufige Fremdarbeitskosten
+T27-F99000759-P8629-A1031-L999:Mehrstufige Prod.-Gemeinkosten
+T27-F99000760-P8629-A1031-L999:Mehrstufige Kap.-Gemeinkosten
+T27-F99000761-P8629-A1031-L999:Planungsabgang (Menge)
+T27-F99000762-P8629-A1031-L999:Planungszugang (Menge)
+T27-F99000765-P8629-A1031-L999:Voraussichtl. Zugang (Menge)
+T27-F99000766-P8629-A1031-L999:Fest geplanter Zugang (Menge)
+T27-F99000767-P8629-A1031-L999:Freigegeb. FA Zugang (Menge)
+T27-F99000768-P8629-A1031-L999:Planungsfreigabemenge
+T27-F99000769-P8629-A1031-L999:Voraussichtliche Freigabemenge
+T27-F99000770-P8629-A1031-L999:Bestellvorschl.-Zugang (Menge)
+T27-F99000771-P8629-A1031-L999:Bestellvorschlagsfreigabemenge
+T27-F99000773-P8629-A1031-L999:Bedarfsverursacherart
+T27-F99000773-P8632-A1031-L999:Keine,Nur Bedarfsverursacher,Bedarfsverurs. & Ereignismeld.
+T27-F99000774-P8629-A1031-L999:Absatzplanungsmenge (Basis)
+T27-F99000775-P8629-A1031-L999:Absatzplanungsname
+T27-F99000776-P8629-A1031-L999:Komponentenabsatzplanung
+T27-F99000777-P8629-A1031-L999:Menge in FA
+T27-F99000778-P8629-A1031-L999:Menge in Komponentenzeilen
+T27-F99000875-P8629-A1031-L999:Kritisch
+T27-F99008500-P8629-A1031-L999:Gemeinsame Artikelnr.
+T27-F99-P8629-A1031-L999:MwSt.-Produktbuchungsgruppe
+T27-F9-P8629-A1031-L999:Preisfaktor
+T27-P8629-A1031-L999:Artikel
+T27-Q1000-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da noch ein(e) %3 (oder mehrere) für diesen Artikel vorhanden ist.
+T27-Q1001-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da noch ein(e) %3 (oder mehrere) für diesen Artikel vorhanden ist.
+T27-Q1002-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da noch offene Fertigungsaufträge, die diesen Artikel enthalten, vorhanden sind.
+T27-Q1003-P26171-A1031-L999:Preise inkl. MwSt. können nicht berechnet werden, wenn %1 %2 ist.
+T27-Q1004-P26171-A1031-L999:Sie können %1 nicht ändern, da Buchungen auf diesem Artikel vorhanden sind.
+T27-Q1005-P26171-A1031-L999:Sie können %1 nicht ändern, da noch ein(e) %2 (oder mehrere) für diesen Artikel vorhanden ist.
+T27-Q1006-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da noch Fertigungsauftragskomponentenzeilen vorhanden sind, die diesen Artikel enthalten und deren Restmenge nicht 0 ist.
+T27-Q1008-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da noch offene Umlagerungsaufträge, die diesen Artikel enthalten, vorhanden sind.
+T27-Q1009-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da mindestens ein ausstehender Service %3 für diesen Artikel vorhanden ist.
+T27-Q1010-P26171-A1031-L999:%1 muss %2 in %3 %4 sein, wenn %5 %6 ist.
+T27-Q1011-P26171-A1031-L999:Sie können %1 nicht ändern, da offene Posten, die diesen Artikel enthalten, vorhanden sind.
+T27-Q1012-P26171-A1031-L999:Es können Aufträge und offene Posten für diesen Artikel vorhanden sein.
+T27-Q1013-P26171-A1031-L999:Wenn Sie %1 ändern, kann dies neue Aufträge und Buchungen beeinflussen.\\
+T27-Q1014-P26171-A1031-L999:Möchten Sie %1 ändern?
+T27-Q1017-P26171-A1031-L999:Die Änderung hat keine Auswirkungen auf bestehende Posten.\
+T27-Q1019-P26171-A1031-L999:Wenn Sie eine %1 für bestehende Posten angeben möchten, müssen Sie eine Neuplanung ausführen.
+T27-Q1021-P26171-A1031-L999:Bedarfsverursacher,Bedarfsverursacher und Ereignismeldungen
+T27-Q1055-P26171-A1031-L999:%1 muss eine Ganzzahl sein, da %2 '%3' für die Verwendung von '%4' eingerichtet ist.
+T27-Q1056-P26171-A1031-L999:Abgebrochen.
+T27-Q1057-P26171-A1031-L999:Möchten Sie %1 ändern?
+T27-Q1058-P26171-A1031-L999:Wenn Sie %1 ändern, werden die Felder %2 und %3 berechnet.\Möchten Sie %1 wirklich ändern?
+T27-Q1064-P26171-A1031-L999:Sie können den %1 %2 nicht löschen, da eine oder mehrere zertifizierte Fert.-Stücklisten mit diesem Artikel vorhanden sind.
+T27-Q1066-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da noch eine %3 für diesen Artikel vorhanden ist.
+T27-Q1072-P26171-A1031-L999:Wenn Sie %1 ändern, hat das u. U. Einfluss auf vorhandene Fertigungsaufträge.\
+T27-Q1077-P26171-A1031-L999:'%1' kann nicht in geändert werden, da sich bei '%2' etwas in Bearbeitung (WIP) befindet. Durch Ändern des Werts erfolgt möglicherweise eine Gegenbuchung auf dem Unf.-Arbeit-Konto.
+T27-Q1078-P26171-A1031-L999:muss größer 0 sein.
+T27-Q1079-P26171-A1031-L999:Sie können das Feld %1 in %2 %3 nicht ändern, da mindestens ein %4-Objekt für diesen Artikel vorhanden ist.
+T27-Q1080-P26171-A1031-L999:Diese Aktion kann nicht ausgeführt werden, da vom Benutzer '%3' der Ausgleich von Posten für den Artikel '%1' in '%2' aufgehoben wurde.
+T27-Q1081-P26171-A1031-L999:Die Menge pro Basiseinheit muss 1 sein. %1 wird mit %2 pro Einheit eingerichtet.\\Sie können diese Einrichtung im Fenster "Artikeleinheiten" ändern.
+T27-Q1082-P26171-A1031-L999:"Artikelverfolgungscode" kann nicht geändert werden, weil mindestens ein offener Beleg vorhanden ist, der diesen Artikel mit der angegebenen Verfolgung enthält: Herkunftsart = %1, Belegnr. = %2.
+T27-Q1083-P26171-A1031-L999:Sie müssen einen vorhandenen Artikel auswählen.
+T27-Q1185-P26171-A1031-L999:Wählen Sie einen vorhandenen Artikel aus.
+T27-Q1186-P26171-A1031-L999:Dieser Artikel ist nicht registriert. Zum Fortfahren wählen Sie eine der folgenden Optionen:
+T27-Q1187-P26171-A1031-L999:Erstellen Sie eine neue Artikelkarte für %1.

@@ -1,0 +1,70 @@
+OBJECT Page 5447307 Webshop Category List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Webshop Kategorieauswahl;
+               ENU=Webshop Category selection];
+    SourceTable=Table5447303;
+    PageType=List;
+    ShowFilter=Yes;
+    OnAfterGetRecord=BEGIN
+                       NameOnFormat(FORMAT(Name));
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000001;2;Field  ;
+                CaptionML=[DEU=Name;
+                           ENU=Name];
+                SourceExpr=NameOnFormat(Name);
+                Style=Standard;
+                StyleExpr=NameEmphasize }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Shop Code" }
+
+  }
+  CODE
+  {
+    VAR
+      TempLevel@1000000000 : Integer;
+      NameEmphasize@19018670 : Boolean INDATASET;
+      FName@1000000001 : Text[250];
+
+    LOCAL PROCEDURE NameOnFormat@19039177(Text@19045581 : Text[250]) : Text[1024];
+    BEGIN
+      NameEmphasize := (Level = 1);
+
+      IF Level > 1 THEN BEGIN
+        TempLevel := 2;
+        REPEAT
+          Text := '    ' + Text;
+          TempLevel := TempLevel + 1
+        UNTIL TempLevel > (Level);
+      END;
+
+      EXIT(Text);
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

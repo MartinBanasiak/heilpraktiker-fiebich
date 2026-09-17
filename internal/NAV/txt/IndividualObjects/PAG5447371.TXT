@@ -1,0 +1,117 @@
+OBJECT Page 5447371 Webshop Item Rel. Fact Box
+{
+  OBJECT-PROPERTIES
+  {
+    Date=05.01.18;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table5447304;
+    PageType=CardPart;
+  }
+  CONTROLS
+  {
+    { 1000000000;;Container;
+                ContainerType=ContentArea }
+
+    { 1000000017;1;Field  ;
+                CaptionML=[DEU=Ist Variante;
+                           ENU=Is Variant];
+                SourceExpr="Is Variant" }
+
+    { 1000000016;1;Field  ;
+                CaptionML=[DEU=Hat Varianten;
+                           ENU=Has Variants];
+                SourceExpr="Has Variants" }
+
+    { 1000000015;1;Field  ;
+                CaptionML=[DEU=Anzahl Varianten;
+                           ENU=No. of Variants];
+                SourceExpr="No. of Variants" }
+
+    { 1000000014;1;Field  ;
+                CaptionML=[DEU=Mutterartikelnr.;
+                           ENU=Parent Item No.];
+                SourceExpr="Parent Item No." }
+
+    { 1000000013;1;Field  ;
+                CaptionML=[DEU=Anzahl Kategorien;
+                           ENU=No. of Categories];
+                SourceExpr="No. of Categories" }
+
+    { 1000000012;1;Field  ;
+                CaptionML=[DEU=Anzahl Alternative Artikel;
+                           ENU=No. of Alt. Item];
+                SourceExpr="No. of Alt. Item" }
+
+    { 1000000011;1;Field  ;
+                CaptionML=[DEU=Anzahl Ersatzteile;
+                           ENU=No. of Spare Parts];
+                SourceExpr="No. of Spare Parts" }
+
+    { 1000000009;1;Field  ;
+                CaptionML=[DEU=Anzahl Zubeh�rartikel;
+                           ENU=No. of Acc. Items];
+                SourceExpr="No. of Acc. Items" }
+
+    { 1000000010;1;Field  ;
+                CaptionML=[DEU=Anzahl Passende Artikel;
+                           ENU=No. of Fit. Items];
+                SourceExpr="No. of Fit. Items" }
+
+    { 1000000008;1;Field  ;
+                CaptionML=[DEU=Anzahl Beschreibungen;
+                           ENU=No. of Descriptions];
+                SourceExpr="No. of Descriptions" }
+
+    { 1000000007;1;Field  ;
+                CaptionML=[DEU=Anzahl Bilder;
+                           ENU=No. of Pictures];
+                SourceExpr="No. of Pictures" }
+
+    { 1000000006;1;Field  ;
+                CaptionML=[DEU=Anzahl Videos;
+                           ENU=No. of Videoclips];
+                SourceExpr="No. of Videoclips" }
+
+    { 1000000005;1;Field  ;
+                CaptionML=[DEU=Anzahl Dokumente;
+                           ENU=No. of Documents];
+                SourceExpr="No. of Documents" }
+
+    { 1000000004;1;Field  ;
+                CaptionML=[DEU=Gruppenberechtigungen;
+                           ENU=No. of Group Permission];
+                SourceExpr="No. of Group Permissions" }
+
+    { 1000000003;1;Field  ;
+                CaptionML=[DEU=Debitorberechtigungen;
+                           ENU=No. of Customer Permission];
+                SourceExpr="No. of Customer Permissions" }
+
+    { 1000000002;1;Field  ;
+                CaptionML=[DEU=Anzahl Artikelmerkmale;
+                           ENU=No. of Attributes];
+                SourceExpr="No. of Attributes";
+                LookupPageID=Webshop Attribute Link;
+                DrillDownPageID=Webshop Attribute Link }
+
+    { 1000000001;1;Field  ;
+                Name=No. of Customizations;
+                CaptionML=[DEU=Anzahl Individualisierungen;
+                           ENU=No. of Customizations];
+                SourceExpr="No. of Customizations";
+                LookupPageID=Webshop Item Customizations;
+                DrillDownPageID=Webshop Item Customizations }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,307 @@
+OBJECT Report 5447330 Webshop Obj. Perm. RapidStart
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Permissions=TableData 2000000001=r,
+                TableData 2000000004=rim,
+                TableData 2000000005=rim,
+                TableData 2000000053=rim,
+                TableData 2000000120=rm;
+    TransactionType=Update;
+    CaptionML=[DEU=Webshop Objektberechtigungen RapidStart;
+               ENU=Webshop Object Permissions RapidStart];
+    ProcessingOnly=Yes;
+    OnPreReport=BEGIN
+                  //Legt eine Alle- und eine Admin-Rolle an
+
+                  PermissionSet.INIT;
+                  PermissionSet."Role ID" := Text002;
+                  PermissionSet.Name := Text003;
+                  IF PermissionSet.INSERT THEN
+                    PermissionSetInsertCounter += 1;
+                  PermissionSet.RESET;
+
+                  PermissionSet.INIT;
+                  PermissionSet."Role ID" := Text004;
+                  PermissionSet.Name := Text005;
+                  IF PermissionSet.INSERT THEN
+                    PermissionSetInsertCounter += 1;
+                  PermissionSet.RESET;
+
+                  PermissionSet.INIT;
+                  PermissionSet."Role ID" := Text010;
+                  PermissionSet.Name := Text011;
+                  IF PermissionSet.INSERT THEN
+                    PermissionSetInsertCounter += 1;
+                  PermissionSet.RESET;
+                END;
+
+    OnPostReport=BEGIN
+                   MESSAGE(
+                       Text016 + '%1\'
+                     + Text017 + '%2\'
+                     + Text018 + '%3\'
+                     + Text019 + '%4\'
+                     + Text020 + '%5',
+                     PermissionSetInsertCounter,
+                     PermissionInsertCounter,
+                     AccessControlInsertCounterAll,
+                     AccessControlInsertCounterBasic,
+                     AccessControlInsertCounterAdmin
+                   );
+                 END;
+
+  }
+  DATASET
+  {
+    { 1000000003;;DataItem;                  ;
+               DataItemTable=Table2000000001;
+               DataItemTableView=SORTING(Type,Company Name,ID)
+                                 ORDER(Ascending)
+                                 WHERE(ID=FILTER(5447300..5447500),
+                                       Version List=FILTER(*@MYS*));
+               OnAfterGetRecord=BEGIN
+                                  //Legt Objektberechtigungen f�r Rollen an
+
+                                  //Legt Objektberechtigung f�r Alle-Rolle an
+                                  CreateAllPermissionForObject(Object);
+
+                                  //Legt Objektberechtigungen f�r Admin-Rolle an
+                                  CreateBasicPermissionForObject(Object);
+
+                                  //Legt Objektberechtigung f�r Basic-Rolle an
+                                  CreateAdminPermissionForObject(Object);
+                                END;
+                                 }
+
+    { 1000000000;;DataItem;Users for Permission Set All;
+               DataItemTable=Table2000000120;
+               ReqFilterHeadingML=[DEU=Benutzer f�r Alle-Rolle;
+                                   ENU=Users for all-role];
+               OnAfterGetRecord=BEGIN
+                                  AccessControl.RESET;
+                                  AccessControl.INIT;
+                                  AccessControl."User Security ID" := "User Security ID";
+                                  AccessControl."Role ID" := Text002; //2,4,10
+                                  //AccessControl."Company Name" := COMPANYNAME;
+                                  IF AccessControl.INSERT THEN
+                                    AccessControlInsertCounterAll += 1;
+                                END;
+
+               ReqFilterFields=User Name,Full Name,Authentication Email }
+
+    { 1000000001;;DataItem;Users for Permission Set Basic;
+               DataItemTable=Table2000000120;
+               ReqFilterHeadingML=[DEU=Benutzer f�r Basic-Rolle;
+                                   ENU=Users for basic-role];
+               OnAfterGetRecord=BEGIN
+                                  AccessControl.RESET;
+                                  AccessControl.INIT;
+                                  AccessControl."User Security ID" := "User Security ID";
+                                  AccessControl."Role ID" := Text010; //2,4,10
+                                  //AccessControl."Company Name" := COMPANYNAME;
+                                  IF AccessControl.INSERT THEN
+                                    AccessControlInsertCounterBasic += 1;
+                                END;
+
+               ReqFilterFields=User Name,Full Name,Authentication Email }
+
+    { 1000000002;;DataItem;Users for Permission Set Admin;
+               DataItemTable=Table2000000120;
+               ReqFilterHeadingML=[DEU=Benutzer f�r Admin-Rolle;
+                                   ENU=Users for admin-role];
+               OnAfterGetRecord=BEGIN
+                                  AccessControl.RESET;
+                                  AccessControl.INIT;
+                                  AccessControl."User Security ID" := "User Security ID";
+                                  AccessControl."Role ID" := Text004; //2,4,10
+                                  //AccessControl."Company Name" := COMPANYNAME;
+                                  IF AccessControl.INSERT THEN
+                                    AccessControlInsertCounterAdmin += 1;
+                                END;
+
+               ReqFilterFields=User Name,Full Name,Authentication Email }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      PermissionSet@1000000000 : Record 2000000004;
+      AccessControl@1000000002 : Record 2000000053;
+      Text001@1000000007 : TextConst 'DEU=MYSW1;ENU=MYSW1';
+      Text002@1000000006 : TextConst 'DEU=MYSYDESHOP-ALLE;ENU=MYSYDESHOP-ALL';
+      Text003@1000000005 : TextConst 'DEU=MysydeShop alle Benutzer;ENU=MysydeShop all users';
+      Text004@1000000004 : TextConst 'DEU=MYSYDESHOP-ADMIN;ENU=MYSYDESHOP-ADMIN';
+      Text005@1000000003 : TextConst 'DEU=MysydeShop Administratoren;ENU=MysydeShop Administrators';
+      Text006@1000000008 : TextConst 'DEU=5?;ENU=5?';
+      Text007@1000000009 : TextConst 'DEU=105?;ENU=105?';
+      Text008@1000000010 : TextConst 'DEU=5447300;ENU=5447300';
+      Text009@1000000011 : TextConst 'DEU=5447500;ENU=5447500';
+      PermissionSetInsertCounter@1000000013 : Integer;
+      PermissionInsertCounter@1000000012 : Integer;
+      AccessControlInsertCounterAll@1000000014 : Integer;
+      Text010@1000000019 : TextConst 'DEU=MYSYDESHOP-BASIC;ENU=MYSYDESHOP-BASIC';
+      Text011@1000000018 : TextConst 'DEU=MysydeShop Basis-Verwaltung;ENU=MysydeShop basic management';
+      Text012@1000000015 : TextConst 'DEU=Item;ENU=Item';
+      Text013@1000000016 : TextConst 'DEU=Attribute;ENU=Attribute';
+      Text014@1000000017 : TextConst 'DEU=Permission;ENU=Permission';
+      Text015@1000000020 : TextConst 'DEU=Category;ENU=Category';
+      Text016@1000000021 : TextConst 'DEU="Berechtigungss�tze angelegt: ";ENU="Permission sets created: "';
+      Text017@1000000022 : TextConst 'DEU="Rollen-Objekt Zugriffsrechtss�tze angelegt: ";ENU="Role-object permissions created: "';
+      Text018@1000000023 : TextConst 'DEU="Anzahl Benutzerverkn�pfungen Rolle ""Alle"" angelegt: ";ENU="No. of user-links created for role ""All"": "';
+      AccessControlInsertCounterBasic@1000000024 : Integer;
+      AccessControlInsertCounterAdmin@1000000025 : Integer;
+      Text019@1000000026 : TextConst 'DEU="Anzahl Benutzerverkn�pfungen Rolle ""Basic"" angelegt: ";ENU="No. of user-links created for role ""Basic"": "';
+      Text020@1000000027 : TextConst 'DEU="Anzahl Benutzerverkn�pfungen Rolle ""Admin"" angelegt: ";ENU="No. of user-links created for role ""Admin"": "';
+
+    LOCAL PROCEDURE CreateAllPermissionForObject@1000000004(Object@1000000000 : Record 2000000001);
+    VAR
+      Permission@1000000001 : Record 2000000005;
+    BEGIN
+      //Legt Objektberechtigung f�r Alle-Rolle an
+      IF (Object.Type = Object.Type::TableData) AND (Object.ID IN [5447300,5447301,5447302,5447310,5447311,5447312,5447336,5447337]) THEN BEGIN
+        IF CreatePermissionRecord(Text002,Object.Type,Object.ID,Permission."Read Permission"::Indirect,Permission."Insert Permission"::" ",
+           Permission."Modify Permission"::" ",Permission."Delete Permission"::" ",Permission."Execute Permission"::" ",'') THEN BEGIN
+          PermissionInsertCounter += 1;
+        END;
+      END ELSE IF (Object.Type = Object.Type::TableData) AND (Object.ID = 5447304) THEN BEGIN
+        IF CreatePermissionRecord(Text002,Object.Type,Object.ID,Permission."Read Permission"::Indirect,Permission."Insert Permission"::" ",
+           Permission."Modify Permission"::Indirect,Permission."Delete Permission"::" ",Permission."Execute Permission"::" ",'') THEN BEGIN
+          PermissionInsertCounter += 1;
+        END;
+      END ELSE IF (Object.Type = Object.Type::TableData) THEN BEGIN
+        IF CreatePermissionRecord(Text002,Object.Type,Object.ID,Permission."Read Permission"::" ",Permission."Insert Permission"::" ",
+           Permission."Modify Permission"::" ",Permission."Delete Permission"::" ",Permission."Execute Permission"::" ",'') THEN BEGIN
+          PermissionInsertCounter += 1;
+        END;
+      END ELSE IF (Object.Type <> Object.Type::TableData) THEN BEGIN
+        IF CreatePermissionRecord(Text002,Object.Type,Object.ID,Permission."Read Permission"::" ",Permission."Insert Permission"::" ",
+           Permission."Modify Permission"::" ",Permission."Delete Permission"::" ",Permission."Execute Permission"::Yes,'') THEN BEGIN
+          PermissionInsertCounter += 1;
+        END;
+      END;
+    END;
+
+    LOCAL PROCEDURE CreateBasicPermissionForObject@1000000005(Object@1000000000 : Record 2000000001);
+    VAR
+      Permission@1000000001 : Record 2000000005;
+      DoInsert@1000000002 : Boolean;
+    BEGIN
+      //Legt Objektberechtigung f�r Basic-Rolle an
+      DoInsert := TRUE;
+      Permission.INIT;
+      Permission."Role ID" := Text010;
+      Permission."Object Type" := Object.Type;
+      Permission."Object ID" := Object.ID;
+      IF ((STRPOS(Object.Name,Text012) <> 0) OR (STRPOS(Object.Name,Text013) <> 0) OR (STRPOS(Object.Name,Text014) <> 0) OR (STRPOS(Object.Name,Text015) <> 0)) THEN BEGIN
+        IF Object.Type = Object.Type::TableData THEN BEGIN
+          Permission."Read Permission" := Permission."Read Permission"::Yes;
+          Permission."Insert Permission" := Permission."Insert Permission"::Yes;
+          Permission."Modify Permission" := Permission."Modify Permission"::Yes;
+          Permission."Delete Permission" := Permission."Delete Permission"::Yes;
+          Permission."Execute Permission" := Permission."Execute Permission"::" ";
+        END ELSE IF (Object.Type = Object.Type::Table) OR (Object.Type = Object.Type::Codeunit) OR (Object.Type = Object.Type::Report) OR (Object.Type = Object.Type::Page) THEN BEGIN
+          Permission."Read Permission" := Permission."Read Permission"::" ";
+          Permission."Insert Permission" := Permission."Insert Permission"::" ";
+          Permission."Modify Permission" := Permission."Modify Permission"::" ";
+          Permission."Delete Permission" := Permission."Delete Permission"::" ";
+          Permission."Execute Permission" := Permission."Execute Permission"::Yes;
+        END;
+      END ELSE BEGIN
+        IF Object.Type = Object.Type::TableData THEN BEGIN
+          Permission."Read Permission" := Permission."Read Permission"::Yes;
+          Permission."Insert Permission" := Permission."Insert Permission"::" ";
+          Permission."Modify Permission" := Permission."Modify Permission"::Indirect;
+          Permission."Delete Permission" := Permission."Delete Permission"::" ";
+          Permission."Execute Permission" := Permission."Execute Permission"::" ";
+        END ELSE IF (Object.Type = Object.Type::Table) OR (Object.Type = Object.Type::Codeunit) THEN BEGIN
+          Permission."Read Permission" := Permission."Read Permission"::" ";
+          Permission."Insert Permission" := Permission."Insert Permission"::" ";
+          Permission."Modify Permission" := Permission."Modify Permission"::" ";
+          Permission."Delete Permission" := Permission."Delete Permission"::" ";
+          Permission."Execute Permission" := Permission."Execute Permission"::Yes;
+        END ELSE IF (Object.Type = Object.Type::Report) OR (Object.Type = Object.Type::Page) THEN BEGIN
+          DoInsert := FALSE;
+        END;
+      END;
+      IF DoInsert THEN BEGIN
+        IF Permission.INSERT THEN BEGIN
+          PermissionInsertCounter += 1;
+        END;
+      END;
+      Permission.RESET;
+    END;
+
+    LOCAL PROCEDURE CreateAdminPermissionForObject@1000000006(Object@1000000000 : Record 2000000001);
+    VAR
+      Permission@1000000001 : Record 2000000005;
+    BEGIN
+      //Legt Objektberechtigungen f�r Admin-Rolle an
+      Permission.INIT;
+      Permission."Role ID" := Text004;
+      Permission."Object Type" := Object.Type;
+      Permission."Object ID" := Object.ID;
+      IF Object.Type = Object.Type::TableData THEN BEGIN
+        Permission."Read Permission" := Permission."Read Permission"::Yes;
+        Permission."Insert Permission" := Permission."Insert Permission"::Yes;
+        Permission."Modify Permission" := Permission."Modify Permission"::Yes;
+        Permission."Delete Permission" := Permission."Delete Permission"::Yes;
+        Permission."Execute Permission" := Permission."Execute Permission"::" ";
+      END ELSE IF (Object.Type = Object.Type::Table) OR (Object.Type = Object.Type::Report) OR (Object.Type = Object.Type::Page) OR (Object.Type = Object.Type::Codeunit) THEN BEGIN
+        Permission."Read Permission" := Permission."Read Permission"::" ";
+        Permission."Insert Permission" := Permission."Insert Permission"::" ";
+        Permission."Modify Permission" := Permission."Modify Permission"::" ";
+        Permission."Delete Permission" := Permission."Delete Permission"::" ";
+        Permission."Execute Permission" := Permission."Execute Permission"::Yes;
+      END;
+      IF Permission.INSERT THEN BEGIN
+        PermissionInsertCounter += 1;
+      END;
+      Permission.RESET;
+    END;
+
+    PROCEDURE CreatePermissionRecord@1000000000(RoleID@1000000000 : Code[20];ObjectType@1000000001 : 'Table Data,Table,,Report,,Codeunit,XMLport,MenuSuite,Page,Query,System';ObjectID@1000000002 : Integer;ReadPermission@1000000003 : ' ,Yes,Indirect';InsertPermission@1000000004 : ' ,Yes,Indirect';ModifyPermission@1000000005 : ' ,Yes,Indirect';DeletePermission@1000000006 : ' ,Yes,Indirect';ExecutePermission@1000000007 : ' ,Yes,Indirect';SecurityFilter@1000000008 : Text[80]) Ok : Boolean;
+    VAR
+      Permission@1000000009 : Record 2000000005;
+    BEGIN
+      Permission.INIT;
+      Permission."Role ID" := RoleID;
+      Permission."Object Type" := ObjectType;
+      Permission."Object ID" := ObjectID;
+      Permission."Read Permission" := ReadPermission;
+      Permission."Insert Permission" := InsertPermission;
+      Permission."Modify Permission" := ModifyPermission;
+      Permission."Delete Permission" := DeletePermission;
+      Permission."Execute Permission" := ExecutePermission;
+      Ok := Permission.INSERT;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

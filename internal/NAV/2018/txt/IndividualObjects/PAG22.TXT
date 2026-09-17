@@ -1,0 +1,1773 @@
+OBJECT Page 22 Customer List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=06.04.18;
+    Time=16:00:00;
+    Version List=NAVW111.00.00.19846,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DEU=Debitoren;
+               ENU=Customers];
+    SourceTable=Table18;
+    PageType=List;
+    CardPageID=Customer Card;
+    RefreshOnActivate=Yes;
+    PromotedActionCategoriesML=[DEU=Neu,Verarbeiten,Bericht,Genehmigen,Neuer Beleg,Genehmigung anfordern,Debitor;
+                                ENU=New,Process,Report,Approve,New Document,Request Approval,Customer];
+    OnInit=BEGIN
+             SetCustomerNoVisibilityOnFactBoxes;
+
+             CaptionTxt := CurrPage.CAPTION;
+             SetCaption(CaptionTxt);
+             CurrPage.CAPTION(CaptionTxt);
+           END;
+
+    OnOpenPage=VAR
+                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                 CustomerMgt@1001 : Codeunit 1302;
+               BEGIN
+                 CRMIntegrationEnabled := CRMIntegrationManagement.IsCRMIntegrationEnabled;
+
+                 SetWorkflowManagementEnabledState;
+                 SETFILTER("Date Filter",CustomerMgt.GetCurrentYearFilter);
+
+                 // Contextual Power BI FactBox: filtering available reports, setting context, loading Power BI related user settings
+                 CurrPage."Power BI Report FactBox".PAGE.SetNameFilter(CurrPage.CAPTION);
+                 CurrPage."Power BI Report FactBox".PAGE.SetContext(CurrPage.OBJECTID(FALSE));
+                 PowerBIVisible := SetPowerBIUserConfig.SetUserConfig(PowerBIUserConfiguration,CurrPage.OBJECTID(FALSE));
+               END;
+
+    OnAfterGetCurrRecord=VAR
+                           CRMCouplingManagement@1001 : Codeunit 5331;
+                           WorkflowWebhookManagement@1000 : Codeunit 1543;
+                         BEGIN
+                           SetSocialListeningFactboxVisibility;
+
+                           CRMIsCoupledToRecord :=
+                             CRMCouplingManagement.IsRecordCoupledToCRM(RECORDID) AND CRMIntegrationEnabled;
+                           OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(RECORDID);
+
+                           CanCancelApprovalForRecord := ApprovalsMgmt.CanCancelApprovalForRecord(RECORDID);
+
+                           WorkflowWebhookManagement.GetCanRequestAndCanCancel(RECORDID,CanRequestApprovalForFlow,CanCancelApprovalForFlow);
+
+                           // Contextual Power BI FactBox: send data to filter the report in the FactBox
+                           CurrPage."Power BI Report FactBox".PAGE.SetCurrentListSelection("No.",FALSE);
+
+                           SetWorkflowManagementEnabledState;
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 16      ;1   ;ActionGroup;
+                      CaptionML=[DEU=D&ebitor;
+                                 ENU=&Customer];
+                      Image=Customer }
+      { 20      ;2   ;Action    ;
+                      CaptionML=[DEU=Be&merkungen;
+                                 ENU=Co&mments];
+                      ToolTipML=[DEU=Zeigen Sie Bemerkungen an, oder f�gen Sie sie dem Datensatz hinzu.;
+                                 ENU=View or add comments for the record.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 124;
+                      RunPageLink=Table Name=CONST(Customer),
+                                  No.=FIELD(No.);
+                      Image=ViewComments }
+      { 66      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Dimensionen;
+                                 ENU=Dimensions];
+                      Image=Dimensions }
+      { 84      ;3   ;Action    ;
+                      Name=DimensionsSingle;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DEU=Zuordnung f�r aktuellen Datensatz;
+                                 ENU=Dimensions-Single];
+                      ToolTipML=[DEU=Zeigen Sie den f�r den ausgew�hlten Datensatz eingerichteten einzelnen Dimensionssatz an, oder bearbeiten Sie ihn.;
+                                 ENU=View or edit the single set of dimensions that are set up for the selected record.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 540;
+                      RunPageLink=Table ID=CONST(18),
+                                  No.=FIELD(No.);
+                      Image=Dimensions }
+      { 42      ;3   ;Action    ;
+                      Name=DimensionsMultiple;
+                      AccessByPermission=TableData 348=R;
+                      CaptionML=[DEU=Zuordnung f�r &markierte Datens�tze;
+                                 ENU=Dimensions-&Multiple];
+                      ToolTipML=[DEU=Zeigt oder bearbeitet Standarddimensionen f�r eine Gruppe von Datens�tzen. Sie k�nnen Transaktionen Dimensionscodes zuweisen, um die Kosten zu verteilen und historische Informationen zu analysieren.;
+                                 ENU=View or edit dimensions for a group of records. You can assign dimension codes to transactions to distribute costs and analyze historical information.];
+                      ApplicationArea=#Suite;
+                      Image=DimensionSets;
+                      OnAction=VAR
+                                 Cust@1001 : Record 18;
+                                 DefaultDimMultiple@1002 : Page 542;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Cust);
+                                 DefaultDimMultiple.SetMultiCust(Cust);
+                                 DefaultDimMultiple.RUNMODAL;
+                               END;
+                                }
+      { 58      ;2   ;Action    ;
+                      CaptionML=[DEU=Bankkonten;
+                                 ENU=Bank Accounts];
+                      ToolTipML=[DEU=Zeigt Bankkonten des Debitors an oder richtet sie ein. Sie k�nnen f�r jeden Kreditor eine beliebige Anzahl von Bankkonten einrichten.;
+                                 ENU=View or set up the customer's bank accounts. You can set up any number of bank accounts for each customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 424;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=BankAccount }
+      { 29      ;2   ;Action    ;
+                      CaptionML=[DEU=Lastschrift-Mandate;
+                                 ENU=Direct Debit Mandates];
+                      ToolTipML=[DEU=Zeigen Sie die Lastschrift-Mandaten an, die Vereinbarungen mit Debitoren zum direkten Einzug der Zahlungen von ihrem Bankkonto widerspiegeln.;
+                                 ENU=View the direct-debit mandates that reflect agreements with customers to collect invoice payments from their bank account.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 1230;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=MakeAgreement }
+      { 23      ;2   ;Action    ;
+                      Name=ShipToAddresses;
+                      CaptionML=[DEU=L&ief. an Adressen;
+                                 ENU=Ship-&to Addresses];
+                      ToolTipML=[DEU=Zeigt die alternative Versandadresse an oder bearbeitet sie, an die der Debitor die Artikel liefern lassen m�chte, falls diese von der regul�ren Adresse abweicht.;
+                                 ENU=View or edit alternate shipping addresses where the customer wants items delivered if different from the regular address.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 301;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=ShipAddress }
+      { 60      ;2   ;Action    ;
+                      AccessByPermission=TableData 5050=R;
+                      CaptionML=[DEU=Ko&ntakt;
+                                 ENU=C&ontact];
+                      ToolTipML=[DEU=Zeigt detaillierte Informationen �ber die Kontaktperson beim Debitor an oder bearbeitet diese.;
+                                 ENU=View or edit detailed information about the contact person at the customer.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Image=ContactPerson;
+                      PromotedCategory=Category7;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 ShowContact;
+                               END;
+                                }
+      { 45      ;2   ;Action    ;
+                      CaptionML=[DEU=Re&ferenzen;
+                                 ENU=Cross Re&ferences];
+                      ToolTipML=[DEU=Richtet eine eigene Benutzereinrichtung des Debitors f�r die Artikel ein, die Sie an den Debitor verkaufen. Querverweise auf die Artikelnummer des Debitors bedeuten, dass die Artikelnummer automatisch anstelle der von Ihnen verwendeten Nummer auf den Verkaufsbelegen angezeigt wird.;
+                                 ENU=Set up the customer's own identification of items that you sell to the customer. Cross-references to the customer's item number means that the item number is automatically shown on sales documents instead of the number that you use.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 5723;
+                      RunPageView=SORTING(Cross-Reference Type,Cross-Reference Type No.);
+                      RunPageLink=Cross-Reference Type=CONST(Customer),
+                                  Cross-Reference Type No.=FIELD(No.);
+                      Image=Change }
+      { 64      ;2   ;Action    ;
+                      Name=OnlineMap;
+                      CaptionML=[DEU=Online Map;
+                                 ENU=Online Map];
+                      ToolTipML=[DEU=Zeigt die Adresse auf einer Onlinekarte an.;
+                                 ENU=View the address on an online map.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=FALSE;
+                      PromotedIsBig=Yes;
+                      Image=Map;
+                      PromotedCategory=Category5;
+                      Scope=Repeater;
+                      OnAction=BEGIN
+                                 DisplayMap;
+                               END;
+                                }
+      { 67      ;2   ;Action    ;
+                      Name=ApprovalEntries;
+                      AccessByPermission=TableData 454=R;
+                      CaptionML=[DEU=Genehmigungen;
+                                 ENU=Approvals];
+                      ToolTipML=[DEU=Zeigt eine Liste der Datens�tze an, die noch genehmigt werden m�ssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.;
+                                 ENU=View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Image=Approvals;
+                      PromotedCategory=Category7;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 ApprovalsMgmt.OpenApprovalEntriesPage(RECORDID);
+                               END;
+                                }
+      { 44      ;1   ;ActionGroup;
+                      Name=ActionGroupCRM;
+                      CaptionML=[DEU=Dynamics 365 for Sales;
+                                 ENU=Dynamics 365 for Sales];
+                      Visible=CRMIntegrationEnabled }
+      { 41      ;2   ;Action    ;
+                      Name=CRMGotoAccount;
+                      CaptionML=[DEU=Konto;
+                                 ENU=Account];
+                      ToolTipML=[DEU=�ffnet das gekoppelte Dynamics 365 for Sales-Konto.;
+                                 ENU=Open the coupled Dynamics 365 for Sales account.];
+                      ApplicationArea=#Suite;
+                      Visible=CRMIntegrationEnabled;
+                      Image=CoupledCustomer;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.ShowCRMEntityFromRecordID(RECORDID);
+                               END;
+                                }
+      { 37      ;2   ;Action    ;
+                      Name=CRMSynchronizeNow;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Jetzt synchronisieren;
+                                 ENU=Synchronize Now];
+                      ToolTipML=[DEU=Sendet aktualisierte Daten an Dynamics 365 for Sales, oder ruft diese ab.;
+                                 ENU=Send or get updated data to or from Dynamics 365 for Sales.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Visible=CRMIntegrationEnabled;
+                      Image=Refresh;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 Customer@1000 : Record 18;
+                                 CRMIntegrationManagement@1001 : Codeunit 5330;
+                                 CustomerRecordRef@1003 : RecordRef;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Customer);
+                                 Customer.NEXT;
+
+                                 IF Customer.COUNT = 1 THEN
+                                   CRMIntegrationManagement.UpdateOneNow(Customer.RECORDID)
+                                 ELSE BEGIN
+                                   CustomerRecordRef.GETTABLE(Customer);
+                                   CRMIntegrationManagement.UpdateMultipleNow(CustomerRecordRef);
+                                 END
+                               END;
+                                }
+      { 97      ;2   ;Action    ;
+                      Name=UpdateStatisticsInCRM;
+                      CaptionML=[DEU=Kontostatistik aktualisieren;
+                                 ENU=Update Account Statistics];
+                      ToolTipML=[DEU=Sendet Debitorenstatistikdaten zum Aktualisieren der Infobox "Kontostatistik" an Dynamics 365 for Sales.;
+                                 ENU=Send customer statistics data to Dynamics 365 for Sales to update the Account Statistics FactBox.];
+                      ApplicationArea=#Suite;
+                      Visible=CRMIntegrationEnabled;
+                      Enabled=CRMIsCoupledToRecord;
+                      Image=UpdateXML;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.CreateOrUpdateCRMAccountStatistics(Rec);
+                               END;
+                                }
+      { 31      ;2   ;ActionGroup;
+                      Name=Coupling;
+                      CaptionML=[@@@=Coupling is a noun;
+                                 DEU=Kopplung;
+                                 ENU=Coupling];
+                      ToolTipML=[DEU=Erstellt, �ndert oder l�scht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Dynamics 365 for Sales-Datensatz.;
+                                 ENU=Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Dynamics 365 for Sales record.];
+                      Image=LinkAccount }
+      { 49      ;3   ;Action    ;
+                      Name=ManageCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Kopplung einrichten;
+                                 ENU=Set Up Coupling];
+                      ToolTipML=[DEU=Erstellt oder �ndert die Kopplung mit einem Dynamics 365 for Sales-Konto.;
+                                 ENU=Create or modify the coupling to a Dynamics 365 for Sales account.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Visible=CRMIntegrationEnabled;
+                      Image=LinkAccount;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.DefineCoupling(RECORDID);
+                               END;
+                                }
+      { 47      ;3   ;Action    ;
+                      Name=DeleteCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DEU=Kopplung l�schen;
+                                 ENU=Delete Coupling];
+                      ToolTipML=[DEU=L�scht die Kopplung mit einem Dynamics 365 for Sales-Konto.;
+                                 ENU=Delete the coupling to a Dynamics 365 for Sales account.];
+                      ApplicationArea=#Suite;
+                      Visible=CRMIntegrationEnabled;
+                      Enabled=CRMIsCoupledToRecord;
+                      Image=UnLinkAccount;
+                      OnAction=VAR
+                                 CRMCouplingManagement@1000 : Codeunit 5331;
+                               BEGIN
+                                 CRMCouplingManagement.RemoveCoupling(RECORDID);
+                               END;
+                                }
+      { 53      ;2   ;ActionGroup;
+                      Name=Create;
+                      CaptionML=[DEU=Erstellen;
+                                 ENU=Create];
+                      Image=NewCustomer }
+      { 57      ;3   ;Action    ;
+                      Name=CreateInCRM;
+                      CaptionML=[DEU=Konto in Dynamics 365 for Sales erstellen;
+                                 ENU=Create Account in Dynamics 365 for Sales];
+                      ToolTipML=[DEU=Generiert das Konto im gekoppelten Dynamics 365 for Sales-Konto.;
+                                 ENU=Generate the account in the coupled Dynamics 365 for Sales account.];
+                      ApplicationArea=#Suite;
+                      Visible=CRMIntegrationEnabled;
+                      Image=NewCustomer;
+                      OnAction=VAR
+                                 Customer@1001 : Record 18;
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Customer);
+                                 CRMIntegrationManagement.CreateNewRecordsInCRM(Customer);
+                               END;
+                                }
+      { 17      ;3   ;Action    ;
+                      Name=CreateFromCRM;
+                      CaptionML=[DEU=Debitor in Dynamics NAV erstellen;
+                                 ENU=Create Customer in Dynamics NAV];
+                      ToolTipML=[DEU=Generiert den Debitor im gekoppelten Dynamics 365 for Sales-Konto.;
+                                 ENU=Generate the customer in the coupled Dynamics 365 for Sales account.];
+                      ApplicationArea=#Suite;
+                      Visible=CRMIntegrationEnabled;
+                      Image=NewCustomer;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.CreateNewCustomerFromCRM;
+                               END;
+                                }
+      { 86      ;2   ;Action    ;
+                      Name=ShowLog;
+                      CaptionML=[DEU=Synchronisierungsprotokoll;
+                                 ENU=Synchronization Log];
+                      ToolTipML=[DEU=Zeigt die Integrationssynchronisierungsauftr�ge f�r die Debitorentabelle an.;
+                                 ENU=View integration synchronization jobs for the customer table.];
+                      ApplicationArea=#Suite;
+                      Visible=CRMIntegrationEnabled;
+                      Image=Log;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.ShowLog(RECORDID);
+                               END;
+                                }
+      { 9       ;1   ;ActionGroup;
+                      CaptionML=[DEU=Historie;
+                                 ENU=History];
+                      Image=History }
+      { 22      ;2   ;Action    ;
+                      Name=CustomerLedgerEntries;
+                      ShortCutKey=Ctrl+F7;
+                      CaptionML=[DEU=&Posten;
+                                 ENU=Ledger E&ntries];
+                      ToolTipML=[DEU=Zeigt die Historie der Transaktionen an, die f�r den ausgew�hlten Datensatz gebucht wurden.;
+                                 ENU=View the history of transactions that have been posted for the selected record.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 25;
+                      RunPageView=SORTING(Customer No.)
+                                  ORDER(Descending);
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=CustomerLedger }
+      { 18      ;2   ;Action    ;
+                      ShortCutKey=F7;
+                      CaptionML=[DEU=Statistik;
+                                 ENU=Statistics];
+                      ToolTipML=[DEU=Zeigt statistische Informationen f�r den Datensatz an, wie etwa den Wert der gebuchten Posten.;
+                                 ENU=View statistical information, such as the value of posted entries, for the record.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 151;
+                      RunPageLink=No.=FIELD(No.),
+                                  Date Filter=FIELD(Date Filter),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                      Promoted=Yes;
+                      Image=Statistics;
+                      PromotedCategory=Process }
+      { 21      ;2   ;Action    ;
+                      CaptionML=[DEU=&Verkauf;
+                                 ENU=S&ales];
+                      ToolTipML=[DEU=Zeigt eine Zusammenfassung der Debitorenposten an. Das Zeitintervall wird im Feld "Anzeigen nach" ausgew�hlt. Die Spalte "Periode" links beinhaltet eine Reihe von Datumsangaben, die durch das ausgew�hlte Zeitintervall bestimmt werden.;
+                                 ENU=Shows a summary of customer ledger entries. You select the time interval in the View by field. The Period column on the left contains a series of dates that are determined by the time interval you have selected.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 155;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                      Image=Sales }
+      { 19      ;2   ;Action    ;
+                      CaptionML=[DEU=Buchungsstatistik;
+                                 ENU=Entry Statistics];
+                      ToolTipML=[DEU=Zeigt Postenstatistiken f�r den Datensatz an.;
+                                 ENU=View entry statistics for the record.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 302;
+                      RunPageLink=No.=FIELD(No.),
+                                  Date Filter=FIELD(Date Filter),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                      Image=EntryStatistics }
+      { 63      ;2   ;Action    ;
+                      CaptionML=[DEU=Statistik nach &W�hrungen;
+                                 ENU=Statistics by C&urrencies];
+                      ToolTipML=[DEU=Zeigt Statistiken f�r Debitoren an, die mehrere W�hrungen verwenden.;
+                                 ENU=View statistics for customers that use multiple currencies.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 486;
+                      RunPageLink=Customer Filter=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Date Filter=FIELD(Date Filter);
+                      Image=Currencies }
+      { 6500    ;2   ;Action    ;
+                      CaptionML=[DEU=Artikel&verfolgungsposten;
+                                 ENU=Item &Tracking Entries];
+                      ToolTipML=[DEU=Zeigt Seriennummern oder Chargennummern an, die Artikel zugeordnet sind.;
+                                 ENU=View serial or lot numbers that are assigned to items.];
+                      ApplicationArea=#ItemTracking;
+                      Image=ItemTrackingLedger;
+                      OnAction=VAR
+                                 ItemTrackingDocMgt@1001 : Codeunit 6503;
+                               BEGIN
+                                 ItemTrackingDocMgt.ShowItemTrackingForMasterData(1,"No.",'','','','','');
+                               END;
+                                }
+      { 24      ;1   ;ActionGroup;
+                      CaptionML=[DEU=&Verkauf;
+                                 ENU=S&ales];
+                      Image=Sales }
+      { 25      ;2   ;Action    ;
+                      Name=Sales_InvoiceDiscounts;
+                      CaptionML=[DEU=&Rechnungsrabatte;
+                                 ENU=Invoice &Discounts];
+                      ToolTipML=[DEU=Richten Sie verschiedene Rabatte ein, die auf Rechnungen f�r den Debitor angewendet werden. Ein Rechnungsrabatt wird dem Debitor automatisch gew�hrt, wenn die Summe auf einer Verkaufsrechnung einen bestimmten Betrag �berschreitet.;
+                                 ENU=Set up different discounts that are applied to invoices for the customer. An invoice discount is automatically granted to the customer when the total on a sales invoice exceeds a certain amount.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 23;
+                      RunPageLink=Code=FIELD(Invoice Disc. Code);
+                      Image=CalculateInvoiceDiscount }
+      { 26      ;2   ;Action    ;
+                      Name=Sales_Prices;
+                      CaptionML=[DEU=Preise;
+                                 ENU=Prices];
+                      ToolTipML=[DEU=Zeigt oder richtet verschiedene Preise f�r Artikel ein, die Sie an den Debitor verkaufen. Ein Artikelpreis wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Debitor, Menge oder Enddatum.;
+                                 ENU=View or set up different prices for items that you sell to the customer. An item price is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7002;
+                      RunPageView=SORTING(Sales Type,Sales Code);
+                      RunPageLink=Sales Type=CONST(Customer),
+                                  Sales Code=FIELD(No.);
+                      Image=Price }
+      { 71      ;2   ;Action    ;
+                      Name=Sales_LineDiscounts;
+                      CaptionML=[DEU=Zeilenrabatte;
+                                 ENU=Line Discounts];
+                      ToolTipML=[DEU=Zeigt verschiedene Rabatte f�r Artikel an oder richtet diese ein, die Sie an den ausgew�hlten Debitor verkaufen. Ein Artikelrabatt wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Debitor, Menge oder Enddatum.;
+                                 ENU=View or set up different discounts for items that you sell to the customer. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7004;
+                      RunPageView=SORTING(Sales Type,Sales Code);
+                      RunPageLink=Sales Type=CONST(Customer),
+                                  Sales Code=FIELD(No.);
+                      Image=LineDiscount }
+      { 82      ;2   ;Action    ;
+                      CaptionML=[DEU=&Vorauszahlungsprozents�tze;
+                                 ENU=Prepa&yment Percentages];
+                      ToolTipML=[DEU="Zeigt die Prozents�tze des Preises an, oder erm�glicht deren Bearbeitung, die als Vorauszahlung beglichen werden k�nnen. ";
+                                 ENU="View or edit the percentages of the price that can be paid as a prepayment. "];
+                      ApplicationArea=#Prepayments;
+                      RunObject=Page 664;
+                      RunPageView=SORTING(Sales Type,Sales Code);
+                      RunPageLink=Sales Type=CONST(Customer),
+                                  Sales Code=FIELD(No.);
+                      Image=PrepaymentPercentages }
+      { 75      ;2   ;Action    ;
+                      CaptionML=[DEU=S&td.-Debitorverkaufscodes;
+                                 ENU=S&td. Cust. Sales Codes];
+                      ToolTipML=[DEU=Zeigt wiederkehrende Verkaufszeilen f�r den Debitor an, oder erm�glicht deren Bearbeitung.;
+                                 ENU=View or edit recurring sales lines for the customer.];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 173;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=CodesList }
+      { 11      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Belege;
+                                 ENU=Documents];
+                      Image=Documents }
+      { 27      ;2   ;Action    ;
+                      CaptionML=[DEU=Angebote;
+                                 ENU=Quotes];
+                      ToolTipML=[DEU=Zeigt eine Liste laufender Verkaufsangebote an.;
+                                 ENU=View a list of ongoing sales quotes.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 9300;
+                      RunPageView=SORTING(Sell-to Customer No.);
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Image=Quote }
+      { 28      ;2   ;Action    ;
+                      CaptionML=[DEU=Auftr�ge;
+                                 ENU=Orders];
+                      ToolTipML=[DEU=Zeigt eine Liste laufender Verkaufsauftr�ge f�r den Debitor an.;
+                                 ENU=View a list of ongoing sales orders for the customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 9305;
+                      RunPageView=SORTING(Sell-to Customer No.);
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Image=Document }
+      { 70      ;2   ;Action    ;
+                      CaptionML=[DEU=Reklamationen;
+                                 ENU=Return Orders];
+                      ToolTipML=[DEU=�ffnet eine Liste laufender Reklamationen.;
+                                 ENU=Open the list of ongoing return orders.];
+                      ApplicationArea=#SalesReturnOrder;
+                      RunObject=Page 9304;
+                      RunPageView=SORTING(Sell-to Customer No.);
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Image=ReturnOrder }
+      { 76      ;2   ;ActionGroup;
+                      CaptionML=[DEU=Registrierte Belege;
+                                 ENU=Issued Documents];
+                      Image=Documents }
+      { 77      ;3   ;Action    ;
+                      CaptionML=[DEU=Registrierte &Mahnungen;
+                                 ENU=Issued &Reminders];
+                      ToolTipML=[DEU=Zeigt die Mahnungen an, die Sie an den Debitor gesendet haben.;
+                                 ENU=View the reminders that you have sent to the customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 440;
+                      RunPageView=SORTING(Customer No.,Posting Date);
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=OrderReminder }
+      { 78      ;3   ;Action    ;
+                      CaptionML=[DEU=Registrierte &Zinsrechnungen;
+                                 ENU=Issued &Finance Charge Memos];
+                      ToolTipML=[DEU=Zeigt die Zinsrechnungen an, die Sie an den Debitor gesendet haben.;
+                                 ENU=View the finance charge memos that you have sent to the customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 452;
+                      RunPageView=SORTING(Customer No.,Posting Date);
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=FinChargeMemo }
+      { 65      ;2   ;Action    ;
+                      CaptionML=[DEU=Rahmenauftr�ge;
+                                 ENU=Blanket Orders];
+                      ToolTipML=[DEU=�ffnet die Liste laufender Rahmenauftr�ge.;
+                                 ENU=Open the list of ongoing blanket orders.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 9303;
+                      RunPageView=SORTING(Document Type,Sell-to Customer No.);
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Image=BlanketOrder }
+      { 14      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Service;
+                                 ENU=Service];
+                      Image=ServiceItem }
+      { 81      ;2   ;Action    ;
+                      CaptionML=[DEU=Serviceauftr�ge;
+                                 ENU=Service Orders];
+                      ToolTipML=[DEU=�ffnet die Liste laufender Serviceauftr�ge.;
+                                 ENU=Open the list of ongoing service orders.];
+                      ApplicationArea=#Service;
+                      RunObject=Page 9318;
+                      RunPageView=SORTING(Document Type,Customer No.);
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=Document }
+      { 68      ;2   ;Action    ;
+                      CaptionML=[DEU=S&ervicevertr�ge;
+                                 ENU=Ser&vice Contracts];
+                      ToolTipML=[DEU=�ffnet die Liste laufender Servicevertr�ge.;
+                                 ENU=Open the list of ongoing service contracts.];
+                      ApplicationArea=#Service;
+                      RunObject=Page 6065;
+                      RunPageView=SORTING(Customer No.,Ship-to Code);
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=ServiceAgreement }
+      { 69      ;2   ;Action    ;
+                      CaptionML=[DEU=Service&artikel;
+                                 ENU=Service &Items];
+                      ToolTipML=[DEU=Zeigt die Serviceartikel an, oder erm�glicht deren Bearbeitung, die f�r den Debitor registriert werden.;
+                                 ENU=View or edit the service items that are registered for the customer.];
+                      ApplicationArea=#Service;
+                      RunObject=Page 5988;
+                      RunPageView=SORTING(Customer No.,Ship-to Code,Item No.,Serial No.);
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=ServiceItem }
+      { 1900000005;0 ;ActionContainer;
+                      ActionContainerType=NewDocumentItems }
+      { 1902575205;1 ;Action    ;
+                      Name=NewSalesBlanketOrder;
+                      CaptionML=[DEU=Rahmenauftrag;
+                                 ENU=Blanket Sales Order];
+                      ToolTipML=[DEU=Erstellt einen Rahmenauftrag f�r den Debitor.;
+                                 ENU=Create a blanket sales order for the customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 507;
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Image=BlanketOrder;
+                      RunPageMode=Create }
+      { 1900246505;1 ;Action    ;
+                      Name=NewSalesQuote;
+                      CaptionML=[DEU=Verkaufsangebot;
+                                 ENU=Sales Quote];
+                      ToolTipML=[DEU=Bietet einem Debitor Artikel oder Dienste an.;
+                                 ENU=Offer items or services to a customer.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 41;
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=NewSalesQuote;
+                      PromotedCategory=Category5;
+                      PromotedOnly=Yes;
+                      RunPageMode=Create }
+      { 1906384905;1 ;Action    ;
+                      Name=NewSalesInvoice;
+                      CaptionML=[DEU=Verkaufsrechnung;
+                                 ENU=Sales Invoice];
+                      ToolTipML=[DEU=Legt eine Verkaufsrechnung f�r den Debitor an.;
+                                 ENU=Create a sales invoice for the customer.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 43;
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=NewSalesInvoice;
+                      PromotedCategory=Category5;
+                      PromotedOnly=Yes;
+                      RunPageMode=Create }
+      { 1904747105;1 ;Action    ;
+                      Name=NewSalesOrder;
+                      CaptionML=[DEU=Verkaufsauftrag;
+                                 ENU=Sales Order];
+                      ToolTipML=[DEU=Legen Sie einen Verkaufsauftrag f�r den Debitor an.;
+                                 ENU=Create a sales order for the customer.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 42;
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Document;
+                      PromotedCategory=Category5;
+                      PromotedOnly=Yes;
+                      RunPageMode=Create }
+      { 1902583505;1 ;Action    ;
+                      Name=NewSalesCrMemo;
+                      CaptionML=[DEU=Verkaufsgutschrift;
+                                 ENU=Sales Credit Memo];
+                      ToolTipML=[DEU=Erstellt eine neue Verkaufsgutschrift, um eine gebuchte Verkaufsrechnung zur�ckzusetzen.;
+                                 ENU=Create a new sales credit memo to revert a posted sales invoice.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 44;
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=CreditMemo;
+                      PromotedCategory=Category5;
+                      PromotedOnly=Yes;
+                      RunPageMode=Create }
+      { 1905163705;1 ;Action    ;
+                      Name=NewSalesReturnOrder;
+                      CaptionML=[DEU=Verkaufsreklamation;
+                                 ENU=Sales Return Order];
+                      ToolTipML=[DEU=Erstellt eine neue Verkaufsreklamation f�r Artikel oder Dienstleistungen.;
+                                 ENU=Create a new sales return order for items or services.];
+                      ApplicationArea=#SalesReturnOrder;
+                      RunObject=Page 6630;
+                      RunPageLink=Sell-to Customer No.=FIELD(No.);
+                      Image=ReturnOrder;
+                      RunPageMode=Create }
+      { 1905185205;1 ;Action    ;
+                      Name=NewServiceQuote;
+                      CaptionML=[DEU=Serviceangebot;
+                                 ENU=Service Quote];
+                      ToolTipML=[DEU=Erstellt ein neues Serviceangebot f�r den Debitor.;
+                                 ENU=Create a new service quote for the customer.];
+                      ApplicationArea=#Service;
+                      RunObject=Page 5964;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=Quote;
+                      RunPageMode=Create }
+      { 1902079405;1 ;Action    ;
+                      Name=NewServiceInvoice;
+                      CaptionML=[DEU=Servicerechnung;
+                                 ENU=Service Invoice];
+                      ToolTipML=[DEU=Erstellt eine neue Servicerechnung f�r den Debitor.;
+                                 ENU=Create a new service invoice for the customer.];
+                      ApplicationArea=#Service;
+                      RunObject=Page 5933;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=Invoice;
+                      RunPageMode=Create }
+      { 1907102005;1 ;Action    ;
+                      Name=NewServiceOrder;
+                      CaptionML=[DEU=Serviceauftrag;
+                                 ENU=Service Order];
+                      ToolTipML=[DEU=Erstellt einen neuen Serviceauftrag f�r den Debitor.;
+                                 ENU=Create a new service order for the customer.];
+                      ApplicationArea=#Service;
+                      RunObject=Page 5900;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=Document;
+                      RunPageMode=Create }
+      { 1901662105;1 ;Action    ;
+                      Name=NewServiceCrMemo;
+                      CaptionML=[DEU=Servicegutschrift;
+                                 ENU=Service Credit Memo];
+                      ToolTipML=[DEU=Erstellt eine neue Servicegutschrift f�r den Debitor.;
+                                 ENU=Create a new service credit memo for the customer.];
+                      ApplicationArea=#Service;
+                      RunObject=Page 5935;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=CreditMemo;
+                      RunPageMode=Create }
+      { 1903839805;1 ;Action    ;
+                      Name=NewReminder;
+                      CaptionML=[DEU=Mahnung;
+                                 ENU=Reminder];
+                      ToolTipML=[DEU=Erstellt eine neue Mahnung f�r den Debitor.;
+                                 ENU=Create a new reminder for the customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 434;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Reminder;
+                      PromotedCategory=Category5;
+                      RunPageMode=Create }
+      { 1901102005;1 ;Action    ;
+                      Name=NewFinChargeMemo;
+                      CaptionML=[DEU=Zinsrechnung;
+                                 ENU=Finance Charge Memo];
+                      ToolTipML=[DEU=Erstellt eine neue Zinsrechnung.;
+                                 ENU=Create a new finance charge memo.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 446;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=FinChargeMemo;
+                      RunPageMode=Create }
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 104     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Historie;
+                                 ENU=History];
+                      Image=History }
+      { 103     ;2   ;Action    ;
+                      Name=CustomerLedgerEntriesHistory;
+                      ShortCutKey=Ctrl+F7;
+                      CaptionML=[DEU=Posten;
+                                 ENU=Ledger E&ntries];
+                      ToolTipML=[DEU=Zeigt die Historie der Transaktionen an, die f�r den ausgew�hlten Datensatz gebucht wurden.;
+                                 ENU=View the history of transactions that have been posted for the selected record.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 25;
+                      RunPageView=SORTING(Customer No.);
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Image=CustomerLedger;
+                      Scope=Repeater }
+      { 102     ;1   ;ActionGroup;
+                      Name=PricesAndDiscounts;
+                      CaptionML=[DEU=Preise und Rabatte;
+                                 ENU=Prices and Discounts] }
+      { 101     ;2   ;Action    ;
+                      Name=Prices_InvoiceDiscounts;
+                      CaptionML=[DEU=&Rechnungsrabatte;
+                                 ENU=Invoice &Discounts];
+                      ToolTipML=[DEU=Legen Sie verschiedene Rabatte an, die auf Rechnungen f�r den ausgew�hlten Debitor angewendet werden. Ein Rechnungsrabatt wird dem Debitor automatisch gew�hrt, wenn die Summe auf einer Verkaufsrechnung einen bestimmten Betrag �berschreitet.;
+                                 ENU=Set up different discounts applied to invoices for the selected customer. An invoice discount is automatically granted to the customer when the total on a sales invoice exceeds a certain amount.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 23;
+                      RunPageLink=Code=FIELD(Invoice Disc. Code);
+                      Image=CalculateInvoiceDiscount;
+                      Scope=Repeater }
+      { 100     ;2   ;Action    ;
+                      Name=Prices_Prices;
+                      CaptionML=[DEU=Preise;
+                                 ENU=Prices];
+                      ToolTipML=[DEU=Zeigt oder richtet verschiedene Preise f�r Artikel ein, die Sie an den ausgew�hlten Debitor verkaufen. Ein Artikelpreis wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Debitor, Menge oder Enddatum.;
+                                 ENU=View or set up different prices for items that you sell to the selected customer. An item price is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7002;
+                      RunPageView=SORTING(Sales Type,Sales Code);
+                      RunPageLink=Sales Type=CONST(Customer),
+                                  Sales Code=FIELD(No.);
+                      Image=Price;
+                      Scope=Repeater }
+      { 98      ;2   ;Action    ;
+                      Name=Prices_LineDiscounts;
+                      CaptionML=[DEU=Zeilenrabatte;
+                                 ENU=Line Discounts];
+                      ToolTipML=[DEU=Zeigt verschiedene Rabatte f�r Artikel an oder richtet diese ein, die Sie an den ausgew�hlten Debitor verkaufen. Ein Artikelrabatt wird automatisch in Rechnungszeilen gew�hrt, wenn die angegebenen Kriterien erf�llt sind, wie Debitor, Menge oder Enddatum.;
+                                 ENU=View or set up different discounts for items that you sell to the customer. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 7004;
+                      RunPageView=SORTING(Sales Type,Sales Code);
+                      RunPageLink=Sales Type=CONST(Customer),
+                                  Sales Code=FIELD(No.);
+                      Image=LineDiscount;
+                      Scope=Repeater }
+      { 55      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Genehmigungsanforderung;
+                                 ENU=Request Approval];
+                      Image=SendApprovalRequest }
+      { 51      ;2   ;Action    ;
+                      Name=SendApprovalRequest;
+                      CaptionML=[DEU=&Genehmigungsanforderung senden;
+                                 ENU=Send A&pproval Request];
+                      ToolTipML=[DEU=Fordert die Genehmigung zum �ndern des Datensatzes an.;
+                                 ENU=Request approval to change the record.];
+                      ApplicationArea=#Advanced;
+                      Enabled=(NOT OpenApprovalEntriesExist) AND EnabledApprovalWorkflowsExist AND CanRequestApprovalForFlow;
+                      Image=SendApprovalRequest;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                               BEGIN
+                                 IF ApprovalsMgmt.CheckCustomerApprovalsWorkflowEnabled(Rec) THEN
+                                   ApprovalsMgmt.OnSendCustomerForApproval(Rec);
+                               END;
+                                }
+      { 39      ;2   ;Action    ;
+                      Name=CancelApprovalRequest;
+                      CaptionML=[DEU=&Genehmigungsanforderung stornieren;
+                                 ENU=Cancel Approval Re&quest];
+                      ToolTipML=[DEU=Storniert die Genehmigungsanforderung.;
+                                 ENU=Cancel the approval request.];
+                      ApplicationArea=#Advanced;
+                      Enabled=CanCancelApprovalForRecord OR CanCancelApprovalForFlow;
+                      Image=CancelApprovalRequest;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                                 WorkflowWebhookManagement@1000 : Codeunit 1543;
+                               BEGIN
+                                 ApprovalsMgmt.OnCancelCustomerApprovalRequest(Rec);
+                                 WorkflowWebhookManagement.FindAndCancel(RECORDID);
+                               END;
+                                }
+      { 85      ;1   ;ActionGroup;
+                      CaptionML=[DEU=Workflow;
+                                 ENU=Workflow] }
+      { 15      ;2   ;Action    ;
+                      Name=CreateApprovalWorkflow;
+                      CaptionML=[DEU=Genehmigungsworkflow erstellen;
+                                 ENU=Create Approval Workflow];
+                      ToolTipML=[DEU=Richten Sie einen Genehmigungsworkflow f�r das Erstellen oder �ndern von Debitoren ein, in dem Sie einige Seiten zur Anleitung durchgehen.;
+                                 ENU=Set up an approval workflow for creating or changing customers, by going through a few pages that will guide you.];
+                      ApplicationArea=#Suite;
+                      Enabled=NOT EnabledApprovalWorkflowsExist;
+                      Image=CreateWorkflow;
+                      OnAction=BEGIN
+                                 PAGE.RUNMODAL(PAGE::"Cust. Approval WF Setup Wizard");
+                                 SetWorkflowManagementEnabledState;
+                               END;
+                                }
+      { 13      ;2   ;Action    ;
+                      Name=ManageApprovalWorkflows;
+                      CaptionML=[DEU=Genehmigungsworkflows verwalten;
+                                 ENU=Manage Approval Workflows];
+                      ToolTipML=[DEU=Zeigen Sie vorhandene Genehmigungsworkflows f�r das Erstellen oder �ndern von Debitoren an, oder bearbeiten Sie sie.;
+                                 ENU=View or edit existing approval workflows for creating or changing customers.];
+                      ApplicationArea=#Suite;
+                      Enabled=EnabledApprovalWorkflowsExist;
+                      Image=WorkflowSetup;
+                      OnAction=VAR
+                                 WorkflowManagement@1000 : Codeunit 1501;
+                               BEGIN
+                                 WorkflowManagement.NavigateToWorkflows(DATABASE::Customer,EventFilter);
+                                 SetWorkflowManagementEnabledState;
+                               END;
+                                }
+      { 1900839804;1 ;Action    ;
+                      CaptionML=[DEU=Zahlungseingangs Buch.-Blatt;
+                                 ENU=Cash Receipt Journal];
+                      ToolTipML=[DEU=�ffnet das Zahlungseingangs Buch.-Blatt, um eingehende Zahlungen zu buchen.;
+                                 ENU=Open the cash receipt journal to post incoming payments.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 255;
+                      Promoted=Yes;
+                      Image=CashReceiptJournal;
+                      PromotedCategory=Process }
+      { 1905171704;1 ;Action    ;
+                      CaptionML=[DEU=Verkaufs Buch.-Blatt;
+                                 ENU=Sales Journal];
+                      ToolTipML=[DEU=Bucht eine beliebige Verkaufstransaktion f�r den Debitor.;
+                                 ENU=Post any sales transaction for the customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Page 253;
+                      Promoted=Yes;
+                      Image=Journals;
+                      PromotedCategory=Process }
+      { 108     ;1   ;Action    ;
+                      Name=ApplyTemplate;
+                      Ellipsis=Yes;
+                      CaptionML=[DEU=Vorlage anwenden;
+                                 ENU=Apply Template];
+                      ToolTipML=[DEU=Wenden Sie eine Vorlage zum Aktualisieren einer oder mehrerer Einheiten mit Ihren Standardeinstellungen f�r einen bestimmten Einheitentyp an.;
+                                 ENU=Apply a template to update one or more entities with your standard settings for a certain type of entity.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=ApplyTemplate;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Customer@1001 : Record 18;
+                                 MiniCustomerTemplate@1000 : Record 1300;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Customer);
+                                 MiniCustomerTemplate.UpdateCustomersFromTemplate(Customer);
+                               END;
+                                }
+      { 105     ;1   ;ActionGroup;
+                      CaptionML=[DEU=Bildschirm;
+                                 ENU=Display] }
+      { 106     ;2   ;Action    ;
+                      Name=ReportFactBoxVisibility;
+                      CaptionML=[DEU=Power BI-Berichte anzeigen/ausblenden;
+                                 ENU=Show/Hide Power BI Reports];
+                      ToolTipML=[DEU=W�hlt aus, ob die Power BI-Infobox angezeigt wird oder nicht.;
+                                 ENU=Select if the Power BI FactBox is visible or not.];
+                      ApplicationArea=#Basic,#Suite;
+                      Image=Report;
+                      OnAction=BEGIN
+                                 IF PowerBIVisible THEN
+                                   PowerBIVisible := FALSE
+                                 ELSE
+                                   PowerBIVisible := TRUE;
+                                 // save visibility value into the table
+                                 CurrPage."Power BI Report FactBox".PAGE.SetFactBoxVisibility(PowerBIVisible);
+                               END;
+                                }
+      { 1000000009;1 ;ActionGroup;
+                      Name=E-Commerce;
+                      Description=Webshop;
+                      ActionContainerType=NewDocumentItems }
+      { 1000000008;2 ;Action    ;
+                      Name=Webshop Update Customer;
+                      CaptionML=DEU=Online Aktualisieren;
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text50700@1000000000 : TextConst 'DEU=Debitor wurde aktualisiert;ENU=Customer has been updated';
+                               BEGIN
+                                 // MysydeShop ---
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   WebshopUpdateManagement.UpdateCustomer(Rec);
+                                   MESSAGE(Text50700);
+                                 END;
+                                 // MysydeShop +++
+                               END;
+                                }
+      { 1000000007;2 ;Action    ;
+                      Name=Webshop Open Customer Login;
+                      CaptionML=DEU=Kundenzugang �ffnen;
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=LaunchWeb;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 // MysydeShop ---
+                                 IF WebshopManagement.ConnectionTest THEN
+                                   WebshopUpdateManagement.OpenCustomerLogin(Rec);
+                                 // MysydeShop +++
+                               END;
+                                }
+      { 1000000006;2 ;ActionGroup;
+                      CaptionML=[DEU=Berechtigungen;
+                                 ENU=Permissions];
+                      Image=Permission }
+      { 1000000005;3 ;Action    ;
+                      CaptionML=[DEU=Gruppenberechtigungen;
+                                 ENU=Group permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(CustomerGroup),
+                                  Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Permission;
+                      PromotedCategory=Process }
+      { 1000000004;3 ;Action    ;
+                      CaptionML=[DEU=Artikelberechtigungen;
+                                 ENU=Item permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(CustomerItem),
+                                  Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Permission;
+                      PromotedCategory=Process }
+      { 1000000002;3 ;Action    ;
+                      CaptionML=[DEU=Kategorieberechtigungen;
+                                 ENU=Category Permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(CustomerCategory),
+                                  Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Permission;
+                      PromotedCategory=Process }
+      { 1000000003;3 ;Action    ;
+                      CaptionML=[DEU=Versandberechtigungen;
+                                 ENU=Shipping Permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(CustomerShipping),
+                                  Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Permission;
+                      PromotedCategory=Process }
+      { 1000000000;3 ;Action    ;
+                      CaptionML=[DEU=Zahlungsberechtigungen;
+                                 ENU=Payment Permissions];
+                      RunObject=Page 5447337;
+                      RunPageLink=Type=CONST(CustomerPayment),
+                                  Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Permission;
+                      PromotedCategory=Process }
+      { 1000000001;3 ;Action    ;
+                      CaptionML=[DEU=Webshopberechtigungen;
+                                 ENU=Webshop Permissions];
+                      RunObject=Page 5447328;
+                      RunPageLink=Customer No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Permission;
+                      PromotedCategory=Process }
+      { 1900000006;0 ;ActionContainer;
+                      ActionContainerType=Reports }
+      { 96      ;1   ;ActionGroup;
+                      Name=Reports;
+                      CaptionML=[DEU=Berichte;
+                                 ENU=Reports] }
+      { 95      ;2   ;ActionGroup;
+                      Name=SalesReports;
+                      CaptionML=[DEU=Verkaufsberichte;
+                                 ENU=Sales Reports];
+                      Image=Report }
+      { 94      ;3   ;Action    ;
+                      Name=ReportCustomerTop10List;
+                      CaptionML=[DEU=Debitor - Top-10-Liste;
+                                 ENU=Customer - Top 10 List];
+                      ToolTipML=[DEU=Zeigt an, welche Debitoren in einer ausgew�hlten Periode am meisten kaufen oder Ihnen am meisten schulden. Es werden nur jene Debitoren ber�cksichtigt, die w�hrend der ausgew�hlten Periode entweder Eink�ufe get�tigt haben oder am Ende der Periode einen Saldo aufweisen.;
+                                 ENU=View which customers purchase the most or owe the most in a selected period. Only customers that have either purchases during the period or a balance at the end of the period will be included.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 111;
+                      Image=Report }
+      { 93      ;3   ;Action    ;
+                      Name=ReportCustomerSalesList;
+                      CaptionML=[DEU=Debitor - Verkaufs�bersicht;
+                                 ENU=Customer - Sales List];
+                      ToolTipML=[DEU=Zeigt den Debitorenverkauf einer Periode an, um beispielsweise die Verkaufsaktivit�t den Zoll- und Steuerbeh�rden zu melden. Sie k�nnen nur Debitoren ausw�hlen, deren Gesamtverkauf einen Minimalbetrag �bersteigt. Sie k�nnen auch angeben, ob in dem Bericht die Adressdetails der einzelnen Debitoren angezeigt werden sollen.;
+                                 ENU=View customer sales for a period, for example, to report sales activity to customs and tax authorities. You can choose to include only customers with total sales that exceed a minimum amount. You can also specify whether you want the report to show address details for each customer.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 119;
+                      Image=Report }
+      { 92      ;3   ;Action    ;
+                      Name=ReportSalesStatistics;
+                      CaptionML=[DEU=Verkaufsstatistik;
+                                 ENU=Sales Statistics];
+                      ToolTipML=[DEU=Zeigt die gesamten Kosten, Einnahmen und Deckungsbeitr�ge der Debitoren im Lauf der Zeit an, um beispielsweise Einnahmentrends zu analysieren. Der Bericht zeigt Betr�ge f�r urspr�ngliche und regulierte Kosten, Einnahmen, Deckungsbeitr�ge, Rechnungsrabatte, Skonti und Deckungsbeitr�ge in Prozent in drei regulierbaren Perioden an.;
+                                 ENU=View customers' total costs, sales, and profits over time, for example, to analyze earnings trends. The report shows amounts for original and adjusted costs, sales, profits, invoice discounts, payment discounts, and profit percentage in three adjustable periods.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 112;
+                      Image=Report }
+      { 91      ;2   ;ActionGroup;
+                      Name=FinanceReports;
+                      CaptionML=[DEU=Finanzberichte;
+                                 ENU=Finance Reports];
+                      Image=Report }
+      { 90      ;3   ;Action    ;
+                      CaptionML=[DEU=Kontoauszug;
+                                 ENU=Statement];
+                      ToolTipML=[DEU=Zeigt eine Liste der Transaktionen eines Debitors in einem ausgew�hlten Zeitraum an, um sie beispielsweise am Ende der Buchhaltungsperiode an den Debitor zu senden. Sie k�nnen ungeachtet der angegebenen Periode alle f�lligen Salden anzeigen oder einen Saldenr�ckblick einf�gen.;
+                                 ENU=View a list of a customer's transactions for a selected period, for example, to send to the customer at the close of an accounting period. You can choose to have all overdue balances displayed regardless of the period specified, or you can choose to include an aging band.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Codeunit 8810;
+                      Image=Report }
+      { 89      ;3   ;Action    ;
+                      Name=ReportCustomerBalanceToDate;
+                      CaptionML=[DEU=Debitorenposten per;
+                                 ENU=Customer - Balance to Date];
+                      ToolTipML=[DEU=Zeigt eine Liste der Zahlungshistorie der Debitoren bis zu einem bestimmten Datum an. Sie k�nnen den Bericht verwenden, um Ihre gesamten Einnahmen am Ende einer Buchhaltungsperiode oder eines Gesch�ftsjahres zu extrahieren.;
+                                 ENU=View a list with customers' payment history up until a certain date. You can use the report to extract your total sales income at the close of an accounting period or fiscal year.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 121;
+                      Image=Report }
+      { 88      ;3   ;Action    ;
+                      Name=ReportCustomerTrialBalance;
+                      CaptionML=[DEU=Debitor - Saldenliste;
+                                 ENU=Customer - Trial Balance];
+                      ToolTipML=[DEU=Zeigt den Anfangs- und Schluss-Saldo f�r Debitoren mit Posten innerhalb einer angegebenen Periode an. Der Bericht kann verwendet werden, um zu �berpr�fen, ob der Saldo der Debitorenbuchungsgruppe mit dem Saldo des entsprechenden Sachkontos an einem bestimmten Datum �bereinstimmt.;
+                                 ENU=View the beginning and ending balance for customers with entries within a specified period. The report can be used to verify that the balance for a customer posting group is equal to the balance on the corresponding general ledger account on a certain date.];
+                      ApplicationArea=#Suite;
+                      RunObject=Report 129;
+                      Image=Report }
+      { 87      ;3   ;Action    ;
+                      Name=ReportCustomerDetailTrial;
+                      CaptionML=[DEU=Debitor - Kontoblatt;
+                                 ENU=Customer - Detail Trial Bal.];
+                      ToolTipML=[DEU=Zeigt den Saldo f�r Debitoren mit Salden an einem angegebenen Datum an. Der Bericht kann z. B. am Ende einer Buchhaltungsperiode oder f�r eine Buchpr�fung verwendet werden.;
+                                 ENU=View the balance for customers with balances on a specified date. The report can be used at the close of an accounting period, for example, or for an audit.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 104;
+                      Image=Report }
+      { 83      ;3   ;Action    ;
+                      Name=ReportCustomerSummaryAging;
+                      CaptionML=[DEU=Debitor - Saldo nach Perioden;
+                                 ENU=Customer - Summary Aging];
+                      ToolTipML=[DEU=Zeigt, druckt oder speichert eine Zusammenfassung f�lliger Zahlungen der einzelnen Debitoren, aufgeteilt in drei Zeitr�ume. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, die Kreditw�rdigkeit eines Debitors einzusch�tzen oder Liquidit�tsanalysen vorzubereiten.;
+                                 ENU=View, print, or save a summary of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 105;
+                      Image=Report }
+      { 80      ;3   ;Action    ;
+                      Name=ReportCustomerDetailedAging;
+                      CaptionML=[DEU=Debitor - F�llige Posten;
+                                 ENU=Customer - Detailed Aging];
+                      ToolTipML=[DEU=Zeigen Sie eine detaillierte Liste f�lliger Zahlungen der einzelnen Debitoren an, aufgeteilt in drei Zeitr�ume, drucken oder speichern Sie sie. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, um die Kreditw�rdigkeit eines Debitors einzusch�tzen oder um Liquidit�tsanalysen vorzubereiten.;
+                                 ENU=View, print, or save a detailed list of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 106;
+                      Image=Report }
+      { 74      ;3   ;Action    ;
+                      Name=ReportAgedAccountsReceivable;
+                      CaptionML=[DEU=Saldenr�ckblick;
+                                 ENU=Aged Accounts Receivable];
+                      ToolTipML=[DEU=Zeigt in vier Perioden aufgeteilt eine �bersicht dar�ber an, wann Debitorenzahlungen f�llig oder �berf�llig sind. Sie m�ssen das Datum angeben, von dem aus der Saldor�ckblick erfolgen soll, und die Periodenl�nge, f�r die jede Spalte Daten enthalten soll.;
+                                 ENU=View an overview of when customer payments are due or overdue, divided into four periods. You must specify the date you want aging calculated from and the length of the period that each column will contain data for.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 120;
+                      Image=Report }
+      { 73      ;3   ;Action    ;
+                      Name=ReportCustomerPaymentReceipt;
+                      CaptionML=[DEU=Debitor - Zahlungseingang;
+                                 ENU=Customer - Payment Receipt];
+                      ToolTipML=[DEU=Zeigt einen Beleg an, der angibt, auf welche Debitorenposten eine Zahlung angewendet wurde. Dieser Bericht kann als Zahlungseingang verwendet werden, den Sie an den Debitor senden.;
+                                 ENU=View a document showing which customer ledger entries that a payment has been applied to. This report can be used as a payment receipt that you send to the customer.];
+                      ApplicationArea=#Suite;
+                      RunObject=Report 211;
+                      Image=Report }
+      { 3       ;1   ;ActionGroup;
+                      CaptionML=[DEU=Allgemein;
+                                 ENU=General] }
+      { 1905562606;2 ;Action    ;
+                      CaptionML=[DEU=Debitoren�bersicht;
+                                 ENU=Customer List];
+                      ToolTipML=[DEU=Zeigt verschiedene Arten von Basisinformationen zu Debitoren an, wie z. B. die Debitorenbuchungsgruppe, die Rabattgruppe, Zins- und Zahlungsinformationen, den Verk�ufer, die Standardw�hrung des Debitors und das Kreditlimit (in MW) sowie den aktuellen Saldo des Debitors (in MW).;
+                                 ENU=View various kinds of basic information for customers, such as customer posting group, discount group, finance charge and payment information, salesperson, the customer's default currency and credit limit (in LCY), and the customer's current balance (in LCY).];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 101;
+                      Image=Report }
+      { 1901007206;2 ;Action    ;
+                      CaptionML=[DEU=Debitorenjournal;
+                                 ENU=Customer Register];
+                      ToolTipML=[DEU=Zeigt gebuchte Debitorenposten an, die in Journale aufgeteilt und nach Journalen geordnet sind. Indem Sie einen Filter verwenden, k�nnen Sie genau die Posten in den Journalen ausw�hlen, die angezeigt werden sollen. Wenn Sie viele Posten erzeugt haben und keinen Filter festlegen, druckt der Bericht eine gro�e Menge an Informationen.;
+                                 ENU=View posted customer ledger entries divided into, and sorted according to, registers. By using a filter, you can select exactly the entries in the registers that you need to see. If you have created many entries and you do not set a filter, the report will print a large amount of information.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 103;
+                      Image=Report }
+      { 1907152806;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Top 10 Liste;
+                                 ENU=Customer - Top 10 List];
+                      ToolTipML=[DEU=Zeigt an, welche Debitoren in einer ausgew�hlten Periode am meisten kaufen oder Ihnen am meisten schulden. Es werden nur jene Debitoren ber�cksichtigt, die w�hrend der ausgew�hlten Periode entweder Eink�ufe get�tigt haben oder am Ende der Periode einen Saldo aufweisen.;
+                                 ENU=View which customers purchase the most or owe the most in a selected period. Only customers that have either purchases during the period or a balance at the end of the period will be included.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 111;
+                      Image=Report }
+      { 5       ;1   ;ActionGroup;
+                      CaptionML=[DEU=Verkauf;
+                                 ENU=Sales];
+                      Image=Sales }
+      { 1905727106;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Auftrags�bersicht;
+                                 ENU=Customer - Order Summary];
+                      ToolTipML=[DEU=Zeigt Auftragsdetails (die noch nicht gelieferte Menge) f�r jeden Debitor in drei Perioden von jeweils 30 Tagen an, beginnend mit dem ausgew�hlten Datum. Es gibt auch Spalten mit Auftr�gen, die vor und nach den drei Perioden geliefert werden sollen, und eine Spalte mit dem gesamten Auftragsbestand jedes Debitors. Dieser Bericht kann verwendet werden, um das erwartete Verkaufsvolumen eines Unternehmens zu analysieren.;
+                                 ENU=View the order detail (the quantity not yet shipped) for each customer in three periods of 30 days each, starting from a selected date. There are also columns with orders to be shipped before and after the three periods and a column with the total order detail for each customer. The report can be used to analyze a company's expected sales volume.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 107;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1900172506;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Auftr�ge;
+                                 ENU=Customer - Order Detail];
+                      ToolTipML=[DEU=Zeigt eine Liste von Auftr�gen an, unterteilt nach Debitoren. Die Auftragsbetr�ge werden sowohl f�r jeden Debitor als auch f�r die gesamte Liste addiert. Der Bericht kann z. B. verwendet werden, um sich einen �berblick �ber die kurzfristig anstehenden Verk�ufe zu verschaffen oder um potenzielle Lieferprobleme zu analysieren.;
+                                 ENU=View a list of orders divided by customer. The order amounts are totaled for each customer and for the entire list. The report can be used, for example, to obtain an overview of sales over the short term or to analyze possible shipment problems.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 108;
+                      Image=Report }
+      { 1906073506;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Verkaufs�bersicht;
+                                 ENU=Customer - Sales List];
+                      ToolTipML=[DEU=Zeigt den Debitorenverkauf einer Periode an, um beispielsweise die Verkaufsaktivit�t den Zoll- und Steuerbeh�rden zu melden. Sie k�nnen nur Debitoren ausw�hlen, deren Gesamtverkauf einen Minimalbetrag �bersteigt. Sie k�nnen auch angeben, ob in dem Bericht die Adressdetails der einzelnen Debitoren angezeigt werden sollen.;
+                                 ENU=View customer sales for a period, for example, to report sales activity to customs and tax authorities. You can choose to include only customers with total sales that exceed a minimum amount. You can also specify whether you want the report to show address details for each customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 119;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1904190506;2 ;Action    ;
+                      CaptionML=[DEU=Verkaufsstatistik;
+                                 ENU=Sales Statistics];
+                      ToolTipML=[DEU=Zeigt die gesamten Kosten, Verk�ufe und Gewinne zu den Debitoren im Lauf der Zeit an, um beispielsweise Einnahmentrends zu analysieren. Der Bericht zeigt Betr�ge f�r urspr�ngliche und regulierte Kosten, Verk�ufe, Gewinne, Rechnungsrabatte, Skonti und Gewinne in Prozent in drei regulierbaren Perioden an.;
+                                 ENU=View customers' total costs, sales, and profits over time, for example, to analyze earnings trends. The report shows amounts for original and adjusted costs, sales, profits, invoice discounts, payment discounts, and profit percentage in three adjustable periods.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 112;
+                      Image=Report }
+      { 1900760706;2 ;Action    ;
+                      CaptionML=[DEU=Debitor/Artikel Statistik;
+                                 ENU=Customer/Item Sales];
+                      ToolTipML=[DEU=Zeigt eine Liste der Artikelverk�ufe an jeden Debitoren f�r einen ausgew�hlten Zeitraum an. Der Bericht enth�lt Informationen �ber die Mengen, den Verkaufsbetrag, den Gewinn und m�gliche Rabatte. Er kann z. B. verwendet werden, um die Debitorengruppen eines Unternehmens zu analysieren.;
+                                 ENU=View a list of item sales for each customer during a selected time period. The report contains information on quantity, sales amount, profit, and possible discounts. It can be used, for example, to analyze a company's customer groups.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 113;
+                      Image=Report }
+      { 7       ;1   ;ActionGroup;
+                      CaptionML=[DEU=Finanzen;
+                                 ENU=Finance];
+                      Image=Report }
+      { 1906871306;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Kontoblatt;
+                                 ENU=Customer - Detail Trial Bal.];
+                      ToolTipML=[DEU=Zeigt den Saldo f�r Debitoren mit Salden an einem angegebenen Datum an. Der Bericht kann z. B. am Ende einer Buchhaltungsperiode oder f�r eine Buchpr�fung verwendet werden.;
+                                 ENU=View the balance for customers with balances on a specified date. The report can be used at the close of an accounting period, for example, or for an audit.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 104;
+                      Image=Report }
+      { 1907944606;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Saldo nach Perioden;
+                                 ENU=Customer - Summary Aging];
+                      ToolTipML=[DEU=Zeigt eine Zusammenfassung f�lliger Zahlungen der einzelnen Debitoren aufgeteilt in drei Zeitr�ume an, druckt oder speichert diese. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, die Kreditw�rdigkeit eines Debitors einzusch�tzen oder Liquidit�tsanalysen vorzubereiten.;
+                                 ENU=View, print, or save a summary of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 105;
+                      Image=Report }
+      { 1906813206;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - F�llige Posten;
+                                 ENU=Customer Detailed Aging];
+                      ToolTipML=[DEU=Zeigt eine detaillierte Liste f�lliger Zahlungen der einzelnen Debitoren an, aufgeteilt in drei Zeitr�ume. Der Bericht kann verwendet werden, um das Registrieren von Mahnungen zu verwalten, um die Kreditw�rdigkeit eines Debitors einzusch�tzen oder um Liquidit�tsanalysen vorzubereiten.;
+                                 ENU=View a detailed list of each customer's total payments due, divided into three time periods. The report can be used to decide when to issue reminders, to evaluate a customer's creditworthiness, or to prepare liquidity analyses.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 106;
+                      Image=Report }
+      { 1055    ;2   ;Action    ;
+                      Name=Statement;
+                      CaptionML=[DEU=Kontoauszug;
+                                 ENU=Statement];
+                      ToolTipML=[DEU=Zeigt eine Liste der Transaktionen eines Debitors in einem ausgew�hlten Zeitraum an, um sie beispielsweise am Ende der Buchhaltungsperiode an den Debitor zu senden. Sie k�nnen ungeachtet der angegebenen Periode alle f�lligen Salden anzeigen oder einen Saldenr�ckblick einf�gen.;
+                                 ENU=View a list of a customer's transactions for a selected period, for example, to send to the customer at the close of an accounting period. You can choose to have all overdue balances displayed regardless of the period specified, or you can choose to include an aging band.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Codeunit 8810;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1903839806;2 ;Action    ;
+                      CaptionML=[DEU=Mahnung;
+                                 ENU=Reminder];
+                      ToolTipML=[DEU=Erstellt eine neue Mahnung f�r den Debitor.;
+                                 ENU=Create a new reminder for the customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 117;
+                      Image=Reminder }
+      { 1900711606;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Saldenr�ckblick;
+                                 ENU=Aged Accounts Receivable];
+                      ToolTipML=[DEU=Zeigt in vier Perioden aufgeteilt eine �bersicht dar�ber an, wann Debitorenzahlungen f�llig oder �berf�llig sind. Sie m�ssen das Datum angeben, von dem aus der Saldor�ckblick erfolgen soll, und die Periodenl�nge, f�r die jede Spalte Daten enthalten soll.;
+                                 ENU=View an overview of when customer payments are due or overdue, divided into four periods. You must specify the date you want aging calculated from and the length of the period that each column will contain data for.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 120;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1902299006;2 ;Action    ;
+                      CaptionML=[DEU=Debitorenposten per;
+                                 ENU=Customer - Balance to Date];
+                      ToolTipML=[DEU=Zeigt eine Liste der Zahlungshistorie der Debitoren bis zu einem bestimmten Datum an. Sie k�nnen den Bericht verwenden, um Ihre gesamten Einnahmen am Ende einer Buchhaltungsperiode oder eines Gesch�ftsjahres zu extrahieren.;
+                                 ENU=View a list with customers' payment history up until a certain date. You can use the report to extract your total sales income at the close of an accounting period or fiscal year.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 121;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1906359306;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Saldenliste;
+                                 ENU=Customer - Trial Balance];
+                      ToolTipML=[DEU=Zeigt den Anfangs- und Schlusssaldo f�r Debitoren mit Posten innerhalb einer angegebenen Periode an. Der Bericht kann verwendet werden, um zu �berpr�fen, ob der Saldo der Debitorenbuchungsgruppe mit dem Saldo des entsprechenden Sachkontos an einem bestimmten Datum �bereinstimmt.;
+                                 ENU=View the beginning and ending balance for customers with entries within a specified period. The report can be used to verify that the balance for a customer posting group is equal to the balance on the corresponding general ledger account on a certain date.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 129;
+                      Image=Report }
+      { 1904039606;2 ;Action    ;
+                      CaptionML=[DEU=Debitor - Zahlungseingang;
+                                 ENU=Customer - Payment Receipt];
+                      ToolTipML=[DEU=Zeigt einen Beleg an, der angibt, auf welche Debitorenposten eine Zahlung angewendet wurde. Dieser Bericht kann als Zahlungseingang verwendet werden, den Sie an den Debitor senden.;
+                                 ENU=View a document showing which customer ledger entries that a payment has been applied to. This report can be used as a payment receipt that you send to the customer.];
+                      ApplicationArea=#Advanced;
+                      RunObject=Report 211;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                GroupType=Repeater }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Nummer des beteiligten Postens oder Datensatz entsprechend der festgelegten Nummernserie an.;
+                           ENU=Specifies the number of the involved entry or record, according to the specified number series.];
+                ApplicationArea=#All;
+                SourceExpr="No." }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Namen des Debitors an. Der Name wird auf allen Verkaufsbelegen f�r den Debitor angezeigt. Sie k�nnen bis zu 50 Zeichen, sowohl Ziffern als auch Buchstaben, eingeben.;
+                           ENU=Specifies the customer's name. This name will appear on all sales documents for the customer. You can enter a maximum of 50 characters, both numbers and letters.];
+                ApplicationArea=#All;
+                SourceExpr=Name }
+
+    { 40  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code der Zust�ndigkeitseinheit (z.�B. ein Logistikhub) an, die dem beteiligten Benutzer, Mandanten, Kreditor oder Debitor zugeordnet ist.;
+                           ENU=Specifies the code of the responsibility center, such as a distribution hub, that is associated with the involved user, company, customer, or vendor.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Responsibility Center" }
+
+    { 43  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, von welchem Lagerort aus Verk�ufe an diesen Debitor standardm��ig verarbeitet werden.;
+                           ENU=Specifies from which location sales to this customer will be processed by default.];
+                ApplicationArea=#Location;
+                SourceExpr="Location Code" }
+
+    { 54  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Postleitzahl an.;
+                           ENU=Specifies the postal code.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Post Code";
+                Visible=FALSE }
+
+    { 30  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt das Land/die Region der Adresse an.;
+                           ENU=Specifies the country/region of the address.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Country/Region Code";
+                Visible=FALSE }
+
+    { 6   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Telefonnummer des Debitors an.;
+                           ENU=Specifies the customer's telephone number.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Phone No." }
+
+    { 79  ;2   ;Field     ;
+                ToolTipML=[DEU=Legt den IC-Partnercode des Debitors fest.;
+                           ENU=Specifies the customer's intercompany partner code.];
+                ApplicationArea=#Intercompany;
+                SourceExpr="IC Partner Code";
+                Visible=FALSE }
+
+    { 34  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Namen der Kontaktperson bei diesem Debitor an.;
+                           ENU=Specifies the name of the person you regularly contact when you do business with this customer.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Contact }
+
+    { 36  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen Code f�r den Verk�ufer an, der normalerweise das Konto dieses Debitors bearbeitet.;
+                           ENU=Specifies a code for the salesperson who normally handles this customer's account.];
+                ApplicationArea=#Suite;
+                SourceExpr="Salesperson Code";
+                Visible=FALSE }
+
+    { 38  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Markttyp des Debitors zum Verkn�pfen von Gesch�ftstransaktionen an.;
+                           ENU=Specifies the customer's market type to link business transactions to.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Customer Posting Group";
+                Visible=FALSE }
+
+    { 56  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Handelstyp des Debitors an, um Transaktionen f�r diesen Debitor mit dem entsprechenden Sachkonto entsprechend der Buchungsmatrix Einrichtung zu verkn�pfen.;
+                           ENU=Specifies the customer's trade type to link transactions made for this customer with the appropriate general ledger account according to the general posting setup.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Gen. Bus. Posting Group";
+                Visible=FALSE }
+
+    { 52  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die MwSt.-Erkl�rung des beteiligten Debitors oder Kreditors an, um Transaktionen f�r diesen Datensatz mit dem entsprechenden Sachkonto entsprechend der MwSt.-Buchungsmatrix Einrichtung zu verkn�pfen.;
+                           ENU=Specifies the VAT specification of the involved customer or vendor to link transactions made for this record with the appropriate general ledger account according to the VAT posting setup.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="VAT Bus. Posting Group";
+                Visible=FALSE }
+
+    { 46  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Debitorenpreisgruppencode an, den Sie verwenden k�nnen, um spezielle Verkaufspreise im Fenster "VK-Preise" einzurichten.;
+                           ENU=Specifies the customer price group code, which you can use to set up special sales prices in the Sales Prices window.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Customer Price Group";
+                Visible=FALSE }
+
+    { 72  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Debitorrabattgruppencode an, den Sie als Kriterium verwenden k�nnen, um spezielle Rabatte im Fenster "VK-Zeilenrabatte" einzurichten.;
+                           ENU=Specifies the customer discount group code, which you can use as a criterion to set up special discounts in the Sales Line Discounts window.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Customer Disc. Group";
+                Visible=FALSE }
+
+    { 8   ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt eine Formel an, die das F�lligkeitsdatum, das Skontodatum und den Skontobetrag berechnet.;
+                           ENU=Specifies a formula that calculates the payment due date, payment discount date, and payment discount amount.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Payment Terms Code";
+                Visible=FALSE }
+
+    { 61  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt an, wie Mahnungen zu �berf�lligen Zahlungen f�r diesen Debitor behandelt werden.;
+                           ENU=Specifies how reminders about late payments are handled for this customer.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Reminder Terms Code";
+                Visible=FALSE }
+
+    { 48  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Code f�r die betreffenden Zinsen bei Zahlungsverzug an.;
+                           ENU=Specifies the code for the involved finance charges in case of late payment.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Fin. Charge Terms Code";
+                Visible=FALSE }
+
+    { 10  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Standardw�hrung f�r den Debitor an.;
+                           ENU=Specifies the default currency for the customer.];
+                ApplicationArea=#Suite;
+                SourceExpr="Currency Code";
+                Visible=FALSE }
+
+    { 50  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt die Sprache an, die verwendet wird, wenn der angegebene Text auf Belegen f�r ausl�ndische Gesch�ftspartner �bersetzt wird, z. B. eine Beschreibung des Artikels auf einer Auftragsbest�tigung.;
+                           ENU=Specifies the language that is used when translating specified text on documents to foreign business partner, such as an item description on an order confirmation.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Language Code";
+                Visible=FALSE }
+
+    { 12  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt einen alternativen Namen an, den Sie zur Suche nach dem fraglichen Datensatz verwenden k�nnen, wenn Sie sich nicht an den Wert im Feld "Name" erinnern k�nnen.;
+                           ENU=Specifies an alternate name that you can use to search for the record in question when you cannot remember the value in the Name field.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Search Name";
+                Visible=FALSE }
+
+    { 1102601000;2;Field  ;
+                ToolTipML=[DEU=Gibt den H�chstbetrag an, um den der Debitor die Zahlungsbilanz �berschreiten darf, bevor Warnungen ausgegeben werden.;
+                           ENU=Specifies the maximum amount you allow the customer to exceed the payment balance before warnings are issued.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Credit Limit (LCY)";
+                Visible=FALSE }
+
+    { 1102601002;2;Field  ;
+                ToolTipML=[DEU=Gibt an, dass der dazugeh�rige Datensatz nicht in Transaktionen gebucht werden kann, weil er gesperrt ist, z. B. ein Debitor, der als zahlungsunf�hig deklariert wurde, oder ein Artikel, der sich in Quarant�ne befindet.;
+                           ENU=Specifies that the related record is blocked from being posted in transactions, for example a customer that is declared insolvent or an item that is placed in quarantine.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Blocked;
+                Visible=FALSE }
+
+    { 1102601004;2;Field  ;
+                ToolTipML=[DEU=Gibt an, wann die Debitorenkarte zuletzt ge�ndert wurde.;
+                           ENU=Specifies when the customer card was last modified.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Last Date Modified";
+                Visible=FALSE }
+
+    { 1102601006;2;Field  ;
+                ToolTipML=[DEU=Gibt an, wie Zahlungen von Posten f�r diesen Debitor ausgeglichen werden.;
+                           ENU=Specifies how to apply payments to entries for this customer.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Application Method";
+                Visible=FALSE }
+
+    { 1102601008;2;Field  ;
+                ToolTipML=[DEU=Gibt an, ob in einer Verkaufsrechnung mehrere Lieferungen an den Debitor zusammengefasst werden k�nnen.;
+                           ENU=Specifies if several orders delivered to the customer can appear on the same sales invoice.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Combine Shipments";
+                Visible=FALSE }
+
+    { 1102601010;2;Field  ;
+                ToolTipML=[DEU=Gibt an, ob Artikel nie, automatisch (immer) oder optional f�r diesen Debitor reserviert werden. Optional bedeutet, dass Sie manuell Artikel f�r diesen Debitor reservieren m�ssen.;
+                           ENU=Specifies whether items will never, automatically (Always), or optionally be reserved for this customer. Optional means that you must manually reserve items for this customer.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Reserve;
+                Visible=FALSE }
+
+    { 1102601012;2;Field  ;
+                ToolTipML=[DEU=Gibt an, ob der Debitor Teillieferungen von Auftr�gen akzeptiert.;
+                           ENU=Specifies if the customer accepts partial shipment of orders.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Shipping Advice";
+                Visible=FALSE }
+
+    { 1102601014;2;Field  ;
+                ToolTipML=[DEU=Gibt den Code des Zustellers an, der diese Artikel bef�rdert.;
+                           ENU=Specifies the code for the shipping agent who is transporting the items.];
+                ApplicationArea=#Suite;
+                SourceExpr="Shipping Agent Code";
+                Visible=FALSE }
+
+    { 1102601016;2;Field  ;
+                ToolTipML=[DEU=Gibt einen anpassbaren Kalender zur Lieferungsplanung an, der die Arbeitstage und die Feiertage des Debitors enth�lt.;
+                           ENU=Specifies a customizable calendar for shipment planning that holds the customer's working days and holidays.];
+                ApplicationArea=#Advanced;
+                SourceExpr="Base Calendar Code";
+                Visible=FALSE }
+
+    { 62  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den Zahlungsbetrag an, den der Debitor f�r abgeschlossene Verk�ufe schuldet. Dieser Wert wird auch als der Saldo des Debitors bezeichnet.;
+                           ENU=Specifies the payment amount that the customer owes for completed sales. This value is also known as the customer's balance.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Balance (LCY)";
+                OnDrillDown=BEGIN
+                              OpenCustomerLedgerEntries(FALSE);
+                            END;
+                             }
+
+    { 59  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt Zahlungen des Debitors an, die nach dem heutigen Datum �berf�llig sind.;
+                           ENU=Specifies payments from the customer that are overdue per today's date.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Balance Due (LCY)";
+                OnDrillDown=BEGIN
+                              OpenCustomerLedgerEntries(TRUE);
+                            END;
+                             }
+
+    { 32  ;2   ;Field     ;
+                ToolTipML=[DEU=Gibt den gesamten Nettobetrag der Verk�ufe an den Debitor in MW an.;
+                           ENU=Specifies the total net amount of sales to the customer in LCY.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Sales (LCY)" }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 861 ;1   ;Part      ;
+                Name=Power BI Report FactBox;
+                CaptionML=[DEU=Power BI-Berichte;
+                           ENU=Power BI Reports];
+                ApplicationArea=#Basic,#Suite;
+                PagePartID=Page6306;
+                Visible=PowerBIVisible;
+                PartType=Page }
+
+    { 99  ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=No.=FIELD(No.);
+                PagePartID=Page5360;
+                Visible=CRMIsCoupledToRecord;
+                PartType=Page }
+
+    { 35  ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Source Type=CONST(Customer),
+                            Source No.=FIELD(No.);
+                PagePartID=Page875;
+                Visible=SocialListeningVisible;
+                PartType=Page }
+
+    { 33  ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Source Type=CONST(Customer),
+                            Source No.=FIELD(No.);
+                PagePartID=Page876;
+                Visible=SocialListeningSetupVisible;
+                PartType=Page;
+                UpdatePropagation=Both }
+
+    { 1903720907;1;Part   ;
+                Name=SalesHistSelltoFactBox;
+                ApplicationArea=#Basic,#Suite;
+                SubPageLink=No.=FIELD(No.),
+                            Currency Filter=FIELD(Currency Filter),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                PagePartID=Page9080;
+                PartType=Page }
+
+    { 1907234507;1;Part   ;
+                Name=SalesHistBilltoFactBox;
+                ApplicationArea=#All;
+                SubPageLink=No.=FIELD(No.),
+                            Currency Filter=FIELD(Currency Filter),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                PagePartID=Page9081;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1902018507;1;Part   ;
+                Name=CustomerStatisticsFactBox;
+                ApplicationArea=#Advanced;
+                SubPageLink=No.=FIELD(No.),
+                            Currency Filter=FIELD(Currency Filter),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                PagePartID=Page9082;
+                PartType=Page }
+
+    { 1900316107;1;Part   ;
+                Name=CustomerDetailsFactBox;
+                ApplicationArea=#Basic,#Suite;
+                SubPageLink=No.=FIELD(No.),
+                            Currency Filter=FIELD(Currency Filter),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                PagePartID=Page9084;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1907829707;1;Part   ;
+                ApplicationArea=#Advanced;
+                SubPageLink=No.=FIELD(No.),
+                            Currency Filter=FIELD(Currency Filter),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                PagePartID=Page9085;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1902613707;1;Part   ;
+                ApplicationArea=#Advanced;
+                SubPageLink=No.=FIELD(No.),
+                            Currency Filter=FIELD(Currency Filter),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter);
+                PagePartID=Page9086;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1900383207;1;Part   ;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      PowerBIUserConfiguration@1011 : Record 6304;
+      ApprovalsMgmt@1010 : Codeunit 1535;
+      SetPowerBIUserConfig@1000 : Codeunit 6305;
+      SocialListeningSetupVisible@1009 : Boolean;
+      SocialListeningVisible@1008 : Boolean;
+      CRMIntegrationEnabled@1007 : Boolean;
+      CRMIsCoupledToRecord@1006 : Boolean;
+      OpenApprovalEntriesExist@1005 : Boolean;
+      CanCancelApprovalForRecord@1004 : Boolean;
+      EnabledApprovalWorkflowsExist@1003 : Boolean;
+      PowerBIVisible@1002 : Boolean;
+      CanRequestApprovalForFlow@1013 : Boolean;
+      CanCancelApprovalForFlow@1014 : Boolean;
+      EventFilter@1001 : Text;
+      CaptionTxt@1012 : Text;
+      "--- dynamic commerce ---"@1000000002 : Integer;
+      WebshopManagement@1000000001 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+
+    [External]
+    PROCEDURE GetSelectionFilter@2() : Text;
+    VAR
+      Cust@1001 : Record 18;
+      SelectionFilterManagement@1002 : Codeunit 46;
+    BEGIN
+      CurrPage.SETSELECTIONFILTER(Cust);
+      EXIT(SelectionFilterManagement.GetSelectionFilterForCustomer(Cust));
+    END;
+
+    [External]
+    PROCEDURE SetSelection@1(VAR Cust@1000 : Record 18);
+    BEGIN
+      CurrPage.SETSELECTIONFILTER(Cust);
+    END;
+
+    LOCAL PROCEDURE SetSocialListeningFactboxVisibility@3();
+    VAR
+      SocialListeningMgt@1000 : Codeunit 871;
+    BEGIN
+      SocialListeningMgt.GetCustFactboxVisibility(Rec,SocialListeningSetupVisible,SocialListeningVisible);
+    END;
+
+    LOCAL PROCEDURE SetCustomerNoVisibilityOnFactBoxes@5();
+    BEGIN
+      CurrPage.SalesHistSelltoFactBox.PAGE.SetCustomerNoVisibility(FALSE);
+      CurrPage.SalesHistBilltoFactBox.PAGE.SetCustomerNoVisibility(FALSE);
+      CurrPage.CustomerDetailsFactBox.PAGE.SetCustomerNoVisibility(FALSE);
+      CurrPage.CustomerStatisticsFactBox.PAGE.SetCustomerNoVisibility(FALSE);
+    END;
+
+    LOCAL PROCEDURE SetWorkflowManagementEnabledState@4();
+    VAR
+      WorkflowManagement@1001 : Codeunit 1501;
+      WorkflowEventHandling@1000 : Codeunit 1520;
+    BEGIN
+      EventFilter := WorkflowEventHandling.RunWorkflowOnSendCustomerForApprovalCode + '|' +
+        WorkflowEventHandling.RunWorkflowOnCustomerChangedCode;
+
+      EnabledApprovalWorkflowsExist := WorkflowManagement.EnabledWorkflowExist(DATABASE::Customer,EventFilter);
+    END;
+
+    [Integration]
+    PROCEDURE SetCaption@17(VAR InText@1000 : Text);
+    BEGIN
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+
+      STANDARD-VERSION 2017
+
+        ELEMENTS (0):
+        PAGE ACTIONS (6):
+
+          NAME                            CAPTION                         TYPE                 SUBTYPE
+
+          E-Commerce                      <E-Commerce>                    ActionGroup
+          Webshop Send Login Data         Zugangsdaten versenden          Action
+          Webshop Update Customer         Online Aktualisieren            Action
+          Webshop Open Customer Login     Kundenzugang �ffnen             Action
+          Permissions                     Berechtigungen                  ActionGroup
+          Page Webshop Permissions Group  Gruppenberechtigungen           Action
+          Page Webshop Permissions Group  Artikelberechtigungen           Action
+          Page Webshop Permissions Group  Kategorieberechtigungen         Action
+          Page Webshop Permissions Group  Versandberechtigungen           Action
+          Page Webshop Permissions Group  Zahlungsberechtigungen          Action
+          Page Webshop Customer Link      Webshopberechtigungen           Action
+
+
+        TRIGGERS (0):
+        GLOBAL VARIABLES (2):
+
+          NAME                          DATATYPE        SUBTYPE                       LENGTH
+
+          WebshopManagement             Codeunit        "Webshop Management"
+          WebshopUpdateManagement       Codeunit        "Webshop Update Management"
+
+
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

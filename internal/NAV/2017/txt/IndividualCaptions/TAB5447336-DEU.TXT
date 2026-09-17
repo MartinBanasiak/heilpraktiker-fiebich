@@ -1,0 +1,8 @@
+T5447336-F10-P8629-A1031-L999:Anzahl Artikel-Berecht.
+T5447336-F11-P8629-A1031-L999:Anzahl Debitor-Berecht.
+T5447336-F12-P8629-A1031-L999:Anzahl Kategorie-Berecht.
+T5447336-F13-P8629-A1031-L999:Anzahl Versand-Berecht.
+T5447336-F14-P8629-A1031-L999:Anzahl Zahlungsart-Berechtigungen
+T5447336-F1-P8629-A1031-L999:Code
+T5447336-F2-P8629-A1031-L999:Beschreibung
+T5447336-P8629-A1031-L999:Webshop Berechtigungsgruppe

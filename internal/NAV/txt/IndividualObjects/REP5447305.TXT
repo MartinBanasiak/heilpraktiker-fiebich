@@ -1,0 +1,128 @@
+OBJECT Report 5447305 Webshop Link Item Categories
+{
+  OBJECT-PROPERTIES
+  {
+    Date=28.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshopartikel Kategorien zuweisen;
+               ENU=Webshop Link Item Categories];
+    ProcessingOnly=Yes;
+    OnPostReport=BEGIN
+                   MESSAGE(Text002,Counter);
+                 END;
+
+  }
+  DATASET
+  {
+    { 3722;    ;DataItem;                    ;
+               DataItemTable=Table5447303;
+               DataItemTableView=SORTING(Shop Code,Language Code,Line No.)
+                                 ORDER(Ascending);
+               ReqFilterHeadingML=[DEU=Kategorie;
+                                   ENU=Category];
+               OnPreDataItem=BEGIN
+                               IF COUNT <> 1 THEN
+                                 ERROR(Text001);
+                             END;
+
+               ReqFilterFields=Shop Code,Language Code,Line No. }
+
+    { 8129;1   ;DataItem;                    ;
+               DataItemTable=Table27;
+               DataItemTableView=SORTING(No.)
+                                 ORDER(Ascending);
+               OnAfterGetRecord=BEGIN
+                                  WebshopItem.SETRANGE("Shop Code","Webshop Category"."Shop Code");
+                                  WebshopItem.SETRANGE("Language Code","Webshop Category"."Language Code");
+                                  WebshopItem.SETRANGE("Item No.",Item."No.");
+                                  IF (NOT WebshopItem.FIND) AND (CreateWebshopItems) THEN BEGIN
+                                    WebshopItem.INIT;
+                                    WebshopItem.VALIDATE("Shop Code","Webshop Category"."Shop Code");
+                                    WebshopItem.VALIDATE("Language Code","Webshop Category"."Language Code");
+                                    WebshopItem.VALIDATE("Item No.",Item."No.");
+                                    IF ActivateCreatedWebshopItems THEN
+                                      WebshopItem.VALIDATE("Is Active",TRUE);
+                                    WebshopItem.INSERT(TRUE);
+                                  END;
+
+                                  IF WebshopItem.GET("Webshop Category"."Shop Code","Webshop Category"."Language Code",Item."No.") THEN BEGIN
+                                    WITH WebshopItem DO BEGIN
+                                      CALCFIELDS("Is Variant");
+                                      IF NOT "Is Variant" THEN BEGIN
+                                        IF NOT WebshopItemCategory.GET("Shop Code","Language Code","Item No.","Shop Code",
+                                                                       "Language Code","Webshop Category"."Line No.") THEN BEGIN
+                                          WebshopItemCategory.INIT;
+                                          WebshopItemCategory.VALIDATE("Item Shop Code","Shop Code");
+                                          WebshopItemCategory.VALIDATE("Item Language Code","Language Code");
+                                          WebshopItemCategory.VALIDATE("Item No.","Item No.");
+                                          WebshopItemCategory.VALIDATE("Category Shop Code","Shop Code");
+                                          WebshopItemCategory.VALIDATE("Category Language Code","Language Code");
+                                          WebshopItemCategory.VALIDATE("Category Line No.","Webshop Category"."Line No.");
+                                          IF WebshopItemCategory.INSERT(TRUE) THEN
+                                             Counter += 1;
+                                        END;
+                                      END;
+                                    END;
+                                  END;
+                                END;
+
+               ReqFilterFields=No.,Description,Item Category Code,Product Group Code }
+
+    { 2102;2   ;DataItem;                    ;
+               DataItemTable=Table5447304;
+               DataItemTableView=SORTING(Shop Code,Language Code,Item No.)
+                                 ORDER(Ascending) }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+    }
+    CONTROLS
+    {
+      { 1000000000;;Container;
+                  Name=Container1;
+                  ContainerType=ContentArea }
+
+      { 1000000001;1;Field  ;
+                  CaptionML=[DEU=Webshopartikel erstellen;
+                             ENU=Create Webshop Items];
+                  SourceExpr=CreateWebshopItems }
+
+      { 1000000002;1;Field  ;
+                  CaptionML=[DEU=Erstellte Webshopartikel aktivieren;
+                             ENU=Activate created webshop items];
+                  SourceExpr=ActivateCreatedWebshopItems }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopItemCategory@1000000002 : Record 5447305;
+      Counter@1000000000 : Integer;
+      Text001@1000000001 : TextConst 'DEU=Sie m�ssen eine einzelne Kategorie ausw�hlen;ENU=A single category has to be selected';
+      Text002@1000000003 : TextConst 'DEU=Der Kategorie wurden %1 Artikel zugeordnet;ENU=%1 items were added to the category';
+      CreateWebshopItems@1000000004 : Boolean INDATASET;
+      ActivateCreatedWebshopItems@1000000005 : Boolean;
+      WebshopItem@1000000006 : Record 5447304;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+

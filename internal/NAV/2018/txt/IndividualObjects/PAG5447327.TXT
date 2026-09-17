@@ -1,0 +1,70 @@
+OBJECT Page 5447327 Webshop Edit Attribute Icon
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikelmerkmal-Icon bearbeiten;
+               ENU=Edit Webshop Attribute Item];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    SourceTable=Table5447322;
+    PageType=StandardDialog;
+    InstructionalTextML=[DEU=Test;
+                         ENU=Test];
+    ShowFilter=No;
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+               END;
+
+    OnNextRecord=BEGIN
+                   EXIT;
+                 END;
+
+    OnAfterGetRecord=BEGIN
+                       RANDOMIZE();
+                       Request :=
+                         STRSUBSTNO('%1webforms/edit_attribute_icon.php?pass=%2&company=%3&code=%4&attribute_code=%5&nav_lang=%6&rand=%7',
+                           WebshopSetup."Server Synch. Endpoint URL",
+                           WebshopSetup."Server Synch. Password",
+                           WebshopManagement.URLEncode(COMPANYNAME),
+                           WebshopManagement.URLEncode(Code),
+                           WebshopManagement.URLEncode("Attribute Code"),
+                           GLOBALLANGUAGE,
+                           RANDOM(2000));
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000004;1;Field  ;
+                Name=WebControl;
+                SourceExpr=Request;
+                ControlAddIn=[DynamicCommerce.MysydeShop.Connect;PublicKeyToken=eb1e70a97bfaeec6] }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000001 : Record 5447300;
+      Text001@1000000003 : TextConst 'DEU=%1 %2 zu Artikel %3 bearbeiten;ENU=Edit - %1 %2 for item %3';
+      Language@1000000004 : Record 8;
+      WebshopManagement@1000000005 : Codeunit 5447300;
+      Request@1000000002 : Text[1024];
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

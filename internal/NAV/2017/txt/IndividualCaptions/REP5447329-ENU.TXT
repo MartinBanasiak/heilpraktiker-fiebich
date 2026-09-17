@@ -1,0 +1,8 @@
+R5447329-N2-C1-P8629-A1033-L999:Prefix
+R5447329-N2-C2-P8629-A1033-L999:No. of Coupon Lines
+R5447329-N2-C3-P8629-A1033-L999:Configuration
+R5447329-N2-C4-P8629-A1033-L999:Suffix
+R5447329-N2-C5-P8629-A1033-L999:No. of random characters
+R5447329-P8629-A1033-L999:Webshop Create Coupon Codes
+R5447329-Q1007-P26171-A1033-L999:The total character length is larger than allowed. Prefix + random characters + suffix must not exceed a length of 20 characters.
+R5447329-Q1009-P26171-A1033-L999:The currently given number of random characters is insufficient to generate enough sufficiently random codes. Please increase the number of random characters or decrease the number of coupon lines to be generated.

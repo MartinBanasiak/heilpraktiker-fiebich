@@ -1,0 +1,19 @@
+N6650-C1000000005-P8629-A1031-L999:Reklamation
+N6650-C1905885101-P8629-A1031-L999:Fakturierung
+N6650-C1906801201-P8629-A1031-L999:Lieferung
+N6650-C1907468901-P8629-A1031-L999:Außenhandel
+N6650-C1-P8629-A1031-L999:Allgemein
+N6650-P55242-G1140001-P8629-A1031-L999:&Belegzeilenverfolgung
+N6650-P55242-G45-P8629-A1031-L999:R&ücklieferung
+N6650-P55242-G47-P8629-A1031-L999:Be&merkungen
+N6650-P55242-G48-P8629-A1031-L999:D&rucken
+N6650-P55242-G49-P8629-A1031-L999:&Navigate
+N6650-P55242-G77-P8629-A1031-L999:&Zeile
+N6650-P55242-G79-P8629-A1031-L999:Dimensionen
+N6650-P55242-G79-P8631-A1031-L999:Anzeigen oder Bearbeiten von Dimensionen, wie etwa eines Bereichs, eines Projekts oder einer Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen können, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.
+N6650-P55242-G81-P8629-A1031-L999:Details der Gelangensbestätigung
+N6650-P55242-G82-P8629-A1031-L999:Gelangensbestätigung drucken
+N6650-P55242-G83-P8629-A1031-L999:Genehmigungen
+N6650-P55242-G83-P8631-A1031-L999:Zeigt eine Liste der Datensätze an, die noch genehmigt werden müssen. Beispielsweise wird angezeigt, wer die Genehmigung des Datensatzes angefordert hat, wann er gesendet wurde und bis wann er genehmigt sein muss.
+N6650-P55242-G8-P8629-A1031-L999:Statistik
+N6650-P8629-A1031-L999:Gebuchte Rücklieferung

@@ -1,0 +1,256 @@
+T36-F100-P8629-A1031-L999:Externe Belegnummer
+T36-F101-P8629-A1031-L999:Ursprungsregion
+T36-F102-P8629-A1031-L999:Verfahren
+T36-F104-P8629-A1031-L999:Zahlungsformcode
+T36-F105-P8629-A1031-L999:Zustellercode
+T36-F106-P8629-A1031-L999:Paketverfolgungsnr.
+T36-F107-P8629-A1031-L999:Nummernserie
+T36-F108-P8629-A1031-L999:Buchungsnr.-Serie
+T36-F109-P8629-A1031-L999:Lieferungsnr.-Serie
+T36-F10-P8629-A1031-L999:Rech. an Kontakt
+T36-F114-P8629-A1031-L999:Steuergebietscode
+T36-F115-P8629-A1031-L999:Steuerpflichtig
+T36-F116-P8629-A1031-L999:MwSt.-Geschäftsbuchungsgruppe
+T36-F117-P8629-A1031-L999:Reservieren
+T36-F117-P8632-A1031-L999:Nie,Optional,Immer
+T36-F118-P8629-A1031-L999:Ausgleichs-ID
+T36-F119-P8629-A1031-L999:MwSt.-Bemessungsgr. Skonto %
+T36-F11-P8629-A1031-L999:Ihre Referenz
+T36-F1200-P8629-A1031-L999:Lastschrift-Mandat-ID
+T36-F120-P8629-A1031-L999:Status
+T36-F120-P8632-A1031-L999:Offen,Freigegeben,Genehmigung ausstehend,Vorauszahlung ausstehend
+T36-F121-P8629-A1031-L999:Rechnungsrab.-Berechnung
+T36-F121-P8632-A1031-L999:Kein,%,Betrag
+T36-F122-P8629-A1031-L999:Rechnungsrab.-Wert
+T36-F123-P8629-A1031-L999:IC-Beleg senden
+T36-F124-P8629-A1031-L999:IC-Status
+T36-F124-P8632-A1031-L999:Neu,Offen,Gesendet
+T36-F125-P8629-A1031-L999:Verk. an IC-Partnercode
+T36-F126-P8629-A1031-L999:Rech. an IC-Partnercode
+T36-F129-P8629-A1031-L999:IC-Richtung
+T36-F129-P8632-A1031-L999:Ausgehend,Eingehend
+T36-F12-P8629-A1031-L999:Lief. an Code
+T36-F1305-P8629-A1031-L999:Rechnungsrab.-Betrag
+T36-F130-P8629-A1031-L999:Vorauszahlung %
+T36-F131-P8629-A1031-L999:Vorauszahlung Nummernserie
+T36-F132-P8629-A1031-L999:Vorauszahlung komprimieren
+T36-F133-P8629-A1031-L999:Fälligkeitsdatum Vorauszahlung
+T36-F134-P8629-A1031-L999:Vorauszahlungsgutschrift Nummernserie
+T36-F135-P8629-A1031-L999:Vorauszahlungs-Buchungsbeschreibung
+T36-F138-P8629-A1031-L999:Skontodatum Vorauszahlung
+T36-F139-P8629-A1031-L999:Zlg.-Bedingungscode Vorauszahlung
+T36-F13-P8629-A1031-L999:Lief. an Name
+T36-F140-P8629-A1031-L999:Skonto % Vorauszahlung
+T36-F14-P8629-A1031-L999:Lief. an Name 2
+T36-F151-P8629-A1031-L999:Angebotsnr.
+T36-F15-P8629-A1031-L999:Lief. an Adresse
+T36-F160-P8629-A1031-L999:Aufgabenwarteschlange - Status
+T36-F160-P8632-A1031-L999: ,Geplant für Buchung,Fehler,Buchung
+T36-F161-P8629-A1031-L999:Aufgabenwarteschlange - Posten-ID
+T36-F165-P8629-A1031-L999:Lfd. Nr. eingehender Beleg
+T36-F16-P8629-A1031-L999:Lief. an Adresse 2
+T36-F17-P8629-A1031-L999:Lief. an Ort
+T36-F18-P8629-A1031-L999:Lief. an Kontakt
+T36-F19-P8629-A1031-L999:Auftragsdatum
+T36-F1-P8629-A1031-L999:Belegart
+T36-F1-P8632-A1031-L999:Angebot,Auftrag,Rechnung,Gutschrift,Rahmenauftrag,Reklamation
+T36-F200-P8629-A1031-L999:Arbeitsbeschreibung
+T36-F20-P8629-A1031-L999:Buchungsdatum
+T36-F21-P8629-A1031-L999:Warenausg.-Datum
+T36-F22-P8629-A1031-L999:Buchungsbeschreibung
+T36-F23-P8629-A1031-L999:Zlg.-Bedingungscode
+T36-F24-P8629-A1031-L999:Fälligkeitsdatum
+T36-F25-P8629-A1031-L999:Skonto %
+T36-F26-P8629-A1031-L999:Skontodatum
+T36-F27-P8629-A1031-L999:Lieferbedingungscode
+T36-F28-P8629-A1031-L999:Lagerortcode
+T36-F29-P8629-A1031-L999:Shortcutdimensionscode 1
+T36-F2-P8629-A1031-L999:Verk. an Deb.-Nr.
+T36-F30-P8629-A1031-L999:Shortcutdimensionscode 2
+T36-F31-P8629-A1031-L999:Debitorenbuchungsgruppe
+T36-F32-P8629-A1031-L999:Währungscode
+T36-F33-P8629-A1031-L999:Währungsfaktor
+T36-F34-P8629-A1031-L999:Debitorenpreisgruppe
+T36-F35-P8629-A1031-L999:Preise inkl. MwSt.
+T36-F37-P8629-A1031-L999:Rechnungsrabattcode
+T36-F3-P8629-A1031-L999:Nr.
+T36-F40-P8629-A1031-L999:Debitorenrabattgruppe
+T36-F41-P8629-A1031-L999:Sprachcode
+T36-F43-P8629-A1031-L999:Verkäufercode
+T36-F45-P8629-A1031-L999:Auftragsgruppe
+T36-F46-P8629-A1031-L999:Bemerkung
+T36-F47-P8629-A1031-L999:Anzahl gedruckt
+T36-F480-P8629-A1031-L999:Dimensionssatz-ID
+T36-F4-P8629-A1031-L999:Rech. an Deb.-Nr.
+T36-F5043-P8629-A1031-L999:Anz. archivierter Versionen
+T36-F5048-P8629-A1031-L999:Belegnr.-Häufigkeit
+T36-F5050-P8629-A1031-L999:Kampagnennr.
+T36-F5051-P8629-A1031-L999:Verk. an Deb.-Vorlagencode
+T36-F5052-P8629-A1031-L999:Verk. an Kontaktnr.
+T36-F5053-P8629-A1031-L999:Rech. an Kontaktnr.
+T36-F5054-P8629-A1031-L999:Rech. an Deb.-Vorlagencode
+T36-F5055-P8629-A1031-L999:Verkaufschancennr.
+T36-F51-P8629-A1031-L999:Abwarten
+T36-F52-P8629-A1031-L999:Ausgleich mit Belegart
+T36-F52-P8632-A1031-L999: ,Zahlung,Rechnung,Gutschrift,Zinsrechnung,Mahnung,Erstattung
+T36-F53-P8629-A1031-L999:Ausgleich mit Belegnr.
+T36-F5447300-P8629-A1031-L999:Webshop Bestellnr.
+T36-F5447301-P8629-A1031-L999:Webshop Zahlungstransaktionsnr.
+T36-F5447302-P8629-A1031-L999:Datum Webshop Synchronisation
+T36-F5447303-P8629-A1031-L999:Webshop Shop Code
+T36-F5447304-P8629-A1031-L999:Webshop Sprachcode
+T36-F5447305-P8629-A1031-L999:Webshop Auftragsbestätigung senden
+T36-F5447306-P8629-A1031-L999:Datum Webshop Auftragsbest. versandt
+T36-F5447307-P8629-A1031-L999:Webshop Lieferbenachr. senden
+T36-F5447308-P8629-A1031-L999:Datum Webshop Lieferbenachr. versandt
+T36-F5447309-P8629-A1031-L999:Ursprungsbetrag Online-Bestellung
+T36-F5447310-P8629-A1031-L999:Online Zahlungs-ID
+T36-F5447311-P8629-A1031-L999:Online Zahlung durchführen
+T36-F5447312-P8629-A1031-L999:Datum Online Zahlung durchgeführt
+T36-F5447313-P8629-A1031-L999:Fehler Online Zahlung
+T36-F5447314-P8629-A1031-L999:Online Zahlung ausgleichen
+T36-F5447315-P8629-A1031-L999:Datum Online Zahlung ausgeglichen
+T36-F5447316-P8629-A1031-L999:Webshop Zahlungsart Zeilennr.
+T36-F5447317-P8629-A1031-L999:Webshop Zahlungsart Beschreibung
+T36-F5447318-P8629-A1031-L999:Webshop Versandart Zeilennr.
+T36-F5447319-P8629-A1031-L999:Webshop Versandart Beschreibung
+T36-F5447320-P8629-A1031-L999:Datum letzte Änderung (Webshop)
+T36-F5447321-P8629-A1031-L999:Datum letzte Aktualisierung (Webshop)
+T36-F5447323-P8629-A1031-L999:Status Webshop Bonitätsprüfung
+T36-F5447323-P8632-A1031-L999:Keine Angabe,Bestanden,Nicht Bestanden
+T36-F5447324-P8629-A1031-L999:Webshop Rechnungsmail senden
+T36-F5447325-P8629-A1031-L999:Datum Webshop Rechnungsmail versandt
+T36-F5447326-P8629-A1031-L999:Webshop Gutschriftmail senden
+T36-F5447327-P8629-A1031-L999:Datum Webshop Gutschriftmail versandt
+T36-F5447340-P8629-A1031-L999:Webshop Reklamationsnr.
+T36-F5447341-P8629-A1031-L999:Webshop Reklamation Shop Code
+T36-F5447342-P8629-A1031-L999:Webshop Reklamation Sprachcode
+T36-F5447343-P8629-A1031-L999:Datum Webshop Synch. Reklamation
+T36-F5447344-P8629-A1031-L999:Webshop Abonnement Code
+T36-F5447345-P8629-A1031-L999:Webshop Abo. Kunde Zeilennr.
+T36-F5447346-P8629-A1031-L999:Web. Kunde Pseud. Zahlungsdaten Zeilennr.
+T36-F5447347-P8629-A1031-L999:Webshop Abo. Sequenzschritt Zeilennr.
+T36-F5447348-P8629-A1031-L999:Ist Webshop Abo. Lieferauftrag
+T36-F5447349-P8629-A1031-L999:Ist Webshop Abo. Rechnungsauftrag
+T36-F5447350-P8629-A1031-L999:E-Mail Adr. Webshop Kunde
+T36-F55-P8629-A1031-L999:Gegenkontonr.
+T36-F56-P8629-A1031-L999:Rechnungsrabatt neu berechnen
+T36-F5700-P8629-A1031-L999:Zuständigkeitseinheitencode
+T36-F5750-P8629-A1031-L999:Versandanweisung
+T36-F5750-P8632-A1031-L999:Teillieferung,Komplettlieferung
+T36-F5751-P8629-A1031-L999:Nicht fakt. Lieferungen
+T36-F5752-P8629-A1031-L999:Komplettlieferung (Ausgang)
+T36-F5753-P8629-A1031-L999:Buchung von Lagerref.-Nr.
+T36-F5754-P8629-A1031-L999:Lagerortfilter
+T36-F5755-P8629-A1031-L999:Geliefert
+T36-F5790-P8629-A1031-L999:Gewünschtes Lieferdatum
+T36-F5791-P8629-A1031-L999:Zugesagtes Lieferdatum
+T36-F5792-P8629-A1031-L999:Transportzeit
+T36-F5793-P8629-A1031-L999:Ausgeh. Lagerdurchlaufzeit
+T36-F5794-P8629-A1031-L999:Zustellertransportartencode
+T36-F5795-P8629-A1031-L999:Fällige Lieferung
+T36-F5796-P8629-A1031-L999:Datumsfilter
+T36-F57-P8629-A1031-L999:Warenausgang
+T36-F5800-P8629-A1031-L999:Wareneingang
+T36-F5801-P8629-A1031-L999:Rücksendungsnr.
+T36-F5802-P8629-A1031-L999:Rücksendungsnr.-Serie
+T36-F5803-P8629-A1031-L999:Letzte Rücksendungsnr.
+T36-F58-P8629-A1031-L999:Rechnung
+T36-F59-P8629-A1031-L999:Gebuchte Belege drucken
+T36-F5-P8629-A1031-L999:Rech. an Name
+T36-F600-P8629-A1031-L999:Zahlungsverkehr-Satz-ID
+T36-F60-P8629-A1031-L999:Betrag
+T36-F61-P8629-A1031-L999:Betrag inkl. MwSt.
+T36-F62-P8629-A1031-L999:Lieferungsnr.
+T36-F63-P8629-A1031-L999:Buchungsnr.
+T36-F64-P8629-A1031-L999:Letzte Lieferscheinnr.
+T36-F65-P8629-A1031-L999:Letzte Buchungsnr.
+T36-F66-P8629-A1031-L999:Vorauszahlungsnr.
+T36-F67-P8629-A1031-L999:Letzte Vorauszahlungsnr.
+T36-F68-P8629-A1031-L999:Vorauszahlungs-Gutschriftnr.
+T36-F69-P8629-A1031-L999:Letzte Vorauszahlungs-Gutschriftnr.
+T36-F6-P8629-A1031-L999:Rech. an Name 2
+T36-F7001-P8629-A1031-L999:Zeilenrabatt zulassen
+T36-F70-P8629-A1031-L999:USt-IdNr.
+T36-F71-P8629-A1031-L999:Sammelrechnung
+T36-F7200-P8629-A1031-L999:Verwendete Lieferung abrufen
+T36-F73-P8629-A1031-L999:Ursachencode
+T36-F74-P8629-A1031-L999:Geschäftsbuchungsgruppe
+T36-F75-P8629-A1031-L999:EU-Dreiecksgeschäft
+T36-F76-P8629-A1031-L999:Art des Geschäftes
+T36-F77-P8629-A1031-L999:Verkehrszweig
+T36-F78-P8629-A1031-L999:MwSt.-Länder-/Regionscode
+T36-F79-P8629-A1031-L999:Verk. an Name
+T36-F7-P8629-A1031-L999:Rech. an Adresse
+T36-F80-P8629-A1031-L999:Verk. an Name 2
+T36-F81-P8629-A1031-L999:Verk. an Adresse
+T36-F82-P8629-A1031-L999:Verk. an Adresse 2
+T36-F83-P8629-A1031-L999:Verk. an Ort
+T36-F84-P8629-A1031-L999:Verk. an Kontakt
+T36-F85-P8629-A1031-L999:Rech. an PLZ-Code
+T36-F86-P8629-A1031-L999:Rech. an Bundesregion
+T36-F87-P8629-A1031-L999:Rech. an Länder-/Regionscode
+T36-F88-P8629-A1031-L999:Verk. an PLZ-Code
+T36-F89-P8629-A1031-L999:Verk. an Bundesregion
+T36-F8-P8629-A1031-L999:Rech. an Adresse 2
+T36-F9000-P8629-A1031-L999:Zugewiesene Benutzer-ID
+T36-F90-P8629-A1031-L999:Verk. an Länder-/Regionscode
+T36-F91-P8629-A1031-L999:Lief. an PLZ-Code
+T36-F92-P8629-A1031-L999:Lief. an Bundesregion
+T36-F93-P8629-A1031-L999:Lief. an Länder-/Regionscode
+T36-F94-P8629-A1031-L999:Gegenkontoart
+T36-F94-P8632-A1031-L999:Sachkonto,Bankkonto
+T36-F97-P8629-A1031-L999:Einladehafen
+T36-F98-P8629-A1031-L999:Storno
+T36-F99-P8629-A1031-L999:Belegdatum
+T36-F9-P8629-A1031-L999:Rech. an Ort
+T36-P8629-A1031-L999:Verkaufskopf
+T36-Q1003-P26171-A1031-L999:Sie können einen %1 nicht umbenennen.
+T36-Q1004-P26171-A1031-L999:Möchten Sie %1 ändern?
+T36-Q1005-P26171-A1031-L999:Sie können %1 nicht zurücksetzen, da der Beleg eine oder mehrere Zeilen enthält.
+T36-Q1006-P26171-A1031-L999:Sie können %1 nicht ändern, da der Auftrag zu einer oder mehreren Bestellungen gehört.
+T36-Q1007-P26171-A1031-L999:%1 kann nicht größer als %2 in der Tabelle %3 sein.
+T36-Q1009-P26171-A1031-L999:Das Löschen dieses Belegs verursacht eine Lücke in der Nummernserie der Lieferungen. Der leere Warenausgang '%1' wird erstellt, um die Lücke in der Nummernserie zu schließen.\\Soll der Vorgang fortgesetzt werden?
+T36-Q1011-P26171-A1031-L999:Für den Beleg vom Typ %1 mit der Nummer %2 sind unbezahlte Vorauszahlungsrechnungen vorhanden.
+T36-Q1012-P26171-A1031-L999:Das Löschen dieses Belegs verursacht eine Lücke in der Nummernserie der gebuchten Rechnungen. Die leere gebuchte Rechnung '%1' wird erstellt, um die Lücke in der Nummernserie zu schließen.\\Soll der Vorgang fortgesetzt werden?
+T36-Q1013-P26171-A1031-L999:Für den Beleg vom Typ '%1' mit der Nummer %2 sind unbezahlte Vorauszahlungsrechnungen vorhanden.
+T36-Q1014-P26171-A1031-L999:Das Löschen dieses Belegs verursacht eine Lücke in der Nummernserie für gebuchte Gutschriften. Die leere gebuchte Gutschrift '%1' wird erstellt, um die Lücke in der Nummernserie zu schließen.\Soll der Vorgang fortgesetzt werden?
+T36-Q1015-P26171-A1031-L999:Wenn Sie '%1' ändern, werden die vorhandenen Verkaufszeilen gelöscht und neue Verkaufszeilen auf der Grundlage der neuen Kopfinformationen erstellt.\\Möchten Sie '%1' ändern?
+T36-Q1017-P26171-A1031-L999:Sie müssen die vorhandenen Verkaufszeilen löschen, bevor Sie das Feld %1 ändern können.
+T36-Q1018-P26171-A1031-L999:Sie haben das Feld %1 im Verkaufskopf geändert, aber die dazugehörigen Verkaufszeilen wurden nicht geändert.\
+T36-Q1019-P26171-A1031-L999:Sie müssen die vorhandenen Verkaufszeilen manuell ändern.
+T36-Q1020-P26171-A1031-L999:Die Änderung kann eventuell den Wechselkurs, der für die Preiskalkulation der Verkaufszeilen verwendet wurde, beeinflussen.
+T36-Q1021-P26171-A1031-L999:Möchten Sie den Wechselkurs ändern?
+T36-Q1022-P26171-A1031-L999:Sie können diesen Beleg nicht löschen. Ihre Benutzereinrichtung lässt nur %1 %2 zu.
+T36-Q1024-P26171-A1031-L999:Sie haben das Feld '%1' geändert. Da die Neuberechnung der MwSt. Differenzen im Centbereich verursachen kann, müssen die Beträge anschließend überprüft werden. Möchten Sie das Feld '%2' in den Zeilen aktualisieren, um den neuen Wert von '%1' zu berücksichtigen?
+T36-Q1026-P26171-A1031-L999:Wird synchronisiert ...\ von: Verkaufskopf mit %1\ zu: Montagekopf mit %2.
+T36-Q1027-P26171-A1031-L999:Ihre Benutzereinrichtung lässt nur %1 %2 zu.
+T36-Q1028-P26171-A1031-L999:Sie können das %1 nicht ändern, wenn das %2 ausgefüllt wurde.
+T36-Q1029-P26171-A1031-L999:Dieser Auftrag muss eine vollständige Lieferung darstellen.
+T36-Q1030-P26171-A1031-L999:Das Löschen dieses Belegs verursacht eine Lücke in der Nummernserie für Rücksendungen. Die leere Rücksendung '%1' wird erstellt, um die Lücke in der Nummernserie zu schließen.\\Soll der Vorgang fortgesetzt werden?
+T36-Q1031-P26171-A1031-L999:Sie haben das Feld %1 geändert.\\
+T36-Q1032-P26171-A1031-L999:Möchten Sie die Zeilen aktualisieren?
+T36-Q1044-P26171-A1031-L999:Möchten Sie die Abgrenzungspläne für die Zeilen aktualisieren?
+T36-Q1052-P26171-A1031-L999:Verk. an Debitor
+T36-Q1057-P26171-A1031-L999:Rechnung an Debitor
+T36-Q1061-P26171-A1031-L999:Der Beleg wurde nicht gebucht.\Möchten Sie den Assistenten wirklich beenden?
+T36-Q1071-P26171-A1031-L999:Der Verkauf %1 %2 ist bereits vorhanden.
+T36-Q1072-P26171-A1031-L999:%1 kann aufgrund der Zuordnung von %2 %3 zu %4 nicht geändert werden.
+T36-Q1074-P26171-A1031-L999:Kontakt %1 %2 ist mit einem anderen Unternehmen als Debitor %3 verknüpft.
+T36-Q1076-P26171-A1031-L999:Sie können Angebote nicht freigeben oder Aufträge erstellen, solange Sie keinen Debitor auf dem Angebot angegeben haben.\\Möchten Sie jetzt einen Debitor erstellen?
+T36-Q1077-P26171-A1031-L999:Für den Auftrag sind Reservierungen vorhanden. Diese Reservierungen werden storniert, falls durch die Änderung ein Datumskonflikt verursacht wird.\\Soll der Vorgang fortgesetzt werden?
+T36-Q1078-P26171-A1031-L999:Kontakt %1 %2 ist nicht mit Debitor %3 verknüpft.
+T36-Q1081-P26171-A1031-L999:Sie können das Feld %1 nicht ändern, da die %2 %3 als %4 %5 hat und dem Beleg der Art %6 bereits die %7 %8 zugewiesen wurde.
+T36-Q1083-P26171-A1031-L999:Mit diesem Auftrag ist eine gewonnene Verkaufschance verknüpft.\Der Status der Verkaufschance muss in 'Verloren' geändert werden, um den Auftrag löschen zu können.\Möchten Sie den Status dieser Verkaufschance jetzt ändern?
+T36-Q1084-P26171-A1031-L999:Mindestens ein entsprechender gebuchter Beleg wurde während des Löschens generiert, um die Lücken in der Buchungsnr.-Serie zu füllen. Sie können die Belege über das entsprechende Belegarchiv anzeigen oder drucken.
+T36-Q1086-P26171-A1031-L999:Kontakt %1 %2 ist nicht mit einem Debitor verknüpft.
+T36-Q1088-P26171-A1031-L999:Der Status der Verkaufschance wurde nicht geändert. Das System hat das Löschen des Auftrags abgebrochen.
+T36-Q1090-P26171-A1031-L999:Sie haben unter Umständen eine Dimension geändert.\\Möchten Sie die Zeilen aktualisieren?
+T36-Q1091-P26171-A1031-L999:Verkaufsangebot %1 wurde bereits Verkaufschance %2 zugewiesen. Möchten Sie dieses Angebot neu zuweisen?
+T36-Q1092-P26171-A1031-L999:Das Feld %1 darf nicht leer sein, weil dieses Angebot mit einer Verkaufschance verknüpft ist.
+T36-Q1095-P26171-A1031-L999:%1 kann aufgrund einer offenen Lagerkommissionierung für %3 nicht in %2 geändert werden.
+T36-Q1096-P26171-A1031-L999:%1 kann aufgrund eines offenen Warenausgangs für %3 nicht in %2 geändert werden.
+T36-Q1102-P26171-A1031-L999:Der Genehmigungsprozess muss abgebrochen werden, wenn Sie %1 ändern möchten.
+T36-Q1105-P26171-A1031-L999:Das Löschen dieses Belegs verursacht eine Lücke in der Nummernserie für Vorauszahlungsrechnungen. Die leere Vorauszahlungsrechnung '%1' wird erstellt, um die Lücke in der Nummernserie zu schließen.\\Soll der Vorgang fortgesetzt werden?
+T36-Q1108-P26171-A1031-L999:Das Löschen dieses Belegs verursacht eine Lücke in der Nummernserie für Vorauszahlungsgutschriften. Die leere gebuchte Vorauszahlungsgutschrift '%1' wird erstellt, um die Lücke in der Nummernserie zu schließen.\\Soll der Vorgang fortgesetzt werden?
+T36-Q1110-P26171-A1031-L999:%1 ist nur für die Verarbeitung von %2 %3 eingerichtet.

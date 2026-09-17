@@ -1,0 +1,145 @@
+T110-F100-P8629-A1031-L999:Externe Belegnummer
+T110-F101-P8629-A1031-L999:Ursprungsregion
+T110-F102-P8629-A1031-L999:Verfahren
+T110-F104-P8629-A1031-L999:Zahlungsformcode
+T110-F105-P8629-A1031-L999:Zustellercode
+T110-F106-P8629-A1031-L999:Paketverfolgungsnr.
+T110-F109-P8629-A1031-L999:Nummernserie
+T110-F10-P8629-A1031-L999:Rech. an Kontakt
+T110-F110-P8629-A1031-L999:Auftragsnr.-Serie
+T110-F112-P8629-A1031-L999:Benutzer-ID
+T110-F113-P8629-A1031-L999:Herkunftscode
+T110-F114-P8629-A1031-L999:Steuergebietscode
+T110-F115-P8629-A1031-L999:Steuerpflichtig
+T110-F116-P8629-A1031-L999:MwSt.-Geschäftsbuchungsgruppe
+T110-F119-P8629-A1031-L999:MwSt.-Bemessungsgr. Skonto %
+T110-F11-P8629-A1031-L999:Ihre Referenz
+T110-F12-P8629-A1031-L999:Lief. an Code
+T110-F13-P8629-A1031-L999:Lief. an Name
+T110-F14-P8629-A1031-L999:Lief. an Name 2
+T110-F151-P8629-A1031-L999:Angebotsnr.
+T110-F15-P8629-A1031-L999:Lief. an Adresse
+T110-F16-P8629-A1031-L999:Lief. an Adresse 2
+T110-F17-P8629-A1031-L999:Lief. an Ort
+T110-F18-P8629-A1031-L999:Lief. an Kontakt
+T110-F19-P8629-A1031-L999:Auftragsdatum
+T110-F20-P8629-A1031-L999:Buchungsdatum
+T110-F21-P8629-A1031-L999:Warenausg.-Datum
+T110-F22-P8629-A1031-L999:Buchungsbeschreibung
+T110-F23-P8629-A1031-L999:Zlg.-Bedingungscode
+T110-F24-P8629-A1031-L999:Fälligkeitsdatum
+T110-F25-P8629-A1031-L999:Skonto %
+T110-F26-P8629-A1031-L999:Skontodatum
+T110-F27-P8629-A1031-L999:Lieferbedingungscode
+T110-F28-P8629-A1031-L999:Lagerortcode
+T110-F29-P8629-A1031-L999:Shortcutdimensionscode 1
+T110-F2-P8629-A1031-L999:Verk. an Deb.-Nr.
+T110-F30-P8629-A1031-L999:Shortcutdimensionscode 2
+T110-F31-P8629-A1031-L999:Debitorenbuchungsgruppe
+T110-F32-P8629-A1031-L999:Währungscode
+T110-F33-P8629-A1031-L999:Währungsfaktor
+T110-F34-P8629-A1031-L999:Debitorenpreisgruppe
+T110-F35-P8629-A1031-L999:Preise inkl. MwSt.
+T110-F37-P8629-A1031-L999:Rechnungsrabattcode
+T110-F3-P8629-A1031-L999:Nr.
+T110-F40-P8629-A1031-L999:Debitorenrabattgruppe
+T110-F41-P8629-A1031-L999:Sprachcode
+T110-F43-P8629-A1031-L999:Verkäufercode
+T110-F44-P8629-A1031-L999:Auftragsnummer
+T110-F46-P8629-A1031-L999:Bemerkung
+T110-F47-P8629-A1031-L999:Anzahl gedruckt
+T110-F480-P8629-A1031-L999:Dimensionssatz-ID
+T110-F4-P8629-A1031-L999:Rech. an Deb.-Nr.
+T110-F5050-P8629-A1031-L999:Kampagnennr.
+T110-F5052-P8629-A1031-L999:Verk. an Kontaktnr.
+T110-F5053-P8629-A1031-L999:Rech. an Kontaktnr.
+T110-F5055-P8629-A1031-L999:Verkaufschancennr.
+T110-F51-P8629-A1031-L999:Abwarten
+T110-F52-P8629-A1031-L999:Ausgleich mit Belegart
+T110-F52-P8632-A1031-L999: ,Zahlung,Rechnung,Gutschrift,Zinsrechnung,Mahnung,Erstattung
+T110-F53-P8629-A1031-L999:Ausgleich mit Belegnr.
+T110-F5447300-P8629-A1031-L999:Online-Bestellnr.
+T110-F5447301-P8629-A1031-L999:Webshop Zahlungstransaktionsnr.
+T110-F5447302-P8629-A1031-L999:Datum Webshop Synchronisation
+T110-F5447303-P8629-A1031-L999:Webshop Code
+T110-F5447304-P8629-A1031-L999:Webshop Sprachcode
+T110-F5447305-P8629-A1031-L999:Webshop Auftragsbestätigung senden
+T110-F5447306-P8629-A1031-L999:Datum Webshop Auftragsbest. versandt
+T110-F5447307-P8629-A1031-L999:Webshop Lieferbenachr. senden
+T110-F5447308-P8629-A1031-L999:Datum Webshop Lieferbenachr. versandt
+T110-F5447309-P8629-A1031-L999:Ursprungsbetrag Online-Bestellung
+T110-F5447310-P8629-A1031-L999:Online Zahlungs-ID
+T110-F5447311-P8629-A1031-L999:Online Zahlung durchführen
+T110-F5447312-P8629-A1031-L999:Datum Online Zahlung durchgeführt
+T110-F5447313-P8629-A1031-L999:Fehler Online Zahlung
+T110-F5447314-P8629-A1031-L999:Online Zahlung ausgleichen
+T110-F5447315-P8629-A1031-L999:Datum Online Zahlung ausgeglichen
+T110-F5447316-P8629-A1031-L999:Webshop Zahlungsart Zeilennr.
+T110-F5447317-P8629-A1031-L999:Webshop Zahlungsart Beschreibung
+T110-F5447318-P8629-A1031-L999:Webshop Versandart Zeilennr.
+T110-F5447319-P8629-A1031-L999:Webshop Versandart Beschreibung
+T110-F5447320-P8629-A1031-L999:Datum letzte Änderung (Webshop)
+T110-F5447321-P8629-A1031-L999:Datum letzte Aktualisierung (Webshop)
+T110-F5447323-P8629-A1031-L999:Status Webshop Bonitätsprüfung
+T110-F5447324-P8629-A1031-L999:Webshop Rechnungsmail senden
+T110-F5447325-P8629-A1031-L999:Datum Webshop Rechnungsmail versandt
+T110-F5447326-P8629-A1031-L999:Webshop Gutschriftmail senden
+T110-F5447327-P8629-A1031-L999:Datum Webshop Gutschriftmail versandt
+T110-F5447340-P8629-A1031-L999:Webshop Reklamationsnr.
+T110-F5447341-P8629-A1031-L999:Webshop Reklamation Shop Code
+T110-F5447342-P8629-A1031-L999:Webshop Reklamation Sprachcode
+T110-F5447343-P8629-A1031-L999:Datum Webshop Synch. Reklamation
+T110-F5447344-P8629-A1031-L999:Webshop Abonnement Code
+T110-F5447345-P8629-A1031-L999:Webshop Abo. Kunde Zeilennr.
+T110-F5447346-P8629-A1031-L999:Web. Kunde Pseud. Zahlungsdaten Zeilennr.
+T110-F5447347-P8629-A1031-L999:Webshop Abo. Sequenzschritt Zeilennr.
+T110-F5447348-P8629-A1031-L999:Ist Webshop Abo. Lieferauftrag
+T110-F5447349-P8629-A1031-L999:Ist Webshop Abo. Rechnungsauftrag
+T110-F5447350-P8629-A1031-L999:E-Mail Adr. Webshop Kunde
+T110-F5447351-P8629-A1031-L999:Wartedauer Web. Lieferben. Versand
+T110-F5447353-P8629-A1031-L999:PayPal Transaktion ID
+T110-F5447354-P8629-A1031-L999:Marktplatz Bestellnummer
+T110-F5447450-P4962-Q1000000001-P26171-A1031-L999:Der Ländercode der Versandoption und der zugeordneten Zone passen nicht zusammen.
+T110-F5447450-P8629-A1031-L999:Versandgruppe Code
+T110-F55-P8629-A1031-L999:Gegenkontonr.
+T110-F5700-P8629-A1031-L999:Zuständigkeitseinheitencode
+T110-F5790-P8629-A1031-L999:Gewünschtes Lieferdatum
+T110-F5791-P8629-A1031-L999:Zugesagtes Lieferdatum
+T110-F5792-P8629-A1031-L999:Transportzeit
+T110-F5793-P8629-A1031-L999:Ausgeh. Lagerdurchlaufzeit
+T110-F5794-P8629-A1031-L999:Zustellertransportartencode
+T110-F5-P8629-A1031-L999:Rech. an Name
+T110-F6-P8629-A1031-L999:Rech. an Name 2
+T110-F7001-P8629-A1031-L999:Zeilenrabatt zulassen
+T110-F70-P8629-A1031-L999:USt-IdNr.
+T110-F73-P8629-A1031-L999:Ursachencode
+T110-F74-P8629-A1031-L999:Geschäftsbuchungsgruppe
+T110-F75-P8629-A1031-L999:EU-Dreiecksgeschäft
+T110-F76-P8629-A1031-L999:Art des Geschäftes
+T110-F77-P8629-A1031-L999:Verkehrszweig
+T110-F78-P8629-A1031-L999:MwSt.-Länder-/Regionscode
+T110-F79-P8629-A1031-L999:Verk. an Name
+T110-F7-P8629-A1031-L999:Rech. an Adresse
+T110-F80-P8629-A1031-L999:Verk. an Name 2
+T110-F81-P8629-A1031-L999:Verk. an Adresse
+T110-F82-P8629-A1031-L999:Verk. an Adresse 2
+T110-F83-P8629-A1031-L999:Verk. an Ort
+T110-F84-P8629-A1031-L999:Verk. an Kontakt
+T110-F85-P8629-A1031-L999:Rech. an PLZ-Code
+T110-F86-P8629-A1031-L999:Rech. an Bundesregion
+T110-F87-P8629-A1031-L999:Rech. an Länder-/Regionscode
+T110-F88-P8629-A1031-L999:Verk. an PLZ-Code
+T110-F89-P8629-A1031-L999:Verk. an Bundesregion
+T110-F8-P8629-A1031-L999:Rech. an Adresse 2
+T110-F90-P8629-A1031-L999:Verk. an Länder-/Regionscode
+T110-F91-P8629-A1031-L999:Lief. an PLZ-Code
+T110-F92-P8629-A1031-L999:Lief. an Bundesregion
+T110-F93-P8629-A1031-L999:Lief. an Länder-/Regionscode
+T110-F94-P8629-A1031-L999:Gegenkontoart
+T110-F94-P8632-A1031-L999:Sachkonto,Bankkonto
+T110-F97-P8629-A1031-L999:Einladehafen
+T110-F98-P8629-A1031-L999:Storno
+T110-F99-P8629-A1031-L999:Belegdatum
+T110-F9-P8629-A1031-L999:Rech. an Ort
+T110-P8629-A1031-L999:Verkaufslieferkopf
+T110-Q1003-P26171-A1031-L999:Lieferung

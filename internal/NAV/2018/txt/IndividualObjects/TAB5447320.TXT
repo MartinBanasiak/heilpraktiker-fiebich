@@ -1,0 +1,128 @@
+OBJECT Table 5447320 Webshop Attribute
+{
+  OBJECT-PROPERTIES
+  {
+    Date=22.02.18;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnDelete=BEGIN
+               AttributeLink.SETRANGE("Attribute Code",Code);
+               AttributeLink.DELETEALL(TRUE);
+               AttributeOption.SETRANGE("Attribute Code",Code);
+               AttributeOption.DELETEALL(TRUE);
+               AttributeTranslation.SETRANGE("Attribute Code",Code);
+               AttributeTranslation.DELETEALL(TRUE);
+             END;
+
+    OnRename=BEGIN
+               AttributeLink.RESET;
+               AttributeLink.SETRANGE("Attribute Code",xRec.Code);
+               IF AttributeLink.FINDSET(TRUE,TRUE) THEN REPEAT
+                 IF AttributeLink2.GET(AttributeLink.Type,AttributeLink."No.",AttributeLink."Shop Code",AttributeLink."Language Code",
+                   AttributeLink."Category Line No.",AttributeLink."Attribute Code",AttributeLink."Value Option") THEN
+                   AttributeLink2.RENAME(AttributeLink.Type,AttributeLink."No.",AttributeLink."Shop Code",AttributeLink."Language Code",
+                   AttributeLink."Category Line No.",Rec.Code,AttributeLink."Value Option");
+               UNTIL AttributeLink.NEXT = 0;
+
+               AttributeOption.RESET;
+               AttributeOption.SETRANGE("Attribute Code",xRec.Code);
+               IF AttributeOption.FINDSET(TRUE,TRUE) THEN REPEAT
+                 IF AttributeOption2.GET(AttributeOption."Attribute Code",AttributeOption.Code) THEN
+                   AttributeOption2.RENAME(Rec.Code,AttributeOption.Code);
+               UNTIL AttributeOption.NEXT = 0;
+
+               AttributeTranslation.RESET;
+               AttributeTranslation.SETRANGE("Attribute Code",xRec.Code);
+               IF AttributeTranslation.FINDSET(TRUE,TRUE) THEN REPEAT
+                 IF AttributeTranslation2.GET(AttributeTranslation.Type,AttributeTranslation."Attribute Code",AttributeTranslation."Attribute Link No.",
+                   AttributeTranslation."Language Code") THEN
+                   AttributeTranslation2.RENAME(AttributeTranslation.Type,Rec.Code,AttributeTranslation."Attribute Link No.",
+                   AttributeTranslation."Language Code");
+               UNTIL AttributeTranslation.NEXT = 0;
+             END;
+
+    CaptionML=[DEU=Webshop Merkmal;
+               ENU=Webshop Item Attribute];
+    LookupPageID=Page5447320;
+    DrillDownPageID=Page5447320;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code30        ;CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 3   ;   ;Attribute Type      ;Option        ;CaptionML=[DEU=Merkmaltyp;
+                                                              ENU=Attribute Type];
+                                                   OptionCaptionML=[DEU=Webshop,Amazon,Ebay,Google;
+                                                                    ENU=Webshop,Amazon,Ebay,Google];
+                                                   OptionString=Webshop,Amazon,Ebay,Google }
+    { 10  ;   ;Display Type        ;Option        ;CaptionML=[DEU=Anzeigeart;
+                                                              ENU=Display Type];
+                                                   OptionCaptionML=[DEU=Liste,Liste zum Scrollen,Drop-Down-Liste,Schieberegler,Checkbox,Symbole;
+                                                                    ENU=List,Scroll-List,Drop-Down,Slider,Checkbox,Icons];
+                                                   OptionString=List,Scroll-List,Drop-Down,Slider,Checkbox,Icons }
+    { 11  ;   ;Multiple Choice     ;Boolean       ;CaptionML=[DEU=Mehrfachauswahl m�glich;
+                                                              ENU=Multiple Choice] }
+    { 12  ;   ;Data Type           ;Option        ;CaptionML=[DEU=Datentyp;
+                                                              ENU=Data Type];
+                                                   OptionCaptionML=[DEU=Option,Ganzzahl,Dezimalzahl,Ja/Nein-Feld,Text;
+                                                                    ENU=Option,Integer,Decimal,Boolean,Text];
+                                                   OptionString=Option,Integer,Decimal,Boolean,Text }
+    { 13  ;   ;Existing Data       ;Option        ;CaptionML=[DEU=Vorhandene Daten;
+                                                              ENU=Existing Data];
+                                                   OptionCaptionML=[DEU=" ,Breite,L�nge,H�he,Volumen,Gewicht,Listenpreis,Basispreis,Kreditor,Verf�gbarkeit";
+                                                                    ENU=" ,Width,Length,Height,Cubage,Weight,RetailPrice,BasePrice,Vendor,Inventory"];
+                                                   OptionString=[ ,Width,Length,Height,Cubage,Weight,RetailPrice,BasePrice,Vendor,Inventory] }
+    { 14  ;   ;Auto-Link existing Data;Boolean    ;CaptionML=[DEU=Best. Daten autom. verkn�pfen;
+                                                              ENU=Auto-Link Existing Data] }
+    { 20  ;   ;Use for Filtering   ;Boolean       ;CaptionML=[DEU=F�r Merkmalfilter verwenden;
+                                                              ENU=Use for Filtering] }
+    { 21  ;   ;Use for Item-Comparison;Boolean    ;CaptionML=[DEU=F�r Artikelvergleich verwenden;
+                                                              ENU=Use for Item-Comparison] }
+    { 22  ;   ;Use for Item-Info   ;Boolean       ;CaptionML=[DEU=F�r Artikel-Info verwenden;
+                                                              ENU=Use for Item-Info] }
+    { 30  ;   ;No. of Attribute Options;Integer   ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Webshop Attribute Option" WHERE (Attribute Code=FIELD(Code)));
+                                                   CaptionML=[DEU=Anzahl Merkmaloptionen;
+                                                              ENU=No. of Attribute Options];
+                                                   Editable=No }
+    { 31  ;   ;Map-to Attribute Code;Code30       ;TableRelation="Webshop Attribute".Code;
+                                                   CaptionML=[DEU=Abgebildet auf Merkmal-Code;
+                                                              ENU=Map-to Attribute Code] }
+    { 33  ;   ;Marketplace Code    ;Code10        ;TableRelation="Webshop Shop" WHERE (Shop Type=CONST(marketplace)) }
+    { 34  ;   ;Show in Header      ;Option        ;CaptionML=[DEU=Auf Artikelkarte anzeigen;
+                                                              ENU=Show on Item Card];
+                                                   OptionCaptionML=[DEU=Nicht anzeigen,Oben,Unten;
+                                                                    ENU=None,Header,Footer];
+                                                   OptionString=None,Header,Footer }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      AttributeLink@1000000000 : Record 5447321;
+      AttributeLink2@1000000003 : Record 5447321;
+      AttributeOption@1000000001 : Record 5447322;
+      AttributeOption2@1000000004 : Record 5447322;
+      AttributeTranslation@1000000002 : Record 5447323;
+      AttributeTranslation2@1000000005 : Record 5447323;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

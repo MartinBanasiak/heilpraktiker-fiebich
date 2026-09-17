@@ -1,0 +1,47 @@
+OBJECT Page 5447324 Webshop Attribute Translation
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Editable=Yes;
+    CaptionML=[DEU=Webshop Artikelmerkmal �bersetzungen;
+               ENU=Webshop Attribute Translation];
+    SourceTable=Table5447323;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                CaptionML=[DEU=Sprachcode;
+                           ENU=Language Code];
+                SourceExpr="Language Code" }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=�bersetzung;
+                           ENU=Description];
+                SourceExpr=Description }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

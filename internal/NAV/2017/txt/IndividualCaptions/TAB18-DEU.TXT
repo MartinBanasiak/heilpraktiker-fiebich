@@ -1,0 +1,185 @@
+T18-F100-P8629-A1031-L999:Habenbetrag (MW)
+T18-F102-P8629-A1031-L999:E-Mail
+T18-F103-P8629-A1031-L999:Homepage
+T18-F104-P8629-A1031-L999:Mahnmethodencode
+T18-F105-P8629-A1031-L999:Mahnbetrag
+T18-F106-P8629-A1031-L999:Mahnbetrag (MW)
+T18-F107-P8629-A1031-L999:Nummernserie
+T18-F108-P8629-A1031-L999:Steuergebietscode
+T18-F109-P8629-A1031-L999:Steuerpflichtig
+T18-F10-P8629-A1031-L999:Telexnr.
+T18-F110-P8629-A1031-L999:MwSt.-Geschäftsbuchungsgruppe
+T18-F111-P8629-A1031-L999:Währungsfilter
+T18-F113-P8629-A1031-L999:Auftragsbestand (MW)
+T18-F114-P8629-A1031-L999:Nicht fakt. Lieferungen (MW)
+T18-F115-P8629-A1031-L999:Reservieren
+T18-F115-P8632-A1031-L999:Nie,Optional,Immer
+T18-F116-P8629-A1031-L999:Zahlungstoleranz sperren
+T18-F117-P8629-A1031-L999:Skontotoleranz (MW)
+T18-F118-P8629-A1031-L999:Zahlungstoleranz (MW)
+T18-F119-P8629-A1031-L999:IC-Partnercode
+T18-F11-P8629-A1031-L999:Belegsendeprofil
+T18-F120-P8629-A1031-L999:Erstattungen
+T18-F121-P8629-A1031-L999:Erstattungen (MW)
+T18-F122-P8629-A1031-L999:Weitere Beträge
+T18-F123-P8629-A1031-L999:Weitere Beträge (MW)
+T18-F124-P8629-A1031-L999:Vorauszahlung %
+T18-F125-P8629-A1031-L999:Ausstehende Rechnungen (MW)
+T18-F126-P8629-A1031-L999:Ausstehende Rechnungen
+T18-F130-P8629-A1031-L999:Anzahl archivierter Belege für Rech. an
+T18-F131-P8629-A1031-L999:Anzahl archivierter Belege für Verk. an
+T18-F132-P8629-A1031-L999:Partnerart
+T18-F132-P8632-A1031-L999: ,Unternehmen,Person
+T18-F140-P8629-A1031-L999:Image
+T18-F14-P8629-A1031-L999:Unsere Kontonr.
+T18-F15-P8629-A1031-L999:Gebietscode
+T18-F16-P8629-A1031-L999:Globaler Dimensionscode 1
+T18-F17-P8629-A1031-L999:Globaler Dimensionscode 2
+T18-F18-P8629-A1031-L999:Unternehmenskette
+T18-F19-P8629-A1031-L999:Budgetierter Betrag
+T18-F1-P8629-A1031-L999:Nr.
+T18-F20-P8629-A1031-L999:Kreditlimit (MW)
+T18-F21-P8629-A1031-L999:Debitorenbuchungsgruppe
+T18-F22-P8629-A1031-L999:Währungscode
+T18-F23-P8629-A1031-L999:Debitorenpreisgruppe
+T18-F24-P8629-A1031-L999:Sprachcode
+T18-F26-P8629-A1031-L999:Statistikgruppe
+T18-F27-P8629-A1031-L999:Zlg.-Bedingungscode
+T18-F288-P8629-A1031-L999:Bevorzugter Bankkontocode
+T18-F28-P8629-A1031-L999:Zinskonditionencode
+T18-F29-P8629-A1031-L999:Verkäufercode
+T18-F2-P8629-A1031-L999:Name
+T18-F30-P8629-A1031-L999:Lieferbedingungscode
+T18-F31-P8629-A1031-L999:Zustellercode
+T18-F32-P8629-A1031-L999:Transitstelle
+T18-F33-P8629-A1031-L999:Rechnungsrabattcode
+T18-F34-P8629-A1031-L999:Debitorenrabattgruppe
+T18-F35-P8629-A1031-L999:Länder-/Regionscode
+T18-F36-P8629-A1031-L999:Einzugsverfahren
+T18-F37-P8629-A1031-L999:Betrag
+T18-F38-P8629-A1031-L999:Bemerkung
+T18-F39-P8629-A1031-L999:Gesperrt
+T18-F39-P8632-A1031-L999: ,Liefern,Fakturieren,Alle
+T18-F3-P8629-A1031-L999:Suchbegriff
+T18-F40-P8629-A1031-L999:Anzahl Rechnungskopien
+T18-F41-P8629-A1031-L999:Letzte Kontoauszugsnr.
+T18-F42-P8629-A1031-L999:Kontoauszüge drucken
+T18-F45-P8629-A1031-L999:Rech. an Deb.-Nr.
+T18-F46-P8629-A1031-L999:Priorität
+T18-F47-P8629-A1031-L999:Zahlungsformcode
+T18-F4-P8629-A1031-L999:Name 2
+T18-F5049-P8629-A1031-L999:Primäre Kontaktnr.
+T18-F5447300-P8629-A1031-L999:Datum Zugangsdaten gesendet
+T18-F5447301-P8629-A1031-L999:Hat Webshop Login
+T18-F5447302-P8629-A1031-L999:Webshop Login E-Mail Adr.
+T18-F5447303-P8629-A1031-L999:Webshop Shop Code
+T18-F5447304-P8629-A1031-L999:Webshop Sprachcode
+T18-F5447305-P8629-A1031-L999:Datum letzte Änderung (Webshop)
+T18-F5447306-P8629-A1031-L999:Datum letzte Aktualisierung (Webshop)
+T18-F5447311-P8629-A1031-L999:Anzahl Webshop Gruppenberechtigungen
+T18-F5447312-P8629-A1031-L999:Anzahl Webshop Artikelberechtigungen
+T18-F5447313-P8629-A1031-L999:Anzahl Webshop Kategorieberechtigungen
+T18-F54-P8629-A1031-L999:Korrigiert am
+T18-F55-P8629-A1031-L999:Datumsfilter
+T18-F56-P8629-A1031-L999:Globaler Dimensionsfilter 1
+T18-F5700-P8629-A1031-L999:Zuständigkeitseinheitencode
+T18-F5750-P8629-A1031-L999:Versandanweisung
+T18-F5750-P8632-A1031-L999:Teillieferung,Komplettlieferung
+T18-F5790-P8629-A1031-L999:Transportzeit
+T18-F5792-P8629-A1031-L999:Zustellertransportartencode
+T18-F57-P8629-A1031-L999:Globaler Dimensionsfilter 2
+T18-F58-P8629-A1031-L999:Saldo
+T18-F5900-P8629-A1031-L999:Servicegebietscode
+T18-F5902-P8629-A1031-L999:Gewinn-/Verlustbetrag (Vertr.)
+T18-F5903-P8629-A1031-L999:Lief. an Filter
+T18-F5910-P8629-A1031-L999:Serviceauftragsbestand (MW)
+T18-F5911-P8629-A1031-L999:Service Lief. nicht fakt. Betrag (MW)
+T18-F5912-P8629-A1031-L999:Ausstehende Servicerechnungen (MW)
+T18-F59-P8629-A1031-L999:Saldo (MW)
+T18-F5-P8629-A1031-L999:Adresse
+T18-F60-P8629-A1031-L999:Bewegung
+T18-F61-P8629-A1031-L999:Bewegung (MW)
+T18-F62-P8629-A1031-L999:Verkauf (MW)
+T18-F63-P8629-A1031-L999:DB (MW)
+T18-F64-P8629-A1031-L999:Rechnungsrabatte (MW)
+T18-F65-P8629-A1031-L999:Skonto (MW)
+T18-F66-P8629-A1031-L999:Fälliger Saldo
+T18-F67-P8629-A1031-L999:Fälliger Saldo (MW)
+T18-F69-P8629-A1031-L999:Zahlungen
+T18-F6-P8629-A1031-L999:Adresse 2
+T18-F7001-P8629-A1031-L999:Zeilenrabatt zulassen
+T18-F70-P8629-A1031-L999:Fakturierter Betrag
+T18-F7171-P8629-A1031-L999:Anzahl Angebote
+T18-F7172-P8629-A1031-L999:Anzahl Rahmenaufträge
+T18-F7173-P8629-A1031-L999:Anzahl Aufträge
+T18-F7174-P8629-A1031-L999:Anzahl Rechnungen
+T18-F7175-P8629-A1031-L999:Anzahl Reklamationen
+T18-F7176-P8629-A1031-L999:Anzahl Gutschriften
+T18-F7177-P8629-A1031-L999:Anzahl gebuchter Lieferungen
+T18-F7178-P8629-A1031-L999:Anzahl gebuchter Rechnungen
+T18-F7179-P8629-A1031-L999:Anz. gebuchter Rücksendungen
+T18-F7180-P8629-A1031-L999:Anzahl gebuchter Gutschriften
+T18-F7181-P8629-A1031-L999:Anzahl Lieferadressen
+T18-F7182-P8629-A1031-L999:Anzahl Angebote für Rechnungsadresse
+T18-F7183-P8629-A1031-L999:Anzahl Rahmenaufträge für Rechnungsadresse
+T18-F7184-P8629-A1031-L999:Anzahl Aufträge für Rechnungsadresse
+T18-F7185-P8629-A1031-L999:Anzahl Rechungen für Rechnungsadresse
+T18-F7186-P8629-A1031-L999:Anzahl Reklamationen für Rechnungsadresse
+T18-F7187-P8629-A1031-L999:Anzahl Gutschriften für Rechnungsadresse
+T18-F7188-P8629-A1031-L999:Anzahl gebuchter Lieferungen für Rechnungsadresse
+T18-F7189-P8629-A1031-L999:Anzahl gebuchter Rechnungen für Rechnungsadresse
+T18-F7190-P8629-A1031-L999:Anzahl geb. Retourenbel. für Rechnungsadresse
+T18-F7191-P8629-A1031-L999:Anz. geb. Gutschr. für Rechnungsadresse
+T18-F71-P8629-A1031-L999:Gutgeschriebener Betrag
+T18-F72-P8629-A1031-L999:Zinsrechnungsbetrag
+T18-F74-P8629-A1031-L999:Bezahlt (MW)
+T18-F75-P8629-A1031-L999:Fakturierter Betrag (MW)
+T18-F7600-P8629-A1031-L999:Basiskalendercode
+T18-F7601-P8629-A1031-L999:Verk. an Adr. in Ang. v. kop.
+T18-F7601-P8632-A1031-L999:Unternehmen,Person
+T18-F76-P8629-A1031-L999:Gutgeschriebener Betrag (MW)
+T18-F77-P8629-A1031-L999:Zinsrechnungsbetrag (MW)
+T18-F78-P8629-A1031-L999:Auftragsbestand
+T18-F79-P8629-A1031-L999:Nicht fakt. Lieferungen
+T18-F7-P8629-A1031-L999:Ort
+T18-F80-P8629-A1031-L999:Ausgleichsmethode
+T18-F80-P8632-A1031-L999:Offener Posten,Saldomethode
+T18-F82-P8629-A1031-L999:Preise inkl. MwSt.
+T18-F83-P8629-A1031-L999:Lagerortcode
+T18-F840-P8629-A1031-L999:Cashflow - Zlg.-Bedingungscode
+T18-F84-P8629-A1031-L999:Faxnr.
+T18-F85-P8629-A1031-L999:Telex Namengeber
+T18-F86-P8629-A1031-L999:USt-IdNr.
+T18-F87-P8629-A1031-L999:Sammelrechnung
+T18-F88-P8629-A1031-L999:Geschäftsbuchungsgruppe
+T18-F89-P8629-A1031-L999:Bild
+T18-F8-P8629-A1031-L999:Kontakt
+T18-F90-P8629-A1031-L999:GLN
+T18-F91-P8629-A1031-L999:PLZ-Code
+T18-F92-P8629-A1031-L999:Bundesregion
+T18-F97-P8629-A1031-L999:Sollbetrag
+T18-F98-P8629-A1031-L999:Habenbetrag
+T18-F99-P8629-A1031-L999:Sollbetrag (MW)
+T18-F9-P8629-A1031-L999:Telefonnr.
+T18-P8629-A1031-L999:Debitor
+T18-Q1000-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da noch ein(e) %3 (oder mehrere) für diesen Debitor vorhanden ist.
+T18-Q1001-P26171-A1031-L999:Möchten Sie einen Kontakt für %1 %2 erstellen?
+T18-Q1017-P26171-A1031-L999:Bevor Sie Online Map verwenden können, müssen Sie die Felder des Fensters 'Online Map-Einrichtung' ausfüllen.\Informationen hierzu finden Sie in der Hilfe zum Einrichten von Online Map.
+T18-Q1019-P26171-A1031-L999:Möchten Sie Zahlungstoleranzen für momentan offene Posten löschen?
+T18-Q1020-P26171-A1031-L999:Kontakt %1 %2 ist nicht mit Debitor %3 %4 verknüpft.
+T18-Q1023-P26171-A1031-L999:buchen
+T18-Q1024-P26171-A1031-L999:erstellen
+T18-Q1025-P26171-A1031-L999:Sie können diese Belegart nicht %1, wenn der Debitor %2 für die Art %3 gesperrt ist.
+T18-Q1028-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da für diesen Debitor mindestens ein nicht stornierter Servicevertrag vorhanden ist.
+T18-Q1029-P26171-A1031-L999:Wenn Sie %1 %2 löschen, wird die %3 für die verknüpften Serviceartikel ebenfalls gelöscht. Möchten Sie fortfahren?
+T18-Q1030-P26171-A1031-L999:Debitor kann nicht gelöscht werden.
+T18-Q1031-P26171-A1031-L999:%1 %2 wurde %3 %4 zugewiesen.\Derselbe %1 kann nicht auf mehr als einen %3 eingegeben werden. Geben Sie einen anderen Code ein.
+T18-Q1032-P26171-A1031-L999:Sie können den Inhalt des Feldes %1 nicht ändern, weil für dieses %2 ein oder mehrere offene Posten vorliegen.
+T18-Q1033-P26171-A1031-L999:Das Abstimmen von IC-Buchungen kann schwierig sein, wenn Sie den IC-Partnercode ändern, weil %1 Posten in einem noch nicht geschlossenen Geschäftsjahr aufweist.\ Möchten Sie den IC-Partnercode trotzdem ändern?
+T18-Q1035-P26171-A1031-L999:Sie können %1 %2 nicht löschen, da noch mindestens ein ausstehender Service-%3 für diesen Debitor vorhanden ist.
+T18-Q1036-P26171-A1031-L999:%1 '%2' kann nicht gelöscht werden, da dem Debitor mindestens ein Objekt vom Typ %3 zugeordnet ist.
+T18-Q1037-P26171-A1031-L999:Möchten Sie Zahlungstoleranzen für momentan offene Posten zulassen?
+T18-Q1040-P26171-A1031-L999:Sie müssen einen vorhandenen Debitor auswählen.
+T18-Q1041-P26171-A1031-L999:Erstellt eine neue Debitorenkarte für %1
+T18-Q1042-P26171-A1031-L999:Dieser Debitor ist nicht registriert. Zum Fortfahren wählen Sie eine der folgenden Optionen:
+T18-Q1043-P26171-A1031-L999:Wählt einen vorhandenen Debitor aus

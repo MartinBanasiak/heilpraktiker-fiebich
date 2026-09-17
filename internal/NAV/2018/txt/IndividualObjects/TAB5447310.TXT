@@ -1,0 +1,85 @@
+OBJECT Table 5447310 Webshop Country
+{
+  OBJECT-PROPERTIES
+  {
+    Date=27.07.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Land;
+               ENU=Webshop Country];
+    LookupPageID=Page5447353;
+    DrillDownPageID=Page5447353;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code] }
+    { 2   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code;
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code] }
+    { 3   ;   ;Country Code        ;Code10        ;TableRelation=Country/Region.Code;
+                                                   OnValidate=BEGIN
+                                                                IF Description = '' THEN
+                                                                  IF Country.GET("Country Code") THEN
+                                                                    Description := Country.Name;
+                                                              END;
+
+                                                   CaptionML=[DEU=L�ndercode;
+                                                              ENU=Country Code];
+                                                   NotBlank=Yes }
+    { 4   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 5   ;   ;Invoicing available ;Boolean       ;CaptionML=[DEU=Rechnungsstellung m�glich;
+                                                              ENU=Invoicing available] }
+    { 6   ;   ;Shipping available  ;Boolean       ;CaptionML=[DEU=Lieferung m�glich;
+                                                              ENU=Shipping available] }
+    { 10  ;   ;Customer Template Code;Code10      ;TableRelation="Customer Template".Code;
+                                                   CaptionML=[DEU=Debitor Vorlagencode;
+                                                              ENU=Customer Template Code] }
+    { 11  ;   ;Customer Reminder Terms Code;Code10;TableRelation="Reminder Terms".Code;
+                                                   CaptionML=[DEU=Debitor Mahnmethodencode;
+                                                              ENU=Customer Reminder Terms Code] }
+    { 12  ;   ;Customer Location Code;Code10      ;TableRelation=Location.Code;
+                                                   CaptionML=[DEU=Debitor Lagerortcode;
+                                                              ENU=Customer Location Code] }
+    { 13  ;   ;Customer Salesperson Code;Code10   ;TableRelation=Salesperson/Purchaser.Code;
+                                                   CaptionML=[DEU=Debitor Verk�ufercode;
+                                                              ENU=Customer Salesperson Code] }
+    { 20  ;   ;Pool Customer No.   ;Code20        ;TableRelation=Customer.No.;
+                                                   CaptionML=[DEU=Sammeldebitornr.;
+                                                              ENU=Pool Customer No.] }
+    { 21  ;   ;Enable Reverse Charge;Boolean      ;CaptionML=[DEU=Reverse Charge aktivieren;
+                                                              ENU=Enable Reverse Charge] }
+    { 22  ;   ;Reverse Charge Cust. Tmp. Code;Code10;
+                                                   TableRelation="Customer Template".Code;
+                                                   CaptionML=[DEU=Reverse Charge Debitor Vorlagencode;
+                                                              ENU=Reverse Charge Cust. Tmp. Code] }
+    { 23  ;   ;Reverse Charge Pool Cust. No.;Code20;
+                                                   TableRelation=Customer.No.;
+                                                   CaptionML=[DEU=Reverse Charge Sammeldebitornr.;
+                                                              ENU=Reverse Charge Pool Cust. No.] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Country Code    ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      Country@1000000000 : Record 9;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

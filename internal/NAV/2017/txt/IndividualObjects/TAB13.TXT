@@ -1,0 +1,431 @@
+OBJECT Table 13 Salesperson/Purchaser
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=NAVW110.00,MYSW14.00;
+  }
+  PROPERTIES
+  {
+    DataCaptionFields=Code,Name;
+    OnInsert=BEGIN
+               VALIDATE(Code);
+               DimMgt.UpdateDefaultDim(
+                 DATABASE::"Salesperson/Purchaser",Code,
+                 "Global Dimension 1 Code","Global Dimension 2 Code");
+             END;
+
+    OnModify=BEGIN
+               VALIDATE(Code);
+
+               //dynamic commerce---
+               "Last Date Modified (Webshop)" := CURRENTDATETIME;
+               //dynamic commerce+++
+             END;
+
+    OnDelete=VAR
+               TeamSalesperson@1000 : Record 5084;
+             BEGIN
+               TeamSalesperson.RESET;
+               TeamSalesperson.SETRANGE("Salesperson Code",Code);
+               TeamSalesperson.DELETEALL;
+               DimMgt.DeleteDefaultDim(DATABASE::"Salesperson/Purchaser",Code);
+             END;
+
+    CaptionML=[DEU=Verk�ufer/Eink�ufer;
+               ENU=Salesperson/Purchaser];
+    LookupPageID=Page14;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code10        ;OnValidate=BEGIN
+                                                                TESTFIELD(Code);
+                                                              END;
+
+                                                   CaptionML=[DEU=Code;
+                                                              ENU=Code];
+                                                   NotBlank=Yes }
+    { 2   ;   ;Name                ;Text50        ;CaptionML=[DEU=Name;
+                                                              ENU=Name] }
+    { 3   ;   ;Commission %        ;Decimal       ;CaptionML=[DEU=Provision %;
+                                                              ENU=Commission %];
+                                                   DecimalPlaces=2:2;
+                                                   MinValue=0;
+                                                   MaxValue=100 }
+    { 140 ;   ;Image               ;Media         ;ExtendedDatatype=Person;
+                                                   CaptionML=[DEU=Image;
+                                                              ENU=Image] }
+    { 5050;   ;Global Dimension 1 Code;Code20     ;TableRelation="Dimension Value".Code WHERE (Global Dimension No.=CONST(1));
+                                                   OnValidate=BEGIN
+                                                                ValidateShortcutDimCode(1,"Global Dimension 1 Code");
+                                                              END;
+
+                                                   CaptionML=[DEU=Globaler Dimensionscode 1;
+                                                              ENU=Global Dimension 1 Code];
+                                                   CaptionClass='1,1,1' }
+    { 5051;   ;Global Dimension 2 Code;Code20     ;TableRelation="Dimension Value".Code WHERE (Global Dimension No.=CONST(2));
+                                                   OnValidate=BEGIN
+                                                                ValidateShortcutDimCode(2,"Global Dimension 2 Code");
+                                                              END;
+
+                                                   CaptionML=[DEU=Globaler Dimensionscode 2;
+                                                              ENU=Global Dimension 2 Code];
+                                                   CaptionClass='1,1,2' }
+    { 5052;   ;E-Mail              ;Text80        ;OnValidate=BEGIN
+                                                                IF ("Search E-Mail" = UPPERCASE(xRec."E-Mail")) OR ("Search E-Mail" = '') THEN
+                                                                  "Search E-Mail" := "E-Mail";
+                                                              END;
+
+                                                   ExtendedDatatype=E-Mail;
+                                                   CaptionML=[DEU=E-Mail;
+                                                              ENU=Email] }
+    { 5053;   ;Phone No.           ;Text30        ;ExtendedDatatype=Phone No.;
+                                                   CaptionML=[DEU=Telefonnr.;
+                                                              ENU=Phone No.] }
+    { 5054;   ;Next To-do Date     ;Date          ;FieldClass=FlowField;
+                                                   CalcFormula=Min(To-do.Date WHERE (Salesperson Code=FIELD(Code),
+                                                                                     Closed=CONST(No),
+                                                                                     System To-do Type=FILTER(Organizer|Salesperson Attendee)));
+                                                   CaptionML=[DEU=N�chste Aufgabe am;
+                                                              ENU=Next To-do Date];
+                                                   Editable=No }
+    { 5055;   ;No. of Opportunities;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Opportunity Entry" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                Active=CONST(Yes),
+                                                                                                Estimated Close Date=FIELD(Date Filter),
+                                                                                                Action Taken=FIELD(Action Taken Filter),
+                                                                                                Sales Cycle Code=FIELD(Sales Cycle Filter),
+                                                                                                Sales Cycle Stage=FIELD(Sales Cycle Stage Filter),
+                                                                                                Probability %=FIELD(Probability % Filter),
+                                                                                                Completed %=FIELD(Completed % Filter)));
+                                                   CaptionML=[DEU=Anzahl Verkaufschancen;
+                                                              ENU=No. of Opportunities];
+                                                   Editable=No }
+    { 5056;   ;Estimated Value (LCY);Decimal      ;FieldClass=FlowField;
+                                                   CalcFormula=Sum("Opportunity Entry"."Estimated Value (LCY)" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                                      Active=CONST(Yes),
+                                                                                                                      Estimated Close Date=FIELD(Date Filter),
+                                                                                                                      Action Taken=FIELD(Action Taken Filter),
+                                                                                                                      Sales Cycle Code=FIELD(Sales Cycle Filter),
+                                                                                                                      Sales Cycle Stage=FIELD(Sales Cycle Stage Filter),
+                                                                                                                      Probability %=FIELD(Probability % Filter),
+                                                                                                                      Completed %=FIELD(Completed % Filter)));
+                                                   CaptionML=[DEU=Erwarteter Wert (MW);
+                                                              ENU=Estimated Value (LCY)];
+                                                   Editable=No;
+                                                   AutoFormatType=1 }
+    { 5057;   ;Calcd. Current Value (LCY);Decimal ;FieldClass=FlowField;
+                                                   CalcFormula=Sum("Opportunity Entry"."Calcd. Current Value (LCY)" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                                           Active=CONST(Yes),
+                                                                                                                           Estimated Close Date=FIELD(Date Filter),
+                                                                                                                           Action Taken=FIELD(Action Taken Filter),
+                                                                                                                           Sales Cycle Code=FIELD(Sales Cycle Filter),
+                                                                                                                           Sales Cycle Stage=FIELD(Sales Cycle Stage Filter),
+                                                                                                                           Probability %=FIELD(Probability % Filter),
+                                                                                                                           Completed %=FIELD(Completed % Filter)));
+                                                   CaptionML=[DEU=Berech. aktueller Wert (MW);
+                                                              ENU=Calcd. Current Value (LCY)];
+                                                   Editable=No;
+                                                   AutoFormatType=1 }
+    { 5058;   ;Date Filter         ;Date          ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Datumsfilter;
+                                                              ENU=Date Filter] }
+    { 5059;   ;No. of Interactions ;Integer       ;FieldClass=FlowField;
+                                                   CalcFormula=Count("Interaction Log Entry" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                    Canceled=CONST(No),
+                                                                                                    Date=FIELD(Date Filter),
+                                                                                                    Postponed=CONST(No)));
+                                                   CaptionML=[DEU=Anzahl Aktivit�ten;
+                                                              ENU=No. of Interactions];
+                                                   Editable=No }
+    { 5060;   ;Cost (LCY)          ;Decimal       ;FieldClass=FlowField;
+                                                   CalcFormula=Sum("Interaction Log Entry"."Cost (LCY)" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                               Canceled=CONST(No),
+                                                                                                               Date=FIELD(Date Filter),
+                                                                                                               Postponed=CONST(No)));
+                                                   CaptionML=[DEU=Einstandsbetrag (MW);
+                                                              ENU=Cost (LCY)];
+                                                   Editable=No;
+                                                   AutoFormatType=1 }
+    { 5061;   ;Duration (Min.)     ;Decimal       ;FieldClass=FlowField;
+                                                   CalcFormula=Sum("Interaction Log Entry"."Duration (Min.)" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                                    Canceled=CONST(No),
+                                                                                                                    Date=FIELD(Date Filter),
+                                                                                                                    Postponed=CONST(No)));
+                                                   CaptionML=[DEU=Dauer (Min.);
+                                                              ENU=Duration (Min.)];
+                                                   DecimalPlaces=0:0;
+                                                   Editable=No }
+    { 5062;   ;Job Title           ;Text30        ;CaptionML=[DEU=Funktion;
+                                                              ENU=Job Title] }
+    { 5063;   ;Action Taken Filter ;Option        ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Kriterienaktionsfilter;
+                                                              ENU=Action Taken Filter];
+                                                   OptionCaptionML=[DEU=" ,N�chster Schritt,Vorheriger Schritt,Aktualisiert,Gesprungen,Gewonnen,Verloren";
+                                                                    ENU=" ,Next,Previous,Updated,Jumped,Won,Lost"];
+                                                   OptionString=[ ,Next,Previous,Updated,Jumped,Won,Lost] }
+    { 5064;   ;Sales Cycle Filter  ;Code10        ;FieldClass=FlowFilter;
+                                                   TableRelation="Sales Cycle";
+                                                   CaptionML=[DEU=Verkaufsprozessfilter;
+                                                              ENU=Sales Cycle Filter] }
+    { 5065;   ;Sales Cycle Stage Filter;Integer   ;FieldClass=FlowFilter;
+                                                   TableRelation="Sales Cycle Stage".Stage WHERE (Sales Cycle Code=FIELD(Sales Cycle Filter));
+                                                   CaptionML=[DEU=Verkaufsprozess-Stufenfilter;
+                                                              ENU=Sales Cycle Stage Filter] }
+    { 5066;   ;Probability % Filter;Decimal       ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Wahrscheinlichkeit % Filter;
+                                                              ENU=Probability % Filter];
+                                                   DecimalPlaces=1:1;
+                                                   MinValue=0;
+                                                   MaxValue=100 }
+    { 5067;   ;Completed % Filter  ;Decimal       ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Abgeschlossen % Filter;
+                                                              ENU=Completed % Filter];
+                                                   DecimalPlaces=1:1;
+                                                   MinValue=0;
+                                                   MaxValue=100 }
+    { 5068;   ;Avg. Estimated Value (LCY);Decimal ;FieldClass=FlowField;
+                                                   CalcFormula=Average("Opportunity Entry"."Estimated Value (LCY)" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                                          Active=CONST(Yes),
+                                                                                                                          Estimated Close Date=FIELD(Date Filter),
+                                                                                                                          Action Taken=FIELD(Action Taken Filter),
+                                                                                                                          Sales Cycle Code=FIELD(Sales Cycle Filter),
+                                                                                                                          Sales Cycle Stage=FIELD(Sales Cycle Stage Filter),
+                                                                                                                          Probability %=FIELD(Probability % Filter),
+                                                                                                                          Completed %=FIELD(Completed % Filter)));
+                                                   CaptionML=[DEU=Durchschn. erw. Wert (MW);
+                                                              ENU=Avg. Estimated Value (LCY)];
+                                                   Editable=No;
+                                                   AutoFormatType=1 }
+    { 5069;   ;Avg.Calcd. Current Value (LCY);Decimal;
+                                                   FieldClass=FlowField;
+                                                   CalcFormula=Average("Opportunity Entry"."Calcd. Current Value (LCY)" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                                               Active=CONST(Yes),
+                                                                                                                               Estimated Close Date=FIELD(Date Filter),
+                                                                                                                               Action Taken=FIELD(Action Taken Filter),
+                                                                                                                               Sales Cycle Code=FIELD(Sales Cycle Filter),
+                                                                                                                               Sales Cycle Stage=FIELD(Sales Cycle Stage Filter),
+                                                                                                                               Probability %=FIELD(Probability % Filter),
+                                                                                                                               Completed %=FIELD(Completed % Filter)));
+                                                   CaptionML=[DEU=Durchschn. ber. akt. Wert (MW);
+                                                              ENU=Avg.Calcd. Current Value (LCY)];
+                                                   Editable=No;
+                                                   AutoFormatType=1 }
+    { 5070;   ;Contact Filter      ;Code20        ;FieldClass=FlowFilter;
+                                                   TableRelation=Contact;
+                                                   CaptionML=[DEU=Kontaktfilter;
+                                                              ENU=Contact Filter] }
+    { 5071;   ;Contact Company Filter;Code20      ;FieldClass=FlowFilter;
+                                                   TableRelation=Contact WHERE (Type=CONST(Company));
+                                                   CaptionML=[DEU=Filter Kontaktunternehmen;
+                                                              ENU=Contact Company Filter] }
+    { 5072;   ;Campaign Filter     ;Code20        ;FieldClass=FlowFilter;
+                                                   TableRelation=Campaign;
+                                                   CaptionML=[DEU=Kampagnenfilter;
+                                                              ENU=Campaign Filter] }
+    { 5073;   ;Estimated Value Filter;Decimal     ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Erwarteter Wert Filter;
+                                                              ENU=Estimated Value Filter];
+                                                   AutoFormatType=1 }
+    { 5074;   ;Calcd. Current Value Filter;Decimal;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Berech. aktueller Wert Filter;
+                                                              ENU=Calcd. Current Value Filter];
+                                                   AutoFormatType=1 }
+    { 5075;   ;Chances of Success % Filter;Decimal;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Erfolgschancen % Filter;
+                                                              ENU=Chances of Success % Filter];
+                                                   DecimalPlaces=0:0;
+                                                   MinValue=0;
+                                                   MaxValue=100 }
+    { 5076;   ;To-do Status Filter ;Option        ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Aufgabenstatusfilter;
+                                                              ENU=To-do Status Filter];
+                                                   OptionCaptionML=[DEU=Nicht begonnen,In Bearbeitung,Erledigt,Warten,Zur�ckgestellt;
+                                                                    ENU=Not Started,In Progress,Completed,Waiting,Postponed];
+                                                   OptionString=Not Started,In Progress,Completed,Waiting,Postponed }
+    { 5077;   ;Closed To-do Filter ;Boolean       ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Abgeschlossene Aufgaben Filter;
+                                                              ENU=Closed To-do Filter] }
+    { 5078;   ;Priority Filter     ;Option        ;FieldClass=FlowFilter;
+                                                   CaptionML=[DEU=Priorit�tenfilter;
+                                                              ENU=Priority Filter];
+                                                   OptionCaptionML=[DEU=Niedrig,Normal,Hoch;
+                                                                    ENU=Low,Normal,High];
+                                                   OptionString=Low,Normal,High }
+    { 5079;   ;Team Filter         ;Code10        ;FieldClass=FlowFilter;
+                                                   TableRelation=Team;
+                                                   CaptionML=[DEU=Teamfilter;
+                                                              ENU=Team Filter] }
+    { 5082;   ;Opportunity Entry Exists;Boolean   ;FieldClass=FlowField;
+                                                   CalcFormula=Exist("Opportunity Entry" WHERE (Salesperson Code=FIELD(Code),
+                                                                                                Active=CONST(Yes),
+                                                                                                Contact No.=FIELD(Contact Filter),
+                                                                                                Contact Company No.=FIELD(Contact Company Filter),
+                                                                                                Sales Cycle Code=FIELD(Sales Cycle Filter),
+                                                                                                Sales Cycle Stage=FIELD(Sales Cycle Stage Filter),
+                                                                                                Campaign No.=FIELD(Campaign Filter),
+                                                                                                Action Taken=FIELD(Action Taken Filter),
+                                                                                                Estimated Value (LCY)=FIELD(Estimated Value Filter),
+                                                                                                Calcd. Current Value (LCY)=FIELD(Calcd. Current Value Filter),
+                                                                                                Completed %=FIELD(Completed % Filter),
+                                                                                                Chances of Success %=FIELD(Chances of Success % Filter),
+                                                                                                Probability %=FIELD(Probability % Filter),
+                                                                                                Estimated Close Date=FIELD(Date Filter),
+                                                                                                Close Opportunity Code=FIELD(Close Opportunity Filter)));
+                                                   CaptionML=[DEU=Verkaufschancenposten vorh.;
+                                                              ENU=Opportunity Entry Exists];
+                                                   Editable=No }
+    { 5083;   ;To-do Entry Exists  ;Boolean       ;FieldClass=FlowField;
+                                                   CalcFormula=Exist(To-do WHERE (Salesperson Code=FIELD(Code),
+                                                                                  Contact No.=FIELD(Contact Filter),
+                                                                                  Contact Company No.=FIELD(Contact Company Filter),
+                                                                                  Campaign No.=FIELD(Campaign Filter),
+                                                                                  Team Code=FIELD(Team Filter),
+                                                                                  Status=FIELD(To-do Status Filter),
+                                                                                  Closed=FIELD(Closed To-do Filter),
+                                                                                  Priority=FIELD(Priority Filter),
+                                                                                  Date=FIELD(Date Filter)));
+                                                   CaptionML=[DEU=Aufgabenposten vorhanden;
+                                                              ENU=To-do Entry Exists];
+                                                   Editable=No }
+    { 5084;   ;Close Opportunity Filter;Code10    ;FieldClass=FlowFilter;
+                                                   TableRelation="Close Opportunity Code";
+                                                   CaptionML=[DEU=Verkaufschancenabschlussfilter;
+                                                              ENU=Close Opportunity Filter] }
+    { 5085;   ;Search E-Mail       ;Code80        ;CaptionML=[DEU=E-Mail-Suchbegriff;
+                                                              ENU=Search Email] }
+    { 5086;   ;E-Mail 2            ;Text80        ;ExtendedDatatype=E-Mail;
+                                                   CaptionML=[DEU=E-Mail 2;
+                                                              ENU=Email 2] }
+    { 5447300;;Date Webshop Login Sent;DateTime   ;CaptionML=[DEU=Datum Zugangsdaten gesendet;
+                                                              ENU=Date Webshop Login Sent];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447301;;Has Webshop Login   ;Boolean       ;OnValidate=VAR
+                                                                WebshopSetup@1000000000 : Record 5447300;
+                                                                Shop@1000000001 : Record 5447301;
+                                                                Language@1000000002 : Record 5447302;
+                                                              BEGIN
+                                                                // dynamic commerce ---
+                                                                IF "Has Webshop Login" THEN BEGIN
+                                                                  // Shop Code vorbelegen
+                                                                  IF "Webshop Shop Code" = '' THEN
+                                                                    WebshopSetup.GET;
+                                                                    IF (WebshopSetup."Default Shop Code" <> '') AND Shop.GET(WebshopSetup."Default Shop Code") THEN
+                                                                      "Webshop Shop Code" := Shop.Code;
+                                                                  IF "Webshop Shop Code" = '' THEN
+                                                                    IF Shop.FINDFIRST THEN
+                                                                      "Webshop Shop Code" := Shop.Code;
+                                                                  // Sprachcode vorbelegen
+                                                                  IF Shop.GET("Webshop Shop Code") THEN BEGIN
+                                                                    Language.SETRANGE("Shop Code",Shop.Code);
+                                                                    IF ("Webshop Shop Code" <> '') AND ("Webshop Language Code" = '') THEN
+                                                                      IF Language.GET(Shop.Code,Shop."Default Language Code") THEN
+                                                                        "Webshop Language Code" := Language.Code;
+                                                                    IF "Webshop Language Code" = '' THEN
+                                                                      IF Language.FINDFIRST THEN
+                                                                        "Webshop Language Code" := Language.Code;
+                                                                  END;
+                                                                  //Rabatt vorbelegen
+                                                                  IF "Webshop Max. Discount %" = 0 THEN
+                                                                    IF Shop."Max Salesperson Discount %" <> 0 THEN
+                                                                      "Webshop Max. Discount %" := Shop."Max Salesperson Discount %";
+
+                                                                  //E-Mail vorbelegen
+                                                                  IF "Webshop Login E-Mail Addr." = '' THEN
+                                                                    "Webshop Login E-Mail Addr." := "E-Mail";
+
+                                                                END;
+                                                                // dynamic commerce ---
+                                                              END;
+
+                                                   CaptionML=[DEU=Hat Webshop Login;
+                                                              ENU=Has Webshop Login];
+                                                   Description=dynamic commerce }
+    { 5447302;;Webshop Shop Code   ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Webshop Code;
+                                                              ENU=Webshop Shop Code];
+                                                   Description=dynamic commerce }
+    { 5447303;;Webshop Language Code;Code10       ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Webshop Shop Code));
+                                                   CaptionML=[DEU=Webshop Sprachcode;
+                                                              ENU=Webshop Language Code];
+                                                   Description=dynamic commerce }
+    { 5447304;;Webshop Max. Discount %;Decimal    ;CaptionML=[DEU=Webshop Max. Rabatt %;
+                                                              ENU=Webshop Max. Discount %];
+                                                   Description=dynamic commerce }
+    { 5447305;;Webshop Login E-Mail Addr.;Text100 ;CaptionML=[DEU=Webshop Login E-Mail Adr.;
+                                                              ENU=Webshop Login E-Mail Addr.];
+                                                   Description=dynamic commerce }
+    { 5447306;;Last Date Modified (Webshop);DateTime;
+                                                   CaptionML=[DEU=Datum letzte �nderung (Webshop);
+                                                              ENU=Date Last Modified (Webshop)];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+    { 5447307;;Last Date Updated (Webshop);DateTime;
+                                                   CaptionML=[DEU=Datum letzte Aktualisierung (Webshop);
+                                                              ENU=Date Last Updated (Webshop)];
+                                                   Description=dynamic commerce;
+                                                   Editable=No }
+  }
+  KEYS
+  {
+    {    ;Code                                    ;Clustered=Yes }
+    {    ;Search E-Mail                            }
+  }
+  FIELDGROUPS
+  {
+    { 1   ;Brick               ;Code,Name,Image                          }
+  }
+  CODE
+  {
+    VAR
+      DimMgt@1000 : Codeunit 408;
+
+    PROCEDURE CreateInteraction@10();
+    VAR
+      TempSegmentLine@1000 : TEMPORARY Record 5077;
+    BEGIN
+      TempSegmentLine.CreateInteractionFromSalesPurc(Rec);
+    END;
+
+    LOCAL PROCEDURE ValidateShortcutDimCode@29(FieldNumber@1000 : Integer;VAR ShortcutDimCode@1001 : Code[20]);
+    BEGIN
+      DimMgt.ValidateDimValueCode(FieldNumber,ShortcutDimCode);
+      DimMgt.SaveDefaultDim(DATABASE::"Salesperson/Purchaser",Code,FieldNumber,ShortcutDimCode);
+      MODIFY;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce ---
+      STANDARD-VERSION 2017
+
+        FIELDS (8):
+
+          NO.        NAME                                DATATYPE        LENGTH
+
+          5447300      "Date Webshop Login Sent"         DateTime
+          5447301      "Has Webshop Login"               Boolean
+          5447302      "Webshop Shop Code"               Code            10
+          5447303      "Webshop Language Code"           Code            10
+          5447304      "Webshop Max. Discount %"         Decimal
+          5447305      "Webshop Login E-Mail"            Text            100
+          5447306      "Last Date Modified (Webshop)"    DateTime
+          5447307      "Last Date Updated(Webshop)"      DateTime
+
+        TRIGGERS (2):
+          OnModify()
+          Has Webshop Login - OnValidate()
+
+        KEYS (0):
+        GLOBAL VARIABLES (0):
+        TEXT CONSTANTS (0):
+        FUNCTIONS (0):
+
+      +++ dynamic commerce +++
+    }
+    END.
+  }
+}
+

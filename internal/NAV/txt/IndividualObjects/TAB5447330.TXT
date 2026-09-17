@@ -1,0 +1,51 @@
+OBJECT Table 5447330 Webshop Coupon Shipping Line
+{
+  OBJECT-PROPERTIES
+  {
+    Date=14.03.18;
+    Time=16:00:00;
+    Version List=MYSW14.00,DCSW11.00,DCCW11.00;
+  }
+  PROPERTIES
+  {
+    OnDelete=BEGIN
+               WebshopUpdateManagment.DeleteWebshopCouponShippingLine(Rec);
+             END;
+
+    CaptionML=[DEU=Webshop Gutscheinzeile;
+               ENU=Webshop Coupon Line];
+  }
+  FIELDS
+  {
+    { 1   ;   ;Code                ;Code20        ;CaptionML=[DEU=Code;
+                                                              ENU=Code] }
+    { 2   ;   ;Coupon Code         ;Code20        ;CaptionML=[DEU=Gutscheincode;
+                                                              ENU=Coupon Code] }
+    { 3   ;   ;Shipping Coupon Type;Option        ;CaptionML=[DEU=Versandgutschein Typ;
+                                                              ENU=Shipping Coupon Type];
+                                                   OptionCaptionML=[DEU=Fixbetrag,Prozentrabatt;
+                                                                    ENU=Fix Amount,Percent Discount];
+                                                   OptionString=amount,percent }
+    { 4   ;   ;Shipping Coupon Value;Decimal      ;CaptionML=[DEU=Versandgutschein Wert;
+                                                              ENU=Shipping Coupon Value] }
+  }
+  KEYS
+  {
+    {    ;Code,Coupon Code                        ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopUpdateManagment@1000000000 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

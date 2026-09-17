@@ -1,0 +1,36 @@
+OBJECT Table 5447319 Webshop Item Joint Purchase
+{
+  OBJECT-PROPERTIES
+  {
+    Date=11.08.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Shop Code           ;Code20        ;TableRelation="Webshop Shop".Code }
+    { 2   ;   ;Item No.            ;Code30        ;TableRelation=Item.No. }
+    { 3   ;   ;Linked Item No.     ;Code10        ;TableRelation=Item.No. }
+    { 10  ;   ;Date                ;Date          ;CaptionML=[DEU=Datum;
+                                                              ENU=Date] }
+    { 11  ;   ;Counter             ;Integer        }
+  }
+  KEYS
+  {
+    {    ;Item No.,Linked Item No.,Shop Code,Date ;Clustered=Yes }
+    {    ;Date,Item No.,Shop Code                 ;SumIndexFields=Counter }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+

@@ -1,0 +1,126 @@
+OBJECT Table 5447346 Webshop Campaign Element
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnModify=BEGIN
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+    OnDelete=BEGIN
+               WebshopUpdateManagement.DeleteCampaignElement(Rec);
+             END;
+
+    OnRename=BEGIN
+               WebshopUpdateManagement.DeleteCampaignElement(xRec);
+               "Date Last Modified" := CURRENTDATETIME;
+             END;
+
+  }
+  FIELDS
+  {
+    { 1   ;   ;Link-to Header Code ;Code20        ;TableRelation="Webshop Campaign Header".Code;
+                                                   CaptionML=[DEU=Verkn�pft mit Shop-Kampagne;
+                                                              ENU=Linked to Shop-Campaign] }
+    { 2   ;   ;Link Type           ;Option        ;CaptionML=[DEU=Verkn�pfungstyp;
+                                                              ENU=Link Type];
+                                                   OptionCaptionML=[DEU=Bedingung,Aktion;
+                                                                    ENU=Condition,Action];
+                                                   OptionString=Condition,Action }
+    { 3   ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Artikel,Kategorie;
+                                                                    ENU=Item,Category];
+                                                   OptionString=0,1 }
+    { 4   ;   ;Include / Exclude   ;Option        ;CaptionML=[DEU=Einschlie�en / Ausschlie�en;
+                                                              ENU=Include / Exclude];
+                                                   OptionCaptionML=[DEU=Einschlie�en,Ausschlie�en;
+                                                                    ENU=Include,Exclude];
+                                                   OptionString=0,1 }
+    { 5   ;   ;Item No.            ;Code20        ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Artikelnummer;
+                                                              ENU=Item No.] }
+    { 6   ;   ;Item Variant Code   ;Code10        ;CaptionML=[DEU=Artikel-Variante;
+                                                              ENU=Item Variant] }
+    { 7   ;   ;Category Line No.   ;Integer       ;TableRelation="Webshop Category"."Line No.";
+                                                   CaptionML=[DEU=Kategorie Zeilennr.;
+                                                              ENU=Category Line No.] }
+    { 8   ;   ;Date Last Modified  ;DateTime      ;CaptionML=[DEU=Datum letzte �nderung;
+                                                              ENU=Date Last Modified] }
+    { 9   ;   ;Date Last Updated   ;DateTime      ;CaptionML=[DEU=Datum letzte Aktualisierung;
+                                                              ENU=Date Last Updated] }
+  }
+  KEYS
+  {
+    {    ;Link-to Header Code,Link Type,Type,Item No.,Item Variant Code,Category Line No.;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopUpdateManagement@1000000000 : Codeunit 5447301;
+
+    PROCEDURE GetName@1000000000() Name : Text[80];
+    VAR
+      Setup@1000000006 : Record 5447300;
+      CampaignHeader@1000000000 : Record 5447345;
+      Shop@1000000004 : Record 5447301;
+      ShopCode@1000000001 : Code[20];
+      ItemShopCode@1000000002 : Code[20];
+      CategoryShopCode@1000000003 : Code[20];
+      LanguageCode@1000000005 : Code[10];
+      Item@1000000007 : Record 5447304;
+      Category@1000000008 : Record 5447303;
+      ItemVariant@1000000009 : Record 5401;
+    BEGIN
+      Name := '';
+      Setup.GET;
+      CampaignHeader.GET("Link-to Header Code");
+
+      IF CampaignHeader."Shop Code" <> '' THEN
+        Shop.GET(CampaignHeader."Shop Code")
+      ELSE
+        Shop.GET(Setup."Default Shop Code");
+
+      ShopCode := Shop.Code;
+      ItemShopCode := Shop.Code;
+      CategoryShopCode := Shop.Code;
+
+      IF Shop."Use Items from Shop Code" <> '' THEN
+        ItemShopCode := Shop."Use Items from Shop Code";
+
+      IF Shop."Use Categories from Shop Code" <> '' THEN
+        CategoryShopCode := Shop."Use Categories from Shop Code";
+
+      IF CampaignHeader."Language Code" <> '' THEN
+        LanguageCode := CampaignHeader."Language Code"
+      ELSE
+        LanguageCode := Shop."Default Language Code";
+
+      //Artikel
+      IF (Type = Type::"0") AND Item.GET(ItemShopCode,LanguageCode,"Item No.") THEN BEGIN
+        Name := Item.Description;
+        IF ("Item Variant Code" <> '') AND (ItemVariant.GET("Item No.","Item Variant Code")) THEN
+          Name += ' ' + ItemVariant.Description;
+      //Kategorie
+      END ELSE IF (Type = Type::"1") AND (Category.GET(CategoryShopCode,LanguageCode,"Category Line No.")) THEN BEGIN
+        Name := Category.Name;
+      END;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

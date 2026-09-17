@@ -1,0 +1,81 @@
+OBJECT Page 5447360 Webshop Edit Category Desc.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Kategoriebeschreibung bearbeiten;
+               ENU=Edit webshop category description];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    ModifyAllowed=No;
+    LinksAllowed=No;
+    SourceTable=Table5447303;
+    PageType=StandardDialog;
+    InstructionalTextML=[DEU=Test;
+                         ENU=Test];
+    ShowFilter=No;
+    OnOpenPage=BEGIN
+                 WebshopSetup.GET;
+               END;
+
+    OnNextRecord=BEGIN
+                   EXIT;
+                 END;
+
+    OnAfterGetRecord=BEGIN
+                       Language.GET("Language Code");
+                       RANDOMIZE();
+                       Request :=
+                         STRSUBSTNO('%1webforms/edit_category_description.php?pass=%2&company=%3&type=%4',
+                           WebshopSetup."Server Synch. Endpoint URL",
+                           WebshopSetup."Server Synch. Password",
+                           WebshopManagement.URLEncode(COMPANYNAME),
+                            FORMAT(Type,0,'<Standard Format,2>'));
+                       Request +=
+                         STRSUBSTNO('&shop_code=%1&language_code=%2&line_no=%3&nav_lang=%5&rand=%6&rtc=TRUE',
+                           WebshopManagement.URLEncode("Shop Code"),
+                           WebshopManagement.URLEncode("Language Code"),
+                           "Line No.",
+                           GLOBALLANGUAGE,
+                           RANDOM(2000));
+                     END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000004;1;Field  ;
+                Name=InputRequest;
+                SourceExpr=Request;
+                ControlAddIn=[DynamicCommerce.MysydeShop.Connect;PublicKeyToken=eb1e70a97bfaeec6] }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopSetup@1000000001 : Record 5447300;
+      Language@1000000004 : Record 8;
+      WebshopManagement@1000000005 : Codeunit 5447300;
+      Request@1000000002 : Text[1024];
+      Type@1000000000 : 'Normal,Promotion';
+
+    PROCEDURE SetType@1000000001(LocalType@1000000000 : 'Normal,Promotion');
+    BEGIN
+      Type := LocalType;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

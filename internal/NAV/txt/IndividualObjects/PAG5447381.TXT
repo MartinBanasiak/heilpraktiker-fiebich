@@ -1,0 +1,1018 @@
+OBJECT Page 5447381 Webshop Campaign Header Card
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Kampagne;
+               ENU=Webshop Campaign];
+    SourceTable=Table5447345;
+    PopulateAllFields=Yes;
+    PageType=Card;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnOpenPage=BEGIN
+                 DisableAllCondFields;
+                 DisableAllActionFields;
+                 CheckCondFields;
+                 CheckActionFields;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       IF ("Shop Code" <> '') AND ("Language Code" <> '') THEN BEGIN
+                         WebshopShop.GET("Shop Code");
+                         WebshopLanguage.GET("Shop Code","Language Code");
+                         IF WebshopShop."Use Items from Shop Code" <> '' THEN BEGIN
+                           CurrPage.ConditionElementPart.PAGE.SetItemShopCode(WebshopShop."Use Items from Shop Code");
+                           CurrPage.ActionElementPart.PAGE.SetItemShopCode(WebshopShop."Use Items from Shop Code");
+                         END ELSE BEGIN
+                           CurrPage.ConditionElementPart.PAGE.SetItemShopCode(WebshopShop.Code);
+                           CurrPage.ActionElementPart.PAGE.SetItemShopCode(WebshopShop.Code);
+                         END;
+
+                         IF WebshopShop."Use Categories from Shop Code" <> '' THEN BEGIN
+                           CurrPage.ConditionElementPart.PAGE.SetCategoryShopCode(WebshopShop."Use Categories from Shop Code");
+                           CurrPage.ActionElementPart.PAGE.SetCategoryShopCode(WebshopShop."Use Categories from Shop Code");
+                         END ELSE BEGIN
+                           CurrPage.ConditionElementPart.PAGE.SetCategoryShopCode(WebshopShop.Code);
+                           CurrPage.ActionElementPart.PAGE.SetCategoryShopCode(WebshopShop.Code);
+                         END;
+
+                         CurrPage.ConditionElementPart.PAGE.SetLanguageCode(WebshopLanguage.Code);
+                         CurrPage.ActionElementPart.PAGE.SetLanguageCode(WebshopLanguage.Code);
+                       END;
+                     END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000043;  ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000044;1 ;Action    ;
+                      Name=Synchronize;
+                      CaptionML=[DEU=Kampagne aktualisieren;
+                                 ENU=Synchronize Campaign];
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Text001@1000000000 : TextConst 'DEU=Die Kampagne wurde mit allen verkn?pften Daten aktualisiert.;ENU=The campaign was synchronized with all linked data.';
+                               BEGIN
+                                 WebshopUpdateManagement.UpdateCampaignByCode(Code);
+                                 MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000050;1 ;ActionGroup;
+                      Name=Images;
+                      CaptionML=[DEU=Bilder;
+                                 ENU=Images] }
+      { 1000000061;2 ;ActionGroup;
+                      Name=Bilder;
+                      CaptionML=[DEU=Bilder;
+                                 ENU=Images];
+                      Image=Picture }
+      { 1000000051;3 ;Action    ;
+                      Name=EditIconCondItems;
+                      CaptionML=[DEU=Icon Konditionsartikel bearbeiten;
+                                 ENU=Edit Icon Condition Items];
+                      Image=TransmitElectronicDoc;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 EditImage(ParamField::IconCondItems);
+                               END;
+                                }
+      { 1000000052;3 ;Action    ;
+                      Name=DeleteIconCondItems;
+                      CaptionML=[DEU=Icon Konditionsartikel l�schen;
+                                 ENU=Delete Icon Condition Items];
+                      Image=VoidElectronicDocument;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 DeleteImage(ParamField::IconCondItems);
+                               END;
+                                }
+      { 1000000053;3 ;Action    ;
+                      Name=EditBannerCondItems;
+                      CaptionML=[DEU=Banner Konditionsartikel bearbeiten;
+                                 ENU=Edit BannerCondition Items];
+                      Image=TransmitElectronicDoc;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 EditImage(ParamField::BannerCondItems);
+                               END;
+                                }
+      { 1000000054;3 ;Action    ;
+                      Name=DeleteBannerCondItems;
+                      CaptionML=[DEU=Banner Konditionsartikel l�schen;
+                                 ENU=Delete Banner Condition Items];
+                      Image=VoidElectronicDocument;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 DeleteImage(ParamField::BannerCondItems);
+                               END;
+                                }
+      { 1000000055;3 ;Action    ;
+                      Name=EditIconActItems;
+                      CaptionML=[DEU=Icon Aktionsartikel bearbeiten;
+                                 ENU=Edit Icon Action Items];
+                      Image=TransmitElectronicDoc;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 EditImage(ParamField::IconActItems);
+                               END;
+                                }
+      { 1000000056;3 ;Action    ;
+                      Name=DeleteIconActItems;
+                      CaptionML=[DEU=Icon Aktionsartikel l�schen;
+                                 ENU=Delete Icon Action Items];
+                      Image=VoidElectronicDocument;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 DeleteImage(ParamField::IconActItems);
+                               END;
+                                }
+      { 1000000057;3 ;Action    ;
+                      Name=EditBannerActItems;
+                      CaptionML=[DEU=Banner Aktionsartikel bearbeiten;
+                                 ENU=Edit Banner Action Items];
+                      Image=TransmitElectronicDoc;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 EditImage(ParamField::BannerActItems);
+                               END;
+                                }
+      { 1000000058;3 ;Action    ;
+                      Name=DeleteBannerActItems;
+                      CaptionML=[DEU=Banner Aktionsartikel l�schen;
+                                 ENU=Delete Banner Action Items];
+                      Image=VoidElectronicDocument;
+                      OnAction=VAR
+                                 ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems';
+                               BEGIN
+                                 DeleteImage(ParamField::BannerActItems);
+                               END;
+                                }
+      { 1000000059;3 ;Action    ;
+                      Name=EditBannerBasket;
+                      CaptionML=[DEU=Banner Warenkorb bearbeiten;
+                                 ENU=Edit Banner Basket];
+                      Image=TransmitElectronicDoc }
+      { 1000000060;3 ;Action    ;
+                      Name=DeleteBannerBasket;
+                      CaptionML=[DEU=Banner Warenkorb l�schen;
+                                 ENU=Delete Banner Basket];
+                      Image=VoidElectronicDocument }
+      { 1000000040;  ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 1000000041;1 ;Action    ;
+                      Name=ConditionElements;
+                      CaptionML=[DEU=Konditions-Elemente;
+                                 ENU=Condition Elements];
+                      Image=ListPage;
+                      OnAction=BEGIN
+                                 WebshopCampaignElementList.SetFilters(Code,0);
+                                 WebshopCampaignElementList.RUN;
+                               END;
+                                }
+      { 1000000042;1 ;Action    ;
+                      Name=ActionElements;
+                      CaptionML=[DEU=Aktions-Elemente;
+                                 ENU=Action Elements];
+                      Image=ListPage;
+                      OnAction=BEGIN
+                                 WebshopCampaignElementList.SetFilters(Code,1);
+                                 WebshopCampaignElementList.RUN;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Allgemein;
+                GroupType=Group }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Code }
+
+    { 1000000018;2;Field  ;
+                SourceExpr="Shop Code";
+                OnValidate=BEGIN
+                             IF "Shop Code" <> '' THEN BEGIN
+                               WebshopShop.GET("Shop Code");
+                               IF WebshopShop."Use Items from Shop Code" <> '' THEN BEGIN
+                                 CurrPage.ConditionElementPart.PAGE.SetItemShopCode(WebshopShop."Use Items from Shop Code");
+                                 CurrPage.ActionElementPart.PAGE.SetItemShopCode(WebshopShop."Use Items from Shop Code");
+                               END ELSE BEGIN
+                                 CurrPage.ConditionElementPart.PAGE.SetItemShopCode(WebshopShop.Code);
+                                 CurrPage.ActionElementPart.PAGE.SetItemShopCode(WebshopShop.Code);
+                               END;
+
+                               IF WebshopShop."Use Categories from Shop Code" <> '' THEN BEGIN
+                                 CurrPage.ConditionElementPart.PAGE.SetCategoryShopCode(WebshopShop."Use Categories from Shop Code");
+                                 CurrPage.ActionElementPart.PAGE.SetCategoryShopCode(WebshopShop."Use Categories from Shop Code");
+                               END ELSE BEGIN
+                                 CurrPage.ConditionElementPart.PAGE.SetCategoryShopCode(WebshopShop.Code);
+                                 CurrPage.ActionElementPart.PAGE.SetCategoryShopCode(WebshopShop.Code);
+                               END;
+                             END;
+
+                             IF "Language Code" <> '' THEN BEGIN
+                               WebshopLanguage.GET("Shop Code","Language Code");
+                               CurrPage.ConditionElementPart.PAGE.SetLanguageCode(WebshopLanguage.Code);
+                               CurrPage.ActionElementPart.PAGE.SetLanguageCode(WebshopLanguage.Code);
+                             END;
+                           END;
+                            }
+
+    { 1000000027;2;Field  ;
+                SourceExpr="Language Code";
+                OnValidate=BEGIN
+                             IF "Shop Code" <> '' THEN BEGIN
+                               WebshopShop.GET("Shop Code");
+                               WebshopLanguage.GET("Shop Code","Language Code");
+                               IF WebshopShop."Use Items from Shop Code" <> '' THEN BEGIN
+                                 CurrPage.ConditionElementPart.PAGE.SetItemShopCode(WebshopShop."Use Items from Shop Code");
+                                 CurrPage.ActionElementPart.PAGE.SetItemShopCode(WebshopShop."Use Items from Shop Code");
+                               END ELSE BEGIN
+                                 CurrPage.ConditionElementPart.PAGE.SetItemShopCode(WebshopShop.Code);
+                                 CurrPage.ActionElementPart.PAGE.SetItemShopCode(WebshopShop.Code);
+                               END;
+
+                               IF WebshopShop."Use Categories from Shop Code" <> '' THEN BEGIN
+                                 CurrPage.ConditionElementPart.PAGE.SetCategoryShopCode(WebshopShop."Use Categories from Shop Code");
+                                 CurrPage.ActionElementPart.PAGE.SetCategoryShopCode(WebshopShop."Use Categories from Shop Code");
+                               END ELSE BEGIN
+                                 CurrPage.ConditionElementPart.PAGE.SetCategoryShopCode(WebshopShop.Code);
+                                 CurrPage.ActionElementPart.PAGE.SetCategoryShopCode(WebshopShop.Code);
+                               END;
+                             END;
+
+                             IF "Language Code" <> '' THEN BEGIN
+                               CurrPage.ConditionElementPart.PAGE.SetLanguageCode(WebshopLanguage.Code);
+                               CurrPage.ActionElementPart.PAGE.SetLanguageCode(WebshopLanguage.Code);
+                             END;
+                           END;
+                            }
+
+    { 1000000003;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Active }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Active from Date" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Active to Date" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Active from Time" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Active to Time" }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Multiply applicable" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr=Priority }
+
+    { 1000000011;1;Group  ;
+                Name=Konditionen;
+                GroupType=Group }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Cond. Sum Amnt. All Items GTE";
+                Enabled=CondSumAmntAllItemsGTEEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Cond. Sum Amnt. All Items GTE" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Condition,CampaignFieldName::CondSumAmntAllItemsGTE,Used);
+                           END;
+                            }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Cond. Sum Amnt. Sing. Item GTE";
+                Enabled=CondSumAmntSingItemGTEEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Cond. Sum Amnt. Sing. Item GTE" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Condition,CampaignFieldName::CondSumAmntSingItemGTE,Used);
+                           END;
+                            }
+
+    { 1000000048;2;Field  ;
+                SourceExpr="Cond. Sum Amnt. Each Item GTE";
+                Enabled=CondSumAmntEachItemGTEEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Cond. Sum Amnt. Each Item GTE" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Condition,CampaignFieldName::CondSumAmntEachItemGTE,Used);
+                           END;
+                            }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Cond. No. diff. Items GTE";
+                Enabled=CondNodiffItemsGTEEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Cond. No. diff. Items GTE" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Condition,CampaignFieldName::CondNodiffItemsGTE,Used);
+                           END;
+                            }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Cond. Total Item Qty. GTE";
+                Enabled=CondTotalItemQtyGTEEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Cond. Total Item Qty. GTE" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Condition,CampaignFieldName::CondTotalItemQtyGTE,Used);
+                           END;
+                            }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Cond. Qty. Single Item GTE";
+                Enabled=CondQtySingleItemGTEEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Cond. Qty. Single Item GTE" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Condition,CampaignFieldName::CondQtySingleItemGTE,Used);
+                           END;
+                            }
+
+    { 1000000049;2;Field  ;
+                SourceExpr="Cond. Qty. Each Item GTE";
+                Enabled=CondQtyEachItemGTEEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Cond. Qty. Each Item GTE" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Condition,CampaignFieldName::CondQtyEachItemGTE,Used);
+                           END;
+                            }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Cond. Basket Total GTE";
+                Enabled=CondBasketTotalGTEEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Cond. Basket Total GTE" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Condition,CampaignFieldName::CondBasketTotalGTE,Used);
+                           END;
+                            }
+
+    { 1000000062;1;Part   ;
+                Name=ConditionElementPart;
+                CaptionML=[DEU=Konditions-Elemente;
+                           ENU=Condition Elements];
+                SubPageLink=Link-to Header Code=FIELD(Code),
+                            Link Type=CONST(Condition);
+                PagePartID=Page5447383;
+                PartType=Page;
+                ShowFilter=No;
+                UpdatePropagation=Both }
+
+    { 1000000019;1;Group  ;
+                Name=Aktion;
+                GroupType=Group }
+
+    { 1000000020;2;Field  ;
+                SourceExpr="Discount Amnt. applies to";
+                Enabled=DiscountAmntappliestoEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Discount Amnt. applies to" <> 0 THEN
+                               Used := TRUE
+                             ELSE
+                               "Discount Amnt." := 0;
+                             EnableFields(CampaignFieldType::Action,CampaignFieldName::DiscountAmntappliesto,Used);
+                           END;
+                            }
+
+    { 1000000021;2;Field  ;
+                SourceExpr="Discount Amnt.";
+                Enabled=DiscountAmntEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Discount Amnt." <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Action,CampaignFieldName::DiscountAmnt,Used);
+                           END;
+                            }
+
+    { 1000000022;2;Field  ;
+                SourceExpr="Discount Percent applies to";
+                Enabled=DiscountPercentappliestoEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Discount Percent applies to" <> 0 THEN
+                               Used := TRUE
+                             ELSE
+                               "Discount Percent" := 0;
+                             EnableFields(CampaignFieldType::Action,CampaignFieldName::DiscountPercentappliesto,Used);
+                           END;
+                            }
+
+    { 1000000023;2;Field  ;
+                SourceExpr="Discount Percent";
+                Enabled=DiscountPercentEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Discount Percent" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Action,CampaignFieldName::DiscountPercent,Used);
+                           END;
+                            }
+
+    { 1000000047;2;Field  ;
+                SourceExpr="Discount applies to Qty. (max)";
+                Enabled=DiscountappliestQtymaxEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Discount applies to Qty. (max)" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Action,CampaignFieldName::DiscountappliestQtymax,Used);
+                           END;
+                            }
+
+    { 1000000024;2;Field  ;
+                SourceExpr="Type Free Item";
+                Enabled=TypeFreeItemEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Type Free Item" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Action,CampaignFieldName::TypeFreeItem,Used);
+                           END;
+                            }
+
+    { 1000000025;2;Field  ;
+                SourceExpr="Qty. Free Item";
+                Enabled=QtyFreeItemEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Qty. Free Item" <> 0 THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Action,CampaignFieldName::QtyFreeItem,Used);
+                           END;
+                            }
+
+    { 1000000026;2;Field  ;
+                SourceExpr="Alternative Shipping Option";
+                Enabled=AlternativeShippingOptionEnabled;
+                OnValidate=BEGIN
+                             Used := FALSE;
+                             IF "Alternative Shipping Option" THEN
+                               Used := TRUE;
+                             EnableFields(CampaignFieldType::Action,CampaignFieldName::AlternativeShippingOption,Used);
+                           END;
+                            }
+
+    { 1000000046;1;Part   ;
+                Name=ActionElementPart;
+                CaptionML=[DEU=Aktions-Elemente;
+                           ENU=Action Elements];
+                SubPageLink=Link-to Header Code=FIELD(Code),
+                            Link Type=CONST(Action);
+                PagePartID=Page5447383;
+                PartType=Page;
+                ShowFilter=No }
+
+    { 1000000028;1;Group  ;
+                Name=Texte & Bilder;
+                GroupType=Group }
+
+    { 1000000029;2;Field  ;
+                SourceExpr="Icon Condition Items" }
+
+    { 1000000030;2;Field  ;
+                SourceExpr="Banner Condition Items" }
+
+    { 1000000031;2;Field  ;
+                SourceExpr="Text Condition Items" }
+
+    { 1000000032;2;Field  ;
+                SourceExpr="Icon Action Items" }
+
+    { 1000000033;2;Field  ;
+                SourceExpr="Banner Action Items" }
+
+    { 1000000034;2;Field  ;
+                SourceExpr="Text Action Items" }
+
+    { 1000000035;2;Field  ;
+                SourceExpr="Banner Basket" }
+
+    { 1000000036;2;Field  ;
+                SourceExpr="Text Basket" }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopCampaignElementList@1000000000 : Page 5447382;
+      WebshopUpdateManagement@1000000001 : Codeunit 5447301;
+      ToEditImageField@1000000002 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems,BannerBaskets';
+      ClientAddInType@1000000007 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000006 : Codeunit 5447320;
+      WebshopWebform@1000000005 : Page 5447366;
+      Type@1000000004 : 'Description1,Promotion,Description2';
+      WebformType@1000000003 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages';
+      Text007@1000000008 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+      WebshopShop@1000000009 : Record 5447301;
+      WebshopLanguage@1000000010 : Record 5447302;
+      CondSumAmntAllItemsGTEEnabled@1000000011 : Boolean;
+      CondSumAmntSingItemGTEEnabled@1000000012 : Boolean;
+      CondSumAmntEachItemGTEEnabled@1000000013 : Boolean;
+      CondNodiffItemsGTEEnabled@1000000014 : Boolean;
+      CondTotalItemQtyGTEEnabled@1000000015 : Boolean;
+      CondQtySingleItemGTEEnabled@1000000016 : Boolean;
+      CondQtyEachItemGTEEnabled@1000000017 : Boolean;
+      CondBasketTotalGTEEnabled@1000000018 : Boolean;
+      DiscountAmntappliestoEnabled@1000000019 : Boolean;
+      DiscountAmntEnabled@1000000020 : Boolean;
+      DiscountPercentappliestoEnabled@1000000021 : Boolean;
+      DiscountPercentEnabled@1000000022 : Boolean;
+      DiscountappliestQtymaxEnabled@1000000023 : Boolean;
+      TypeFreeItemEnabled@1000000024 : Boolean;
+      QtyFreeItemEnabled@1000000025 : Boolean;
+      AlternativeShippingOptionEnabled@1000000026 : Boolean;
+      Used@1000000027 : Boolean;
+      CampaignFieldType@1000000029 : 'Condition,Action';
+      CampaignFieldName@1000000028 : 'CondSumAmntAllItemsGTE,CondSumAmntSingItemGTE,CondSumAmntEachItemGTE,CondNodiffItemsGTE,CondTotalItemQtyGTE,CondQtySingleItemGTE,CondQtyEachItemGTE,CondBasketTotalGTE,DiscountAmntappliesto,DiscountAmnt,DiscountPercentappliesto,DiscountPercent,DiscountappliestQtymax,TypeFreeItem,QtyFreeItem,AlternativeShippingOption';
+      CondFieldsUsed@1000000030 : Boolean;
+      ActionFieldsUsed@1000000031 : Boolean;
+      DiscountAmntAppliesTo@1000000032 : Integer;
+      DiscountPercentAppliesTo@1000000033 : Integer;
+
+    LOCAL PROCEDURE EditImage@1000000000(ParamField@1000000004 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems');
+    VAR
+      TMPCampaignHeader@1000000001 : TEMPORARY Record 5447345;
+      EditCampaignImage@1000000002 : Page 5447384;
+      WebshopManagement@1000000003 : Codeunit 5447300;
+      ThisRecRef@1000000000 : RecordRef;
+      ThisFieldRef@1000000005 : FieldRef;
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      ThisRecRef.GETTABLE(Rec);
+
+      CASE ParamField OF
+        ParamField::IconCondItems:    ThisFieldRef := ThisRecRef.FIELD(60);
+        ParamField::BannerCondItems:  ThisFieldRef := ThisRecRef.FIELD(61);
+        ParamField::IconActItems:     ThisFieldRef := ThisRecRef.FIELD(63);
+        ParamField::BannerActItems:   ThisFieldRef := ThisRecRef.FIELD(64);
+      END;
+
+      TESTFIELD(Code);
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopManagement.ConnectionTest();
+      CurrPage.UPDATE;
+      WebshopUpdateManagement.UpdateCampaignByCode(Code);
+      CurrPage.UPDATE;
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+          CLEAR(WebshopWebform);
+          //DynamicCommerceAddIn
+          WebshopWebform.SetWebformType(WebformType::CampaignImages);
+          WebshopWebform.SetShopCode("Shop Code");
+          WebshopWebform.SetLanguageCode("Language Code");
+          WebshopWebform.SetRecordCode(Code);
+          WebshopWebform.SetWebFieldName(ParamField);
+          WebshopWebform.LOOKUPMODE(TRUE);
+          WebshopWebform.RUNMODAL();
+        END ELSE BEGIN
+          //Legacy
+          CLEAR(EditCampaignImage);
+          TMPCampaignHeader.SETRANGE(Code,Code);
+          EditCampaignImage.SETTABLEVIEW(TMPCampaignHeader);
+          EditCampaignImage.SetField(ParamField);
+          //EditCampaignImage.LOOKUPMODE(TRUE);
+          EditCampaignImage.RUNMODAL();
+      END;
+      WebshopUpdateManagement.CheckCampaignImage(Rec,ThisFieldRef);
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      CurrPage.UPDATE;
+    END;
+
+    LOCAL PROCEDURE DeleteImage@1000000001(ParamField@1000000000 : 'IconCondItems,BannerCondItems,IconActItems,BannerActItems');
+    VAR
+      ThisRecRef@1000000002 : RecordRef;
+      ThisFieldRef@1000000001 : FieldRef;
+      WebshopManagement@1000000003 : Codeunit 5447300;
+    BEGIN
+      ThisRecRef.GETTABLE(Rec);
+
+      CASE ParamField OF
+        ParamField::IconCondItems:    ThisFieldRef := ThisRecRef.FIELD(60);
+        ParamField::BannerCondItems:  ThisFieldRef := ThisRecRef.FIELD(61);
+        ParamField::IconActItems:     ThisFieldRef := ThisRecRef.FIELD(63);
+        ParamField::BannerActItems:   ThisFieldRef := ThisRecRef.FIELD(64);
+      END;
+
+      TESTFIELD(Code);
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopManagement.ConnectionTest();
+      CurrPage.UPDATE;
+      WebshopUpdateManagement.UpdateCampaignByCode(Code);
+      CurrPage.UPDATE;
+      COMMIT;
+      WebshopUpdateManagement.DeleteCampaignImage(Rec,ThisFieldRef);
+      CurrPage.UPDATE;
+    END;
+
+    LOCAL PROCEDURE EnableFields@1000000007(CampaignFieldType@1000000000 : 'Condition,Action';CampaignFieldName@1000000001 : 'CondSumAmntAllItemsGTE,CondSumAmntSingItemGTE,CondSumAmntEachItemGTE,CondNodiffItemsGTE,CondTotalItemQtyGTE,CondQtySingleItemGTE,CondQtyEachItemGTE,CondBasketTotalGTE,DiscountAmntappliesto,DiscountAmnt,DiscountPercentappliesto,DiscountPercent,DiscountappliestQtymax,TypeFreeItem,QtyFreeItem,AlternativeShippingOption';Used@1000000002 : Boolean);
+    BEGIN
+
+      IF CampaignFieldType = CampaignFieldType::Condition THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::CondSumAmntAllItemsGTE THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllCondFields;
+            CondSumAmntAllItemsGTEEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllCondFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Condition THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::CondBasketTotalGTE THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllCondFields;
+            CondBasketTotalGTEEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllCondFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Condition THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::CondNodiffItemsGTE THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllCondFields;
+            CondNodiffItemsGTEEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllCondFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Condition THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::CondQtyEachItemGTE THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllCondFields;
+            CondQtyEachItemGTEEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllCondFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Condition THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::CondQtySingleItemGTE THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllCondFields;
+            CondQtySingleItemGTEEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllCondFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Condition THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::CondSumAmntEachItemGTE THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllCondFields;
+            CondSumAmntEachItemGTEEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllCondFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Condition THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::CondSumAmntSingItemGTE THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllCondFields;
+            CondSumAmntSingItemGTEEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllCondFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Condition THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::CondTotalItemQtyGTE THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllCondFields;
+            CondTotalItemQtyGTEEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllCondFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Action THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::DiscountAmnt THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllActionFields;
+            DiscountAmntEnabled := TRUE;
+            DiscountAmntappliestoEnabled := TRUE;
+            DiscountappliestQtymaxEnabled := TRUE;
+            IF "Discount Amnt. applies to" = 0 THEN
+              "Discount Amnt. applies to" := 1;
+          END ELSE BEGIN
+            IF "Discount Amnt. applies to" = 0 THEN
+              EnableAllActionFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Action THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::DiscountAmntappliesto THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllActionFields;
+            DiscountAmntEnabled := TRUE;
+            DiscountAmntappliestoEnabled := TRUE;
+            DiscountappliestQtymaxEnabled := TRUE;
+          END ELSE BEGIN
+            IF "Discount applies to Qty. (max)" <> 0 THEN
+              "Discount applies to Qty. (max)" := 0;
+            EnableAllActionFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Action THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::DiscountPercent THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllActionFields;
+            DiscountPercentEnabled := TRUE;
+            DiscountPercentappliestoEnabled := TRUE;
+            DiscountappliestQtymaxEnabled := TRUE;
+            IF "Discount Percent applies to" = 0 THEN
+              "Discount Percent applies to" := 1;
+          END ELSE BEGIN
+            IF "Discount Percent applies to" = 0 THEN
+              EnableAllActionFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Action THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::DiscountPercentappliesto THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllActionFields;
+            DiscountPercentEnabled := TRUE;
+            DiscountPercentappliestoEnabled := TRUE;
+            DiscountappliestQtymaxEnabled := TRUE;
+          END ELSE BEGIN
+            IF "Discount applies to Qty. (max)" <> 0 THEN
+              "Discount applies to Qty. (max)" := 0;
+            EnableAllActionFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Action THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::DiscountappliestQtymax THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllActionFields;
+            DiscountAmntAppliesTo := "Discount Amnt. applies to";
+            DiscountPercentAppliesTo := "Discount Percent applies to";
+
+            IF DiscountAmntAppliesTo = 0 THEN BEGIN
+              DiscountPercentEnabled := TRUE;
+              DiscountPercentappliestoEnabled := TRUE;
+              DiscountappliestQtymaxEnabled := TRUE;
+            END;
+
+            IF DiscountPercentAppliesTo = 0 THEN BEGIN
+              DiscountAmntEnabled := TRUE;
+              DiscountAmntappliestoEnabled := TRUE;
+              DiscountappliestQtymaxEnabled := TRUE;
+            END;
+          END ELSE BEGIN
+            IF ("Discount Percent applies to" = 0) AND ("Discount Amnt. applies to" = 0) THEN
+              EnableAllActionFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Action THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::TypeFreeItem THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllActionFields;
+            TypeFreeItemEnabled := TRUE;
+            QtyFreeItemEnabled := TRUE;
+          END ELSE BEGIN
+            "Qty. Free Item" := 0;
+            EnableAllActionFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Action THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::QtyFreeItem THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllActionFields;
+            TypeFreeItemEnabled := TRUE;
+            QtyFreeItemEnabled := TRUE;
+            IF "Type Free Item" = 0 THEN
+              "Type Free Item" := 1;
+          END ELSE BEGIN
+            IF "Type Free Item" <> 0 THEN
+              "Type Free Item" := 0;
+              EnableAllActionFields;
+          END;
+        END;
+      END;
+
+      IF CampaignFieldType = CampaignFieldType::Action THEN BEGIN
+        IF CampaignFieldName = CampaignFieldName::AlternativeShippingOption THEN BEGIN
+          IF Used THEN BEGIN
+            DisableAllActionFields;
+            AlternativeShippingOptionEnabled := TRUE;
+          END ELSE BEGIN
+            EnableAllActionFields;
+          END;
+        END;
+      END;
+    END;
+
+    LOCAL PROCEDURE EnableAllCondFields@1000000011();
+    BEGIN
+      CondSumAmntAllItemsGTEEnabled := TRUE;
+      CondSumAmntSingItemGTEEnabled := TRUE;
+      CondSumAmntEachItemGTEEnabled := TRUE;
+      CondNodiffItemsGTEEnabled := TRUE;
+      CondTotalItemQtyGTEEnabled := TRUE;
+      CondQtySingleItemGTEEnabled := TRUE;
+      CondQtyEachItemGTEEnabled := TRUE;
+      CondBasketTotalGTEEnabled := TRUE;
+    END;
+
+    LOCAL PROCEDURE EnableAllActionFields@1000000012();
+    BEGIN
+      DiscountAmntappliestoEnabled := TRUE;
+      DiscountAmntEnabled := TRUE;
+      DiscountPercentappliestoEnabled := TRUE;
+      DiscountPercentEnabled := TRUE;
+      DiscountappliestQtymaxEnabled := TRUE;
+      TypeFreeItemEnabled := TRUE;
+      QtyFreeItemEnabled := TRUE;
+      AlternativeShippingOptionEnabled := TRUE;
+    END;
+
+    LOCAL PROCEDURE DisableAllCondFields@1000000013();
+    BEGIN
+      CondSumAmntAllItemsGTEEnabled := FALSE;
+      CondSumAmntSingItemGTEEnabled := FALSE;
+      CondSumAmntEachItemGTEEnabled := FALSE;
+      CondNodiffItemsGTEEnabled := FALSE;
+      CondTotalItemQtyGTEEnabled := FALSE;
+      CondQtySingleItemGTEEnabled := FALSE;
+      CondQtyEachItemGTEEnabled := FALSE;
+      CondBasketTotalGTEEnabled := FALSE;
+    END;
+
+    LOCAL PROCEDURE DisableAllActionFields@1000000014();
+    BEGIN
+      DiscountAmntappliestoEnabled := FALSE;
+      DiscountAmntEnabled := FALSE;
+      DiscountPercentappliestoEnabled := FALSE;
+      DiscountPercentEnabled := FALSE;
+      DiscountappliestQtymaxEnabled := FALSE;
+      TypeFreeItemEnabled := FALSE;
+      QtyFreeItemEnabled := FALSE;
+      AlternativeShippingOptionEnabled := FALSE;
+    END;
+
+    LOCAL PROCEDURE CheckCondFields@1000000002();
+    BEGIN
+      CondFieldsUsed := FALSE;
+
+      IF "Cond. Sum Amnt. All Items GTE" <> 0 THEN BEGIN
+        CondSumAmntAllItemsGTEEnabled := TRUE;
+        CondFieldsUsed := TRUE;
+      END;
+
+      IF "Cond. Sum Amnt. Sing. Item GTE" <> 0 THEN BEGIN
+        CondSumAmntSingItemGTEEnabled := TRUE;
+        CondFieldsUsed := TRUE;
+      END;
+
+      IF "Cond. No. diff. Items GTE" <> 0 THEN BEGIN
+        CondNodiffItemsGTEEnabled := TRUE;
+        CondFieldsUsed := TRUE;
+      END;
+
+      IF "Cond. Total Item Qty. GTE" <> 0 THEN BEGIN
+        CondTotalItemQtyGTEEnabled := TRUE;
+        CondFieldsUsed := TRUE;
+      END;
+
+      IF "Cond. Qty. Single Item GTE" <> 0 THEN BEGIN
+        CondQtySingleItemGTEEnabled := TRUE;
+        CondFieldsUsed := TRUE;
+      END;
+
+      IF "Cond. Basket Total GTE" <> 0 THEN BEGIN
+        CondBasketTotalGTEEnabled := TRUE;
+        CondFieldsUsed := TRUE;
+      END;
+
+      IF "Cond. Sum Amnt. Each Item GTE" <> 0 THEN BEGIN
+        CondSumAmntEachItemGTEEnabled := TRUE;
+        CondFieldsUsed := TRUE;
+      END;
+
+      IF "Cond. Qty. Each Item GTE" <> 0 THEN BEGIN
+        CondQtyEachItemGTEEnabled := TRUE;
+        CondFieldsUsed := TRUE;
+      END;
+
+      IF NOT CondFieldsUsed THEN
+        EnableAllCondFields;
+    END;
+
+    LOCAL PROCEDURE CheckActionFields@1000000003();
+    BEGIN
+      ActionFieldsUsed := FALSE;
+
+      IF ("Discount Amnt." <> 0) OR ("Discount Amnt. applies to" <> 0) THEN BEGIN
+        DiscountAmntEnabled := TRUE;
+        ActionFieldsUsed := TRUE;
+      END;
+
+      IF "Discount Amnt. applies to" <> "Discount Amnt. applies to"::None THEN BEGIN
+        DiscountAmntappliestoEnabled := TRUE;
+        ActionFieldsUsed := TRUE;
+      END;
+
+      IF ("Discount Percent" <> 0) OR ("Discount Percent applies to" <> 0) THEN BEGIN
+        DiscountPercentEnabled := TRUE;
+        ActionFieldsUsed := TRUE;
+      END;
+
+      IF "Discount Percent applies to" <> "Discount Percent applies to"::None THEN BEGIN
+        DiscountPercentappliestoEnabled := TRUE;
+        ActionFieldsUsed := TRUE;
+      END;
+
+      IF ("Type Free Item" <> 0) OR ("Qty. Free Item" <> 0) THEN BEGIN
+        TypeFreeItemEnabled := TRUE;
+        QtyFreeItemEnabled := TRUE;
+        ActionFieldsUsed := TRUE;
+      END;
+
+      IF "Alternative Shipping Option" THEN BEGIN
+        AlternativeShippingOptionEnabled := TRUE;
+        ActionFieldsUsed := TRUE;
+      END;
+
+      IF ("Discount applies to Qty. (max)" <> 0) OR ("Discount Amnt. applies to" <> 0) OR ("Discount Percent applies to" <> 0) THEN BEGIN
+        DiscountappliestQtymaxEnabled := TRUE;
+        ActionFieldsUsed := TRUE;
+      END;
+
+      IF NOT ActionFieldsUsed THEN
+        EnableAllActionFields;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

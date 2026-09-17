@@ -1,0 +1,52 @@
+N5116-C10-P8631-A1031-L999:Gibt die Telefonnummer des Verkäufers an.
+N5116-C12-P8631-A1031-L999:Gibt das Datum der nächsten dem Verkäufer zugewiesenen Aufgabe an.
+N5116-C14-P8631-A1031-L999:Gibt den Dimensionswertcode für die globale Dimension 1 an, die Sie der Kampagne zugeordnet haben.
+N5116-C16-P8631-A1031-L999:Gibt den Dimensionswertcode für die globale Dimension 2 an, die Sie der Kampagne zugeordnet haben.
+N5116-C1905885101-P8629-A1031-L999:Fakturierung
+N5116-C1-P8629-A1031-L999:Allgemein
+N5116-C22-P8631-A1031-L999:Gibt den Titel des Verkäufers an.
+N5116-C2-P8631-A1031-L999:Gibt einen Code für den Verkäufer oder Einkäufer an.
+N5116-C4-P8631-A1031-L999:Gibt den Namen des Verkäufers oder Einkäufers an.
+N5116-C6-P8631-A1031-L999:Gibt den Prozentsatz an, der verwendet werden soll, um die Verkäuferprovision zu berechnen.
+N5116-C8-P8631-A1031-L999:Gibt die E-Mail-Adresse des Verkäufers an.
+N5116-P55242-G1000000008-P55160-Q1000000000-P26171-A1031-L999:Verkäufer wurde aktualisiert.
+N5116-P55242-G1000000008-P8629-A1031-L999:Verkäufer aktualisieren
+N5116-P55242-G1000000009-P55160-Q1000000000-P26171-A1031-L999:Die Zugangsdaten wurden an den Verkäufer versendet.
+N5116-P55242-G1000000009-P8629-A1031-L999:Zugangsdaten versenden
+N5116-P55242-G1000000011-P8629-A1031-L999:Verkäuferbild löschen
+N5116-P55242-G1000000013-P8629-A1031-L999:Verkäuferbild hochladen
+N5116-P55242-G11-P8629-A1031-L999:Benutzer
+N5116-P55242-G11-P8631-A1031-L999:Öffnet den gekoppelten Microsoft Dynamics CRM-Systembenutzer.
+N5116-P55242-G13-P8629-A1031-L999:Dynamics CRM
+N5116-P55242-G18-P8629-A1031-L999:Kopplung
+N5116-P55242-G18-P8631-A1031-L999:Erstellt, ändert oder löscht eine Kopplung zwischen dem Microsoft Dynamics NAV-Datensatz und einem Microsoft Dynamics CRM-Datensatz.
+N5116-P55242-G19-P8629-A1031-L999:&Verkäufer
+N5116-P55242-G20-P8629-A1031-L999:Jetzt synchronisieren
+N5116-P55242-G20-P8631-A1031-L999:Sendet aktualisierte Daten an Microsoft Dynamics CRM oder ruft diese ab.
+N5116-P55242-G21-P8629-A1031-L999:Statistik
+N5116-P55242-G21-P8631-A1031-L999:Zeigt statistische Informationen für den Datensatz an, wie etwa den Wert der gebuchten Posten.
+N5116-P55242-G23-P8629-A1031-L999:Dimensionen
+N5116-P55242-G23-P8631-A1031-L999:Zeigt Dimensionen an oder bearbeitet sie, wie etwa einen Bereich, ein Projekt oder eine Abteilung, die Sie Verkaufs- oder Einkaufsbelegen zuweisen können, um die Kosten zu verteilen und den Transaktionsverlauf zu analysieren.
+N5116-P55242-G25-P8629-A1031-L999:Ko&ntakte
+N5116-P55242-G25-P8631-A1031-L999:Zeigen Sie eine Liste der Kontakte an, die dem Verkäufer/Einkäufer zugeordnet sind.
+N5116-P55242-G26-P8629-A1031-L999:Ka&mpagnen
+N5116-P55242-G27-P8629-A1031-L999:Se&gmente
+N5116-P55242-G27-P8631-A1031-L999:Zeigt eine Liste aller Segmente an.
+N5116-P55242-G28-P8629-A1031-L999:&Teams
+N5116-P55242-G32-P8629-A1031-L999:Aktivit&ätenprotokollposten
+N5116-P55242-G32-P8631-A1031-L999:Zeigt Aktivitätenprotokollposten für den Verkäufer/Einkäufer an.
+N5116-P55242-G34-P8629-A1031-L999:Übersicht
+N5116-P55242-G34-P8631-A1031-L999:Zeigt eine Liste aller Verkäufer/Einkäufer an.
+N5116-P55242-G35-P8629-A1031-L999:Aufga&ben
+N5116-P55242-G36-P8629-A1031-L999:Aktivität &erst.
+N5116-P55242-G36-P8631-A1031-L999:Erstellt eine Aktivität mit einem bestimmten Kontakt.
+N5116-P55242-G76-P8629-A1031-L999:Zurückgestellte &Aktivitäten
+N5116-P55242-G76-P8631-A1031-L999:Zeigt zurückgestellte Aktivitäten für den Verkäufer/Einkäufer an.
+N5116-P55242-G78-P8629-A1031-L999:Verkaufs&chancen
+N5116-P55242-G7-P8629-A1031-L999:Kopplung löschen
+N5116-P55242-G7-P8631-A1031-L999:Löscht die Kopplung mit einem Microsoft Dynamics CRM-Benutzer.
+N5116-P55242-G9-P8629-A1031-L999:Kopplung einrichten
+N5116-P55242-G9-P8631-A1031-L999:Erstellt oder ändert die Kopplung mit einem Microsoft Dynamics CRM-Benutzer.
+N5116-P8629-A1031-L999:Verkäufer-/Einkäuferkarte
+N5116-Q1000000007-P26171-A1031-L999:Verkäuferbild gelöscht
+N5116-Q1000000008-P26171-A1031-L999:Bitte zuerst das nötige Steuerelement installieren.

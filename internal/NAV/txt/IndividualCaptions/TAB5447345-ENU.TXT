@@ -1,0 +1,77 @@
+T5447345-F1-P8629-A1033-L999:Code
+T5447345-F20-P8629-A1033-L999:Sum total items min.
+T5447345-F21-P8629-A1033-L999:Sum total single item min.
+T5447345-F22-P8629-A1033-L999:No. of different items min.
+T5447345-F23-P8629-A1033-L999:Total qty. items min.
+T5447345-F24-P8629-A1033-L999:Qty. single item min.
+T5447345-F25-P8629-A1033-L999:Sum basket min.
+T5447345-F26-P8629-A1033-L999:Sum total each item min.
+T5447345-F27-P8629-A1033-L999:Qty. each item min.
+T5447345-F2-P8629-A1033-L999:Description
+T5447345-F3-P8629-A1033-L999:Active
+T5447345-F40-P8629-A1033-L999:Discount amount
+T5447345-F41-P8629-A1033-L999:Discount amount applies to
+T5447345-F41-P8632-A1033-L999: ,Current condition-item,All condition-items,All action-items,basket
+T5447345-F42-P8629-A1033-L999:Discount Percent
+T5447345-F43-P8629-A1033-L999:Discount percent applies to
+T5447345-F43-P8632-A1033-L999: ,Current condition-item,All condition-items,Least expensive condition-item,All action-items,basket
+T5447345-F44-P8629-A1033-L999:Qty. Free Item
+T5447345-F45-P8629-A1033-L999:Type free item
+T5447345-F45-P8632-A1033-L999: ,Current condition-item,Least expensive condition-item,All action-items
+T5447345-F46-P8629-A1033-L999:Alternative shipping option
+T5447345-F47-P8629-A1033-L999:Discount applies to Qty. (max)
+T5447345-F4-P8629-A1033-L999:Active from date
+T5447345-F5-P8629-A1033-L999:Active to date
+T5447345-F60-P8629-A1033-L999:Icon condition-items
+T5447345-F61-P8629-A1033-L999:Banner condition-items
+T5447345-F62-P8629-A1033-L999:Text condition-items
+T5447345-F63-P8629-A1033-L999:Icon action-items
+T5447345-F64-P8629-A1033-L999:Banner action-items
+T5447345-F65-P8629-A1033-L999:Text action-items
+T5447345-F66-P8629-A1033-L999:Banner basket
+T5447345-F67-P8629-A1033-L999:Text basket
+T5447345-F68-P8629-A1033-L999:Webshop Code
+T5447345-F69-P8629-A1033-L999:Webshop Language Code
+T5447345-F6-P8629-A1033-L999:Active from time
+T5447345-F72-P8629-A1033-L999:Date Last Modified
+T5447345-F73-P8629-A1033-L999:Date Last Updated
+T5447345-F7-P8629-A1033-L999:Active to time
+T5447345-F8-P8629-A1033-L999:Multiply applicable
+T5447345-F9-P8629-A1033-L999:Priority
+T5447345-F9-P8632-A1033-L999:1,2,3,4,5,6,7,8,9,10
+T5447345-P8629-A1033-L999:Webshop Campaign Header
+T5447345-Q1000000000-P26171-A1033-L999:Only one condition-field can be set per campaign.
+T5447345-Q1000000001-P26171-A1033-L999:Only one action can be set per campaign.
+T5447345-Q1000000003-P26171-A1033-L999:All
+T5447345-Q1000000004-P26171-A1033-L999:AllCond
+T5447345-U1000000000-Q1000000010-P26171-A1033-L999:The applicable Campaign with Code %1 has already been applied to this Sales Order.\How should the Campaign be handled?
+T5447345-U1000000000-Q1000000011-P26171-A1033-L999:Skip,Apply a further time,Revert and apply anew
+T5447345-U1000000000-Q1000000015-P26171-A1033-L999:The following Campaigns are now applied to the Sales Order:\%1
+T5447345-U1000000000-Q1000000016-P26171-A1033-L999:''|<=%1
+T5447345-U1000000000-Q1000000017-P26171-A1033-L999:''|>=%1
+T5447345-U1000000001-Q1000000001-P26171-A1033-L999:Exactly one Webshop Campaign Header record must be passed\to the function DoesCampaignHeaderApplyToSalesOrder!
+T5447345-U1000000001-Q1000000003-P26171-A1033-L999:Exactly one Sales Header must be passed\to the function DoesCampaignApplyToSalesOrder!
+T5447345-U1000000001-Q1000000005-P26171-A1033-L999:The SalesLineCondItemsTmp parameter must be temporary!
+T5447345-U1000000006-Q1000000005-P26171-A1033-L999:SalesHeader must be a unique Sales Header.
+T5447345-U1000000006-Q1000000006-P26171-A1033-L999:SalesHeader must be a Sales Order.
+T5447345-U1000000006-Q1000000009-P26171-A1033-L999:Sales Order must not have the status "Released".
+T5447345-U1000000009-Q1000000004-P26171-A1033-L999:The Sales Order Lines Parameter passed to the function\FiltersalesOrderLinesForCondItems must be temporary!
+T5447345-U1000000009-Q1000000005-P26171-A1033-L999:Exactly one Webshop Campaign Header must be passed\to the function FilterSalesorderLinesForConditems
+T5447345-U1000000012-Q1000000004-P26171-A1033-L999:Exactly one Webshop Campaign Header must be passed\to the function FilterSalesorderLinesForConditems
+T5447345-U1000000012-Q1000000005-P26171-A1033-L999:The process is being terminated - reason:\No Shop Code set in Webshop Campaign despite category conditions.
+T5447345-U1000000012-Q1000000027-P26171-A1033-L999:Please chose the Shop to be used.
+T5447345-U1000000012-Q1000000028-P26171-A1033-L999:Code: %1 | Name: %2
+T5447345-U1000000015-Q1000000011-P26171-A1033-L999:SalesHeader must be a Sales Order.
+T5447345-U1000000015-Q1000000012-P26171-A1033-L999:SalesHeader must be a unique Sales Header.
+T5447345-U1000000015-Q1000000013-P26171-A1033-L999:The Campaign must be of the Free Item type.
+T5447345-U1000000015-Q1000000014-P26171-A1033-L999:WebshopCampaign must be a unique Campaign Header.
+T5447345-U1000000015-Q1000000023-P26171-A1033-L999:Sales Order must not have the status "Released".
+T5447345-U1000000016-Q1000000003-P26171-A1033-L999:Shop Code and Language Code have to be set in the Campaign in order to check Shipping Options.
+T5447345-U1000000016-Q1000000004-P26171-A1033-L999:Which Shipping Option shall be added?
+T5447345-U1000000016-Q1000000018-P26171-A1033-L999:Please choose the Shipping Option to use.
+T5447345-U1000000016-Q1000000019-P26171-A1033-L999:Country: %1 | Shipping Agent: %2 | Shipping Agent Service: %3 | Cost exemption limit: %4 | Cost: %5
+T5447345-U1000000017-Q1000000013-P26171-A1033-L999:Sales Order must not have the status "Released".
+T5447345-U1000000017-Q1000000014-P26171-A1033-L999:SalesHeader must be a Sales Order.
+T5447345-U1000000017-Q1000000015-P26171-A1033-L999:SalesHeader must be a unique Sales Header.
+T5447345-U1000000017-Q1000000016-P26171-A1033-L999:The Campaign must have an amount- or percent-discount action.
+T5447345-U1000000017-Q1000000017-P26171-A1033-L999:WebshopCampaign must be a unique Campaign Header.

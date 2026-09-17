@@ -1,0 +1,165 @@
+OBJECT Page 5447314 Webshop Item File Part
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30.06.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DEU=Webshop Artikeldatei;
+               ENU=Webshop Item File];
+    SourceTable=Table5447307;
+    PageType=ListPart;
+    AutoSplitKey=Yes;
+    ShowFilter=No;
+    OnInit=BEGIN
+             ClientAddInType := WebshopAssemblyResolver.ClientAddInVersion();
+           END;
+
+    OnAfterGetRecord=BEGIN
+                       IF File THEN
+                         FileText := YesText
+                       ELSE
+                         FileText := NoText;
+                     END;
+
+    OnNewRecord=BEGIN
+                  FileText := NoText;
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000002;1 ;Action    ;
+                      Name=<Action1000000017>;
+                      CaptionML=[DEU=Datei bearbeiten;
+                                 ENU=Edit File];
+                      Image=DocumentEdit;
+                      OnAction=BEGIN
+                                 EditContent();
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                GroupType=Repeater }
+
+    { 1000000007;2;Field  ;
+                CaptionML=[DEU=Zeilennr.;
+                           ENU=Line No.];
+                SourceExpr="Line No.";
+                Visible=FALSE }
+
+    { 1000000010;2;Field  ;
+                AssistEdit=No;
+                CaptionML=[DEU=Beschreibung;
+                           ENU=Description];
+                SourceExpr=Description;
+                OnAssistEdit=VAR
+                               TempItemFile@1000000000 : Record 5447307;
+                               EditItemFile@1000000001 : Page 5447303;
+                             BEGIN
+                             END;
+                              }
+
+    { 1000000003;2;Field  ;
+                CaptionML=[DEU=Datei;
+                           ENU=File];
+                SourceExpr=FileText;
+                Editable=FALSE;
+                OnAssistEdit=BEGIN
+                               EditContent();
+                             END;
+                              }
+
+    { 1000000001;2;Field  ;
+                CaptionML=[DEU=Alle Sprachen;
+                           ENU=All Language Codes];
+                SourceExpr="All Language Codes" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Customization Image" }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000002 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000008 : Codeunit 5447301;
+      WebshopWebforms@1000000000 : Codeunit 5447302;
+      WebshopItem@1000000001 : Record 5447304;
+      TempItemFile@1000000003 : Record 5447307;
+      EditItemFile@1000000004 : Page 5447362;
+      FileText@1000000005 : Text[30];
+      YesText@1000000006 : TextConst 'DEU=Ja;ENU=Yes';
+      NoText@1000000007 : TextConst 'DEU=Nein;ENU=No';
+      ClientAddInType@1000000013 : 'Undefined,Legacy,DynamicCommerce';
+      WebshopAssemblyResolver@1000000012 : Codeunit 5447320;
+      WebshopWebform@1000000011 : Page 5447366;
+      Type@1000000010 : 'Description1,Promotion,Description2';
+      WebformType@1000000009 : 'AttributeIcon,CouponBackground,CategoryImage,CategoryDesc,ItemDesc,ItemFile,TextModul,Placeholder,TxtModAttac,CampaignImages,Collection';
+      Text007@1000000014 : TextConst 'DEU=Bitte zuerst das n�tige Steuerelement installieren.;ENU=Please install needed Client AddIn first';
+
+    PROCEDURE EditContent@1000000002();
+    BEGIN
+      IF ClientAddInType = ClientAddInType::Undefined THEN
+        ERROR(Text007);
+
+      WebshopUpdateManagement.SetSendNow(TRUE);
+      WebshopUpdateManagement.UpdateWebshopItemFile(Rec);
+      GET("Shop Code","Language Code","Item No.",Type,"Variant Code","Line No.");
+      COMMIT;
+
+      IF ClientAddInType = ClientAddInType::DynamicCommerce THEN BEGIN
+        //DynamicCommerceAddIn
+        CLEAR(WebshopWebform);
+        WebshopWebform.SetWebformType(WebformType::ItemFile);
+        WebshopWebform.SetShopCode("Shop Code");
+        WebshopWebform.SetLanguageCode("Language Code");
+        WebshopWebform.SetItemNo("Item No.");
+        WebshopWebform.SetItemFileType(Type);
+        WebshopWebform.SetLineNo("Line No.");
+        WebshopWebform.LOOKUPMODE(TRUE);
+        WebshopWebform.RUNMODAL();
+      END ELSE BEGIN
+        //Legacy
+        CLEAR(EditItemFile);
+        TempItemFile.SETRANGE(Type,Type);
+        TempItemFile.SETRANGE("Shop Code","Shop Code");
+        TempItemFile.SETRANGE("Language Code","Language Code");
+        TempItemFile.SETRANGE("Item No.","Item No.");
+        TempItemFile.SETRANGE("Variant Code","Variant Code");
+        TempItemFile.SETRANGE("Line No.","Line No.");
+        EditItemFile.SETTABLEVIEW(TempItemFile);
+        EditItemFile.LOOKUPMODE(TRUE);
+        EditItemFile.RUNMODAL();
+      END;
+
+      GET("Shop Code","Language Code","Item No.",Type,"Variant Code","Line No.");
+      WebshopUpdateManagement.CheckWebshopItemFile(Rec);
+      GET("Shop Code","Language Code","Item No.",Type,"Variant Code","Line No.");
+      WebshopUpdateManagement.SetSendNow(FALSE);
+      IF File THEN
+        FileText := YesText
+      ELSE
+        FileText := NoText;
+
+      CurrPage.UPDATE;
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

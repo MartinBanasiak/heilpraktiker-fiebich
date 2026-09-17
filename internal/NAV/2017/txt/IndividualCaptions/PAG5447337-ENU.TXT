@@ -1,0 +1,22 @@
+N5447337-P8629-A1033-L999:Webshop Permissions Group Link
+N5447337-Q1000000004-P26171-A1033-L999:Category permissions for customer %1
+N5447337-Q1000000005-P26171-A1033-L999:Customer permissions for category %1
+N5447337-Q1000000006-P26171-A1033-L999:Category permissions for group %1
+N5447337-Q1000000007-P26171-A1033-L999:Group permissions for category %1
+N5447337-Q1000000008-P26171-A1033-L999:Customer permissions for item %1
+N5447337-Q1000000009-P26171-A1033-L999:Item permissions for customer %1
+N5447337-Q1000000010-P26171-A1033-L999:Item permissions for group %1
+N5447337-Q1000000011-P26171-A1033-L999:Group permissions for item %1
+N5447337-Q1000000012-P26171-A1033-L999:Customer permissions for group %1
+N5447337-Q1000000013-P26171-A1033-L999:Group permissions for customer %1
+N5447337-Q1000000026-P26171-A1033-L999:Category permissions for contact %1
+N5447337-Q1000000027-P26171-A1033-L999:Item permissions for contact %1
+N5447337-Q1000000028-P26171-A1033-L999:Group permissions for contact %1
+N5447337-Q1000000036-P26171-A1033-L999:Shipping option permissions for customer %1
+N5447337-Q1000000037-P26171-A1033-L999:Customer permissions for shipping option %1
+N5447337-Q1000000038-P26171-A1033-L999:Shipping option permissions for group %1
+N5447337-Q1000000039-P26171-A1033-L999:Group permissions for shipping option %1
+N5447337-Q1000000040-P26171-A1033-L999:Payment option permissions for customer %1
+N5447337-Q1000000041-P26171-A1033-L999:Customer permissions for payment option %1
+N5447337-Q1000000042-P26171-A1033-L999:Payment option permission for group %1
+N5447337-Q1000000043-P26171-A1033-L999:Group permissions for payment option %1

@@ -1,0 +1,655 @@
+OBJECT Page 5447300 Webshop Setup
+{
+  OBJECT-PROPERTIES
+  {
+    Date=28.02.18;
+    Time=16:00:00;
+    Version List=MYSW14.10;
+  }
+  PROPERTIES
+  {
+    Permissions=TableData 36=rimd,
+                TableData 110=rimd,
+                TableData 112=rimd,
+                TableData 114=rimd;
+    CaptionML=[DEU=Webshop Einrichtung;
+               ENU=Webshop Setup];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    SourceTable=Table5447300;
+    PageType=Card;
+    ShowFilter=No;
+    OnOpenPage=BEGIN
+                 RESET;
+                 IF NOT GET THEN BEGIN
+                   INIT;
+                   INSERT;
+                 END;
+                 HideErrorMessagesField := FALSE;
+                 DCVersionString := Text009;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       IF "Catch & Log WebRequest Errors" THEN BEGIN
+                         ShowErrorMessagesField := TRUE;
+                         HideErrorMessagesField := FALSE;
+                       END ELSE BEGIN
+                         ShowErrorMessagesField := FALSE;
+                         HideErrorMessagesField := TRUE;
+                       END;
+                     END;
+
+    OnNewRecord=BEGIN
+                  ShowErrorMessagesField := FALSE;
+                  HideErrorMessagesField := TRUE;
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 1000000008;1 ;ActionGroup;
+                      Name=Update;
+                      CaptionML=[DEU=Aktualisierung;
+                                 ENU=Update];
+                      Image=Refresh }
+      { 1000000015;2 ;Action    ;
+                      Name=ConnectionTest;
+                      CaptionML=[DEU=Verbindung testen;
+                                 ENU=Connection Test];
+                      Promoted=Yes;
+                      Image=NewSparkle;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 CountRecords@1000000000 : Boolean;
+                                 i@1000000001 : Integer;
+                               BEGIN
+                                 IF WebshopManagement.ConnectionTest() THEN
+                                   MESSAGE(Text001);
+                               END;
+                                }
+      { 1000000029;2 ;Action    ;
+                      Name=UpdateBasicSetup;
+                      CaptionML=[DEU=Grundeinrichtung aktualisieren;
+                                 ENU=Update Basic Setup];
+                      Promoted=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 CountRecords@1000 : Boolean;
+                                 i@1001 : Integer;
+                               BEGIN
+                                 IF WebshopManagement.ConnectionTest THEN BEGIN
+                                   WebshopUpdateManagement.StateIndicatorOpen(Text008);
+                                   CountRecords := TRUE;
+                                   WebshopUpdateManagement.SetSendNow(TRUE);
+                                   FOR i := 1 TO 2 DO BEGIN
+                                     WebshopUpdateManagement.UpdateAllWebshopSetup(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShop(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllLanguage(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllCountry(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllPaymentOptions(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShippingClasses(CountRecords);
+                                     WebshopUpdateManagement.UpdateAllShippingOptions(CountRecords);
+                                     CountRecords := FALSE;
+                                   END;
+                                   WebshopUpdateManagement.SetSendNow(FALSE);
+                                   WebshopUpdateManagement.StateIndicatorClose();
+                                 END;
+                               END;
+                                }
+      { 1000000025;2 ;Action    ;
+                      Name=UpdateDynamicData;
+                      CaptionML=[DEU=Bewegungsdaten aktualisieren;
+                                 ENU=Update dynamic data];
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 WebshopUpdateDynamicData.UpdateDynamicData;
+                               END;
+                                }
+      { 1000000027;2 ;Action    ;
+                      Name=UpdateAllData;
+                      CaptionML=[DEU=Gesamtdaten aktualisieren;
+                                 ENU=Update all data];
+                      Promoted=Yes;
+                      Image=Refresh;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 WebshopUpdateAllData.UpdateAllData;
+                               END;
+                                }
+      { 1000000052;2 ;Action    ;
+                      Name=StartSolrUpdate;
+                      CaptionML=[DEU=Solr-Update starten;
+                                 ENU=Start Solr-update];
+                      Image=ViewDescription;
+                      OnAction=BEGIN
+                                 IF CONFIRM(Text007) THEN BEGIN
+                                     WebshopUpdateManagement.ForceSolrUpdate;
+                                 END;
+                               END;
+                                }
+      { 1000000012;2 ;ActionGroup;
+                      Name=SetUpdateFlags;
+                      CaptionML=[DEU=Aktualisierung zur�cksetzen;
+                                 ENU=Reset Update Flags];
+                      ActionContainerType=NewDocumentItems;
+                      Image=ResetStatus }
+      { 1000000021;3 ;Action    ;
+                      Name=ResetSystemProperties;
+                      CaptionML=[DEU=Systemeigenschaften zur�cksetzen;
+                                 ENU=Reset system properties];
+                      Visible=FALSE;
+                      Image=ResetStatus;
+                      PromotedCategory=Process;
+                      OnAction=BEGIN
+                                 IF CONFIRM(Text004) THEN BEGIN
+                                   Servername := '';
+                                   "Company Name" := '';
+                                   MODIFY(TRUE);
+                                   MESSAGE(Text005);
+                                 END;
+                               END;
+                                }
+      { 1000000017;3 ;Action    ;
+                      Name=ResetCustomers;
+                      CaptionML=[DEU=Debitoren zur�cksetzen;
+                                 ENU=Reset customers];
+                      Image=ResetStatus;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 Customer@1000000000 : Record 18;
+                               BEGIN
+                                 IF CONFIRM(Text002,FALSE,Customer.TABLECAPTION) THEN BEGIN
+                                   Customer.MODIFYALL("Date Last Updated (Webshop)",0DT);
+                                   MESSAGE(Text003);
+                                 END;
+                               END;
+                                }
+      { 1000000018;3 ;Action    ;
+                      Name=ResetOrders;
+                      CaptionML=[DEU=Auftr�ge zur�cksetzen;
+                                 ENU=Reset orders];
+                      Image=ResetStatus;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 SalesHeader@1000000000 : Record 36;
+                               BEGIN
+                                 IF CONFIRM(Text002,FALSE,SalesHeader.TABLECAPTION) THEN BEGIN
+                                   SalesHeader.MODIFYALL("Date Last Updated (Webshop)",0DT);
+                                   MESSAGE(Text003);
+                                 END;
+                               END;
+                                }
+      { 1000000019;3 ;Action    ;
+                      Name=ResetInvoices;
+                      CaptionML=[DEU=Rechnungen zur�cksetzen;
+                                 ENU=Reset invoices];
+                      Image=ResetStatus;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 SalesInvoiceHeader@1000000000 : Record 112;
+                               BEGIN
+                                 IF CONFIRM(Text002,FALSE,SalesInvoiceHeader.TABLECAPTION) THEN BEGIN
+                                   SalesInvoiceHeader.MODIFYALL("Date Last Updated (Webshop)",0DT);
+                                   MESSAGE(Text003);
+                                 END;
+                               END;
+                                }
+      { 1000000020;3 ;Action    ;
+                      Name=ResetVouchers;
+                      CaptionML=[DEU=Lieferscheine zur�cksetzen;
+                                 ENU=Reset vouchers];
+                      Image=ResetStatus;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 SalesShipmentHeader@1000000000 : Record 110;
+                               BEGIN
+                                 IF CONFIRM(Text002,FALSE,SalesShipmentHeader.TABLECAPTION) THEN BEGIN
+                                   SalesShipmentHeader.MODIFYALL("Date Last Updated (Webshop)",0DT);
+                                   MESSAGE(Text003);
+                                 END;
+                               END;
+                                }
+      { 5       ;3   ;Action    ;
+                      Name=ResetInvoiceDiscounts;
+                      CaptionML=[DEU=Rechnungsrabatte zur�cksetzen;
+                                 ENU=Reset invoice discounts];
+                      Visible=FALSE;
+                      Image=ResetStatus }
+      { 1000000077;3 ;Action    ;
+                      Name=ResetLineDiscounts;
+                      CaptionML=[DEU=Zeilenrabatte zur�cksetzen;
+                                 ENU=Reset line discounts];
+                      Image=ResetStatus;
+                      PromotedCategory=Process }
+      { 13      ;3   ;Action    ;
+                      Name=ResetSalesPrices;
+                      CaptionML=[DEU=Preise zur�cksetzen;
+                                 ENU=Reset sales prices];
+                      Visible=FALSE;
+                      Image=ResetStatus }
+      { 10      ;3   ;Action    ;
+                      Name=ResetPermissions;
+                      CaptionML=[DEU=Berechtigungen zur�cksetzen;
+                                 ENU=Reset permissions];
+                      Visible=FALSE }
+      { 1000000076;3 ;Action    ;
+                      Name=ResetItems;
+                      CaptionML=[DEU=Artikel zur�cksetzen;
+                                 ENU=Reset items];
+                      Image=ResetStatus;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 WebshopItem@1000000001 : Record 5447304;
+                               BEGIN
+                                 IF CONFIRM(Text002,FALSE,WebshopItem.TABLECAPTION) THEN BEGIN
+                                   WebshopItem.MODIFYALL("Date Last Updated",0DT);
+                                   MESSAGE(Text003);
+                                 END;
+                               END;
+                                }
+      { 1       ;3   ;Action    ;
+                      Name=ResetVariants;
+                      CaptionML=[DEU=Varianten zur�cksetzen;
+                                 ENU=Reset variants];
+                      Visible=FALSE }
+      { 2       ;3   ;Action    ;
+                      Name=ResetInventories;
+                      CaptionML=[DEU=Lagerbestand zur�cksetzen;
+                                 ENU=Reset inventory];
+                      Visible=FALSE }
+      { 12      ;3   ;Action    ;
+                      Name=ResetItemCategories;
+                      CaptionML=[DEU=Artikel-Kategorie-Verkn�pfungen zur�cksetzen;
+                                 ENU=Reset item-category links];
+                      Image=ResetStatus;
+                      OnAction=VAR
+                                 WebshopItemCategory@1000000000 : Record 5447305;
+                               BEGIN
+                                 IF CONFIRM(Text002,FALSE,WebshopItemCategory.TABLECAPTION) THEN BEGIN
+                                   WebshopItemCategory.MODIFYALL("Date Last Updated",0DT);
+                                   MESSAGE(Text003);
+                                 END;
+                               END;
+                                }
+      { 3       ;3   ;Action    ;
+                      Name=ResetCategories;
+                      CaptionML=[DEU=Kategorien zur�cksetzen;
+                                 ENU=Reset categories];
+                      Image=ResetStatus;
+                      OnAction=VAR
+                                 WebshopCategory@1000000000 : Record 5447303;
+                               BEGIN
+                                 IF CONFIRM(Text002,FALSE,WebshopCategory.TABLECAPTION) THEN BEGIN
+                                   WebshopCategory.MODIFYALL("Last Date Updated",0DT);
+                                   MESSAGE(Text003);
+                                 END;
+                               END;
+                                }
+      { 6       ;3   ;Action    ;
+                      Name=ResetItemAttributes;
+                      CaptionML=[DEU=Artikel-Merkmal-Verkn�pfungen zur�cksetzen;
+                                 ENU=Reset item-attribute links];
+                      Visible=FALSE }
+      { 7       ;3   ;Action    ;
+                      Name=ResetAttributeOptions;
+                      CaptionML=[DEU=Merkmaloptionen zur�cksetzen;
+                                 ENU=Reset attribute options];
+                      Visible=FALSE }
+      { 8       ;3   ;Action    ;
+                      Name=ResetAttributes;
+                      CaptionML=[DEU=Merkmale zur�cksetzen;
+                                 ENU=Reset attributes];
+                      Visible=FALSE }
+      { 9       ;3   ;Action    ;
+                      Name=ResetUserRatings;
+                      CaptionML=[DEU=Bewertungen zur�cksetzen;
+                                 ENU=Reset user ratings];
+                      Visible=FALSE }
+      { 4       ;3   ;Action    ;
+                      Name=ResetSalespeople;
+                      CaptionML=[DEU=Verk�ufer zur�cksetzen;
+                                 ENU=Reset salespeople];
+                      Visible=FALSE }
+      { 11      ;3   ;Action    ;
+                      Name=ResetGoogleMerchant;
+                      CaptionML=[DEU=Google Merchant Info zur�cksetzen;
+                                 ENU=Reset Google Merchant info];
+                      Visible=FALSE }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000000;1;Group  ;
+                CaptionML=[DEU=Verbindung;
+                           ENU=Connection];
+                GroupType=Group }
+
+    { 1000000001;2;Field  ;
+                SourceExpr="Server Synch. Endpoint URL";
+                Importance=Promoted }
+
+    { 1000000095;2;Field  ;
+                ExtendedDatatype=Masked;
+                SourceExpr="Server Synch. Password" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr="CMS URL" }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Support URL" }
+
+    { 1000000047;2;Field  ;
+                SourceExpr="Computop Paygate URL" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Newsletter System URL" }
+
+    { 1000000093;2;Field  ;
+                SourceExpr="Default Shop Code" }
+
+    { 1000000038;2;Field  ;
+                SourceExpr="Proxy Server Address" }
+
+    { 1000000057;2;Field  ;
+                SourceExpr="Proxy Server Port" }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Classic Client Uses Proxy";
+                Visible=FALSE }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="NAS Uses Proxy" }
+
+    { 1000000034;2;Field  ;
+                SourceExpr="Windows Client Uses Proxy" }
+
+    { 1906176301;1;Group  ;
+                CaptionML=[DEU=Aktualisierung;
+                           ENU=Update];
+                GroupType=Group }
+
+    { 1000000049;2;Field  ;
+                SourceExpr="Time Last Update Dynamic Data";
+                Importance=Promoted }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Time Last Full Update" }
+
+    { 1000000036;2;Field  ;
+                SourceExpr="Time Last Auto Upd. Dyn. Data" }
+
+    { 1000000041;2;Field  ;
+                SourceExpr="Time Last Auto Full Update" }
+
+    { 1000000026;2;Field  ;
+                SourceExpr="Upd. Interv. Dyn. Data (min.)";
+                Visible=FALSE }
+
+    { 1000000028;2;Field  ;
+                SourceExpr="Time Full Webshop Update";
+                Visible=FALSE }
+
+    { 1000000051;2;Field  ;
+                SourceExpr="Last Update Item-Search";
+                Editable=FALSE }
+
+    { 1000000030;2;Field  ;
+                SourceExpr="NAS Error E-Mail Text";
+                Visible=FALSE }
+
+    { 1000000043;2;Field  ;
+                SourceExpr="NAS Error E-Mail Recipient";
+                Visible=FALSE }
+
+    { 1000000084;2;Field  ;
+                SourceExpr="NAS Error E-Mail Recipient 2" }
+
+    { 1000000086;2;Field  ;
+                SourceExpr="NAS Error E-Mail Sender Addr." }
+
+    { 1000000045;2;Field  ;
+                CaptionML=DEU=Verbindungsprotokoll aktiv;
+                SourceExpr="Is Connection Log Active" }
+
+    { 1000000003;2;Field  ;
+                CaptionML=DEU=Verbindungsprotokoll Datei;
+                SourceExpr="Connection Log File Path" }
+
+    { 14  ;2   ;Field     ;
+                SourceExpr="Catch & Log WebRequest Errors";
+                OnValidate=BEGIN
+                             IF "Catch & Log WebRequest Errors" THEN BEGIN
+                               ShowErrorMessagesField := TRUE;
+                               HideErrorMessagesField := FALSE;
+                               CurrPage.UPDATE;
+                             END ELSE BEGIN
+                               "Show Errors as Messages" := FALSE;
+                               ShowErrorMessagesField := FALSE;
+                               HideErrorMessagesField := TRUE;
+                               CurrPage.UPDATE;
+                             END;
+                           END;
+                            }
+
+    { 15  ;2   ;Field     ;
+                SourceExpr="Show Errors as Messages";
+                Editable="Catch & Log WebRequest Errors" }
+
+    { 1000000031;2;Field  ;
+                SourceExpr="Use Update Buffer" }
+
+    { 1904503601;1;Group  ;
+                CaptionML=[DEU=Aktualisierungsoptionen;
+                           ENU=Update Options];
+                GroupType=Group }
+
+    { 1000000037;2;Group  ;
+                CaptionML=[DEU=Webshop Artikel;
+                           ENU=Webshop Items];
+                GroupType=Group }
+
+    { 1000000009;3;Field  ;
+                SourceExpr="Update Items" }
+
+    { 1000000032;3;Field  ;
+                SourceExpr="Update Item Variants" }
+
+    { 1000000040;3;Field  ;
+                SourceExpr="Update Item Inventory" }
+
+    { 1000000022;3;Field  ;
+                SourceExpr="Update Item Attributes" }
+
+    { 1000000039;2;Group  ;
+                CaptionML=[DEU=Bestellungen;
+                           ENU=Orders];
+                GroupType=Group }
+
+    { 1000000056;3;Field  ;
+                SourceExpr="Fetch Orders" }
+
+    { 1000000042;2;Group  ;
+                CaptionML=[DEU=Kategorien;
+                           ENU=Categories];
+                GroupType=Group }
+
+    { 1000000053;3;Field  ;
+                SourceExpr="Update Webshop Categories" }
+
+    { 1000000044;2;Group  ;
+                CaptionML=[DEU=Preise & Rabatte;
+                           ENU=Prices & Discounts];
+                GroupType=Group }
+
+    { 1000000013;3;Field  ;
+                SourceExpr="Update Sales Line Discounts" }
+
+    { 1000000054;3;Field  ;
+                SourceExpr="Update Sales Prices" }
+
+    { 1000000087;3;Field  ;
+                SourceExpr="Update Invoice Discounts" }
+
+    { 1000000065;2;Group  ;
+                CaptionML=[DEU=Debitoren & Verk�ufer;
+                           ENU=Customers & Salesperson];
+                GroupType=Group }
+
+    { 1000000055;3;Field  ;
+                SourceExpr="Update Active Customers" }
+
+    { 1000000081;3;Field  ;
+                SourceExpr="Update All Customers" }
+
+    { 1000000085;3;Field  ;
+                SourceExpr="Update Salespeople" }
+
+    { 1000000066;2;Group  ;
+                CaptionML=[DEU=Belegarchiv;
+                           ENU=Customer Documents];
+                GroupType=Group }
+
+    { 1000000089;3;Field  ;
+                SourceExpr="Update Sales Orders" }
+
+    { 1000000006;3;Field  ;
+                SourceExpr="Update Posted Sales Invoices" }
+
+    { 1000000011;3;Field  ;
+                SourceExpr="Update Posted Sales Shipments" }
+
+    { 1000000050;3;Field  ;
+                SourceExpr="Update Posted Sales Cr. Memos" }
+
+    { 1000000068;2;Group  ;
+                CaptionML=[DEU=RMA;
+                           ENU=RMA];
+                GroupType=Group }
+
+    { 1000000046;3;Field  ;
+                SourceExpr="Fetch Return Orders" }
+
+    { 1000000048;3;Field  ;
+                SourceExpr="Update Return Orders" }
+
+    { 1000000069;2;Group  ;
+                CaptionML=[DEU=Abonements;
+                           ENU=Subscriptions];
+                GroupType=Group }
+
+    { 1000000058;3;Field  ;
+                SourceExpr="Fetch Subscription Orders" }
+
+    { 1000000059;3;Field  ;
+                SourceExpr="Update Subscriptions" }
+
+    { 1000000060;3;Field  ;
+                SourceExpr="Update Subscr. Seq. Steps" }
+
+    { 1000000061;3;Field  ;
+                SourceExpr="Update Subscr. Item Links" }
+
+    { 1000000062;3;Field  ;
+                SourceExpr="Update Subscr. Cust. Links" }
+
+    { 1000000063;3;Field  ;
+                SourceExpr="Create Subscription Orders" }
+
+    { 1000000070;2;Group  ;
+                CaptionML=[DEU=Marktpl�tze;
+                           ENU=Marketplaces];
+                GroupType=Group }
+
+    { 1000000071;3;Field  ;
+                SourceExpr="Update Marketplaces" }
+
+    { 1000000072;3;Field  ;
+                SourceExpr="Update Marketplace Prices" }
+
+    { 1000000073;3;Field  ;
+                SourceExpr="Update Marketplace Inventory" }
+
+    { 1000000074;3;Field  ;
+                SourceExpr="Update Marketplace Items" }
+
+    { 1000000075;3;Field  ;
+                SourceExpr="Update Marketplace Images" }
+
+    { 1000000078;3;Field  ;
+                SourceExpr="Update Marketpl. Item Rel." }
+
+    { 1000000079;3;Field  ;
+                SourceExpr="Fetch Marketplace Orders" }
+
+    { 1000000080;3;Field  ;
+                SourceExpr="Confirm Marketplace Orders" }
+
+    { 1000000082;3;Field  ;
+                SourceExpr="Fetch Marketplace Upd. Errors" }
+
+    { 1000000067;2;Group  ;
+                CaptionML=[DEU=Sonstiges;
+                           ENU=Others];
+                GroupType=Group }
+
+    { 1000000023;3;Field  ;
+                SourceExpr="Update Item Reviews" }
+
+    { 1000000024;3;Field  ;
+                SourceExpr="Update Permissions" }
+
+    { 1000000033;3;Field  ;
+                SourceExpr="Send Orders to Newsl. System" }
+
+    { 1000000004;3;Field  ;
+                SourceExpr="Update Google Merchant Center" }
+
+    { 1000000035;3;Field  ;
+                SourceExpr="Process Coupons" }
+
+    { 1000000064;3;Field  ;
+                SourceExpr="Update Item Customizations" }
+
+    { 1000000083;3;Field  ;
+                Name=dynamic commerce Version;
+                CaptionML=DEU=dynamic commerce Version;
+                SourceExpr=DCVersionString;
+                Editable=FALSE }
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      Text001@1000000001 : TextConst 'DEU=Verbindungstest erfolgreich;ENU=Connection test successful';
+      Text002@1000000002 : TextConst 'DEU=Wollen Sie die Aktualisierung der Tabelle %1 wirklich zur�cksetzten? Alle Daten werden bei der n�chsten Gesamtdatenaktualisierung erneut �bertragen.;ENU=Do you really want to reset synchronization of table %1? All data will be transferred again starting from the next full update.';
+      Text003@1000000003 : TextConst 'DEU=Aktualisierung zur�ckgesetzt;ENU=Synchronization has been reset.';
+      Text004@1000000004 : TextConst 'DEU=Wollen Sie die Systemeigenschaften zur�cksetzten?;ENU=Do you want to reset basic setup synchronization?';
+      Text005@1000000005 : TextConst 'DEU=Systemeigenschaften zur�ckgesetzt.;ENU=Basic setup synchronization has been reset.';
+      Text006@1000000006 : TextConst 'DEU=Aktualisierung erfolgreich;ENU=Synchronization successful';
+      WebshopUpdateManagement@1000000007 : Codeunit 5447301;
+      WebshopUpdateDynamicData@1000000008 : Codeunit 5447304;
+      WebshopUpdateAllData@1000000009 : Codeunit 5447303;
+      ShowErrorMessagesField@1000 : Boolean;
+      HideErrorMessagesField@1001 : Boolean;
+      Text007@1000000010 : TextConst 'DEU=Wollen Sie die Solr-Aktualisierung wirklich ansto�en? Dieser Prozess kann mehrere Minuten dauern und die Webdatenbank stark auslasten.;ENU=Do you really wish to start the Solr-update? This process may take several Minutes and will demand a lot of resources from the web-database.';
+      Text008@1000000011 : TextConst 'DEU=Grundeinrichtung aktualisieren;ENU=Update Basic Setup';
+      DCVersionString@1000000012 : Text;
+      Text009@1000000013 : TextConst 'DEU=Version 4.00;ENU=Version 4.00';
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

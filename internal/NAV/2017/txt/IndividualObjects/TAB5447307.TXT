@@ -1,0 +1,90 @@
+OBJECT Table 5447307 Webshop Item File
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01.12.17;
+    Time=16:00:00;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    OnModify=BEGIN
+               // Webshop-Artikel zur Aktualisierung kennzeichnen
+               WebshopManagement.SetWebshopItemModified("Item No.",TRUE,FALSE,FALSE);
+             END;
+
+    OnDelete=BEGIN
+               // Web-Datensatz l�schen
+               IF WebshopManagement.ConnectionTest THEN
+                 WebshopUpdateManagement.DeleteWebshopItemFile(Rec);
+             END;
+
+    OnRename=VAR
+               Text001@1000000000 : TextConst 'DEU=Sie k�nnen den Datensatz nicht umbenennen.;ENU=Row cannot be renamed';
+             BEGIN
+               ERROR(Text001);
+             END;
+
+    CaptionML=[DEU=Webshop Artikeldatei;
+               ENU=Webshop Item File];
+    LookupPageID=Page5447313;
+    DrillDownPageID=Page5447313;
+  }
+  FIELDS
+  {
+    { 1   ;   ;Item No.            ;Code20        ;TableRelation=Item.No.;
+                                                   CaptionML=[DEU=Artikelnr.;
+                                                              ENU=Item No.] }
+    { 2   ;   ;Language Code       ;Code10        ;TableRelation="Webshop Language".Code WHERE (Shop Code=FIELD(Shop Code));
+                                                   CaptionML=[DEU=Sprachcode;
+                                                              ENU=Language Code];
+                                                   NotBlank=Yes }
+    { 3   ;   ;Type                ;Option        ;CaptionML=[DEU=Typ;
+                                                              ENU=Type];
+                                                   OptionCaptionML=[DEU=Bild,Datei,Video;
+                                                                    ENU=Picture,Document,Videoclip];
+                                                   OptionString=Picture,Document,Videoclip }
+    { 4   ;   ;Line No.            ;Integer       ;CaptionML=[DEU=Zeilennr.;
+                                                              ENU=Line No.];
+                                                   NotBlank=Yes }
+    { 5   ;   ;Description         ;Text50        ;CaptionML=[DEU=Beschreibung;
+                                                              ENU=Description] }
+    { 6   ;   ;File                ;Boolean       ;CaptionML=[DEU=Datei;
+                                                              ENU=File];
+                                                   Editable=No }
+    { 7   ;   ;All Language Codes  ;Boolean       ;CaptionML=[DEU=Alle Sprachen;
+                                                              ENU=All Language Codes] }
+    { 10  ;   ;Shop Code           ;Code10        ;TableRelation="Webshop Shop".Code;
+                                                   CaptionML=[DEU=Shopcode;
+                                                              ENU=Shop Code] }
+    { 11  ;   ;Variant Code        ;Code10        ;TableRelation="Item Variant".Code WHERE (Item No.=FIELD(Item No.));
+                                                   CaptionML=[DEU=Variantencode;
+                                                              ENU=Variant Code] }
+    { 12  ;   ;Customization Image ;Boolean       ;CaptionML=[DEU=Geh�rt zu Individualisierung;
+                                                              ENU=Belongs to Customization] }
+    { 20  ;   ;Temp Filename       ;Text100       ;CaptionML=[DEU=Tempor�rer Dateiname;
+                                                              ENU=Temp Filename] }
+  }
+  KEYS
+  {
+    {    ;Shop Code,Language Code,Item No.,Type,Variant Code,Line No.;
+                                                   Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      Text001@1000000001 : TextConst 'DEU=Sie k�nnen den Datensatz nicht umbenennen.;ENU=Row cannot be renamed';
+      WebshopUpdateManagement@1000000002 : Codeunit 5447301;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

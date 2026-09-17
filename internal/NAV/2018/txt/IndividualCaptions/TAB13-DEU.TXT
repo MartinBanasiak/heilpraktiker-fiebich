@@ -1,0 +1,51 @@
+T13-F140-P8629-A1031-L999:Bild
+T13-F1-P8629-A1031-L999:Code
+T13-F2-P8629-A1031-L999:Name
+T13-F3-P8629-A1031-L999:Provision %
+T13-F5050-P8629-A1031-L999:Globaler Dimensionscode 1
+T13-F5051-P8629-A1031-L999:Globaler Dimensionscode 2
+T13-F5052-P8629-A1031-L999:E-Mail
+T13-F5053-P8629-A1031-L999:Telefonnr.
+T13-F5054-P8629-A1031-L999:Datum der nächsten Aufgabe
+T13-F5055-P8629-A1031-L999:Anzahl Verkaufschancen
+T13-F5056-P8629-A1031-L999:Erwarteter Wert (MW)
+T13-F5057-P8629-A1031-L999:Berech. aktueller Wert (MW)
+T13-F5058-P8629-A1031-L999:Datumsfilter
+T13-F5059-P8629-A1031-L999:Anzahl Aktivitäten
+T13-F5060-P8629-A1031-L999:Einstandsbetrag (MW)
+T13-F5061-P8629-A1031-L999:Dauer (Min.)
+T13-F5062-P8629-A1031-L999:Funktion
+T13-F5063-P8629-A1031-L999:Kriterienaktionsfilter
+T13-F5063-P8632-A1031-L999: ,Nächster Schritt,Vorheriger Schritt,Aktualisiert,Gesprungen,Gewonnen,Verloren
+T13-F5064-P8629-A1031-L999:Verkaufsprozessfilter
+T13-F5065-P8629-A1031-L999:Verkaufsprozess-Stufenfilter
+T13-F5066-P8629-A1031-L999:Wahrscheinlichkeit % Filter
+T13-F5067-P8629-A1031-L999:Abgeschlossen % Filter
+T13-F5068-P8629-A1031-L999:Durchschn. erw. Wert (MW)
+T13-F5069-P8629-A1031-L999:Durchschn. ber. akt. Wert (MW)
+T13-F5070-P8629-A1031-L999:Kontaktfilter
+T13-F5071-P8629-A1031-L999:Filter Kontaktunternehmen
+T13-F5072-P8629-A1031-L999:Kampagnenfilter
+T13-F5073-P8629-A1031-L999:Erwarteter Wert Filter
+T13-F5074-P8629-A1031-L999:Berech. aktueller Wert Filter
+T13-F5075-P8629-A1031-L999:Erfolgschancen % Filter
+T13-F5076-P8629-A1031-L999:Aufgabenstatusfilter
+T13-F5076-P8632-A1031-L999:Nicht begonnen,In Bearbeitung,Erledigt,Warten,Zurückgestellt
+T13-F5077-P8629-A1031-L999:Filter für abgeschlossene Aufgabe
+T13-F5078-P8629-A1031-L999:Prioritätenfilter
+T13-F5078-P8632-A1031-L999:Niedrig,Normal,Hoch
+T13-F5079-P8629-A1031-L999:Teamfilter
+T13-F5082-P8629-A1031-L999:Verkaufschancenposten vorh.
+T13-F5083-P8629-A1031-L999:Aufgabenposten ist vorhanden
+T13-F5084-P8629-A1031-L999:Verkaufschancenabschlussfilter
+T13-F5085-P8629-A1031-L999:E-Mail-Suchbegriff
+T13-F5086-P8629-A1031-L999:E-Mail 2
+T13-F5447300-P8629-A1031-L999:Datum Zugangsdaten gesendet
+T13-F5447301-P8629-A1031-L999:Hat Webshop Login
+T13-F5447302-P8629-A1031-L999:Webshop Shop Code
+T13-F5447303-P8629-A1031-L999:Webshop Sprachcode
+T13-F5447304-P8629-A1031-L999:Webshop Max. Rabatt %
+T13-F5447305-P8629-A1031-L999:Webshop Login E-Mail Adr.
+T13-F5447306-P8629-A1031-L999:Datum letzte Änderung (Webshop)
+T13-F5447307-P8629-A1031-L999:Datum letzte Aktualisierung (Webshop)
+T13-P8629-A1031-L999:Verkäufer/Einkäufer

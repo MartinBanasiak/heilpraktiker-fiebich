@@ -1,0 +1,4923 @@
+OBJECT Codeunit 5447302 Webshop Customized Update Mgt.
+{
+  OBJECT-PROPERTIES
+  {
+    Date=08.05.18;
+    Time=11:19:14;
+    Modified=Yes;
+    Version List=MYSW14.00;
+  }
+  PROPERTIES
+  {
+    Permissions=TableData 36=rimd,
+                TableData 110=rimd,
+                TableData 112=rimd,
+                TableData 114=rimd;
+    OnRun=VAR
+            Item@1000000000 : Record 27;
+          BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      WebshopManagement@1000000000 : Codeunit 5447300;
+      WebshopUpdateManagement@1000000001 : Codeunit 5447301;
+      WebshopSetup@1000000002 : Record 5447300;
+
+    PROCEDURE "--- WebshopManagement ---"@1000000040();
+    BEGIN
+    END;
+
+    PROCEDURE AddVar@1000000041(VAR Data@1000000002 : Text[1024];VarName@1000000001 : Text[100];VarValue@1000000000 : Variant);
+    BEGIN
+      WebshopManagement.AddVar(Data,VarName,VarValue);
+    END;
+
+    PROCEDURE StateIndicatorOpen@1000000014(Title@1000 : Text[250]);
+    BEGIN
+      WebshopManagement.StateIndicatorOpen(Title);
+    END;
+
+    PROCEDURE StateIndicatorClose@1();
+    BEGIN
+      WebshopManagement.StateIndicatorClose();
+    END;
+
+    LOCAL PROCEDURE "--- EventSubscriber ---"@1000000000();
+    BEGIN
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllWebshopSetup,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllWebshopSetup@5447300(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllWebshopSetup,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllWebshopSetup@54473000(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopSetup,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopSetup@5447301(VAR Handled@1000000000 : Boolean;VAR WebshopSetup@1000000001 : Record 5447300;VAR GeneralLedgerSetup@1000000002 : Record 98;VAR ShippingOptionsSetup@1000000003 : Record 5447450);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+      //  Beispiel f�r komplettes Ersetzten der Standardfunktion
+      //
+      //  AddVar(CurrRec,'table','shop_setup');
+      //  AddVar(CurrRec,'primary[company]',COMPANYNAME);
+      //  AddVar(CurrRec,'data[nas_email_text_module]',WebshopSetup."NAS Error E-Mail Text");
+      //  AddVar(CurrRec,'data[nas_email_recipient]',WebshopSetup."NAS Error E-Mail Recipient");
+      //  AddVar(CurrRec,'data[nas_email_recipient_2]',WebshopSetup."NAS Error E-Mail Recipient 2");
+      //  AddVar(CurrRec,'data[nas_email_sender]',WebshopSetup."NAS Error E-Mail Sender Addr.");
+      //  AddVar(CurrRec,'data[default_currency_code]',GeneralLedgerSetup."LCY Code");
+      //  WebshopManagement.AddDTVar(CurrRec,'data[last_datetime_nav_updated]',WebshopSetup."Time Last Full Update");
+      //
+      //  IF WebshopSetup."Use Update Buffer" THEN
+      //    WebshopUpdateBuffer.SendRequest('update',CurrRec,FALSE,gSendNow)
+      //  ELSE
+      //    WebshopManagement.SendRequest('update',CurrRec);
+      //
+      //  Handled := TRUE;
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopSetup,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopSetup@54473010(VAR Handled@1000000000 : Boolean;VAR WebshopSetup@1000000001 : Record 5447300;VAR GeneralLedgerSetup@1000000002 : Record 98;VAR ShippingOptionsSetup@1000000003 : Record 5447450);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+      //  Beispiel f�r zus�tzliche Anpassungen zur Standardversion
+      //
+      //  AddVar(CurrRec,'table','shop_setup');
+      //  AddVar(CurrRec,'primary[company]',COMPANYNAME);
+      //  AddVar(CurrRec,'data[ZUS�TZLICHES_FELD]',ZUS�TZLICHER_WERT);
+      //
+      //  IF WebshopSetup."Use Update Buffer" THEN
+      //    WebshopUpdateBuffer.SendRequest('update',CurrRec,FALSE,gSendNow)
+      //  ELSE
+      //    WebshopManagement.SendRequest('update',CurrRec);
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllShop,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllShop@5447302(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllShop,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllShop@54473020(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateShop,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateShop@5447303(VAR Handled@1100000000 : Boolean;VAR ParameterShop@1000000002 : Record 5447301);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateShop,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateShop@54473030(VAR Handled@1100000000 : Boolean;VAR ParameterShop@1000000002 : Record 5447301);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllShop,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllShop@5447304(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllShop,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllShop@54473040(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllLanguage,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllLanguage@5447305(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllLanguage,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllLanguage@54473050(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateLanguage,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateLanguage@5447306(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopLanguage@1000000002 : Record 5447302);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateLanguage,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateLanguage@54473060(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopLanguage@1000000002 : Record 5447302);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllLanguage,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllLanguage@5447307(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllLanguage,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllLanguage@54473070(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCurrency,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCurrency@5447308(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000001 : Code[10];VAR LanguageCode@1000000003 : Code[10];VAR ParameterCurrency@1000000002 : Record 4);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCurrency,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCurrency@54473080(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000001 : Code[10];VAR LanguageCode@1000000003 : Code[10];VAR ParameterCurrency@1000000002 : Record 4);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCurrency,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCurrency@5447309(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000003 : Code[10];VAR LanguageCode@1000000002 : Code[10];VAR ConfirmDelete@1000000001 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCurrency,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCurrency@54473090(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000003 : Code[10];VAR LanguageCode@1000000002 : Code[10];VAR ConfirmDelete@1000000001 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckItemPlaceholderImage,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckItemPlaceholderImage@5447310(VAR Handled@1100000000 : Boolean;VAR WebshopLanguage@1000000000 : Record 5447302);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckItemPlaceholderImage,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckItemPlaceholderImage@54473100(VAR Handled@1100000000 : Boolean;VAR WebshopLanguage@1000000000 : Record 5447302);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteItemPlaceholderImage,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteItemPlaceholderImage@5447311(VAR Handled@1100000000 : Boolean;VAR WebshopLanguage@1000000000 : Record 5447302);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteItemPlaceholderImage,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteItemPlaceholderImage@54473110(VAR Handled@1100000000 : Boolean;VAR WebshopLanguage@1000000000 : Record 5447302);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllCountry,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllCountry@5447312(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllCountry,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllCountry@54473120(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCountry,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCountry@5447313(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopCountry@1000000002 : Record 5447310);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCountry,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCountry@54473130(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopCountry@1000000002 : Record 5447310);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllCountry,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllCountry@5447314(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllCountry,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllCountry@54473140(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllShippingOptions,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllShippingOptions@5447315(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllShippingOptions,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllShippingOptions@54473150(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateShippingOption,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateShippingOption@5447316(VAR Handled@1100000000 : Boolean;VAR ParameterShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateShippingOption,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateShippingOption@54473160(VAR Handled@1100000000 : Boolean;VAR ParameterShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllShippingOptions,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllShippingOptions@5447317(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllShippingOptions,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllShippingOptions@54473170(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllPaymentOptions,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllPaymentOptions@5447318(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllPaymentOptions,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllPaymentOptions@54473180(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdatePaymentOption,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdatePaymentOption@5447319(VAR Handled@1100000000 : Boolean;VAR ParameterPaymentOption@1000000002 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdatePaymentOption,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdatePaymentOption@54473190(VAR Handled@1100000000 : Boolean;VAR ParameterPaymentOption@1000000002 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllPaymentOptions,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllPaymentOptions@5447320(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllPaymentOptions,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllPaymentOptions@54473200(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllVATPostingSetup,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllVATPostingSetup@5447321(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllVATPostingSetup,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllVATPostingSetup@54473210(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateVATPostingSetup,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateVATPostingSetup@5447322(VAR Handled@1100000000 : Boolean;VAR ParameterVATPostingSetup@1000000002 : Record 325);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateVATPostingSetup,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateVATPostingSetup@54473220(VAR Handled@1100000000 : Boolean;VAR ParameterVATPostingSetup@1000000002 : Record 325);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllVATPostingSetup,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllVATPostingSetup@5447323(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllVATPostingSetup,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllVATPostingSetup@54473230(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateTextModule,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateTextModule@5447324(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateTextModule,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateTextModule@54473240(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckTextModule,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckTextModule@5447325(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckTextModule,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckTextModule@54473250(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckTextModuleAttachment,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckTextModuleAttachment@5447326(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309;VAR AttachmentNo@1000000003 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckTextModuleAttachment,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckTextModuleAttachment@54473260(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309;VAR AttachmentNo@1000000003 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteTextModule,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteTextModule@5447327(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteTextModule,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteTextModule@54473270(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteTextModuleAttachment,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteTextModuleAttachment@5447328(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309;VAR NoOfAttachment@1000000002 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteTextModuleAttachment,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteTextModuleAttachment@54473280(VAR Handled@1100000000 : Boolean;VAR WebshopTextModule@1000000000 : Record 5447309;VAR NoOfAttachment@1000000002 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckShippingOption,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckShippingOption@5447329(VAR Handled@1100000000 : Boolean;VAR WebshopShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckShippingOption,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckShippingOption@54473290(VAR Handled@1100000000 : Boolean;VAR WebshopShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckShippingOptionIcon,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckShippingOptionIcon@5447330(VAR Handled@1100000000 : Boolean;VAR WebshopShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckShippingOptionIcon,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckShippingOptionIcon@54473300(VAR Handled@1100000000 : Boolean;VAR WebshopShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckPaymentOption,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckPaymentOption@5447331(VAR Handled@1100000000 : Boolean;VAR WebshopPaymentOption@1000000000 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckPaymentOption,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckPaymentOption@54473310(VAR Handled@1100000000 : Boolean;VAR WebshopPaymentOption@1000000000 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckPaymentOptionIcon,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckPaymentOptionIcon@5447332(VAR Handled@1100000000 : Boolean;VAR WebshopPaymentOption@1000000000 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckPaymentOptionIcon,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckPaymentOptionIcon@54473320(VAR Handled@1100000000 : Boolean;VAR WebshopPaymentOption@1000000000 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAndSaveLastSolrUpdateDT,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAndSaveLastSolrUpdateDT@5447333(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAndSaveLastSolrUpdateDT,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAndSaveLastSolrUpdateDT@54473330(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeForceSolrUpdate,"",Skip,Skip)]
+    PROCEDURE OnBeforeForceSolrUpdate@5447334(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterForceSolrUpdate,"",Skip,Skip)]
+    PROCEDURE OnAfterForceSolrUpdate@54473340(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteShippingOptionImage,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteShippingOptionImage@5447335(VAR Handled@1100000000 : Boolean;VAR WebshopShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteShippingOptionImage,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteShippingOptionImage@54473350(VAR Handled@1100000000 : Boolean;VAR WebshopShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteShippingOptionDescription,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteShippingOptionDescription@5447336(VAR Handled@1100000000 : Boolean;VAR WebshopShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteShippingOptionDescription,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteShippingOptionDescription@54473360(VAR Handled@1100000000 : Boolean;VAR WebshopShippingOption@1000000000 : Record 5447311);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeletePaymentOptionImage,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeletePaymentOptionImage@5447337(VAR Handled@1100000000 : Boolean;VAR WebshopPaymentOption@1000000000 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeletePaymentOptionImage,"",Skip,Skip)]
+    PROCEDURE OnAfterDeletePaymentOptionImage@54473370(VAR Handled@1100000000 : Boolean;VAR WebshopPaymentOption@1000000000 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeletePaymentOptionDescription,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeletePaymentOptionDescription@5447338(VAR Handled@1100000000 : Boolean;VAR WebshopPaymentOption@1000000002 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeletePaymentOptionDescription,"",Skip,Skip)]
+    PROCEDURE OnAfterDeletePaymentOptionDescription@54473380(VAR Handled@1100000000 : Boolean;VAR WebshopPaymentOption@1000000002 : Record 5447312);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllWebshopItem,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllWebshopItem@5447339(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllWebshopItem,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllWebshopItem@54473390(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemManually,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemManually@5447340(VAR WebshopItem@1000000000 : Record 5447304;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemManually,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemManually@54473400(VAR WebshopItem@1000000000 : Record 5447304;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItem,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItem@5447341(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItem@1000000000 : Record 5447304);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItem,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItem@54473410(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItem@1000000000 : Record 5447304);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteWebshopItem,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteWebshopItem@5447342(VAR Handled@1100000000 : Boolean;VAR WebshopItem@1000000000 : Record 5447304);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteWebshopItem,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteWebshopItem@54473420(VAR Handled@1100000000 : Boolean;VAR WebshopItem@1000000000 : Record 5447304);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeRenameWebshopItem,"",Skip,Skip)]
+    PROCEDURE OnBeforeRenameWebshopItem@5447343(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000000 : Code[20];VAR NewItemNo@1000000010 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterRenameWebshopItem,"",Skip,Skip)]
+    PROCEDURE OnAfterRenameWebshopItem@54473430(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000000 : Code[20];VAR NewItemNo@1000000010 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemMarketplace,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemMarketplace@5447344(VAR Handled@1100000000 : Boolean;VAR ParaWebshopItem@1000000000 : Record 5447304;VAR ParaUpdate@1000000005 : Boolean;VAR ParaUpdateImages@1000000006 : Boolean;VAR ParaUpdatePrice@1000000007 : Boolean;VAR ParaUpdateInventory@1000000008 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemMarketplace,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemMarketplace@54473440(VAR Handled@1100000000 : Boolean;VAR ParaWebshopItem@1000000000 : Record 5447304;VAR ParaUpdate@1000000005 : Boolean;VAR ParaUpdateImages@1000000006 : Boolean;VAR ParaUpdatePrice@1000000007 : Boolean;VAR ParaUpdateInventory@1000000008 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllWebshopItemInventory,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllWebshopItemInventory@5447345(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllWebshopItemInventory,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllWebshopItemInventory@54473450(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemInventory,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemInventory@5447346(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItem@1000000000 : Record 5447304);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemInventory,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemInventory@54473460(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItem@1000000000 : Record 5447304);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemDescription,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemDescription@5447347(VAR Handled@1100000000 : Boolean;VAR ParamWebshopItemDescription@1000000000 : Record 5447306);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemDescription,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemDescription@54473470(VAR Handled@1100000000 : Boolean;VAR ParamWebshopItemDescription@1000000000 : Record 5447306);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckWebshopItemDescription,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckWebshopItemDescription@5447348(VAR Handled@1100000000 : Boolean;VAR WebshopItemDescription@1000000000 : Record 5447306);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckWebshopItemDescription,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckWebshopItemDescription@54473480(VAR Handled@1100000000 : Boolean;VAR WebshopItemDescription@1000000000 : Record 5447306);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteWebshopItemDescription,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteWebshopItemDescription@5447349(VAR Handled@1100000000 : Boolean;VAR WebshopItemDescription@1000000000 : Record 5447306);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteWebshopItemDescription,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteWebshopItemDescription@54473490(VAR Handled@1100000000 : Boolean;VAR WebshopItemDescription@1000000000 : Record 5447306);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemFile,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemFile@5447350(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItemFile@1000000000 : Record 5447307);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemFile,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemFile@54473500(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItemFile@1000000000 : Record 5447307);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckWebshopItemFile,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckWebshopItemFile@5447351(VAR Handled@1100000000 : Boolean;VAR WebshopItemFile@1000000000 : Record 5447307);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckWebshopItemFile,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckWebshopItemFile@54473510(VAR Handled@1100000000 : Boolean;VAR WebshopItemFile@1000000000 : Record 5447307);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteWebshopItemFile,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteWebshopItemFile@5447352(VAR Handled@1100000000 : Boolean;VAR WebshopItemFile@1000000000 : Record 5447307);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteWebshopItemFile,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteWebshopItemFile@54473520(VAR Handled@1100000000 : Boolean;VAR WebshopItemFile@1000000000 : Record 5447307);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemLink@5447353(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItemLink@1000000000 : Record 5447308);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemLink@54473530(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItemLink@1000000000 : Record 5447308);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteWebshopItemLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteWebshopItemLink@5447354(VAR Handled@1100000000 : Boolean;VAR WebshopItemLink@1000000000 : Record 5447308);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteWebshopItemLink,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteWebshopItemLink@54473540(VAR Handled@1100000000 : Boolean;VAR WebshopItemLink@1000000000 : Record 5447308);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateItemCrossReference,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateItemCrossReference@5447355(VAR Handled@1100000000 : Boolean;VAR ParameterItemCrossReference@1118900000 : Record 5717);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateItemCrossReference,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateItemCrossReference@54473550(VAR Handled@1100000000 : Boolean;VAR ParameterItemCrossReference@1118900000 : Record 5717);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteItemCrossReference,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteItemCrossReference@5447356(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000000 : Code[20];VAR ConfirmDelete@1118900000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteItemCrossReference,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteItemCrossReference@54473560(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000000 : Code[20];VAR ConfirmDelete@1118900000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllItemVariantInventory,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllItemVariantInventory@5447357(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllItemVariantInventory,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllItemVariantInventory@54473570(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateItemVariant,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateItemVariant@5447358(VAR Handled@1100000000 : Boolean;ParameterItemVariant@1000000000 : Record 5401);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateItemVariant,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateItemVariant@54473580(VAR Handled@1100000000 : Boolean;ParameterItemVariant@1000000000 : Record 5401);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteItemVariant,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteItemVariant@5447359(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000002 : Code[20];VAR ConfirmDelete@1000000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteItemVariant,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteItemVariant@54473590(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000002 : Code[20];VAR ConfirmDelete@1000000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateItemVariantTranslation,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateItemVariantTranslation@5447360(VAR Handled@1100000000 : Boolean;ParamItemVariantTranslation@1000000000 : Record 30);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateItemVariantTranslation,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateItemVariantTranslation@54473600(VAR Handled@1100000000 : Boolean;ParamItemVariantTranslation@1000000000 : Record 30);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteItemVariantTranslation,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteItemVariantTranslation@5447361(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000002 : Code[20];VAR ConfirmDelete@1000000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteItemVariantTranslation,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteItemVariantTranslation@54473610(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000002 : Code[20];VAR ConfirmDelete@1000000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemComment,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemComment@5447362(VAR Handled@1100000000 : Boolean;VAR ParamWebshopItemComment@1000000000 : Record 5447317);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemComment,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemComment@54473620(VAR Handled@1100000000 : Boolean;VAR ParamWebshopItemComment@1000000000 : Record 5447317);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteWebshopItemComment,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteWebshopItemComment@5447363(VAR Handled@1100000000 : Boolean;VAR WebshopItemComment@1000000000 : Record 5447317);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteWebshopItemComment,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteWebshopItemComment@54473630(VAR Handled@1100000000 : Boolean;VAR WebshopItemComment@1000000000 : Record 5447317);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllItemComments,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllItemComments@5447365(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllItemComments,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllItemComments@54473650(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetItemComment,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetItemComment@5447366(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetItemComment,"",Skip,Skip)]
+    PROCEDURE OnAfterGetItemComment@54473660(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllWebshopItemComment,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllWebshopItemComment@5447367(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllWebshopItemComment,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllWebshopItemComment@54473670(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllWebshopItemStdPrices,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllWebshopItemStdPrices@5447368(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllWebshopItemStdPrices,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllWebshopItemStdPrices@54473680(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemStdPrices,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemStdPrices@5447369(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItem@1000000000 : Record 5447304);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemStdPrices,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemStdPrices@54473690(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItem@1000000000 : Record 5447304);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllAttribute,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllAttribute@5447370(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllAttribute,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllAttribute@54473700(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAttribute,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAttribute@5447371(VAR Handled@1100000000 : Boolean;VAR ParameterAttribute@1000000000 : Record 5447320);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAttribute,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAttribute@54473710(VAR Handled@1100000000 : Boolean;VAR ParameterAttribute@1000000000 : Record 5447320);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllAttribute,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllAttribute@5447372(VAR ConfirmDelete@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllAttribute,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllAttribute@54473720(VAR ConfirmDelete@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllAttributeLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllAttributeLink@5447373(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllAttributeLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllAttributeLink@54473730(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAttributeLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAttributeLink@5447374(VAR Handled@1100000000 : Boolean;VAR ParameterAttributeLink@1000000000 : Record 5447321);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAttributeLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAttributeLink@54473740(VAR Handled@1100000000 : Boolean;VAR ParameterAttributeLink@1000000000 : Record 5447321);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAttributeLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAttributeLink@5447375(VAR Handled@1100000000 : Boolean;VAR AttributeLink@1000000000 : Record 5447321);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAttributeLink,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAttributeLink@54473750(VAR Handled@1100000000 : Boolean;VAR AttributeLink@1000000000 : Record 5447321);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllAttributeOption,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllAttributeOption@5447376(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllAttributeOption,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllAttributeOption@54473760(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAttributeOption,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAttributeOption@5447377(VAR Handled@1100000000 : Boolean;VAR ParameterAttributeOption@1000000000 : Record 5447322);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAttributeOption,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAttributeOption@54473770(VAR Handled@1100000000 : Boolean;VAR ParameterAttributeOption@1000000000 : Record 5447322);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllAttributeOption,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllAttributeOption@5447378(VAR ConfirmDelete@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllAttributeOption,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllAttributeOption@54473780(VAR ConfirmDelete@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAttributeTranslation,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAttributeTranslation@5447379(VAR Handled@1100000000 : Boolean;VAR ParameterAttributeTranslation@1000000000 : Record 5447323);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAttributeTranslation,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAttributeTranslation@54473790(VAR Handled@1100000000 : Boolean;VAR ParameterAttributeTranslation@1000000000 : Record 5447323);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckFilterImage,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckFilterImage@5447380(VAR Handled@1100000000 : Boolean;VAR AttributeOption@1000000000 : Record 5447322);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckFilterImage,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckFilterImage@54473800(VAR Handled@1100000000 : Boolean;VAR AttributeOption@1000000000 : Record 5447322);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllItemCustomizations,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllItemCustomizations@5447381(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllItemCustomizations,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllItemCustomizations@54473810(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateItemCustomizations,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateItemCustomizations@5447382(VAR Handled@1100000000 : Boolean;VAR ParaCustomization@1000000000 : Record 5447348);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateItemCustomizations,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateItemCustomizations@54473820(VAR Handled@1100000000 : Boolean;VAR ParaCustomization@1000000000 : Record 5447348);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllItemCustomizations,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllItemCustomizations@5447383(VAR ConfirmDelete@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllItemCustomizations,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllItemCustomizations@54473830(VAR ConfirmDelete@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteItemCustomization,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteItemCustomization@5447384(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000003 : Code[10];VAR LanguageCode@1000000004 : Code[10];VAR ItemNo@1000000002 : Code[20];VAR ConfirmDelete@1000000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteItemCustomization,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteItemCustomization@54473840(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000003 : Code[10];VAR LanguageCode@1000000004 : Code[10];VAR ItemNo@1000000002 : Code[20];VAR ConfirmDelete@1000000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllCategory,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllCategory@5447385(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllCategory,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllCategory@54473850(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCategory,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCategory@5447386(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopCategory@1000000000 : Record 5447303);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCategory,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCategory@54473860(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopCategory@1000000000 : Record 5447303);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCategory,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCategory@5447387(VAR Handled@1100000000 : Boolean;VAR WebshopCategory@1000000001 : Record 5447303);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCategory,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCategory@54473870(VAR Handled@1100000000 : Boolean;VAR WebshopCategory@1000000001 : Record 5447303);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSwapCategory,"",Skip,Skip)]
+    PROCEDURE OnBeforeSwapCategory@5447388(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000002 : Code[10];VAR FromLineNo@1000000008 : Integer;VAR ToLineNo@1000000009 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSwapCategory,"",Skip,Skip)]
+    PROCEDURE OnAfterSwapCategory@54473880(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000002 : Code[10];VAR FromLineNo@1000000008 : Integer;VAR ToLineNo@1000000009 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckCategoryFiles,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckCategoryFiles@5447389(VAR Handled@1100000000 : Boolean;VAR WebshopCategory@1000000000 : Record 5447303;VAR Type@1000000002 : 'Picture,Icon,Description,Promotion Description,Description 2,Excerpt');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckCategoryFiles,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckCategoryFiles@54473890(VAR Handled@1100000000 : Boolean;VAR WebshopCategory@1000000000 : Record 5447303;VAR Type@1000000002 : 'Picture,Icon,Description,Promotion Description,Description 2,Excerpt');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCategoryFiles,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCategoryFiles@5447390(VAR Handled@1100000000 : Boolean;VAR WebshopCategory@1000000000 : Record 5447303;VAR Type@1000000003 : 'Picture,Icon,Description,Promotion Description,Description 2,Excerpt');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCategoryFiles,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCategoryFiles@54473900(VAR Handled@1100000000 : Boolean;VAR WebshopCategory@1000000000 : Record 5447303;VAR Type@1000000003 : 'Picture,Icon,Description,Promotion Description,Description 2,Excerpt');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllWebshopItemCategory,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllWebshopItemCategory@5447391(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllWebshopItemCategory,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllWebshopItemCategory@54473910(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopItemCategory,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopItemCategory@5447392(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItemCategory@1000000000 : Record 5447305);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopItemCategory,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopItemCategory@54473920(VAR Handled@1100000000 : Boolean;VAR ParameterWebshopItemCategory@1000000000 : Record 5447305);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteWebshopItemCategory,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteWebshopItemCategory@5447393(VAR Handled@1100000000 : Boolean;VAR WebshopItemCategory@1000000001 : Record 5447305);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteWebshopItemCategory,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteWebshopItemCategory@54473930(VAR Handled@1100000000 : Boolean;VAR WebshopItemCategory@1000000001 : Record 5447305);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCategoryManually,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCategoryManually@5447394(VAR ParameterWebshopCategory@1000000000 : Record 5447303;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCategoryManually,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCategoryManually@54473940(VAR ParameterWebshopCategory@1000000000 : Record 5447303;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllCustomer,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllCustomer@5447395(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllCustomer,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllCustomer@54473950(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCustomer,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCustomer@5447396(VAR Handled@1100000000 : Boolean;VAR ParameterCustomer@1000000000 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCustomer,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCustomer@54473960(VAR Handled@1100000000 : Boolean;VAR ParameterCustomer@1000000000 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCustomer,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCustomer@5447397(VAR Handled@1100000000 : Boolean;VAR Customer@1000000000 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCustomer,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCustomer@54473970(VAR Handled@1100000000 : Boolean;VAR Customer@1000000000 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendCustomerLogin,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendCustomerLogin@5447398(VAR Handled@1100000000 : Boolean;VAR Customer@1000000002 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendCustomerLogin,"",Skip,Skip)]
+    PROCEDURE OnAfterSendCustomerLogin@54473980(VAR Handled@1100000000 : Boolean;VAR Customer@1000000002 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeOpenCustomerLogin,"",Skip,Skip)]
+    PROCEDURE OnBeforeOpenCustomerLogin@5447399(VAR Handled@1100000000 : Boolean;VAR Customer@1000000000 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterOpenCustomerLogin,"",Skip,Skip)]
+    PROCEDURE OnAfterOpenCustomerLogin@54473990(VAR Handled@1100000000 : Boolean;VAR Customer@1000000000 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateShipToAddress,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateShipToAddress@5447400(VAR Handled@1100000000 : Boolean;VAR ParameterShipToAddress@1000000000 : TEMPORARY Record 222);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateShipToAddress,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateShipToAddress@54474000(VAR Handled@1100000000 : Boolean;VAR ParameterShipToAddress@1000000000 : TEMPORARY Record 222);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllNewCustomer,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllNewCustomer@5447401(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllNewCustomer,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllNewCustomer@54474010(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetNewCustomer,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetNewCustomer@5447402(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetNewCustomer,"",Skip,Skip)]
+    PROCEDURE OnAfterGetNewCustomer@54474020(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateWebshopCustomerLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateWebshopCustomerLink@5447403(VAR Handled@1100000000 : Boolean;VAR Customer@1000000000 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateWebshopCustomerLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateWebshopCustomerLink@54474030(VAR Handled@1100000000 : Boolean;VAR Customer@1000000000 : Record 18);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSalesperson,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSalesperson@5447404(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSalesperson,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSalesperson@54474040(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesperson,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesperson@5447405(VAR Handled@1100000000 : Boolean;VAR ParameterSalesperson@1000000002 : Record 13);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesperson,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesperson@54474050(VAR Handled@1100000000 : Boolean;VAR ParameterSalesperson@1000000002 : Record 13);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllSalesperson,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllSalesperson@5447406(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllSalesperson,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllSalesperson@54474060(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendSalespersonLogin,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendSalespersonLogin@5447407(VAR Handled@1100000000 : Boolean;VAR Salesperson@1140000 : Record 13);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendSalespersonLogin,"",Skip,Skip)]
+    PROCEDURE OnAfterSendSalespersonLogin@54474070(VAR Handled@1100000000 : Boolean;VAR Salesperson@1140000 : Record 13);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeOpenSalespersonLogin,"",Skip,Skip)]
+    PROCEDURE OnBeforeOpenSalespersonLogin@5447408(VAR Handled@1100000000 : Boolean;VAR Salesperson@1000000001 : Record 13);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterOpenSalespersonLogin,"",Skip,Skip)]
+    PROCEDURE OnAfterOpenSalespersonLogin@54474080(VAR Handled@1100000000 : Boolean;VAR Salesperson@1000000001 : Record 13);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSalespersonImage,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSalespersonImage@5447409(VAR Handled@1100000000 : Boolean;VAR Salesperson@1000000000 : Record 13);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSalespersonImage,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSalespersonImage@54474090(VAR Handled@1100000000 : Boolean;VAR Salesperson@1000000000 : Record 13);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesPrice,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesPrice@5447410(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000001 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesPrice,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesPrice@54474100(VAR Handled@1100000000 : Boolean;VAR ItemNo@1000000001 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSalesPricePerItem,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSalesPricePerItem@5447411(VAR Handled@1100000000 : Boolean;VAR ConfirmDelete@1000000002 : Boolean;VAR ItemNo@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSalesPricePerItem,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSalesPricePerItem@54474110(VAR Handled@1100000000 : Boolean;VAR ConfirmDelete@1000000002 : Boolean;VAR ItemNo@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSalesLineDiscount,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSalesLineDiscount@5447412(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSalesLineDiscount,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSalesLineDiscount@54474120(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesLineDiscount,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesLineDiscount@5447413(VAR Handled@1100000000 : Boolean;VAR ParameterSalesLineDiscount@1000000000 : Record 7004);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesLineDiscount,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesLineDiscount@54474130(VAR Handled@1100000000 : Boolean;VAR ParameterSalesLineDiscount@1000000000 : Record 7004);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSalesLineDiscount,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSalesLineDiscount@5447414(VAR Handled@1100000000 : Boolean;VAR SalesLineDiscount@1000000001 : Record 7004);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSalesLineDiscount,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSalesLineDiscount@54474140(VAR Handled@1100000000 : Boolean;VAR SalesLineDiscount@1000000001 : Record 7004);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllInvoiceDiscount,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllInvoiceDiscount@5447415(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllInvoiceDiscount,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllInvoiceDiscount@54474150(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateInvoiceDiscount,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateInvoiceDiscount@5447416(VAR Handled@1100000000 : Boolean;VAR ParameterCustInvoiceDisc@1000000002 : Record 19);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateInvoiceDiscount,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateInvoiceDiscount@54474160(VAR Handled@1100000000 : Boolean;VAR ParameterCustInvoiceDisc@1000000002 : Record 19);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllInvoiceDiscount,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllInvoiceDiscount@5447417(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllInvoiceDiscount,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllInvoiceDiscount@54474170(VAR ConfirmDelete@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSalesInvoiceHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSalesInvoiceHeader@5447418(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSalesInvoiceHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSalesInvoiceHeader@54474180(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesInvoiceHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesInvoiceHeader@5447419(VAR Handled@1100000000 : Boolean;VAR ParameterSalesInvoiceHeader@1140000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesInvoiceHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesInvoiceHeader@54474190(VAR Handled@1100000000 : Boolean;VAR ParameterSalesInvoiceHeader@1140000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesInvoiceLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesInvoiceLine@5447420(VAR Handled@1100000000 : Boolean;VAR ParameterSalesInvoiceLine@1140000 : Record 113);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesInvoiceLine,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesInvoiceLine@54474200(VAR Handled@1100000000 : Boolean;VAR ParameterSalesInvoiceLine@1140000 : Record 113);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSalesInvoice,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSalesInvoice@5447421(VAR Handled@1100000000 : Boolean;VAR SalesInvoiceHeader@1000000000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSalesInvoice,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSalesInvoice@54474210(VAR Handled@1100000000 : Boolean;VAR SalesInvoiceHeader@1000000000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllInvoiceRequest,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllInvoiceRequest@5447422(VAR CountRecords@1140002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllInvoiceRequest,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllInvoiceRequest@54474220(VAR CountRecords@1140002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetInvoiceRequest,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetInvoiceRequest@5447423(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetInvoiceRequest,"",Skip,Skip)]
+    PROCEDURE OnAfterGetInvoiceRequest@54474230(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendInvoiceRequestMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendInvoiceRequestMail@5447424(VAR Handled@1100000000 : Boolean;VAR InvoiceHeader@1140000 : Record 112;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1000000002 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendInvoiceRequestMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendInvoiceRequestMail@54474240(VAR Handled@1100000000 : Boolean;VAR InvoiceHeader@1140000 : Record 112;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1000000002 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSalesShipmentHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSalesShipmentHeader@5447425(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSalesShipmentHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSalesShipmentHeader@54474250(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesShipmentHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesShipmentHeader@5447426(VAR Handled@1100000000 : Boolean;VAR ParameterSalesShipmentHeader@1140000 : Record 110);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesShipmentHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesShipmentHeader@54474260(VAR Handled@1100000000 : Boolean;VAR ParameterSalesShipmentHeader@1140000 : Record 110);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesShipmentLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesShipmentLine@5447427(VAR Handled@1100000000 : Boolean;VAR ParameterSalesShipmentLine@1140000 : Record 111);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesShipmentLine,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesShipmentLine@54474270(VAR Handled@1100000000 : Boolean;VAR ParameterSalesShipmentLine@1140000 : Record 111);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSalesShipment,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSalesShipment@5447428(VAR Handled@1100000000 : Boolean;VAR SalesShipmentHeader@1000000000 : Record 110);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSalesShipment,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSalesShipment@54474280(VAR Handled@1100000000 : Boolean;VAR SalesShipmentHeader@1000000000 : Record 110);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllShipmentRequest,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllShipmentRequest@5447429(VAR CountRecords@1140002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllShipmentRequest,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllShipmentRequest@54474290(VAR CountRecords@1140002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetShipmentRequest,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetShipmentRequest@5447430(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetShipmentRequest,"",Skip,Skip)]
+    PROCEDURE OnAfterGetShipmentRequest@54474300(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendShipmentRequestMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendShipmentRequestMail@5447431(VAR Handled@1100000000 : Boolean;VAR ShipmentHeader@1140000 : Record 110;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1140001 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendShipmentRequestMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendShipmentRequestMail@54474310(VAR Handled@1100000000 : Boolean;VAR ShipmentHeader@1140000 : Record 110;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1140001 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSalesOrder,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSalesOrder@5447432(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSalesOrder,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSalesOrder@54474320(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesOrder,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesOrder@5447433(VAR Handled@1100000000 : Boolean;VAR ParameterSalesHeader@1000000002 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesOrder,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesOrder@54474330(VAR Handled@1100000000 : Boolean;VAR ParameterSalesHeader@1000000002 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSalesOrder,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSalesOrder@5447434(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000001 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSalesOrder,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSalesOrder@54474340(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000001 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesOrderLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesOrderLine@5447435(VAR Handled@1100000000 : Boolean;VAR ParameterSalesLine@1000000002 : Record 37);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesOrderLine,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesOrderLine@54474350(VAR Handled@1100000000 : Boolean;VAR ParameterSalesLine@1000000002 : Record 37);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSalesOrderLinePerOrder,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSalesOrderLinePerOrder@5447436(VAR Handled@1100000000 : Boolean;VAR ConfirmDelete@1000000001 : Boolean;VAR DocumentType@1000000002 : 'Quote,Order,Invoice,Credit Memo,Blanket Order,Return Order';VAR DocumentNo@1118900000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSalesOrderLinePerOrder,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSalesOrderLinePerOrder@54474360(VAR Handled@1100000000 : Boolean;VAR ConfirmDelete@1000000001 : Boolean;VAR DocumentType@1000000002 : 'Quote,Order,Invoice,Credit Memo,Blanket Order,Return Order';VAR DocumentNo@1118900000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSalesCrMemoHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSalesCrMemoHeader@5447437(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSalesCrMemoHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSalesCrMemoHeader@54474370(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesCrMemoHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesCrMemoHeader@5447438(VAR Handled@1100000000 : Boolean;VAR ParameterSalesCrMemoHeader@1140000 : Record 114);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesCrMemoHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesCrMemoHeader@54474380(VAR Handled@1100000000 : Boolean;VAR ParameterSalesCrMemoHeader@1140000 : Record 114);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSalesCrMemoLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSalesCrMemoLine@5447439(VAR Handled@1100000000 : Boolean;VAR ParameterSalesCrMemoLine@1140000 : Record 115);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSalesCrMemoLine,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSalesCrMemoLine@54474390(VAR Handled@1100000000 : Boolean;VAR ParameterSalesCrMemoLine@1140000 : Record 115);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSalesMemo,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSalesMemo@5447440(VAR Handled@1100000000 : Boolean;VAR SalesCrMemoHeader@1000000000 : Record 114);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSalesMemo,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSalesMemo@54474400(VAR Handled@1100000000 : Boolean;VAR SalesCrMemoHeader@1000000000 : Record 114);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllCrMemoRequest,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllCrMemoRequest@5447441(VAR CountRecords@1140002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllCrMemoRequest,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllCrMemoRequest@54474410(VAR CountRecords@1140002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetCrMemoRequest,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetCrMemoRequest@5447442(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetCrMemoRequest,"",Skip,Skip)]
+    PROCEDURE OnAfterGetCrMemoRequest@54474420(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendCrMemoRequestMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendCrMemoRequestMail@5447443(VAR Handled@1100000000 : Boolean;VAR CrMemoHeader@1140000 : Record 114;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1140001 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendCrMemoRequestMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendCrMemoRequestMail@54474430(VAR Handled@1100000000 : Boolean;VAR CrMemoHeader@1140000 : Record 114;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1140001 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllSalesHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllSalesHeader@5447444(VAR CountRecords@1000000000 : Boolean;VAR ParaShopCode@1000000001 : Code[20];VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllSalesHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllSalesHeader@54474440(VAR CountRecords@1000000000 : Boolean;VAR ParaShopCode@1000000001 : Code[20];VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetSalesHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetSalesHeader@5447445(VAR Handled@1100000000 : Boolean;VAR ParaCouponCode@1000000130 : Code[20];VAR ParaShopCode@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetSalesHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterGetSalesHeader@54474450(VAR Handled@1100000000 : Boolean;VAR ParaCouponCode@1000000130 : Code[20];VAR ParaShopCode@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetSalesLines,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetSalesLines@5447446(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000006 : Record 36;VAR SalesLine@1000000007 : Record 37;VAR OrderAmount@1000000009 : Decimal);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetSalesLines,"",Skip,Skip)]
+    PROCEDURE OnAfterGetSalesLines@54474460(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000006 : Record 36;VAR SalesLine@1000000007 : Record 37;VAR OrderAmount@1000000009 : Decimal);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetUSSalesTax,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetUSSalesTax@5447447(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000006 : Record 36;VAR SalesLine@1000000007 : Record 37;VAR OrderAmount@1000000009 : Decimal;VAR SalesLineTyp@1000000043 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetUSSalesTax,"",Skip,Skip)]
+    PROCEDURE OnAfterGetUSSalesTax@54474470(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000006 : Record 36;VAR SalesLine@1000000007 : Record 37;VAR OrderAmount@1000000009 : Decimal;VAR SalesLineTyp@1000000043 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendTextModuleMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendTextModuleMail@5447448(VAR Handled@1100000000 : Boolean;VAR ShopLanguage@1000000001 : Record 5447302;VAR TextModule@1000000003 : Record 5447309;VAR SenderMail@1000000006 : Text[255];VAR RecipientMail@1000000005 : Text[255];VAR PostFieldsString@1000000002 : Text[1024];VAR AttachmentPath@1000000004 : Text[255]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendTextModuleMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendTextModuleMail@54474480(VAR Handled@1100000000 : Boolean;VAR ShopLanguage@1000000001 : Record 5447302;VAR TextModule@1000000003 : Record 5447309;VAR SenderMail@1000000006 : Text[255];VAR RecipientMail@1000000005 : Text[255];VAR PostFieldsString@1000000002 : Text[1024];VAR AttachmentPath@1000000004 : Text[255]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendAllOrderConfirmMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendAllOrderConfirmMail@5447449(VAR CountRecords@1140000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendAllOrderConfirmMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendAllOrderConfirmMail@54474490(VAR CountRecords@1140000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendOrderConfirmMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendOrderConfirmMail@5447450(VAR Handled@1100000000 : Boolean;VAR ParameterSalesHeader@1140000 : Record 36;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1140001 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendOrderConfirmMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendOrderConfirmMail@54474500(VAR Handled@1100000000 : Boolean;VAR ParameterSalesHeader@1140000 : Record 36;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1140001 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendAllOrderShippingMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendAllOrderShippingMail@5447451(VAR CountRecords@1140000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendAllOrderShippingMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendAllOrderShippingMail@54474510(VAR CountRecords@1140000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendOrderShipingMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendOrderShipingMail@5447452(VAR Handled@1100000000 : Boolean;VAR ParameterShipmentHeader@1140000 : Record 110;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1140001 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendOrderShipingMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendOrderShipingMail@54474520(VAR Handled@1100000000 : Boolean;VAR ParameterShipmentHeader@1140000 : Record 110;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1140001 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendAllOrderInvoiceMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendAllOrderInvoiceMail@5447453(VAR CountRecords@1140000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendAllOrderInvoiceMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendAllOrderInvoiceMail@54474530(VAR CountRecords@1140000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendOrderInvoiceMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendOrderInvoiceMail@5447454(VAR Handled@1100000000 : Boolean;VAR InvoiceHeader@1140000 : Record 112;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1000000002 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendOrderInvoiceMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendOrderInvoiceMail@54474540(VAR Handled@1100000000 : Boolean;VAR InvoiceHeader@1140000 : Record 112;VAR ShopCode@1000000000 : Code[10];VAR LanguageCode@1000000001 : Code[10];VAR RequestMail@1000000002 : Text[80]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSetOrderShipMailSendTime,"",Skip,Skip)]
+    PROCEDURE OnBeforeSetOrderShipMailSendTime@5447455(VAR Handled@1100000000 : Boolean;VAR ParaSalesShipmentHeader@1000000000 : Record 110);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSetOrderShipMailSendTime,"",Skip,Skip)]
+    PROCEDURE OnAfterSetOrderShipMailSendTime@54474550(VAR Handled@1100000000 : Boolean;VAR ParaSalesShipmentHeader@1000000000 : Record 110);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSetOrderInvMailSendTime,"",Skip,Skip)]
+    PROCEDURE OnBeforeSetOrderInvMailSendTime@5447456(VAR Handled@1100000000 : Boolean;VAR ParaSalesInvoiceHeader@1000000000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSetOrderInvMailSendTime,"",Skip,Skip)]
+    PROCEDURE OnAfterSetOrderInvMailSendTime@54474560(VAR Handled@1100000000 : Boolean;VAR ParaSalesInvoiceHeader@1000000000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeResetInvoicePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeResetInvoicePayment@5447457(VAR Handled@1100000000 : Boolean;VAR SalesInvoiceHeader@1140000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterResetInvoicePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterResetInvoicePayment@54474570(VAR Handled@1100000000 : Boolean;VAR SalesInvoiceHeader@1140000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeChangeInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeChangeInvoiceOnlinePayment@5447458(VAR Handled@1100000000 : Boolean;VAR SalesInvoiceHeader@1000000002 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterChangeInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterChangeInvoiceOnlinePayment@54474580(VAR Handled@1100000000 : Boolean;VAR SalesInvoiceHeader@1000000002 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeChangeOrderOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeChangeOrderOnlinePayment@5447459(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000002 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterChangeOrderOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterChangeOrderOnlinePayment@54474590(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000002 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeProcessOrderOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeProcessOrderOnlinePayment@5447460(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000002 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterProcessOrderOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterProcessOrderOnlinePayment@54474600(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000002 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeProcessAllInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeProcessAllInvoiceOnlinePayment@5447461(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterProcessAllInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterProcessAllInvoiceOnlinePayment@54474610(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeProcessInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeProcessInvoiceOnlinePayment@5447462(VAR Handled@1100000000 : Boolean;VAR ParameterSalesInvoiceHeader@1000000002 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterProcessInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterProcessInvoiceOnlinePayment@54474620(VAR Handled@1100000000 : Boolean;VAR ParameterSalesInvoiceHeader@1000000002 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeProcessAllCrMemoOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeProcessAllCrMemoOnlinePayment@5447463(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterProcessAllCrMemoOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterProcessAllCrMemoOnlinePayment@54474630(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeProcessCrMemoOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeProcessCrMemoOnlinePayment@5447464(VAR Handled@1100000000 : Boolean;VAR ParameterSalesCrMemoHeader@1000000002 : Record 114);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterProcessCrMemoOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterProcessCrMemoOnlinePayment@54474640(VAR Handled@1100000000 : Boolean;VAR ParameterSalesCrMemoHeader@1000000002 : Record 114);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeClearOrderOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeClearOrderOnlinePayment@5447465(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000000 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterClearOrderOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterClearOrderOnlinePayment@54474650(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000000 : Record 36);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeClearAllInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeClearAllInvoiceOnlinePayment@5447466(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterClearAllInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterClearAllInvoiceOnlinePayment@54474660(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeClearInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeClearInvoiceOnlinePayment@5447467(VAR Handled@1100000000 : Boolean;VAR ParameterSalesInvoiceHeader@1000000000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterClearInvoiceOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterClearInvoiceOnlinePayment@54474670(VAR Handled@1100000000 : Boolean;VAR ParameterSalesInvoiceHeader@1000000000 : Record 112);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeClearAllCrMemoOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeClearAllCrMemoOnlinePayment@5447468(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterClearAllCrMemoOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterClearAllCrMemoOnlinePayment@54474680(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeClearCrMemoOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnBeforeClearCrMemoOnlinePayment@5447469(VAR Handled@1100000000 : Boolean;VAR ParameterSalesCrMemoHeader@1000000006 : Record 114);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterClearCrMemoOnlinePayment,"",Skip,Skip)]
+    PROCEDURE OnAfterClearCrMemoOnlinePayment@54474690(VAR Handled@1100000000 : Boolean;VAR ParameterSalesCrMemoHeader@1000000006 : Record 114);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllCouponHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllCouponHeader@5447470(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllCouponHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllCouponHeader@54474700(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCouponHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCouponHeader@5447471(VAR Handled@1100000000 : Boolean;VAR ParameterCouponHeader@1118900000 : Record 5447471);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCouponHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCouponHeader@54474710(VAR Handled@1100000000 : Boolean;VAR ParameterCouponHeader@1118900000 : Record 5447471);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllCouponHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllCouponHeader@5447472(VAR ConfirmDelete@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllCouponHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllCouponHeader@54474720(VAR ConfirmDelete@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCouponHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCouponHeader@5447473(VAR Handled@1100000000 : Boolean;VAR ParamCouponHeader@1000000000 : Record 5447471);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCouponHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCouponHeader@54474730(VAR Handled@1100000000 : Boolean;VAR ParamCouponHeader@1000000000 : Record 5447471);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCouponLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCouponLine@5447474(VAR Handled@1100000000 : Boolean;VAR ParameterCouponLine@1118900000 : Record 5447472);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCouponLine,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCouponLine@54474740(VAR Handled@1100000000 : Boolean;VAR ParameterCouponLine@1118900000 : Record 5447472);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllCouponLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllCouponLine@5447475(VAR ConfirmDelete@1118900000 : Boolean;VAR CouponCode@1000000000 : Code[20];VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllCouponLine,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllCouponLine@54474750(VAR ConfirmDelete@1118900000 : Boolean;VAR CouponCode@1000000000 : Code[20];VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCouponLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCouponLine@5447476(VAR Handled@1100000000 : Boolean;VAR ParamCouponLine@1118900000 : Record 5447472);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCouponLine,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCouponLine@54474760(VAR Handled@1100000000 : Boolean;VAR ParamCouponLine@1118900000 : Record 5447472);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllCouponLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllCouponLine@5447477(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllCouponLine,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllCouponLine@54474770(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetCouponLine,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetCouponLine@5447478(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetCouponLine,"",Skip,Skip)]
+    PROCEDURE OnAfterGetCouponLine@54474780(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforePostCouponLines,"",Skip,Skip)]
+    PROCEDURE OnBeforePostCouponLines@5447479(VAR Handled@1100000000 : Boolean;VAR CouponHeader@1118900000 : Record 5447471);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterPostCouponLines,"",Skip,Skip)]
+    PROCEDURE OnAfterPostCouponLines@54474790(VAR Handled@1100000000 : Boolean;VAR CouponHeader@1118900000 : Record 5447471);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckDCFiles,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckDCFiles@5447480(VAR Handled@1100000000 : Boolean;VAR WebshopLanguage@1000000000 : Record 5447302;VAR "No."@1000000002 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckDCFiles,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckDCFiles@54474800(VAR Handled@1100000000 : Boolean;VAR WebshopLanguage@1000000000 : Record 5447302;VAR "No."@1000000002 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteDCFiles,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteDCFiles@5447481(VAR Handled@1100000000 : Boolean;VAR WebshopLanguage@1000000000 : Record 5447302;VAR "No."@1000000003 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteDCFiles,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteDCFiles@54474810(VAR Handled@1100000000 : Boolean;VAR WebshopLanguage@1000000000 : Record 5447302;VAR "No."@1000000003 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckCouponOrders,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckCouponOrders@5447482(VAR Handled@1100000000 : Boolean;VAR CouponCode@1000000004 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckCouponOrders,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckCouponOrders@54474820(VAR Handled@1100000000 : Boolean;VAR CouponCode@1000000004 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllPermissionGroup,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllPermissionGroup@5447483(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllPermissionGroup,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllPermissionGroup@54474830(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdatePermissionGroup,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdatePermissionGroup@5447484(VAR Handled@1100000000 : Boolean;VAR ParameterPermissionGroup@1118900000 : Record 5447336);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdatePermissionGroup,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdatePermissionGroup@54474840(VAR Handled@1100000000 : Boolean;VAR ParameterPermissionGroup@1118900000 : Record 5447336);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllPermissionGroup,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllPermissionGroup@5447485(VAR ConfirmDelete@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllPermissionGroup,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllPermissionGroup@54474850(VAR ConfirmDelete@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllPermGroupLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllPermGroupLink@5447486(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllPermGroupLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllPermGroupLink@54474860(VAR CountRecords@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdatePermGroupLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdatePermGroupLink@5447487(VAR Handled@1100000000 : Boolean;VAR ParameterPermGroupLink@1118900000 : Record 5447337);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdatePermGroupLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdatePermGroupLink@54474870(VAR Handled@1100000000 : Boolean;VAR ParameterPermGroupLink@1118900000 : Record 5447337);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllPermGroupLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllPermGroupLink@5447488(VAR ConfirmDelete@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllPermGroupLink,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllPermGroupLink@54474880(VAR ConfirmDelete@1118900000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSwapCategoryPermissions,"",Skip,Skip)]
+    PROCEDURE OnBeforeSwapCategoryPermissions@5447489(VAR Handled@1100000000 : Boolean;VAR CategoryShop@1000000000 : Code[20];VAR CategoryLanguage@1000000001 : Code[10];VAR FromCategoryLineNo@1000000002 : Integer;VAR ToCategoryLineNo@1000000005 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSwapCategoryPermissions,"",Skip,Skip)]
+    PROCEDURE OnAfterSwapCategoryPermissions@54474890(VAR Handled@1100000000 : Boolean;VAR CategoryShop@1000000000 : Code[20];VAR CategoryLanguage@1000000001 : Code[10];VAR FromCategoryLineNo@1000000002 : Integer;VAR ToCategoryLineNo@1000000005 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateGoogleMerchant,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateGoogleMerchant@5447490(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateGoogleMerchant,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateGoogleMerchant@54474900(VAR Handled@1100000000 : Boolean;VAR ShopCode@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeTransferNewsletter,"",Skip,Skip)]
+    PROCEDURE OnBeforeTransferNewsletter@5447496(VAR Handled@1100000000 : Boolean;VAR CountRecords@1000000001 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterTransferNewsletter,"",Skip,Skip)]
+    PROCEDURE OnAfterTransferNewsletter@54474960(VAR Handled@1100000000 : Boolean;VAR CountRecords@1000000001 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeNewsletterSyncAllSegment,"",Skip,Skip)]
+    PROCEDURE OnBeforeNewsletterSyncAllSegment@5447497(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterNewsletterSyncAllSegment,"",Skip,Skip)]
+    PROCEDURE OnAfterNewsletterSyncAllSegment@54474970(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeNewsletterSyncSegment,"",Skip,Skip)]
+    PROCEDURE OnBeforeNewsletterSyncSegment@5447498(VAR Handled@1100000000 : Boolean;VAR ParaSegmentHeader@1000000000 : Record 5076;VAR ParaWebshopShop@1000000001 : Record 5447301);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterNewsletterSyncSegment,"",Skip,Skip)]
+    PROCEDURE OnAfterNewsletterSyncSegment@54474980(VAR Handled@1100000000 : Boolean;VAR ParaSegmentHeader@1000000000 : Record 5076;VAR ParaWebshopShop@1000000001 : Record 5447301);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeNewsletterSegmentLineSyncAll,"",Skip,Skip)]
+    PROCEDURE OnBeforeNewsletterSegmentLineSyncAll@5447499(VAR Segment@1000000000 : Record 5076;VAR CountRecords@1000000002 : Boolean;VAR Shop@1000000003 : Record 5447301;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterNewsletterSegmentLineSyncAll,"",Skip,Skip)]
+    PROCEDURE OnAfterNewsletterSegmentLineSyncAll@54474990(VAR Segment@1000000000 : Record 5076;VAR CountRecords@1000000002 : Boolean;VAR Shop@1000000003 : Record 5447301;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeNewsletterSegmentLineSync,"",Skip,Skip)]
+    PROCEDURE OnBeforeNewsletterSegmentLineSync@5447500(VAR Handled@1100000000 : Boolean;VAR SegLine@1000000000 : Record 5077;VAR Shop@1000000010 : Record 5447301);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterNewsletterSegmentLineSync,"",Skip,Skip)]
+    PROCEDURE OnAfterNewsletterSegmentLineSync@54475000(VAR Handled@1100000000 : Boolean;VAR SegLine@1000000000 : Record 5077;VAR Shop@1000000010 : Record 5447301);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllReturnReason,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllReturnReason@5447503(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllReturnReason,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllReturnReason@54475030(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateReturnReason,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateReturnReason@5447504(VAR Handled@1100000000 : Boolean;VAR ParamReturnReason@1000000002 : Record 6635);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateReturnReason,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateReturnReason@54475040(VAR Handled@1100000000 : Boolean;VAR ParamReturnReason@1000000002 : Record 6635);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteAllReturnReason,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteAllReturnReason@5447505(VAR ConfirmDelete@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteAllReturnReason,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteAllReturnReason@54475050(VAR ConfirmDelete@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllReturnOrders,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllReturnOrders@5447506(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllReturnOrders,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllReturnOrders@54475060(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllReturnOrder,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllReturnOrder@5447507(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllReturnOrder,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllReturnOrder@54475070(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetReturnOrder,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetReturnOrder@5447508(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetReturnOrder,"",Skip,Skip)]
+    PROCEDURE OnAfterGetReturnOrder@54475080(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetReturnLines,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetReturnLines@5447509(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000006 : Record 36;VAR SalesLine@1000000007 : Record 37;VAR ShipmentHeaderNo@1000000009 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetReturnLines,"",Skip,Skip)]
+    PROCEDURE OnAfterGetReturnLines@54475090(VAR Handled@1100000000 : Boolean;VAR SalesHeader@1000000006 : Record 36;VAR SalesLine@1000000007 : Record 37;VAR ShipmentHeaderNo@1000000009 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeManageSubscriptions,"",Skip,Skip)]
+    PROCEDURE OnBeforeManageSubscriptions@5447510(VAR Handled@1100000000 : Boolean;VAR CountRecords@1000000001 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterManageSubscriptions,"",Skip,Skip)]
+    PROCEDURE OnAfterManageSubscriptions@54475100(VAR Handled@1100000000 : Boolean;VAR CountRecords@1000000001 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCreateSalOrdFromSubscriptions,"",Skip,Skip)]
+    PROCEDURE OnBeforeCreateSalOrdFromSubscriptions@5447511(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionHeader@1000000000 : Record 5447340);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCreateSalOrdFromSubscriptions,"",Skip,Skip)]
+    PROCEDURE OnAfterCreateSalOrdFromSubscriptions@54475110(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionHeader@1000000000 : Record 5447340);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCreateSalOrdForSubscription,"",Skip,Skip)]
+    PROCEDURE OnBeforeCreateSalOrdForSubscription@5447512(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionHeader@1000000000 : Record 5447340;VAR WebshopSubscrCustomerLink@1000000001 : Record 5447343;VAR PayAndOrShip@1000000008 : 'PaymentOnly,ShipmentOnly,Both');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCreateSalOrdForSubscription,"",Skip,Skip)]
+    PROCEDURE OnAfterCreateSalOrdForSubscription@54475120(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionHeader@1000000000 : Record 5447340;VAR WebshopSubscrCustomerLink@1000000001 : Record 5447343;VAR PayAndOrShip@1000000008 : 'PaymentOnly,ShipmentOnly,Both');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSubscriptionHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSubscriptionHeader@5447513(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSubscriptionHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSubscriptionHeader@54475130(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSubscriptionHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSubscriptionHeader@5447514(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionHeader@1000000000 : Record 5447340);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSubscriptionHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSubscriptionHeader@54475140(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionHeader@1000000000 : Record 5447340);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSubscriptionHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSubscriptionHeader@5447515(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionHeader@1000000000 : Record 5447340);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSubscriptionHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSubscriptionHeader@54475150(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionHeader@1000000000 : Record 5447340);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSubscSeqStep,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSubscSeqStep@5447516(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSubscSeqStep,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSubscSeqStep@54475160(VAR CountRecords@1000000002 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSubscSeqStepForHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSubscSeqStepForHeader@5447517(VAR WebshopSubscriptionHeader@1000000002 : Record 5447340;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSubscSeqStepForHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSubscSeqStepForHeader@54475170(VAR WebshopSubscriptionHeader@1000000002 : Record 5447340;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSubscSeqStep,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSubscSeqStep@5447518(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionSeqStep@1000000000 : Record 5447341);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSubscSeqStep,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSubscSeqStep@54475180(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionSeqStep@1000000000 : Record 5447341);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSubscSeqStep,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSubscSeqStep@5447519(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionSeqStep@1000000000 : Record 5447341);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSubscSeqStep,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSubscSeqStep@54475190(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionSeqStep@1000000000 : Record 5447341);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllSubscItemLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllSubscItemLink@5447520(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllSubscItemLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllSubscItemLink@54475200(VAR CountRecords@1000000001 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdAllSubscItemLinkForHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdAllSubscItemLinkForHeader@5447521(VAR WebshopSubscriptionHeader@1000000001 : Record 5447340;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdAllSubscItemLinkForHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdAllSubscItemLinkForHeader@54475210(VAR WebshopSubscriptionHeader@1000000001 : Record 5447340;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSubscItemLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSubscItemLink@5447522(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionItemLink@1000000000 : Record 5447342);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSubscItemLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSubscItemLink@54475220(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionItemLink@1000000000 : Record 5447342);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSubscItemLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSubscItemLink@5447523(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionItemLink@1000000000 : Record 5447342);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSubscItemLink,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSubscItemLink@54475230(VAR Handled@1100000000 : Boolean;VAR WebshopSubscriptionItemLink@1000000000 : Record 5447342);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetAllSubscriptionCustomerLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetAllSubscriptionCustomerLink@5447524(VAR CountRecords@1000000003 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetAllSubscriptionCustomerLink,"",Skip,Skip)]
+    PROCEDURE OnAfterGetAllSubscriptionCustomerLink@54475240(VAR CountRecords@1000000003 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetSubscCustLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetSubscCustLink@5447525(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetSubscCustLink,"",Skip,Skip)]
+    PROCEDURE OnAfterGetSubscCustLink@54475250(VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetSubscCustLinkByPrimary,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetSubscCustLinkByPrimary@5447526(VAR Handled@1100000000 : Boolean;VAR ParamSubscriptionCode@1000000046 : Code[30];VAR ParamCustomerNo@1000000047 : Code[30];VAR ParamWebshopOrderEmail@1000000048 : Text[100];VAR ParamLineNo@1000000049 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetSubscCustLinkByPrimary,"",Skip,Skip)]
+    PROCEDURE OnAfterGetSubscCustLinkByPrimary@54475260(VAR Handled@1100000000 : Boolean;VAR ParamSubscriptionCode@1000000046 : Code[30];VAR ParamCustomerNo@1000000047 : Code[30];VAR ParamWebshopOrderEmail@1000000048 : Text[100];VAR ParamLineNo@1000000049 : Integer);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdAllSubscCustLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdAllSubscCustLink@5447527(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdAllSubscCustLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdAllSubscCustLink@54475270(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdAllSubscCustLinkForHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdAllSubscCustLinkForHeader@5447528(VAR WebshopSubscriptionHeader@1000000000 : Record 5447340;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdAllSubscCustLinkForHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdAllSubscCustLinkForHeader@54475280(VAR WebshopSubscriptionHeader@1000000000 : Record 5447340;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateSubscriptionCustLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateSubscriptionCustLink@5447529(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000001 : Record 5447343);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateSubscriptionCustLink,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateSubscriptionCustLink@54475290(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000001 : Record 5447343);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteSubscriptionCustLink,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteSubscriptionCustLink@5447530(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000001 : Record 5447343);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteSubscriptionCustLink,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteSubscriptionCustLink@54475300(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000001 : Record 5447343);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetCustSubscNextDeliveryDate,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetCustSubscNextDeliveryDate@5447531(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000000 : Record 5447343;VAR AlternativeBaseDate@1000000011 : Date;VAR BaseDateHandling@1000000017 : 'BaseDateIncluded,BaseDateExcluded');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetCustSubscNextDeliveryDate,"",Skip,Skip)]
+    PROCEDURE OnAfterGetCustSubscNextDeliveryDate@54475310(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000000 : Record 5447343;VAR AlternativeBaseDate@1000000011 : Date;VAR BaseDateHandling@1000000017 : 'BaseDateIncluded,BaseDateExcluded');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetCustSubscrNextShipOrderDate,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetCustSubscrNextShipOrderDate@5447532(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000000 : Record 5447343;VAR Shop@1000000001 : Record 5447301;VAR AlternativeBaseDate@1000000003 : Date;VAR BaseDateHandling@1000000006 : 'BaseDateIncluded,BaseDateExcluded');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetCustSubscrNextShipOrderDate,"",Skip,Skip)]
+    PROCEDURE OnAfterGetCustSubscrNextShipOrderDate@54475320(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000000 : Record 5447343;VAR Shop@1000000001 : Record 5447301;VAR AlternativeBaseDate@1000000003 : Date;VAR BaseDateHandling@1000000006 : 'BaseDateIncluded,BaseDateExcluded');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetCustSubscrNextSeqStepLineNo,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetCustSubscrNextSeqStepLineNo@5447533(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000000 : Record 5447343;VAR AlternativeBaseDate@1000000007 : Date;VAR BaseDateHandling@1000000006 : 'BaseDateIncluded,BaseDateExcluded');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetCustSubscrNextSeqStepLineNo,"",Skip,Skip)]
+    PROCEDURE OnAfterGetCustSubscrNextSeqStepLineNo@54475330(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000000 : Record 5447343;VAR AlternativeBaseDate@1000000007 : Date;VAR BaseDateHandling@1000000006 : 'BaseDateIncluded,BaseDateExcluded');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetCustSubscrNextPayOrderDate,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetCustSubscrNextPayOrderDate@5447534(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000000 : Record 5447343;VAR AlternativeBaseDate@1000000009 : Date;VAR BaseDateHandling@1000000008 : 'BaseDateIncluded,BaseDateExcluded');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetCustSubscrNextPayOrderDate,"",Skip,Skip)]
+    PROCEDURE OnAfterGetCustSubscrNextPayOrderDate@54475340(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000000 : Record 5447343;VAR AlternativeBaseDate@1000000009 : Date;VAR BaseDateHandling@1000000008 : 'BaseDateIncluded,BaseDateExcluded');
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetCustSubscrItQtyInDateRange,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetCustSubscrItQtyInDateRange@5447535(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000002 : Record 5447343;VAR StartDate@1000000000 : Date;VAR EndDate@1000000001 : Date);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetCustSubscrItQtyInDateRange,"",Skip,Skip)]
+    PROCEDURE OnAfterGetCustSubscrItQtyInDateRange@54475350(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000002 : Record 5447343;VAR StartDate@1000000000 : Date;VAR EndDate@1000000001 : Date);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeGetCustSubNoOfTurnsInDateRange,"",Skip,Skip)]
+    PROCEDURE OnBeforeGetCustSubNoOfTurnsInDateRange@5447536(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000002 : Record 5447343;VAR StartDate@1000000000 : Date;VAR EndDate@1000000001 : Date);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterGetCustSubNoOfTurnsInDateRange,"",Skip,Skip)]
+    PROCEDURE OnAfterGetCustSubNoOfTurnsInDateRange@54475360(VAR Handled@1100000000 : Boolean;VAR WebshopSubscrCustomerLink@1000000002 : Record 5447343;VAR StartDate@1000000000 : Date;VAR EndDate@1000000001 : Date);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendAllSubscInvoiceMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendAllSubscInvoiceMail@5447537(VAR CountRecords@1000000009 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendAllSubscInvoiceMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendAllSubscInvoiceMail@54475370(VAR CountRecords@1000000009 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendAllSubscShipmentMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendAllSubscShipmentMail@5447538(VAR CountRecords@1000000009 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendAllSubscShipmentMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendAllSubscShipmentMail@54475380(VAR CountRecords@1000000009 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeSendAllSubscCombinedMail,"",Skip,Skip)]
+    PROCEDURE OnBeforeSendAllSubscCombinedMail@5447539(VAR CountRecords@1000000009 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterSendAllSubscCombinedMail,"",Skip,Skip)]
+    PROCEDURE OnAfterSendAllSubscCombinedMail@54475390(VAR CountRecords@1000000009 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllCampaignHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllCampaignHeader@5447540(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllCampaignHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllCampaignHeader@54475400(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCampaignHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCampaignHeader@5447541(VAR Handled@1100000000 : Boolean;VAR ParamCampaignHeader@1000000000 : Record 5447345);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCampaignHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCampaignHeader@54475410(VAR Handled@1100000000 : Boolean;VAR ParamCampaignHeader@1000000000 : Record 5447345);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCampaignHeader,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCampaignHeader@5447542(VAR Handled@1100000000 : Boolean;VAR ParamCampaignHeader@1000000000 : Record 5447345);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCampaignHeader,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCampaignHeader@54475420(VAR Handled@1100000000 : Boolean;VAR ParamCampaignHeader@1000000000 : Record 5447345);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateAllCampaignElements,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateAllCampaignElements@5447543(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateAllCampaignElements,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateAllCampaignElements@54475430(VAR CountRecords@1000000000 : Boolean;VAR Handled@1100000000 : Boolean);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCampaignElement,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCampaignElement@5447544(VAR Handled@1100000000 : Boolean;VAR ParamCampaignElement@1000000000 : Record 5447346);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCampaignElement,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCampaignElement@54475440(VAR Handled@1100000000 : Boolean;VAR ParamCampaignElement@1000000000 : Record 5447346);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCampaignElement,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCampaignElement@5447545(VAR Handled@1100000000 : Boolean;VAR ParamCampaignElement@1000000000 : Record 5447346);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCampaignElement,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCampaignElement@54475450(VAR Handled@1100000000 : Boolean;VAR ParamCampaignElement@1000000000 : Record 5447346);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeUpdateCampaignByCode,"",Skip,Skip)]
+    PROCEDURE OnBeforeUpdateCampaignByCode@5447546(VAR Handled@1100000000 : Boolean;VAR WebshopCampaignCode@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterUpdateCampaignByCode,"",Skip,Skip)]
+    PROCEDURE OnAfterUpdateCampaignByCode@54475460(VAR Handled@1100000000 : Boolean;VAR WebshopCampaignCode@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCampaignByCode,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCampaignByCode@5447547(VAR Handled@1100000000 : Boolean;VAR WebshopCampaignCode@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCampaignByCode,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCampaignByCode@54475470(VAR Handled@1100000000 : Boolean;VAR WebshopCampaignCode@1000000000 : Code[20]);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeCheckCampaignImage,"",Skip,Skip)]
+    PROCEDURE OnBeforeCheckCampaignImage@5447548(VAR Handled@1100000000 : Boolean;VAR CampaignHeader@1000000000 : Record 5447345;VAR Field@1000000001 : FieldRef);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterCheckCampaignImage,"",Skip,Skip)]
+    PROCEDURE OnAfterCheckCampaignImage@54475480(VAR Handled@1100000000 : Boolean;VAR CampaignHeader@1000000000 : Record 5447345;VAR Field@1000000001 : FieldRef);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnBeforeDeleteCampaignImage,"",Skip,Skip)]
+    PROCEDURE OnBeforeDeleteCampaignImage@5447549(VAR Handled@1100000000 : Boolean;VAR CampaignHeader@1000000001 : Record 5447345;VAR Field@1000000000 : FieldRef);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    [EventSubscriber(Codeunit,5447301,OnAfterDeleteCampaignImage,"",Skip,Skip)]
+    PROCEDURE OnAfterDeleteCampaignImage@54475490(VAR Handled@1100000000 : Boolean;VAR CampaignHeader@1000000001 : Record 5447345;VAR Field@1000000000 : FieldRef);
+    BEGIN
+        IF Handled THEN
+          EXIT;
+
+
+
+    END;
+
+    BEGIN
+    {
+      --- dynamic commerce - dynamic commerce GmbH - www.dc-solution.de ---
+    }
+    END.
+  }
+}
+

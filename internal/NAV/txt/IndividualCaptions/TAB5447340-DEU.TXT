@@ -1,0 +1,52 @@
+T5447340-F10-P8629-A1031-L999:Max. Anzahl Turni
+T5447340-F11-P8629-A1031-L999:Abo-Dauer
+T5447340-F12-P8629-A1031-L999:Anzahl Sequenz-Schritte
+T5447340-F13-P8629-A1031-L999:Anzahl Artikel
+T5447340-F14-P8629-A1031-L999:Anzahl Kunden
+T5447340-F15-P8629-A1031-L999:Ist Aktiv
+T5447340-F16-P8629-A1031-L999:Startdatum Bearbeitung
+T5447340-F17-P8629-A1031-L999:Enddatum Bearbeitung
+T5447340-F18-P8629-A1031-L999:Kündigungsfrist (Formel)
+T5447340-F19-P8629-A1031-L999:Preis pro Abrechnungsintervall
+T5447340-F1-P8629-A1031-L999:Code
+T5447340-F21-P8629-A1031-L999:Bestellbar
+T5447340-F22-P8629-A1031-L999:Startdatum Bestellbarkeit
+T5447340-F23-P8629-A1031-L999:Enddatum Bestellbarkeit
+T5447340-F24-P8629-A1031-L999:Shop Code
+T5447340-F25-P8629-A1031-L999:Webshop Sprachcode
+T5447340-F26-P8629-A1031-L999:Alle Shops
+T5447340-F27-P8629-A1031-L999:Alle Sprachen
+T5447340-F28-P8629-A1031-L999:E-Mail Erste Bestellung
+T5447340-F29-P8629-A1031-L999:E-Mail Lieferung
+T5447340-F2-P4962-Q1000000000-P26171-A1031-L999:Der Datensatz muss zurückgesetzt und alle Verknüpftungen entfernt werden. Fortfahren?
+T5447340-F2-P8629-A1031-L999:Typ
+T5447340-F2-P8632-A1031-L999:Abo Bestelloption,Abo Sequenz Artikel
+T5447340-F30-P8629-A1031-L999:E-Mail letzte Lieferung
+T5447340-F31-P8629-A1031-L999:Lieferart Zeilennr.
+T5447340-F32-P8629-A1031-L999:Referenz-Zahlungsdatum (Formel) auf Basis Startdatum
+T5447340-F33-P8629-A1031-L999:Beschreibung Intervall
+T5447340-F34-P8629-A1031-L999:Beschreibung Zahlweise
+T5447340-F35-P8629-A1031-L999:Beschreibung Kündigungsfrist
+T5447340-F36-P8629-A1031-L999:Datum letzte Änderung
+T5447340-F37-P8629-A1031-L999:Datum letzte Aktualisierung
+T5447340-F38-P8629-A1031-L999:Kurztext
+T5447340-F39-P8629-A1031-L999:E-Mail Zahlung
+T5447340-F3-P8629-A1031-L999:Beschreibung
+T5447340-F40-P8629-A1031-L999:E-Mail Zahlung & Lieferung
+T5447340-F41-P8629-A1031-L999:E-Mail Kündigungsbestätigung
+T5447340-F42-P8629-A1031-L999:Email lezte Zahlung
+T5447340-F43-P4962-Q1000000000-P26171-A1031-L999:Nachorder (Spät-Einstieg) ist nur bei Abo Sequenz-Artiklen mit Zahlungstyp 'Einmalig' möglich.
+T5447340-F43-P8629-A1031-L999:Nachorder erlaubt
+T5447340-F44-P8629-A1031-L999:Max. Anzahl Sequenzschritte pro Kunde
+T5447340-F4-P8629-A1031-L999:Artikel-Nr. Abo-Artikel
+T5447340-F5-P4962-Q1000000000-P26171-A1031-L999:Bei Abo-Typ "Bestelloption" ist Zahlung ausschließlich per Turnus möglich.
+T5447340-F5-P8629-A1031-L999:Zahlungstyp
+T5447340-F5-P8632-A1031-L999:Einmalig,Pro Turnus,Monatlich,Quartalsweise,Halbjährlich,Jährlich
+T5447340-F6-P4962-Q1000000001-P26171-A1031-L999:Es gibt Sequenzschritt-Zeilen, die nicht mit dem gewählten Starttyp kompatibel sind. \ Bitte prüfen Sie die Definition der Sequenzschritte.
+T5447340-F6-P8629-A1031-L999:Start-Typ
+T5447340-F6-P8632-A1031-L999:Neue Sequenz beginnen,In laufende Sequenz einsteigen
+T5447340-F7-P8629-A1031-L999:Startdatum (Formel)
+T5447340-F8-P8629-A1031-L999:Turnus Intervall (Formel)
+T5447340-F9-P8629-A1031-L999:Mind. Anzahl Turni
+T5447340-P4961-Q1000000000-P26171-A1031-L999:Der Datensatz muss zurückgesetzt und alle Verknüpftungen entfernt werden. Fortfahren?
+T5447340-P8629-A1031-L999:Webshop Abonnement

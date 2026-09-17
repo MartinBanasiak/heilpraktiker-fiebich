@@ -1,0 +1,6 @@
+T5447347-P4959-Q1000000000-P26171-A1033-L999:Modify is not permitted for event-tracking records.\Records can only be deleted by using the Unapply-function\to completely revert the adjustments of a Campaign\to a Sales Order.
+T5447347-P4960-Q1000000000-P26171-A1033-L999:Delete is only allowed via the Unapply-function.
+T5447347-P4961-Q1000000000-P26171-A1033-L999:Rename is not permitted for event-tracking records.\Records can only be deleted by using the Unapply-function\to completely revert the adjustments of a Campaign\to a Sales Order.
+T5447347-U1000000004-Q1000000003-P26171-A1033-L999:The passed Sales Header Record does not point to a unique Sales Order!
+T5447347-U1000000008-Q1000000003-P26171-A1033-L999:The passed Sales Header Record must match the unique Sales Order specified in the Adjustment Line!
+T5447347-U1000000013-Q1000000003-P26171-A1033-L999:The parameter AppliedWebshopCampaignsTmp has to be temporary!
