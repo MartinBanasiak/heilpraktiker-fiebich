@@ -26,7 +26,7 @@ h6,
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   line-height: 1.2;
-  color: #EE993A;
+  color: #c3741a;
   margin-top: 0;
   margin-bottom: 1em;
 }
@@ -100,7 +100,7 @@ h6,
 }
 a,
 .link {
-  color: #EE993A;
+  color: #c3741a;
   text-decoration: none;
   cursor: pointer;
 }
@@ -297,40 +297,40 @@ label {
 }
 .button_primary,
 .btn-primary {
-  color: #EE993A;
-  border-color: #EE993A;
+  color: #c3741a;
+  border-color: #c3741a;
 }
 .button_primary:hover,
 .btn-primary:hover,
 .button_primary:focus,
 .btn-primary:focus {
   color: #ffffff;
-  border-color: #ec8d23;
-  background-color: #ec8d23;
+  border-color: #ac6717;
+  background-color: #ac6717;
 }
 .button_primary:active,
 .btn-primary:active {
   color: #ffffff;
-  border-color: #e28013;
-  background-color: #e28013;
+  border-color: #965914;
+  background-color: #965914;
 }
 .button_second,
 .btn-second {
-  background-color: #ffffff;
+  background-color: #fbefe1;
   color: #ffffff;
-  border-color: #ffffff;
+  border-color: #fbefe1;
 }
 .button_second:hover,
 .btn-second:hover,
 .button_second:focus,
 .btn-second:focus {
-  background-color: #d9d9d9;
-  border-color: #d9d9d9;
+  background-color: #f2cb9d;
+  border-color: #f2cb9d;
 }
 .button_second:active,
 .btn-second:active {
-  background-color: #bfbfbf;
-  border-color: #bfbfbf;
+  background-color: #ecb270;
+  border-color: #ecb270;
 }
 .button_warning,
 .btn-warning {
@@ -534,7 +534,7 @@ select:not([type=submit]):focus,
 textarea:not([type=submit]):focus {
   outline: 0;
   border-width: 4px;
-  border-color: #EE993A;
+  border-color: #c3741a;
 }
 input.error,
 select.error,
@@ -715,7 +715,7 @@ textarea {
   -moz-transition: opacity 0.1s ease-in;
   -ms-transition: opacity 0.1s ease-in;
   -o-transition: opacity 0.1s ease-in;
-  background-color: #EE993A;
+  background-color: #c3741a;
   border-radius: 50%;
   -moz-background-clip: padding;
   -webkit-background-clip: padding-box;
@@ -740,7 +740,7 @@ textarea {
   color: #919191;
 }
 .specialradiobox:active {
-  color: #EE993A;
+  color: #c3741a;
 }
 .specialradiobox:active label:after {
   -webkit-opacity: 0.7;
@@ -782,7 +782,7 @@ textarea {
   left: 0;
   content: "\f17b";
   font-family: fontawesome;
-  color: #EE993A;
+  color: #c3741a;
   top: 0;
   -webkit-opacity: 0;
   -moz-opacity: 0;
@@ -812,15 +812,15 @@ textarea {
   opacity: 1;
 }
 .specialcheckbox input:disabled + label:after {
-  color: #ffffff;
+  color: #fbefe1;
 }
 .specialcheckbox input:hover + label,
 .specialcheckbox input:active + label,
 .specialcheckbox input:focus + label {
-  border-color: #EE993A;
+  border-color: #c3741a;
 }
 .specialcheckbox:active {
-  color: #EE993A;
+  color: #c3741a;
 }
 .specialcheckbox:active label:after {
   -webkit-opacity: 0.7;

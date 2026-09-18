@@ -41,7 +41,9 @@ main:focus {
 // nur 2,06:1 und waere als Rahmen zu schwach.
 :focus,
 a:focus {
-  outline: 0;
+  &:not(:focus-visible){
+    outline: 0;
+  }
 }
 :focus-visible {
   outline: 1px dotted @text-base;
