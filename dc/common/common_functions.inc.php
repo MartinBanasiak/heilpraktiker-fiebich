@@ -427,6 +427,118 @@ function site_title( $language, $navigation ) {
     return $title;
 }
 
+/**
+ * Die eine gueltige Adresse einer Kollektions-Detailseite.
+ *
+ * Das Frontend wertet bei Detailseiten nur die ID am Ende der Adresse aus.
+ * Davor durfte jeder beliebige Menuepunkt stehen: /de/kontakt/hrv-messung-291/
+ * lieferte dieselbe Seite wie /de/diagnostik/hrv-messung-291/ - jeweils mit
+ * einem Canonical auf sich selbst. Fuer Google sind das lauter Duplikate.
+ *
+ * Massgeblich ist der Menuepunkt, dessen Seite die Kollektion als Liste fuehrt
+ * (main_page_link.main_collection_list = 1) - dieselbe Zuordnung, nach der
+ * auch der Sitemap-Generator die Detailseiten aufbaut. Schraenkt die Liste auf
+ * Gruppen ein, muss die Kollektion in einer davon stehen. Ohne Gruppenauswahl
+ * zeigt die Liste alle Kollektionen des Aufbaus (siehe
+ * get_collection_sql_in_groups() in frontend_functions.inc.php).
+ *
+ * Liefert '' wenn sich keine Adresse bestimmen laesst - die Kollektion fehlt,
+ * hat keine Bezeichnung oder keine Seite listet sie. Der Aufrufer bleibt dann
+ * beim bisherigen Verhalten.
+ */
+function get_collection_canonical_path($collectionId) {
+    static $cache = array();
+
+    $collectionId = (int)$collectionId;
+    if ($collectionId <= 0) {
+        return '';
+    }
+    if (isset($cache[$collectionId])) {
+        return $cache[$collectionId];
+    }
+    $cache[$collectionId] = '';
+
+    if (!isset($GLOBALS['mysql_con'])) {
+        db_connect();
+    }
+
+    $result = @mysqli_query($GLOBALS['mysql_con'], "SELECT id, description, main_collection_setup_id FROM main_collection WHERE id = " . $collectionId);
+    $collection = @mysqli_fetch_assoc($result);
+    if (empty($collection) || $collection['description'] == '') {
+        return '';
+    }
+
+    $query = "SELECT n.id
+                FROM main_page_link pl
+                JOIN main_navigation n
+                  ON n.forward_page_id = pl.main_page_id
+                 AND n.forward_type = 1
+               WHERE pl.main_collection_setup_id = " . (int)$collection['main_collection_setup_id'] . "
+                 AND pl.main_collection_list = 1
+                 AND pl.active = 1
+                 AND n.main_site_id = " . (int)$GLOBALS['site']['id'] . "
+                 AND n.main_language_id = " . (int)$GLOBALS['language']['id'] . "
+                 AND (
+                      NOT EXISTS (SELECT 1 FROM main_page_collection_group_link g
+                                   WHERE g.main_page_link_id = pl.id)
+                      OR EXISTS (SELECT 1 FROM main_page_collection_group_link g
+                                   JOIN main_collection_group_link cg
+                                     ON cg.main_collection_setup_group_id = g.main_collection_setup_group_id
+                                    AND cg.active = 1
+                                  WHERE g.main_page_link_id = pl.id
+                                    AND cg.main_collection_id = " . $collectionId . ")
+                 )
+            ORDER BY n.active DESC, n.level ASC, n.sorting ASC
+               LIMIT 1";
+    $result = @mysqli_query($GLOBALS['mysql_con'], $query);
+    $navigation = @mysqli_fetch_assoc($result);
+    if (empty($navigation)) {
+        return '';
+    }
+
+    $cache[$collectionId] = get_link_to_navigation($navigation['id']) . get_collection_rewrite($collection['description'], $collectionId);
+    return $cache[$collectionId];
+}
+
+/**
+ * Ziel eines Menuepunkts fuer den Link im Menue.
+ *
+ * Weiterleitungen (Typ 2 auf einen anderen Menuepunkt, Typ 5 auf einen
+ * internen Pfad) antworten mit 302. Im Menue auf die Weiterleitung zu
+ * verlinken heisst: jeder Klick und jeder Crawler-Besuch nimmt den Umweg, und
+ * Google sieht eine Adresse, die auf eine andere zeigt. Das Menue verlinkt
+ * deshalb direkt auf das Ziel. Fuehrt der Pfad auf eine Kollektion, wird ihre
+ * aktuelle Adresse eingesetzt - im Backend hinterlegte Pfade veralten, sobald
+ * jemand die Bezeichnung der Kollektion aendert.
+ *
+ * Die Weiterleitung selbst bleibt ein 302: Das Ziel ist im Backend jederzeit
+ * aenderbar, und ein 301 haengt im Browser-Cache fest.
+ */
+function get_navigation_menu_href($nav, $defaultHref) {
+    switch ((int)$nav['forward_type']) {
+        case 2:
+            $link = get_link_to_navigation($nav['forward_navigation_id']);
+            return ($link != '') ? $link : $defaultHref;
+
+        case 5:
+            $url = trim($nav['forward_url']);
+            if ($url == '') {
+                return $defaultHref;
+            }
+            if (substr($url, 0, 1) != '/') {
+                $url = '/' . $url;
+            }
+            if (preg_match('#-(\d+)/?$#', parse_url($url, PHP_URL_PATH), $match)) {
+                $collectionPath = get_collection_canonical_path($match[1]);
+                if ($collectionPath != '') {
+                    return $collectionPath;
+                }
+            }
+            return $url;
+    }
+    return $defaultHref;
+}
+
 //Canonical infos füllen
 function get_canonical() {
     $url    = $_SERVER["SERVER_NAME"] . $_SERVER["REDIRECT_URL"];
@@ -560,8 +672,17 @@ function get_canonical() {
             && (int)$GLOBALS['language']['std_main_navigation_id'] === (int)$GLOBALS['navigation']['id']
             && !isset($_GET['collection_id']);
 
+        // Detailseiten nicht aus dem aufgerufenen Pfad ableiten - der kann
+        // jeder beliebige Menuepunkt sein (siehe get_collection_canonical_path()).
+        $collectionCanonical = '';
+        if (isset($_GET['collection_id']) && $_GET['collection_id'] <> '') {
+            $collectionCanonical = get_collection_canonical_path($_GET['collection_id']);
+        }
+
         if ($istStartseite) {
             $path = "<link rel='canonical' href='https://" . $domain . "/'/>";
+        } elseif ($collectionCanonical <> '') {
+            $path = "<link rel='canonical' href='https://" . $domain . $collectionCanonical . "'/>";
         } else {
             $path = "<link rel='canonical' href='https://" . $domain . "/" . customizeUrl(). "/" . $path . "/'/>";
         }
@@ -1037,9 +1158,34 @@ function curr_navigation_path_rek( $sitecode, $languagecode, $parent_id, $path )
 
 
 //TF: 18.09.13 für Breadcrumb redaktionell, von NBM kopiert
+/**
+ * Adresse der Startseite fuer interne Links.
+ *
+ * Die Sprache, die unter / ausgeliefert wird (die erste der Site), verlinkt auf
+ * die Wurzel - /de/ leitet dorthin per 301 weiter (siehe
+ * extract_site_request_uri_variables() in frontend.php). Jede weitere Sprache
+ * behaelt ihre eigene Startseite /<sprache>/.
+ */
+function get_start_page_href() {
+    static $href = null;
+    if ($href !== null) {
+        return $href;
+    }
+
+    $href = '/' . customizeUrl() . '/';
+    // get_language_by_site_id() steht in frontend.php - im Backend gibt es sie nicht.
+    if (function_exists('get_language_by_site_id')) {
+        $siteLanguages = get_language_by_site_id($GLOBALS['site']['id']);
+        if (isset($siteLanguages[0]['id']) && (int)$siteLanguages[0]['id'] === (int)$GLOBALS['language']['id']) {
+            $href = '/';
+        }
+    }
+    return $href;
+}
+
 function cust_curr_navigation_path( $site, $language, $navigation ) {
     if ((int)$navigation['id'] <> (int)$language['std_main_navigation_id'] && !isset($_GET['collection_id'])) {
-        return '<div class="breadcrumb"><span><a href="/' . customizeUrl() . '/">' . $GLOBALS["tc"]["homepage"] . '</a>' . cust_curr_navigation_path_rek($site["code"], $language["code"], $navigation["parent_id"], '') . "&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;<span class='current'>" . $navigation["menu_name"] . '</span></span></div>';
+        return '<div class="breadcrumb"><span><a href="' . get_start_page_href() . '">' . $GLOBALS["tc"]["homepage"] . '</a>' . cust_curr_navigation_path_rek($site["code"], $language["code"], $navigation["parent_id"], '') . "&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;<span class='current'>" . $navigation["menu_name"] . '</span></span></div>';
     } elseif(isset($_GET['collection_id'])) {
         switch ($navigation["level"]) {
             case 4:
@@ -1078,18 +1224,18 @@ function cust_curr_navigation_path( $site, $language, $navigation ) {
 
         if (count($resultArray) == 1) {
             return '<div class="breadcrumb">
-                <span><a href="/' . customizeUrl(). '/">' . $GLOBALS["tc"]["homepage"] . '</a>'
+                <span><a href="' . get_start_page_href() . '">' . $GLOBALS["tc"]["homepage"] . '</a>'
                 . cust_curr_navigation_path_rek($site["code"], $language["code"], $navigation["parent_id"], '')
                 . "&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;<a href=\"".$link."\"><span>" . $navigation["menu_name"] . '</span></a>
                 &nbsp;<i class="fa fa-angle-right" aria-hidden="true"></i>&nbsp;<span class=\'current\'>'.$resultArray[0]["description"].'</span>
              </span></div>';
         } else {
-            return '<div class="breadcrumb"><span><a href="/' .customizeUrl() . '/">' . $GLOBALS["tc"]["homepage"] . '</a>' . cust_curr_navigation_path_rek($site["code"], $language["code"], $navigation["parent_id"], '') . "&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;<span class='current'>" . $navigation["menu_name"] . '</span></span></div>';
+            return '<div class="breadcrumb"><span><a href="' . get_start_page_href() . '">' . $GLOBALS["tc"]["homepage"] . '</a>' . cust_curr_navigation_path_rek($site["code"], $language["code"], $navigation["parent_id"], '') . "&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;<span class='current'>" . $navigation["menu_name"] . '</span></span></div>';
         }
 
 
     } else {
-        return '<div class="breadcrumb"><span><a href="/' . customizeUrl() . '/">' . $GLOBALS["tc"]["homepage"] . '</a></span></div>';
+        return '<div class="breadcrumb"><span><a href="' . get_start_page_href() . '">' . $GLOBALS["tc"]["homepage"] . '</a></span></div>';
     }
 }
 
@@ -1254,6 +1400,7 @@ function navigation_fullmenu_rek( $site, $language, $navigation, $parent_id, $le
             if ($show_level) {
                 $addr = "/" . customizeUrl() . "/" . $newnavcode;
                 $addr = str_replace('//','/',$addr);
+                $addr = get_navigation_menu_href($nav, $addr);
                 echo "\n" . $spaces . "  <li class=\"level_$level ".$nav["code"]."\"><a " . $active . "href=\"" . $addr."\">" . $nav["menu_name"] . "</a>";
             }
             navigation_fullmenu_rek($site, $language, $navigation, $nav["id"], ($level + 1), $newnavcode, $from_level, $to_level);
@@ -1323,6 +1470,8 @@ function navigation_menu_rek( $site, $language, $navigation, $parent_id, $level,
         if ($nav["forward_type"] == 3) {
             $target = 'target="_blank"';
             $href = $nav['forward_url'];
+        } else {
+            $href = get_navigation_menu_href($nav, $href);
         }
 
         if ($show_level) {

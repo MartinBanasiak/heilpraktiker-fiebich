@@ -475,16 +475,31 @@ function extract_site_request_uri_variables()
             //Do noting
         }
 
-        $path = get_collection_rewrite($description, filter_var($_GET['collection_id'], FILTER_SANITIZE_NUMBER_INT));
+        // Steht die Detailseite unter einem anderen Menuepunkt oder mit einem
+        // veralteten Slug in der Adresse, per 301 auf die gueltige Adresse.
+        // Vorher lieferte jeder Menuepunkt davor die Seite mit 200 aus (lauter
+        // Duplikate), und ein umbenannter Slug ergab einen 404 - obwohl die ID
+        // die Seite eindeutig bestimmt.
+        $canonicalCollectionPath = ($description <> '') ? get_collection_canonical_path($_GET['collection_id']) : '';
+        if ($canonicalCollectionPath <> '') {
+            if ($urlPath <> $canonicalCollectionPath) {
+                $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+                headerFunctionBridge("HTTP/1.1 301 Moved Permanently");
+                headerFunctionBridge('Location: ' . $canonicalCollectionPath . ($queryString ? '?' . $queryString : ''));
+                exit;
+            }
+        } else {
+            $path = get_collection_rewrite($description, filter_var($_GET['collection_id'], FILTER_SANITIZE_NUMBER_INT));
 
-        $checkLevel = $levelindex;
-        $lastNavigationCode = $_GET['level_' . $checkLevel];
-        $navigation = navigation_getbycode($lastNavigationCode);
-        $getNavigationPath = current_site_navigation_path("", "", $navigation);
-        $path = $getNavigationPath . $path;
+            $checkLevel = $levelindex;
+            $lastNavigationCode = $_GET['level_' . $checkLevel];
+            $navigation = navigation_getbycode($lastNavigationCode);
+            $getNavigationPath = current_site_navigation_path("", "", $navigation);
+            $path = $getNavigationPath . $path;
 
-        if ($urlPath <> $path) {
-            show_error_404($GLOBALS['GLOBAL_RESPONSE'],$GLOBALS['PRODEPLOY_ROUTING']);
+            if ($urlPath <> $path) {
+                show_error_404($GLOBALS['GLOBAL_RESPONSE'],$GLOBALS['PRODEPLOY_ROUTING']);
+            }
         }
 
     }
@@ -497,6 +512,38 @@ function extract_site_request_uri_variables()
         }
     }
 
+    // Die Startseite ist unter /, /de/ und /de/home/ erreichbar. Das Canonical
+    // zeigt bereits auf / (siehe get_canonical()), aber solange die beiden
+    // anderen Adressen mit 200 antworten und intern verlinkt werden, fuehrt
+    // Google sie als eigene Seiten. Deshalb 301 auf die Wurzel.
+    //
+    // Nur fuer die Sprache, die die Wurzel selbst ausliefert - /en/ waere die
+    // Startseite einer anderen Sprache. Und nur fuer einfache Aufrufe: POST
+    // oder Parameter wie ?action= duerfen nicht durch eine Weiterleitung
+    // verloren gehen.
+    $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+    $isRootLanguage = isset($getSiteLanguages[0]['id'], $GLOBALS['language']['id'])
+        && (int)$getSiteLanguages[0]['id'] === (int)$GLOBALS['language']['id'];
+    if ($isRootLanguage
+        && ($requestMethod === 'GET' || $requestMethod === 'HEAD')
+        && (string)parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) === ''
+        && !isset($_GET['collection_id'])
+        && !isset($_GET['card'])
+    ) {
+        if (!isset($GLOBALS['mysql_con'])) {
+            db_connect();
+        }
+        $startPaths = ["/" . customizeUrl() . "/"];
+        $startNavigationPath = get_link_to_navigation($GLOBALS['language']['std_main_navigation_id']);
+        if ($startNavigationPath <> '') {
+            $startPaths[] = $startNavigationPath;
+        }
+        if (in_array($urlPath, $startPaths, true)) {
+            headerFunctionBridge("HTTP/1.1 301 Moved Permanently");
+            headerFunctionBridge('Location: /');
+            exit;
+        }
+    }
 
 }
 

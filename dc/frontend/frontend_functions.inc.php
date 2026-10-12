@@ -525,6 +525,15 @@ function show_collection_setup_content( $collection_setup, $group_link_table = "
                         $fullviewLink = get_link_to_navigation($GLOBALS["navigation"]['id']) . get_collection_rewrite($collectionData['description'], $collection_id);
                     }
 
+                    // Oben wird die Adresse aus einem Menuepunkt zusammengesetzt,
+                    // der nicht der zustaendige sein muss. Gibt es eine feste
+                    // Adresse der Detailseite, direkt dorthin - sonst fuehrt der
+                    // Link ueber eine 301.
+                    $canonicalFullviewLink = get_collection_canonical_path($collection_id);
+                    if ($canonicalFullviewLink <> '') {
+                        $fullviewLink = $canonicalFullviewLink;
+                    }
+
                     $createFullViewLink = '<a href="' . $fullviewLink . '" />%s</a>';
                 }
 
