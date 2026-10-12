@@ -96,7 +96,7 @@
                                 if ($GLOBALS['language']['std_main_navigation_id'] == $navigation['id']) {
                                     $active = "active";
                                 }?>
-                                <a class="home <?=$active?>" title="<?=$GLOBALS['tc']['homepage']?>" href="/<?=$GLOBALS['language']['code']?>/">
+                                <a class="home <?=$active?>" title="<?=$GLOBALS['tc']['homepage']?>" href="<?=get_start_page_href()?>">
                                     <i class="fa fa-home"></i>
                                 </a>
                                 <? navigation_full_menu_area($site, $language, $navigation, 2); ?>

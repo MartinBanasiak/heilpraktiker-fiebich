@@ -131,6 +131,59 @@ function sitemap_append_collections($navigation_id, $conurl, $site, $language) {
     }
 }
 
+/**
+ * Ziel einer internen Weiterleitung in die Sitemap aufnehmen.
+ *
+ * Seiten wie FAQ und Downloads haengen im Menue nur noch als Weiterleitung
+ * unter "Info" (Typ 5, interner Pfad). Ihr eigener Menuepunkt ist dafuer
+ * deaktiviert - erreichbar ist die Seite trotzdem, mit 200 und eigenem
+ * Canonical. sitemap_navigation_has_own_page() laesst inaktive Eintraege aus,
+ * die Weiterleitung selbst ist keine Zielseite: Die Seite fiel damit ganz aus
+ * der Sitemap.
+ *
+ * Aufgenommen wird nur, was auf einen Menuepunkt mit eigener Seite zeigt.
+ * Pfade auf Kollektionen (Endung -<ID>/) bleiben aussen vor, die fuehrt
+ * sitemap_append_collections() bereits unter ihrer Listenseite.
+ */
+function sitemap_append_forward_target($navigation, $site, $language) {
+
+    global $sitemap_co;
+
+    if ((int)$navigation['active'] !== 1 || (int)$navigation['forward_type'] !== 5) {
+        return;
+    }
+
+    $path = parse_url(trim($navigation['forward_url']), PHP_URL_PATH);
+    if ($path == '' || preg_match('#-\d+/?$#', $path)) {
+        return;
+    }
+    $path = '/' . trim($path, '/') . '/';
+
+    // Der letzte Abschnitt ist der Code des Ziel-Menuepunkts. Gezaehlt wird er
+    // nur, wenn sein vollstaendiger Pfad genau dem hinterlegten entspricht.
+    $segments = explode('/', trim($path, '/'));
+    $code = end($segments);
+    $query = "SELECT * FROM main_navigation
+               WHERE main_site_id = '" . (int)$site['id'] . "'
+                 AND main_language_id = '" . (int)$language['id'] . "'
+                 AND code = '" . mysqli_real_escape_string($GLOBALS['mysql_con'], $code) . "'
+                 AND forward_type = 1";
+    $result = @mysqli_query($GLOBALS['mysql_con'], $query);
+    while ($target = @mysqli_fetch_assoc($result)) {
+        $targetPath = '/' . customizeUrl(true, $site, $language) . '/' . navigation_path_rek($target['id'], '');
+        if ($targetPath !== $path) {
+            continue;
+        }
+        $loc = "https://" . str_replace("//", "/", $GLOBALS['base_url']['de'] . ltrim($targetPath, '/'));
+        if (strpos($sitemap_co, "<loc>" . $loc . "</loc>") === FALSE) {
+            $sitemap_co .= "		<url>\n";
+            $sitemap_co .= "			<loc>" . $loc . "</loc>\n";
+            $sitemap_co .= "		</url>\n";
+        }
+        return;
+    }
+}
+
 $sitemap_co = "";
 function generate_content($language_code,$shop_code,$company) {
 
@@ -194,6 +247,7 @@ function generate_content($language_code,$shop_code,$company) {
 
             sitemap_append_collections($content['id'], $conurl, $site, $language);
         }
+        sitemap_append_forward_target($content, $site, $language);
         /*
         }
     }
@@ -256,6 +310,7 @@ function get_content_rek($pid,$company,$shop,$language_code,$conurl,$language,$s
 
                 sitemap_append_collections($content_rek['id'], $conurl2, $site, $language);
             }
+            sitemap_append_forward_target($content_rek, $site, $language);
             /*)
                 }
             }
